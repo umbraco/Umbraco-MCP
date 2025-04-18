@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "umbraco-mcp": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["D:\\Code\\umbraco-mcp\\build\\index.js"]
+    }
+  }
+}
