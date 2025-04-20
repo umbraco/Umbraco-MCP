@@ -8,7 +8,8 @@
     "umbraco": "./build/index.js"
   },
   "scripts": {
-    "build": "rimraf build && tsc && node -e \"const fs = require('fs'); fs.chmodSync('./build/index.js', 0o755);\"",
+    "clean": "rimraf build",
+    "build": "npm run clean && tsc",
     "generate": "orval --config orval.config.cjs"
   },
   "files": [

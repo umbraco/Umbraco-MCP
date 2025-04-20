@@ -5,6533 +5,4922 @@
  * This shows all APIs available in this version of Umbraco - including all the legacy apis that are available for backward compatibility
  * OpenAPI spec version: Latest
  */
-import {
-  z as zod
-} from 'zod';
-
-
-export const getCultureQuerySkipDefault = 0;export const getCultureQueryTakeDefault = 100;
-
-export const getCultureQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getCultureQueryTakeDefault)
-})
-
-export const getCultureResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().min(1),
-  "englishName": zod.string().min(1)
-}))
-})
-
-
-export const postDataTypeBody = zod.object({
-  "name": zod.string().min(1),
-  "editorAlias": zod.string().min(1),
-  "editorUiAlias": zod.string(),
-  "values": zod.array(zod.object({
-  "alias": zod.string(),
-  "value": zod.any().nullish()
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDataTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDataTypeByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "editorAlias": zod.string().min(1),
-  "editorUiAlias": zod.string(),
-  "values": zod.array(zod.object({
-  "alias": zod.string(),
-  "value": zod.any().nullish()
-})),
-  "id": zod.string().uuid(),
-  "isDeletable": zod.boolean(),
-  "canIgnoreStartNodes": zod.boolean()
-})
-
-
-export const deleteDataTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDataTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDataTypeByIdBody = zod.object({
-  "name": zod.string().min(1),
-  "editorAlias": zod.string().min(1),
-  "editorUiAlias": zod.string(),
-  "values": zod.array(zod.object({
-  "alias": zod.string(),
-  "value": zod.any().nullish()
-}))
-})
-
-
-export const postDataTypeByIdCopyParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postDataTypeByIdCopyBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDataTypeByIdIsUsedParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDataTypeByIdIsUsedResponse = zod.boolean()
-
-
-export const putDataTypeByIdMoveParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDataTypeByIdMoveBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDataTypeByIdReferencesParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDataTypeByIdReferencesResponseItem = zod.object({
-  "contentType": zod.object({
-  "id": zod.string().uuid(),
-  "type": zod.string().nullable(),
-  "name": zod.string().nullable(),
-  "icon": zod.string().nullable()
-}),
-  "properties": zod.array(zod.object({
-  "name": zod.string(),
-  "alias": zod.string()
-}))
-})
-export const getDataTypeByIdReferencesResponse = zod.array(getDataTypeByIdReferencesResponseItem)
-
-
-export const getDataTypeConfigurationResponse = zod.object({
-  "canBeChanged": zod.enum(['True', 'False', 'FalseWithHelpText']),
-  "documentListViewId": zod.string().uuid(),
-  "mediaListViewId": zod.string().uuid()
-})
-
-
-export const postDataTypeFolderBody = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDataTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDataTypeFolderByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid()
-})
-
-
-export const deleteDataTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDataTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDataTypeFolderByIdBody = zod.object({
-  "name": zod.string().min(1)
-})
-
-
-export const getFilterDataTypeQuerySkipDefault = 0;export const getFilterDataTypeQueryTakeDefault = 100;export const getFilterDataTypeQueryNameDefault = "";
-
-export const getFilterDataTypeQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterDataTypeQueryTakeDefault),
-  "name": zod.string().optional(),
-  "editorUiAlias": zod.string().optional(),
-  "editorAlias": zod.string().optional()
-})
-
-export const getFilterDataTypeResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "editorUiAlias": zod.string().nullish(),
-  "editorAlias": zod.string(),
-  "isDeletable": zod.boolean()
-}))
-})
-
-
-export const getItemDataTypeQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemDataTypeResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "editorUiAlias": zod.string().nullish(),
-  "editorAlias": zod.string(),
-  "isDeletable": zod.boolean()
-})
-export const getItemDataTypeResponse = zod.array(getItemDataTypeResponseItem)
-
-
-export const getItemDataTypeSearchQuerySkipDefault = 0;export const getItemDataTypeSearchQueryTakeDefault = 100;
-
-export const getItemDataTypeSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemDataTypeSearchQueryTakeDefault)
-})
-
-export const getItemDataTypeSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "editorUiAlias": zod.string().nullish(),
-  "editorAlias": zod.string(),
-  "isDeletable": zod.boolean()
-})),
-  "total": zod.number()
-})
-
-
-export const getTreeDataTypeAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeDataTypeAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "editorUiAlias": zod.string().nullish(),
-  "isDeletable": zod.boolean()
-})
-export const getTreeDataTypeAncestorsResponse = zod.array(getTreeDataTypeAncestorsResponseItem)
-
-
-export const getTreeDataTypeChildrenQuerySkipDefault = 0;export const getTreeDataTypeChildrenQueryTakeDefault = 100;export const getTreeDataTypeChildrenQueryFoldersOnlyDefault = false;
-
-export const getTreeDataTypeChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDataTypeChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeDataTypeChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "editorUiAlias": zod.string().nullish(),
-  "isDeletable": zod.boolean()
-}))
-})
-
-
-export const getTreeDataTypeRootQuerySkipDefault = 0;export const getTreeDataTypeRootQueryTakeDefault = 100;export const getTreeDataTypeRootQueryFoldersOnlyDefault = false;
-
-export const getTreeDataTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDataTypeRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeDataTypeRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "editorUiAlias": zod.string().nullish(),
-  "isDeletable": zod.boolean()
-}))
-})
-
-
-export const getDictionaryQuerySkipDefault = 0;export const getDictionaryQueryTakeDefault = 100;
-
-export const getDictionaryQueryParams = zod.object({
-  "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDictionaryQueryTakeDefault)
-})
-
-export const getDictionaryResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().nullish(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "translatedIsoCodes": zod.array(zod.string())
-}))
-})
-
-
-export const postDictionaryBody = zod.object({
-  "name": zod.string().min(1),
-  "translations": zod.array(zod.object({
-  "isoCode": zod.string().min(1),
-  "translation": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDictionaryByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDictionaryByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "translations": zod.array(zod.object({
-  "isoCode": zod.string().min(1),
-  "translation": zod.string().min(1)
-})),
-  "id": zod.string().uuid()
-})
-
-
-export const deleteDictionaryByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDictionaryByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDictionaryByIdBody = zod.object({
-  "name": zod.string().min(1),
-  "translations": zod.array(zod.object({
-  "isoCode": zod.string().min(1),
-  "translation": zod.string().min(1)
-}))
-})
-
-
-export const getDictionaryByIdExportParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDictionaryByIdExportQueryIncludeChildrenDefault = false;
-
-export const getDictionaryByIdExportQueryParams = zod.object({
-  "includeChildren": zod.boolean().optional()
-})
-
-export const getDictionaryByIdExportResponse = zod.instanceof(File)
-
-
-export const putDictionaryByIdMoveParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDictionaryByIdMoveBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const postDictionaryImportBody = zod.object({
-  "temporaryFile": zod.object({
-  "id": zod.string().uuid()
-}),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getItemDictionaryQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemDictionaryResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string()
-})
-export const getItemDictionaryResponse = zod.array(getItemDictionaryResponseItem)
-
-
-export const getTreeDictionaryAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeDictionaryAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string()
-})
-export const getTreeDictionaryAncestorsResponse = zod.array(getTreeDictionaryAncestorsResponseItem)
-
-
-export const getTreeDictionaryChildrenQuerySkipDefault = 0;export const getTreeDictionaryChildrenQueryTakeDefault = 100;
-
-export const getTreeDictionaryChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDictionaryChildrenQueryTakeDefault)
-})
-
-export const getTreeDictionaryChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string()
-}))
-})
-
-
-export const getTreeDictionaryRootQuerySkipDefault = 0;export const getTreeDictionaryRootQueryTakeDefault = 100;
-
-export const getTreeDictionaryRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDictionaryRootQueryTakeDefault)
-})
-
-export const getTreeDictionaryRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string()
-}))
-})
-
-
-export const postDocumentBlueprintBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const getDocumentBlueprintByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentBlueprintByIdResponse = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges']),
-  "publishDate": zod.string().datetime({}).nullish(),
-  "scheduledPublishDate": zod.string().datetime({}).nullish(),
-  "scheduledUnpublishDate": zod.string().datetime({}).nullish()
-})),
-  "id": zod.string().uuid(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-})
-
-
-export const deleteDocumentBlueprintByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDocumentBlueprintByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentBlueprintByIdBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-}))
-})
-
-
-export const putDocumentBlueprintByIdMoveParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentBlueprintByIdMoveBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const postDocumentBlueprintFolderBody = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDocumentBlueprintFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentBlueprintFolderByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid()
-})
-
-
-export const deleteDocumentBlueprintFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDocumentBlueprintFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentBlueprintFolderByIdBody = zod.object({
-  "name": zod.string().min(1)
-})
-
-
-export const postDocumentBlueprintFromDocumentBody = zod.object({
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "id": zod.string().uuid().nullish(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getItemDocumentBlueprintQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemDocumentBlueprintResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-})
-export const getItemDocumentBlueprintResponse = zod.array(getItemDocumentBlueprintResponseItem)
-
-
-export const getTreeDocumentBlueprintAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeDocumentBlueprintAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}).nullish()
-})
-export const getTreeDocumentBlueprintAncestorsResponse = zod.array(getTreeDocumentBlueprintAncestorsResponseItem)
-
-
-export const getTreeDocumentBlueprintChildrenQuerySkipDefault = 0;export const getTreeDocumentBlueprintChildrenQueryTakeDefault = 100;export const getTreeDocumentBlueprintChildrenQueryFoldersOnlyDefault = false;
-
-export const getTreeDocumentBlueprintChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentBlueprintChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeDocumentBlueprintChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}).nullish()
-}))
-})
-
-
-export const getTreeDocumentBlueprintRootQuerySkipDefault = 0;export const getTreeDocumentBlueprintRootQueryTakeDefault = 100;export const getTreeDocumentBlueprintRootQueryFoldersOnlyDefault = false;
-
-export const getTreeDocumentBlueprintRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentBlueprintRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeDocumentBlueprintRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}).nullish()
-}))
-})
-
-
-export const postDocumentTypeBody = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "allowedTemplates": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "defaultTemplate": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "cleanup": zod.object({
-  "preventCleanup": zod.boolean(),
-  "keepAllVersionsNewerThanDays": zod.number().nullish(),
-  "keepLatestVersionPerDayForDays": zod.number().nullish()
-}),
-  "allowedDocumentTypes": zod.array(zod.object({
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "sortOrder": zod.number()
-})),
-  "compositions": zod.array(zod.object({
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-}))
-})
-
-
-export const getDocumentTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentTypeByIdResponse = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "id": zod.string().uuid(),
-  "allowedTemplates": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "defaultTemplate": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "cleanup": zod.object({
-  "preventCleanup": zod.boolean(),
-  "keepAllVersionsNewerThanDays": zod.number().nullish(),
-  "keepLatestVersionPerDayForDays": zod.number().nullish()
-}),
-  "allowedDocumentTypes": zod.array(zod.object({
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "sortOrder": zod.number()
-})),
-  "compositions": zod.array(zod.object({
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-}))
-})
-
-
-export const deleteDocumentTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDocumentTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentTypeByIdBody = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "allowedTemplates": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "defaultTemplate": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "cleanup": zod.object({
-  "preventCleanup": zod.boolean(),
-  "keepAllVersionsNewerThanDays": zod.number().nullish(),
-  "keepLatestVersionPerDayForDays": zod.number().nullish()
-}),
-  "allowedDocumentTypes": zod.array(zod.object({
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "sortOrder": zod.number()
-})),
-  "compositions": zod.array(zod.object({
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-}))
-})
-
-
-export const getDocumentTypeByIdAllowedChildrenParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentTypeByIdAllowedChildrenQuerySkipDefault = 0;export const getDocumentTypeByIdAllowedChildrenQueryTakeDefault = 100;
-
-export const getDocumentTypeByIdAllowedChildrenQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentTypeByIdAllowedChildrenQueryTakeDefault)
-})
-
-export const getDocumentTypeByIdAllowedChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "icon": zod.string().nullish()
-}))
-})
-
-
-export const getDocumentTypeByIdBlueprintParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentTypeByIdBlueprintQuerySkipDefault = 0;export const getDocumentTypeByIdBlueprintQueryTakeDefault = 100;
-
-export const getDocumentTypeByIdBlueprintQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentTypeByIdBlueprintQueryTakeDefault)
-})
-
-export const getDocumentTypeByIdBlueprintResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string()
-}))
-})
-
-
-export const getDocumentTypeByIdCompositionReferencesParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentTypeByIdCompositionReferencesResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string()
-})
-export const getDocumentTypeByIdCompositionReferencesResponse = zod.array(getDocumentTypeByIdCompositionReferencesResponseItem)
-
-
-export const postDocumentTypeByIdCopyParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postDocumentTypeByIdCopyBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDocumentTypeByIdExportParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentTypeByIdExportResponse = zod.instanceof(File)
-
-
-export const putDocumentTypeByIdImportParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentTypeByIdImportBody = zod.object({
-  "file": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const putDocumentTypeByIdMoveParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentTypeByIdMoveBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDocumentTypeAllowedAtRootQuerySkipDefault = 0;export const getDocumentTypeAllowedAtRootQueryTakeDefault = 100;
-
-export const getDocumentTypeAllowedAtRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentTypeAllowedAtRootQueryTakeDefault)
-})
-
-export const getDocumentTypeAllowedAtRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "icon": zod.string().nullish()
-}))
-})
-
-
-export const postDocumentTypeAvailableCompositionsBody = zod.object({
-  "id": zod.string().uuid().nullish(),
-  "currentPropertyAliases": zod.array(zod.string()),
-  "currentCompositeIds": zod.array(zod.string().uuid()),
-  "isElement": zod.boolean()
-})
-
-export const postDocumentTypeAvailableCompositionsResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string(),
-  "folderPath": zod.array(zod.string()),
-  "isCompatible": zod.boolean()
-})
-export const postDocumentTypeAvailableCompositionsResponse = zod.array(postDocumentTypeAvailableCompositionsResponseItem)
-
-
-export const getDocumentTypeConfigurationResponse = zod.object({
-  "dataTypesCanBeChanged": zod.enum(['True', 'False', 'FalseWithHelpText']),
-  "disableTemplates": zod.boolean(),
-  "useSegments": zod.boolean(),
-  "reservedFieldNames": zod.array(zod.string())
-})
-
-
-export const postDocumentTypeFolderBody = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDocumentTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentTypeFolderByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid()
-})
-
-
-export const deleteDocumentTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDocumentTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentTypeFolderByIdBody = zod.object({
-  "name": zod.string().min(1)
-})
-
-
-export const postDocumentTypeImportBody = zod.object({
-  "file": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const getItemDocumentTypeQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemDocumentTypeResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "isElement": zod.boolean(),
-  "icon": zod.string().nullish(),
-  "description": zod.string().nullish()
-})
-export const getItemDocumentTypeResponse = zod.array(getItemDocumentTypeResponseItem)
-
-
-export const getItemDocumentTypeSearchQuerySkipDefault = 0;export const getItemDocumentTypeSearchQueryTakeDefault = 100;
-
-export const getItemDocumentTypeSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemDocumentTypeSearchQueryTakeDefault)
-})
-
-export const getItemDocumentTypeSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "isElement": zod.boolean(),
-  "icon": zod.string().nullish(),
-  "description": zod.string().nullish()
-})),
-  "total": zod.number()
-})
-
-
-export const getTreeDocumentTypeAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeDocumentTypeAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "isElement": zod.boolean(),
-  "icon": zod.string()
-})
-export const getTreeDocumentTypeAncestorsResponse = zod.array(getTreeDocumentTypeAncestorsResponseItem)
-
-
-export const getTreeDocumentTypeChildrenQuerySkipDefault = 0;export const getTreeDocumentTypeChildrenQueryTakeDefault = 100;export const getTreeDocumentTypeChildrenQueryFoldersOnlyDefault = false;
-
-export const getTreeDocumentTypeChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentTypeChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeDocumentTypeChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "isElement": zod.boolean(),
-  "icon": zod.string()
-}))
-})
-
-
-export const getTreeDocumentTypeRootQuerySkipDefault = 0;export const getTreeDocumentTypeRootQueryTakeDefault = 100;export const getTreeDocumentTypeRootQueryFoldersOnlyDefault = false;
-
-export const getTreeDocumentTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentTypeRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeDocumentTypeRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "isElement": zod.boolean(),
-  "icon": zod.string()
-}))
-})
-
-
-export const getDocumentVersionQuerySkipDefault = 0;export const getDocumentVersionQueryTakeDefault = 100;
-
-export const getDocumentVersionQueryParams = zod.object({
-  "documentId": zod.string().uuid(),
-  "culture": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentVersionQueryTakeDefault)
-})
-
-export const getDocumentVersionResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "versionDate": zod.string().datetime({}),
-  "isCurrentPublishedVersion": zod.boolean(),
-  "isCurrentDraftVersion": zod.boolean(),
-  "preventCleanup": zod.boolean()
-}))
-})
-
-
-export const getDocumentVersionByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentVersionByIdResponse = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges']),
-  "publishDate": zod.string().datetime({}).nullish(),
-  "scheduledPublishDate": zod.string().datetime({}).nullish(),
-  "scheduledUnpublishDate": zod.string().datetime({}).nullish()
-})),
-  "id": zod.string().uuid(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const putDocumentVersionByIdPreventCleanupParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentVersionByIdPreventCleanupQueryParams = zod.object({
-  "preventCleanup": zod.boolean().optional()
-})
-
-
-export const postDocumentVersionByIdRollbackParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postDocumentVersionByIdRollbackQueryParams = zod.object({
-  "culture": zod.string().optional()
-})
-
-
-export const getCollectionDocumentByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getCollectionDocumentByIdQueryOrderByDefault = "updateDate";export const getCollectionDocumentByIdQuerySkipDefault = 0;export const getCollectionDocumentByIdQueryTakeDefault = 100;
-
-export const getCollectionDocumentByIdQueryParams = zod.object({
-  "dataTypeId": zod.string().uuid().optional(),
-  "orderBy": zod.string().default(getCollectionDocumentByIdQueryOrderByDefault),
-  "orderCulture": zod.string().optional(),
-  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
-  "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getCollectionDocumentByIdQueryTakeDefault)
-})
-
-export const getCollectionDocumentByIdResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges']),
-  "publishDate": zod.string().datetime({}).nullish(),
-  "scheduledPublishDate": zod.string().datetime({}).nullish(),
-  "scheduledUnpublishDate": zod.string().datetime({}).nullish()
-})),
-  "id": zod.string().uuid(),
-  "creator": zod.string().nullish(),
-  "sortOrder": zod.number(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "alias": zod.string(),
-  "icon": zod.string()
-}),
-  "isTrashed": zod.boolean(),
-  "isProtected": zod.boolean(),
-  "updater": zod.string().nullish()
-}))
-})
-
-
-export const postDocumentBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullable()
-})
-
-
-export const getDocumentByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdResponse = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges']),
-  "publishDate": zod.string().datetime({}).nullish(),
-  "scheduledPublishDate": zod.string().datetime({}).nullish(),
-  "scheduledUnpublishDate": zod.string().datetime({}).nullish()
-})),
-  "id": zod.string().uuid(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "urls": zod.array(zod.object({
-  "culture": zod.string().nullable(),
-  "url": zod.string()
-})),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isTrashed": zod.boolean()
-})
-
-
-export const deleteDocumentByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putDocumentByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getDocumentByIdAuditLogParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdAuditLogQuerySkipDefault = 0;export const getDocumentByIdAuditLogQueryTakeDefault = 100;
-
-export const getDocumentByIdAuditLogQueryParams = zod.object({
-  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
-  "sinceDate": zod.string().datetime({}).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentByIdAuditLogQueryTakeDefault)
-})
-
-export const getDocumentByIdAuditLogResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "timestamp": zod.string().datetime({}),
-  "logType": zod.enum(['New', 'Save', 'SaveVariant', 'Open', 'Delete', 'Publish', 'PublishVariant', 'SendToPublish', 'SendToPublishVariant', 'Unpublish', 'UnpublishVariant', 'Move', 'Copy', 'AssignDomain', 'PublicAccess', 'Sort', 'Notify', 'System', 'RollBack', 'PackagerInstall', 'PackagerUninstall', 'Custom', 'ContentVersionPreventCleanup', 'ContentVersionEnableCleanup']),
-  "comment": zod.string().nullish(),
-  "parameters": zod.string().nullish()
-}))
-})
-
-
-export const postDocumentByIdCopyParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postDocumentByIdCopyBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "relateToOriginal": zod.boolean(),
-  "includeDescendants": zod.boolean()
-})
-
-
-export const getDocumentByIdDomainsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdDomainsResponse = zod.object({
-  "defaultIsoCode": zod.string().nullish(),
-  "domains": zod.array(zod.object({
-  "domainName": zod.string(),
-  "isoCode": zod.string()
-}))
-})
-
-
-export const putDocumentByIdDomainsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdDomainsBody = zod.object({
-  "defaultIsoCode": zod.string().nullish(),
-  "domains": zod.array(zod.object({
-  "domainName": zod.string(),
-  "isoCode": zod.string()
-}))
-})
-
-
-export const putDocumentByIdMoveParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdMoveBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const putDocumentByIdMoveToRecycleBinParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const getDocumentByIdNotificationsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdNotificationsResponseItem = zod.object({
-  "actionId": zod.string(),
-  "alias": zod.string(),
-  "subscribed": zod.boolean()
-})
-export const getDocumentByIdNotificationsResponse = zod.array(getDocumentByIdNotificationsResponseItem)
-
-
-export const putDocumentByIdNotificationsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdNotificationsBody = zod.object({
-  "subscribedActionIds": zod.array(zod.string())
-})
-
-
-export const postDocumentByIdPublicAccessParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postDocumentByIdPublicAccessBody = zod.object({
-  "loginDocument": zod.object({
-  "id": zod.string().uuid()
-}),
-  "errorDocument": zod.object({
-  "id": zod.string().uuid()
-}),
-  "memberUserNames": zod.array(zod.string()),
-  "memberGroupNames": zod.array(zod.string())
-})
-
-
-export const deleteDocumentByIdPublicAccessParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const getDocumentByIdPublicAccessParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdPublicAccessResponse = zod.object({
-  "loginDocument": zod.object({
-  "id": zod.string().uuid()
-}),
-  "errorDocument": zod.object({
-  "id": zod.string().uuid()
-}),
-  "members": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "memberType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-})),
-  "kind": zod.enum(['Default', 'Api'])
-})),
-  "groups": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string()
-}))
-})
-
-
-export const putDocumentByIdPublicAccessParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdPublicAccessBody = zod.object({
-  "loginDocument": zod.object({
-  "id": zod.string().uuid()
-}),
-  "errorDocument": zod.object({
-  "id": zod.string().uuid()
-}),
-  "memberUserNames": zod.array(zod.string()),
-  "memberGroupNames": zod.array(zod.string())
-})
-
-
-export const putDocumentByIdPublishParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdPublishBody = zod.object({
-  "publishSchedules": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "schedule": zod.object({
-  "publishTime": zod.string().datetime({}).nullish(),
-  "unpublishTime": zod.string().datetime({}).nullish()
-}).nullish()
-}))
-})
-
-
-export const putDocumentByIdPublishWithDescendantsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdPublishWithDescendantsBody = zod.object({
-  "includeUnpublishedDescendants": zod.boolean(),
-  "cultures": zod.array(zod.string())
-})
-
-
-export const getDocumentByIdPublishedParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdPublishedResponse = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges']),
-  "publishDate": zod.string().datetime({}).nullish(),
-  "scheduledPublishDate": zod.string().datetime({}).nullish(),
-  "scheduledUnpublishDate": zod.string().datetime({}).nullish()
-})),
-  "id": zod.string().uuid(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "urls": zod.array(zod.object({
-  "culture": zod.string().nullable(),
-  "url": zod.string()
-})),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isTrashed": zod.boolean()
-})
-
-
-export const getDocumentByIdReferencedByParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdReferencedByQuerySkipDefault = 0;export const getDocumentByIdReferencedByQueryTakeDefault = 20;
-
-export const getDocumentByIdReferencedByQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentByIdReferencedByQueryTakeDefault)
-})
-
-export const getDocumentByIdReferencedByResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "$type": zod.enum(['DefaultReferenceResponseModel']),
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "icon": zod.string().nullish()
-}).or(zod.object({
-  "$type": zod.enum(['DocumentReferenceResponseModel']),
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish(),
-  "published": zod.boolean().nullish(),
-  "documentType": zod.object({
-  "icon": zod.string().nullish(),
-  "alias": zod.string().nullish(),
-  "name": zod.string().nullish()
-})
-})).or(zod.object({
-  "$type": zod.enum(['MediaReferenceResponseModel']),
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish(),
-  "mediaType": zod.object({
-  "icon": zod.string().nullish(),
-  "alias": zod.string().nullish(),
-  "name": zod.string().nullish()
-})
-})))
-})
-
-
-export const getDocumentByIdReferencedDescendantsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getDocumentByIdReferencedDescendantsQuerySkipDefault = 0;export const getDocumentByIdReferencedDescendantsQueryTakeDefault = 20;
-
-export const getDocumentByIdReferencedDescendantsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentByIdReferencedDescendantsQueryTakeDefault)
-})
-
-export const getDocumentByIdReferencedDescendantsResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const putDocumentByIdUnpublishParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdUnpublishBody = zod.object({
-  "cultures": zod.array(zod.string()).nullish()
-})
-
-
+import type {
+  AvailableDocumentTypeCompositionResponseModel,
+  AvailableMediaTypeCompositionResponseModel,
+  AvailableMemberTypeCompositionResponseModel,
+  CalculatedUserStartNodesResponseModel,
+  ChangePasswordCurrentUserRequestModel,
+  ChangePasswordUserRequestModel,
+  CopyDataTypeRequestModel,
+  CopyDocumentRequestModel,
+  CopyDocumentTypeRequestModel,
+  CopyMediaTypeRequestModel,
+  CreateDataTypeRequestModel,
+  CreateDictionaryItemRequestModel,
+  CreateDocumentBlueprintFromDocumentRequestModel,
+  CreateDocumentBlueprintRequestModel,
+  CreateDocumentRequestModel,
+  CreateDocumentTypeRequestModel,
+  CreateFolderRequestModel,
+  CreateInitialPasswordUserRequestModel,
+  CreateLanguageRequestModel,
+  CreateMediaRequestModel,
+  CreateMediaTypeRequestModel,
+  CreateMemberGroupRequestModel,
+  CreateMemberRequestModel,
+  CreateMemberTypeRequestModel,
+  CreatePackageRequestModel,
+  CreatePartialViewFolderRequestModel,
+  CreatePartialViewRequestModel,
+  CreateScriptFolderRequestModel,
+  CreateScriptRequestModel,
+  CreateStylesheetFolderRequestModel,
+  CreateStylesheetRequestModel,
+  CreateTemplateRequestModel,
+  CreateUserClientCredentialsRequestModel,
+  CreateUserDataRequestModel,
+  CreateUserGroupRequestModel,
+  CreateUserRequestModel,
+  CreateWebhookRequestModel,
+  CurrenUserConfigurationResponseModel,
+  CurrentUserResponseModel,
+  DataTypeItemResponseModel,
+  DataTypeReferenceResponseModel,
+  DataTypeResponseModel,
+  DataTypeTreeItemResponseModel,
+  DatabaseInstallRequestModel,
+  DatatypeConfigurationResponseModel,
+  DeleteUserCurrent2faByProviderNameParams,
+  DeleteUserGroupsRequestModel,
+  DeleteUsersRequestModel,
+  DictionaryItemItemResponseModel,
+  DictionaryItemResponseModel,
+  DisableUserRequestModel,
+  DocumentBlueprintItemResponseModel,
+  DocumentBlueprintResponseModel,
+  DocumentBlueprintTreeItemResponseModel,
+  DocumentConfigurationResponseModel,
+  DocumentItemResponseModel,
+  DocumentNotificationResponseModel,
+  DocumentResponseModel,
+  DocumentTreeItemResponseModel,
+  DocumentTypeCompositionRequestModel,
+  DocumentTypeCompositionResponseModel,
+  DocumentTypeConfigurationResponseModel,
+  DocumentTypeItemResponseModel,
+  DocumentTypeResponseModel,
+  DocumentTypeTreeItemResponseModel,
+  DocumentUrlInfoResponseModel,
+  DocumentVersionResponseModel,
+  DomainsResponseModel,
+  DynamicRootRequestModel,
+  DynamicRootResponseModel,
+  EnableTwoFactorRequestModel,
+  EnableUserRequestModel,
+  EntityImportAnalysisResponseModel,
+  FileSystemTreeItemPresentationModel,
+  FolderResponseModel,
+  GetCollectionDocumentByIdParams,
+  GetCollectionMediaParams,
+  GetCultureParams,
+  GetDictionaryByIdExportParams,
+  GetDictionaryParams,
+  GetDocumentAreReferencedParams,
+  GetDocumentByIdAuditLogParams,
+  GetDocumentByIdReferencedByParams,
+  GetDocumentByIdReferencedDescendantsParams,
+  GetDocumentTypeAllowedAtRootParams,
+  GetDocumentTypeByIdAllowedChildrenParams,
+  GetDocumentTypeByIdBlueprintParams,
+  GetDocumentUrlsParams,
+  GetDocumentVersionParams,
+  GetFilterDataTypeParams,
+  GetFilterMemberParams,
+  GetFilterUserGroupParams,
+  GetFilterUserParams,
+  GetHealthCheckGroupParams,
+  GetHelpParams,
+  GetImagingResizeUrlsParams,
+  GetImportAnalyzeParams,
+  GetIndexerParams,
+  GetItemDataTypeParams,
+  GetItemDataTypeSearchParams,
+  GetItemDictionaryParams,
+  GetItemDocumentBlueprintParams,
+  GetItemDocumentParams,
+  GetItemDocumentSearchParams,
+  GetItemDocumentTypeParams,
+  GetItemDocumentTypeSearchParams,
+  GetItemLanguageParams,
+  GetItemMediaParams,
+  GetItemMediaSearchParams,
+  GetItemMediaTypeAllowedParams,
+  GetItemMediaTypeFoldersParams,
+  GetItemMediaTypeParams,
+  GetItemMediaTypeSearchParams,
+  GetItemMemberGroupParams,
+  GetItemMemberParams,
+  GetItemMemberSearchParams,
+  GetItemMemberTypeParams,
+  GetItemMemberTypeSearchParams,
+  GetItemPartialViewParams,
+  GetItemRelationTypeParams,
+  GetItemScriptParams,
+  GetItemStaticFileParams,
+  GetItemStylesheetParams,
+  GetItemTemplateParams,
+  GetItemTemplateSearchParams,
+  GetItemUserGroupParams,
+  GetItemUserParams,
+  GetItemWebhookParams,
+  GetLanguageParams,
+  GetLogViewerLevelCountParams,
+  GetLogViewerLevelParams,
+  GetLogViewerLogParams,
+  GetLogViewerMessageTemplateParams,
+  GetLogViewerSavedSearchParams,
+  GetLogViewerValidateLogsSizeParams,
+  GetMediaAreReferencedParams,
+  GetMediaByIdAuditLogParams,
+  GetMediaByIdReferencedByParams,
+  GetMediaByIdReferencedDescendantsParams,
+  GetMediaTypeAllowedAtRootParams,
+  GetMediaTypeByIdAllowedChildrenParams,
+  GetMediaUrlsParams,
+  GetMemberGroupParams,
+  GetObjectTypesParams,
+  GetOembedQueryParams,
+  GetPackageCreatedParams,
+  GetPackageMigrationStatusParams,
+  GetPartialViewSnippetParams,
+  GetPropertyTypeIsUsedParams,
+  GetRecycleBinDocumentChildrenParams,
+  GetRecycleBinDocumentRootParams,
+  GetRecycleBinMediaChildrenParams,
+  GetRecycleBinMediaRootParams,
+  GetRedirectManagementByIdParams,
+  GetRedirectManagementParams,
+  GetRelationByRelationTypeIdParams,
+  GetRelationTypeParams,
+  GetSearcherBySearcherNameQueryParams,
+  GetSearcherParams,
+  GetSegmentParams,
+  GetTagParams,
+  GetTelemetryParams,
+  GetTreeDataTypeAncestorsParams,
+  GetTreeDataTypeChildrenParams,
+  GetTreeDataTypeRootParams,
+  GetTreeDictionaryAncestorsParams,
+  GetTreeDictionaryChildrenParams,
+  GetTreeDictionaryRootParams,
+  GetTreeDocumentAncestorsParams,
+  GetTreeDocumentBlueprintAncestorsParams,
+  GetTreeDocumentBlueprintChildrenParams,
+  GetTreeDocumentBlueprintRootParams,
+  GetTreeDocumentChildrenParams,
+  GetTreeDocumentRootParams,
+  GetTreeDocumentTypeAncestorsParams,
+  GetTreeDocumentTypeChildrenParams,
+  GetTreeDocumentTypeRootParams,
+  GetTreeMediaAncestorsParams,
+  GetTreeMediaChildrenParams,
+  GetTreeMediaRootParams,
+  GetTreeMediaTypeAncestorsParams,
+  GetTreeMediaTypeChildrenParams,
+  GetTreeMediaTypeRootParams,
+  GetTreeMemberGroupRootParams,
+  GetTreeMemberTypeRootParams,
+  GetTreePartialViewAncestorsParams,
+  GetTreePartialViewChildrenParams,
+  GetTreePartialViewRootParams,
+  GetTreeScriptAncestorsParams,
+  GetTreeScriptChildrenParams,
+  GetTreeScriptRootParams,
+  GetTreeStaticFileAncestorsParams,
+  GetTreeStaticFileChildrenParams,
+  GetTreeStaticFileRootParams,
+  GetTreeStylesheetAncestorsParams,
+  GetTreeStylesheetChildrenParams,
+  GetTreeStylesheetRootParams,
+  GetTreeTemplateAncestorsParams,
+  GetTreeTemplateChildrenParams,
+  GetTreeTemplateRootParams,
+  GetUserCurrentPermissionsDocumentParams,
+  GetUserCurrentPermissionsMediaParams,
+  GetUserCurrentPermissionsParams,
+  GetUserDataParams,
+  GetUserGroupParams,
+  GetUserParams,
+  GetWebhookByIdLogsParams,
+  GetWebhookEventsParams,
+  GetWebhookLogsParams,
+  GetWebhookParams,
+  HealthCheckActionRequestModel,
+  HealthCheckGroupPresentationModel,
+  HealthCheckGroupWithResultResponseModel,
+  HealthCheckResultResponseModel,
+  ImportDictionaryRequestModel,
+  ImportDocumentTypeRequestModel,
+  ImportMediaTypeRequestModel,
+  IndexResponseModel,
+  InstallRequestModel,
+  InstallSettingsResponseModel,
+  InviteUserRequestModel,
+  LanguageItemResponseModel,
+  LanguageResponseModel,
+  LogLevelCountsReponseModel,
+  ManifestResponseModel,
+  MediaConfigurationResponseModel,
+  MediaItemResponseModel,
+  MediaResponseModel,
+  MediaTreeItemResponseModel,
+  MediaTypeCompositionRequestModel,
+  MediaTypeCompositionResponseModel,
+  MediaTypeConfigurationResponseModel,
+  MediaTypeItemResponseModel,
+  MediaTypeResponseModel,
+  MediaTypeTreeItemResponseModel,
+  MediaUrlInfoResponseModel,
+  MemberConfigurationResponseModel,
+  MemberGroupItemResponseModel,
+  MemberGroupResponseModel,
+  MemberItemResponseModel,
+  MemberResponseModel,
+  MemberTypeCompositionRequestModel,
+  MemberTypeCompositionResponseModel,
+  MemberTypeConfigurationResponseModel,
+  MemberTypeItemResponseModel,
+  MemberTypeResponseModel,
+  ModelsBuilderResponseModel,
+  MoveDataTypeRequestModel,
+  MoveDictionaryRequestModel,
+  MoveDocumentBlueprintRequestModel,
+  MoveDocumentRequestModel,
+  MoveDocumentTypeRequestModel,
+  MoveMediaRequestModel,
+  MoveMediaTypeRequestModel,
+  NamedEntityTreeItemResponseModel,
+  NoopSetupTwoFactorModel,
+  OEmbedResponseModel,
+  OutOfDateStatusResponseModel,
+  PackageConfigurationResponseModel,
+  PackageDefinitionResponseModel,
+  PagedAllowedDocumentTypeModel,
+  PagedAllowedMediaTypeModel,
+  PagedAuditLogResponseModel,
+  PagedCultureReponseModel,
+  PagedDataTypeItemResponseModel,
+  PagedDataTypeTreeItemResponseModel,
+  PagedDictionaryOverviewResponseModel,
+  PagedDocumentBlueprintTreeItemResponseModel,
+  PagedDocumentCollectionResponseModel,
+  PagedDocumentRecycleBinItemResponseModel,
+  PagedDocumentTreeItemResponseModel,
+  PagedDocumentTypeBlueprintItemResponseModel,
+  PagedDocumentTypeTreeItemResponseModel,
+  PagedDocumentVersionItemResponseModel,
+  PagedFileSystemTreeItemPresentationModel,
+  PagedHealthCheckGroupResponseModel,
+  PagedHelpPageResponseModel,
+  PagedIReferenceResponseModel,
+  PagedIndexResponseModel,
+  PagedLanguageResponseModel,
+  PagedLogMessageResponseModel,
+  PagedLogTemplateResponseModel,
+  PagedLoggerResponseModel,
+  PagedMediaCollectionResponseModel,
+  PagedMediaRecycleBinItemResponseModel,
+  PagedMediaTreeItemResponseModel,
+  PagedMediaTypeTreeItemResponseModel,
+  PagedMemberGroupResponseModel,
+  PagedMemberResponseModel,
+  PagedMemberTypeTreeItemResponseModel,
+  PagedModelDataTypeItemResponseModel,
+  PagedModelDocumentItemResponseModel,
+  PagedModelDocumentTypeItemResponseModel,
+  PagedModelMediaItemResponseModel,
+  PagedModelMediaTypeItemResponseModel,
+  PagedModelMemberItemResponseModel,
+  PagedModelMemberTypeItemResponseModel,
+  PagedModelTemplateItemResponseModel,
+  PagedNamedEntityTreeItemResponseModel,
+  PagedObjectTypeResponseModel,
+  PagedPackageDefinitionResponseModel,
+  PagedPackageMigrationStatusResponseModel,
+  PagedPartialViewSnippetItemResponseModel,
+  PagedRedirectUrlResponseModel,
+  PagedReferenceByIdModel,
+  PagedRelationResponseModel,
+  PagedRelationTypeResponseModel,
+  PagedSavedLogSearchResponseModel,
+  PagedSearchResultResponseModel,
+  PagedSearcherResponseModel,
+  PagedSegmentResponseModel,
+  PagedTagResponseModel,
+  PagedTelemetryResponseModel,
+  PagedUserDataResponseModel,
+  PagedUserGroupResponseModel,
+  PagedUserResponseModel,
+  PagedWebhookEventModel,
+  PagedWebhookLogResponseModel,
+  PagedWebhookResponseModel,
+  PartialViewFolderResponseModel,
+  PartialViewItemResponseModel,
+  PartialViewResponseModel,
+  PartialViewSnippetResponseModel,
+  PostDocumentVersionByIdRollbackParams,
+  PostRedirectManagementStatusParams,
+  PostTemporaryFileBody,
+  ProfilingStatusRequestModel,
+  ProfilingStatusResponseModel,
+  PublicAccessRequestModel,
+  PublicAccessResponseModel,
+  PublishDocumentRequestModel,
+  PublishDocumentWithDescendantsRequestModel,
+  PublishedDocumentResponseModel,
+  PutDocumentVersionByIdPreventCleanupParams,
+  RedirectUrlStatusResponseModel,
+  ReferenceByIdModel,
+  RelationTypeItemResponseModel,
+  RelationTypeResponseModel,
+  RenamePartialViewRequestModel,
+  RenameScriptRequestModel,
+  RenameStylesheetRequestModel,
+  ResendInviteUserRequestModel,
+  ResetPasswordRequestModel,
+  ResetPasswordTokenRequestModel,
+  ResetPasswordUserResponseModel,
+  SavedLogSearchRequestModel,
+  SavedLogSearchResponseModel,
+  ScriptFolderResponseModel,
+  ScriptItemResponseModel,
+  ScriptResponseModel,
+  SecurityConfigurationResponseModel,
+  ServerConfigurationResponseModel,
+  ServerInformationResponseModel,
+  ServerStatusResponseModel,
+  ServerTroubleshootingResponseModel,
+  SetAvatarRequestModel,
+  SortingRequestModel,
+  StaticFileItemResponseModel,
+  StylesheetFolderResponseModel,
+  StylesheetItemResponseModel,
+  StylesheetResponseModel,
+  TelemetryRequestModel,
+  TelemetryResponseModel,
+  TemplateConfigurationResponseModel,
+  TemplateItemResponseModel,
+  TemplateQueryExecuteModel,
+  TemplateQueryResultResponseModel,
+  TemplateQuerySettingsResponseModel,
+  TemplateResponseModel,
+  TemporaryFileConfigurationResponseModel,
+  TemporaryFileResponseModel,
+  UnlockUsersRequestModel,
+  UnpublishDocumentRequestModel,
+  UpdateDataTypeRequestModel,
+  UpdateDictionaryItemRequestModel,
+  UpdateDocumentBlueprintRequestModel,
+  UpdateDocumentNotificationsRequestModel,
+  UpdateDocumentRequestModel,
+  UpdateDocumentTypeRequestModel,
+  UpdateDomainsRequestModel,
+  UpdateFolderResponseModel,
+  UpdateLanguageRequestModel,
+  UpdateMediaRequestModel,
+  UpdateMediaTypeRequestModel,
+  UpdateMemberGroupRequestModel,
+  UpdateMemberRequestModel,
+  UpdateMemberTypeRequestModel,
+  UpdatePackageRequestModel,
+  UpdatePartialViewRequestModel,
+  UpdateScriptRequestModel,
+  UpdateStylesheetRequestModel,
+  UpdateTemplateRequestModel,
+  UpdateUserDataRequestModel,
+  UpdateUserGroupRequestModel,
+  UpdateUserGroupsOnUserRequestModel,
+  UpdateUserRequestModel,
+  UpdateWebhookRequestModel,
+  UpgradeCheckResponseModel,
+  UpgradeSettingsResponseModel,
+  UserConfigurationResponseModel,
+  UserDataModel,
+  UserExternalLoginProviderModel,
+  UserGroupItemResponseModel,
+  UserGroupResponseModel,
+  UserItemResponseModel,
+  UserPermissionsResponseModel,
+  UserResponseModel,
+  UserTwoFactorProviderModel,
+  ValidateUpdateDocumentRequestModel,
+  VerifyInviteUserRequestModel,
+  VerifyInviteUserResponseModel,
+  VerifyResetPasswordResponseModel,
+  VerifyResetPasswordTokenRequestModel,
+  WebhookItemResponseModel,
+  WebhookResponseModel
+} from './schemas/index.js';
+
+import { UmbracoManagementClient } from '../clients/umbraco-management-client.js';
+
+// https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
+type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
+T,
+>() => T extends Y ? 1 : 2
+? A
+: B;
+
+type WritableKeys<T> = {
+[P in keyof T]-?: IfEquals<
+  { [Q in P]: T[P] },
+  { -readonly [Q in P]: T[P] },
+  P
+>;
+}[keyof T];
+
+type UnionToIntersection<U> =
+  (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
+type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
+
+type Writable<T> = Pick<T, WritableKeys<T>>;
+type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
+  [P in keyof Writable<T>]: T[P] extends object
+    ? NonReadonly<NonNullable<T[P]>>
+    : T[P];
+} : DistributeReadOnlyOverUnions<T>;
+
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
+  export const getUmbracoManagementAPI = () => {
+const getCulture = (
+    params?: GetCultureParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedCultureReponseModel>(
+      {url: `/umbraco/management/api/v1/culture`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDataType = (
+    createDataTypeRequestModel: CreateDataTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDataTypeRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/data-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDataTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDataTypeById = (
+    id: string,
+    updateDataTypeRequestModel: UpdateDataTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDataTypeRequestModel
+    },
+      options);
+    }
+  
+const postDataTypeByIdCopy = (
+    id: string,
+    copyDataTypeRequestModel: CopyDataTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyDataTypeRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeByIdIsUsed = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<boolean>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/is-used`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDataTypeByIdMove = (
+    id: string,
+    moveDataTypeRequestModel: MoveDataTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDataTypeRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeByIdReferences = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeReferenceResponseModel[]>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/references`, method: 'GET'
+    },
+      options);
+    }
+  
+const getDataTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DatatypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/data-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postDataTypeFolder = (
+    createFolderRequestModel: CreateFolderRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/data-type/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDataTypeFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDataTypeFolderById = (
+    id: string,
+    updateFolderResponseModel: UpdateFolderResponseModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const getFilterDataType = (
+    params?: GetFilterDataTypeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDataTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/data-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDataType = (
+    params?: GetItemDataTypeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/data-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDataTypeSearch = (
+    params?: GetItemDataTypeSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelDataTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/data-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDataTypeAncestors = (
+    params?: GetTreeDataTypeAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/data-type/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDataTypeChildren = (
+    params?: GetTreeDataTypeChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDataTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/data-type/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDataTypeRoot = (
+    params?: GetTreeDataTypeRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDataTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/data-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDictionary = (
+    params?: GetDictionaryParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDictionaryOverviewResponseModel>(
+      {url: `/umbraco/management/api/v1/dictionary`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDictionary = (
+    createDictionaryItemRequestModel: CreateDictionaryItemRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDictionaryItemRequestModel
+    },
+      options);
+    }
+  
+const getDictionaryById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DictionaryItemResponseModel>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDictionaryById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDictionaryById = (
+    id: string,
+    updateDictionaryItemRequestModel: UpdateDictionaryItemRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDictionaryItemRequestModel
+    },
+      options);
+    }
+  
+const getDictionaryByIdExport = (
+    id: string,
+    params?: GetDictionaryByIdExportParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}/export`, method: 'GET',
+        params,
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const putDictionaryByIdMove = (
+    id: string,
+    moveDictionaryRequestModel: MoveDictionaryRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDictionaryRequestModel
+    },
+      options);
+    }
+  
+const postDictionaryImport = (
+    importDictionaryRequestModel: ImportDictionaryRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/import`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: importDictionaryRequestModel
+    },
+      options);
+    }
+  
+const getItemDictionary = (
+    params?: GetItemDictionaryParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DictionaryItemItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/dictionary`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDictionaryAncestors = (
+    params?: GetTreeDictionaryAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NamedEntityTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/dictionary/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDictionaryChildren = (
+    params?: GetTreeDictionaryChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/dictionary/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDictionaryRoot = (
+    params?: GetTreeDictionaryRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/dictionary/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentBlueprint = (
+    createDocumentBlueprintRequestModel: CreateDocumentBlueprintRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentBlueprintRequestModel
+    },
+      options);
+    }
+  
+const getDocumentBlueprintById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentBlueprintResponseModel>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentBlueprintById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentBlueprintById = (
+    id: string,
+    updateDocumentBlueprintRequestModel: UpdateDocumentBlueprintRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentBlueprintRequestModel
+    },
+      options);
+    }
+  
+const putDocumentBlueprintByIdMove = (
+    id: string,
+    moveDocumentBlueprintRequestModel: MoveDocumentBlueprintRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDocumentBlueprintRequestModel
+    },
+      options);
+    }
+  
+const postDocumentBlueprintFolder = (
+    createFolderRequestModel: CreateFolderRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getDocumentBlueprintFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentBlueprintFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentBlueprintFolderById = (
+    id: string,
+    updateFolderResponseModel: UpdateFolderResponseModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const postDocumentBlueprintFromDocument = (
+    createDocumentBlueprintFromDocumentRequestModel: CreateDocumentBlueprintFromDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/from-document`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentBlueprintFromDocumentRequestModel
+    },
+      options);
+    }
+  
+const getItemDocumentBlueprint = (
+    params?: GetItemDocumentBlueprintParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentBlueprintItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/document-blueprint`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentBlueprintAncestors = (
+    params?: GetTreeDocumentBlueprintAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentBlueprintTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/document-blueprint/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentBlueprintChildren = (
+    params?: GetTreeDocumentBlueprintChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentBlueprintTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-blueprint/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentBlueprintRoot = (
+    params?: GetTreeDocumentBlueprintRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentBlueprintTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-blueprint/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentType = (
+    createDocumentTypeRequestModel: CreateDocumentTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentTypeById = (
+    id: string,
+    updateDocumentTypeRequestModel: UpdateDocumentTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdAllowedChildren = (
+    id: string,
+    params?: GetDocumentTypeByIdAllowedChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedDocumentTypeModel>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/allowed-children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdBlueprint = (
+    id: string,
+    params?: GetDocumentTypeByIdBlueprintParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTypeBlueprintItemResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/blueprint`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdCompositionReferences = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/composition-references`, method: 'GET'
+    },
+      options);
+    }
+  
+const postDocumentTypeByIdCopy = (
+    id: string,
+    copyDocumentTypeRequestModel: CopyDocumentTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdExport = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/export`, method: 'GET',
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const putDocumentTypeByIdImport = (
+    id: string,
+    importDocumentTypeRequestModel: ImportDocumentTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/import`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: importDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const putDocumentTypeByIdMove = (
+    id: string,
+    moveDocumentTypeRequestModel: MoveDocumentTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeAllowedAtRoot = (
+    params?: GetDocumentTypeAllowedAtRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedDocumentTypeModel>(
+      {url: `/umbraco/management/api/v1/document-type/allowed-at-root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentTypeAvailableCompositions = (
+    documentTypeCompositionRequestModel: DocumentTypeCompositionRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<AvailableDocumentTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document-type/available-compositions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: documentTypeCompositionRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postDocumentTypeFolder = (
+    createFolderRequestModel: CreateFolderRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentTypeFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentTypeFolderById = (
+    id: string,
+    updateFolderResponseModel: UpdateFolderResponseModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const postDocumentTypeImport = (
+    importDocumentTypeRequestModel: ImportDocumentTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/import`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: importDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getItemDocumentType = (
+    params?: GetItemDocumentTypeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/document-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDocumentTypeSearch = (
+    params?: GetItemDocumentTypeSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelDocumentTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/document-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentTypeAncestors = (
+    params?: GetTreeDocumentTypeAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/document-type/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentTypeChildren = (
+    params?: GetTreeDocumentTypeChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-type/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentTypeRoot = (
+    params?: GetTreeDocumentTypeRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentVersion = (
+    params: GetDocumentVersionParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentVersionItemResponseModel>(
+      {url: `/umbraco/management/api/v1/document-version`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentVersionById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentVersionResponseModel>(
+      {url: `/umbraco/management/api/v1/document-version/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentVersionByIdPreventCleanup = (
+    id: string,
+    params?: PutDocumentVersionByIdPreventCleanupParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-version/${id}/prevent-cleanup`, method: 'PUT',
+        params
+    },
+      options);
+    }
+  
+const postDocumentVersionByIdRollback = (
+    id: string,
+    params?: PostDocumentVersionByIdRollbackParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-version/${id}/rollback`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+const getCollectionDocumentById = (
+    id: string,
+    params?: GetCollectionDocumentByIdParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentCollectionResponseModel>(
+      {url: `/umbraco/management/api/v1/collection/document/${id}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocument = (
+    createDocumentRequestModel: CreateDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentById = (
+    id: string,
+    updateDocumentRequestModel: UpdateDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentByIdAuditLog = (
+    id: string,
+    params?: GetDocumentByIdAuditLogParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAuditLogResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/audit-log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentByIdCopy = (
+    id: string,
+    copyDocumentRequestModel: CopyDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentByIdDomains = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DomainsResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/domains`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentByIdDomains = (
+    id: string,
+    updateDomainsRequestModel: UpdateDomainsRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/domains`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDomainsRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdMove = (
+    id: string,
+    moveDocumentRequestModel: MoveDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDocumentRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdMoveToRecycleBin = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/move-to-recycle-bin`, method: 'PUT'
+    },
+      options);
+    }
+  
+const getDocumentByIdNotifications = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentNotificationResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document/${id}/notifications`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentByIdNotifications = (
+    id: string,
+    updateDocumentNotificationsRequestModel: UpdateDocumentNotificationsRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/notifications`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentNotificationsRequestModel
+    },
+      options);
+    }
+  
+const postDocumentByIdPublicAccess = (
+    id: string,
+    publicAccessRequestModel: PublicAccessRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: publicAccessRequestModel
+    },
+      options);
+    }
+  
+const deleteDocumentByIdPublicAccess = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getDocumentByIdPublicAccess = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PublicAccessResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentByIdPublicAccess = (
+    id: string,
+    publicAccessRequestModel: PublicAccessRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: publicAccessRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdPublish = (
+    id: string,
+    publishDocumentRequestModel: PublishDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/publish`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: publishDocumentRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdPublishWithDescendants = (
+    id: string,
+    publishDocumentWithDescendantsRequestModel: PublishDocumentWithDescendantsRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/publish-with-descendants`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: publishDocumentWithDescendantsRequestModel
+    },
+      options);
+    }
+  
+const getDocumentByIdPublished = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PublishedDocumentResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/published`, method: 'GET'
+    },
+      options);
+    }
+  
+const getDocumentByIdReferencedBy = (
+    id: string,
+    params?: GetDocumentByIdReferencedByParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedIReferenceResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/referenced-by`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentByIdReferencedDescendants = (
+    id: string,
+    params?: GetDocumentByIdReferencedDescendantsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/referenced-descendants`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putDocumentByIdUnpublish = (
+    id: string,
+    unpublishDocumentRequestModel: UnpublishDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/unpublish`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: unpublishDocumentRequestModel
+    },
+      options);
+    }
+  
 /**
  * @deprecated
  */
-export const putDocumentByIdValidateParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdValidateBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const putUmbracoManagementApiV11DocumentByIdValidate11Params = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putUmbracoManagementApiV11DocumentByIdValidate11Body = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "cultures": zod.array(zod.string()).nullish()
-})
-
-
-export const getDocumentAreReferencedQuerySkipDefault = 0;export const getDocumentAreReferencedQueryTakeDefault = 20;
-
-export const getDocumentAreReferencedQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentAreReferencedQueryTakeDefault)
-})
-
-export const getDocumentAreReferencedResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const getDocumentConfigurationResponse = zod.object({
-  "disableDeleteWhenReferenced": zod.boolean(),
-  "disableUnpublishWhenReferenced": zod.boolean(),
-  "allowEditInvariantFromNonDefault": zod.boolean(),
-  "allowNonExistingSegmentsCreation": zod.boolean(),
-  "reservedFieldNames": zod.array(zod.string())
-})
-
-
-export const putDocumentSortBody = zod.object({
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sorting": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "sortOrder": zod.number()
-}))
-})
-
-
-export const getDocumentUrlsQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getDocumentUrlsResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "urlInfos": zod.array(zod.object({
-  "culture": zod.string().nullable(),
-  "url": zod.string()
-}))
-})
-export const getDocumentUrlsResponse = zod.array(getDocumentUrlsResponseItem)
-
-
-export const postDocumentValidateBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullable()
-})
-
-
-export const getItemDocumentQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemDocumentResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "isTrashed": zod.boolean(),
-  "isProtected": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "hasChildren": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish(),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
-}))
-})
-export const getItemDocumentResponse = zod.array(getItemDocumentResponseItem)
-
-
-export const getItemDocumentSearchQuerySkipDefault = 0;export const getItemDocumentSearchQueryTakeDefault = 100;
-
-export const getItemDocumentSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemDocumentSearchQueryTakeDefault),
-  "parentId": zod.string().uuid().optional(),
-  "allowedDocumentTypes": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemDocumentSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "isTrashed": zod.boolean(),
-  "isProtected": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "hasChildren": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish(),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
-}))
-})),
-  "total": zod.number()
-})
-
-
-export const deleteRecycleBinDocumentByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const getRecycleBinDocumentByIdOriginalParentParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getRecycleBinDocumentByIdOriginalParentResponse = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putRecycleBinDocumentByIdRestoreParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putRecycleBinDocumentByIdRestoreBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getRecycleBinDocumentChildrenQuerySkipDefault = 0;export const getRecycleBinDocumentChildrenQueryTakeDefault = 100;
-
-export const getRecycleBinDocumentChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinDocumentChildrenQueryTakeDefault)
-})
-
-export const getRecycleBinDocumentChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish(),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
-}))
-}))
-})
-
-
-export const getRecycleBinDocumentRootQuerySkipDefault = 0;export const getRecycleBinDocumentRootQueryTakeDefault = 100;
-
-export const getRecycleBinDocumentRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinDocumentRootQueryTakeDefault)
-})
-
-export const getRecycleBinDocumentRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish(),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
-}))
-}))
-})
-
-
-export const getTreeDocumentAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeDocumentAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "noAccess": zod.boolean(),
-  "isTrashed": zod.boolean(),
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "isProtected": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish(),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
-}))
-})
-export const getTreeDocumentAncestorsResponse = zod.array(getTreeDocumentAncestorsResponseItem)
-
-
-export const getTreeDocumentChildrenQuerySkipDefault = 0;export const getTreeDocumentChildrenQueryTakeDefault = 100;
-
-export const getTreeDocumentChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentChildrenQueryTakeDefault),
-  "dataTypeId": zod.string().uuid().optional()
-})
-
-export const getTreeDocumentChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "noAccess": zod.boolean(),
-  "isTrashed": zod.boolean(),
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "isProtected": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish(),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
-}))
-}))
-})
-
-
-export const getTreeDocumentRootQuerySkipDefault = 0;export const getTreeDocumentRootQueryTakeDefault = 100;
-
-export const getTreeDocumentRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentRootQueryTakeDefault),
-  "dataTypeId": zod.string().uuid().optional()
-})
-
-export const getTreeDocumentRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "noAccess": zod.boolean(),
-  "isTrashed": zod.boolean(),
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "isProtected": zod.boolean(),
-  "documentType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish(),
-  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
-}))
-}))
-})
-
-
-export const postDynamicRootQueryBody = zod.object({
-  "context": zod.object({
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}),
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish()
-}),
-  "query": zod.object({
-  "origin": zod.object({
-  "alias": zod.string(),
-  "id": zod.string().uuid().nullish()
-}),
-  "steps": zod.array(zod.object({
-  "alias": zod.string(),
-  "documentTypeIds": zod.array(zod.string().uuid())
-}))
-})
-})
-
-export const postDynamicRootQueryResponse = zod.object({
-  "roots": zod.array(zod.string().uuid())
-})
-
-
-export const getDynamicRootStepsResponseItem = zod.string()
-export const getDynamicRootStepsResponse = zod.array(getDynamicRootStepsResponseItem)
-
-
-export const getHealthCheckGroupQuerySkipDefault = 0;export const getHealthCheckGroupQueryTakeDefault = 100;
-
-export const getHealthCheckGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getHealthCheckGroupQueryTakeDefault)
-})
-
-export const getHealthCheckGroupResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string()
-}))
-})
-
-
-export const getHealthCheckGroupByNameParams = zod.object({
-  "name": zod.string()
-})
-
-export const getHealthCheckGroupByNameResponse = zod.object({
-  "name": zod.string(),
-  "checks": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "description": zod.string().nullish()
-}))
-})
-
-
-export const postHealthCheckGroupByNameCheckParams = zod.object({
-  "name": zod.string()
-})
-
-export const postHealthCheckGroupByNameCheckResponse = zod.object({
-  "checks": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "results": zod.array(zod.object({
-  "message": zod.string(),
-  "resultType": zod.enum(['Success', 'Warning', 'Error', 'Info']),
-  "actions": zod.array(zod.object({
-  "healthCheck": zod.object({
-  "id": zod.string().uuid()
-}),
-  "alias": zod.string().nullish(),
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "valueRequired": zod.boolean(),
-  "providedValue": zod.string().nullish(),
-  "providedValueValidation": zod.string().nullish(),
-  "providedValueValidationRegex": zod.string().nullish(),
-  "actionParameters": zod.record(zod.string(), zod.any()).nullish()
-})).nullish(),
-  "readMoreLink": zod.string().nullish()
-})).nullish()
-}))
-})
-
-
-export const postHealthCheckExecuteActionBody = zod.object({
-  "healthCheck": zod.object({
-  "id": zod.string().uuid()
-}),
-  "alias": zod.string().nullish(),
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "valueRequired": zod.boolean(),
-  "providedValue": zod.string().nullish(),
-  "providedValueValidation": zod.string().nullish(),
-  "providedValueValidationRegex": zod.string().nullish(),
-  "actionParameters": zod.record(zod.string(), zod.any()).nullish()
-})
-
-export const postHealthCheckExecuteActionResponse = zod.object({
-  "message": zod.string(),
-  "resultType": zod.enum(['Success', 'Warning', 'Error', 'Info']),
-  "actions": zod.array(zod.object({
-  "healthCheck": zod.object({
-  "id": zod.string().uuid()
-}),
-  "alias": zod.string().nullish(),
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "valueRequired": zod.boolean(),
-  "providedValue": zod.string().nullish(),
-  "providedValueValidation": zod.string().nullish(),
-  "providedValueValidationRegex": zod.string().nullish(),
-  "actionParameters": zod.record(zod.string(), zod.any()).nullish()
-})).nullish(),
-  "readMoreLink": zod.string().nullish()
-})
-
-
-export const getHelpQuerySkipDefault = 0;export const getHelpQueryTakeDefault = 100;export const getHelpQueryBaseUrlDefault = "https://our.umbraco.com";
-
-export const getHelpQueryParams = zod.object({
-  "section": zod.string().optional(),
-  "tree": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getHelpQueryTakeDefault),
-  "baseUrl": zod.string().default(getHelpQueryBaseUrlDefault)
-})
-
-export const getHelpResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "url": zod.string().nullish(),
-  "type": zod.string().nullish()
-}))
-})
-
-
-export const getImagingResizeUrlsQueryHeightDefault = 200;export const getImagingResizeUrlsQueryWidthDefault = 200;
-
-export const getImagingResizeUrlsQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional(),
-  "height": zod.number().default(getImagingResizeUrlsQueryHeightDefault),
-  "width": zod.number().default(getImagingResizeUrlsQueryWidthDefault),
-  "mode": zod.enum(['Crop', 'Max', 'Stretch', 'Pad', 'BoxPad', 'Min']).optional()
-})
-
-export const getImagingResizeUrlsResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "urlInfos": zod.array(zod.object({
-  "culture": zod.string().nullable(),
-  "url": zod.string()
-}))
-})
-export const getImagingResizeUrlsResponse = zod.array(getImagingResizeUrlsResponseItem)
-
-
-export const getImportAnalyzeQueryParams = zod.object({
-  "temporaryFileId": zod.string().uuid().optional()
-})
-
-export const getImportAnalyzeResponse = zod.object({
-  "entityType": zod.string(),
-  "alias": zod.string().nullish(),
-  "key": zod.string().uuid().nullish()
-})
-
-
-export const getIndexerQuerySkipDefault = 0;export const getIndexerQueryTakeDefault = 100;
-
-export const getIndexerQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getIndexerQueryTakeDefault)
-})
-
-export const getIndexerResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().min(1),
-  "healthStatus": zod.object({
-  "status": zod.enum(['Healthy', 'Unhealthy', 'Rebuilding', 'Corrupt']),
-  "message": zod.string().nullish()
-}),
-  "canRebuild": zod.boolean(),
-  "searcherName": zod.string(),
-  "documentCount": zod.number(),
-  "fieldCount": zod.number(),
-  "providerProperties": zod.record(zod.string(), zod.any().nullable()).nullish()
-}))
-})
-
-
-export const getIndexerByIndexNameParams = zod.object({
-  "indexName": zod.string()
-})
-
-export const getIndexerByIndexNameResponse = zod.object({
-  "name": zod.string().min(1),
-  "healthStatus": zod.object({
-  "status": zod.enum(['Healthy', 'Unhealthy', 'Rebuilding', 'Corrupt']),
-  "message": zod.string().nullish()
-}),
-  "canRebuild": zod.boolean(),
-  "searcherName": zod.string(),
-  "documentCount": zod.number(),
-  "fieldCount": zod.number(),
-  "providerProperties": zod.record(zod.string(), zod.any().nullable()).nullish()
-})
-
-
-export const postIndexerByIndexNameRebuildParams = zod.object({
-  "indexName": zod.string()
-})
-
-
-export const getInstallSettingsResponse = zod.object({
-  "user": zod.object({
-  "minCharLength": zod.number(),
-  "minNonAlphaNumericLength": zod.number(),
-  "consentLevels": zod.array(zod.object({
-  "level": zod.enum(['Minimal', 'Basic', 'Detailed']),
-  "description": zod.string().min(1)
-}))
-}),
-  "databases": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "sortOrder": zod.number(),
-  "displayName": zod.string().min(1),
-  "defaultDatabaseName": zod.string().min(1),
-  "providerName": zod.string().min(1),
-  "isConfigured": zod.boolean(),
-  "requiresServer": zod.boolean(),
-  "serverPlaceholder": zod.string().min(1),
-  "requiresCredentials": zod.boolean(),
-  "supportsIntegratedAuthentication": zod.boolean(),
-  "requiresConnectionTest": zod.boolean()
-}))
-})
-
-
-export const postInstallSetupBodyUserNameMin = 0;
-
-export const postInstallSetupBodyUserNameMax = 255;
-
-
-export const postInstallSetupBody = zod.object({
-  "user": zod.object({
-  "name": zod.string().min(postInstallSetupBodyUserNameMin).max(postInstallSetupBodyUserNameMax),
-  "email": zod.string().email().min(1),
-  "password": zod.string().min(1),
-  "subscribeToNewsletter": zod.boolean()
-}),
-  "database": zod.object({
-  "id": zod.string().uuid(),
-  "providerName": zod.string().min(1),
-  "server": zod.string().nullish(),
-  "name": zod.string().nullish(),
-  "username": zod.string().nullish(),
-  "password": zod.string().nullish(),
-  "useIntegratedAuthentication": zod.boolean(),
-  "connectionString": zod.string().nullish(),
-  "trustServerCertificate": zod.boolean()
-}),
-  "telemetryLevel": zod.enum(['Minimal', 'Basic', 'Detailed'])
-})
-
-
-export const postInstallValidateDatabaseBody = zod.object({
-  "id": zod.string().uuid(),
-  "providerName": zod.string().min(1),
-  "server": zod.string().nullish(),
-  "name": zod.string().nullish(),
-  "username": zod.string().nullish(),
-  "password": zod.string().nullish(),
-  "useIntegratedAuthentication": zod.boolean(),
-  "connectionString": zod.string().nullish(),
-  "trustServerCertificate": zod.boolean()
-})
-
-
-export const getItemLanguageQueryParams = zod.object({
-  "isoCode": zod.array(zod.string()).optional()
-})
-
-export const getItemLanguageResponseItem = zod.object({
-  "name": zod.string().min(1),
-  "isoCode": zod.string().min(1)
-})
-export const getItemLanguageResponse = zod.array(getItemLanguageResponseItem)
-
-
-export const getItemLanguageDefaultResponse = zod.object({
-  "name": zod.string().min(1),
-  "isoCode": zod.string().min(1)
-})
-
-
-export const getLanguageQuerySkipDefault = 0;export const getLanguageQueryTakeDefault = 100;
-
-export const getLanguageQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLanguageQueryTakeDefault)
-})
-
-export const getLanguageResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().min(1),
-  "isDefault": zod.boolean(),
-  "isMandatory": zod.boolean(),
-  "fallbackIsoCode": zod.string().nullish(),
-  "isoCode": zod.string().min(1)
-}))
-})
-
-
-export const postLanguageBody = zod.object({
-  "name": zod.string().min(1),
-  "isDefault": zod.boolean(),
-  "isMandatory": zod.boolean(),
-  "fallbackIsoCode": zod.string().nullish(),
-  "isoCode": zod.string().min(1)
-})
-
-
-export const getLanguageByIsoCodeParams = zod.object({
-  "isoCode": zod.string()
-})
-
-export const getLanguageByIsoCodeResponse = zod.object({
-  "name": zod.string().min(1),
-  "isDefault": zod.boolean(),
-  "isMandatory": zod.boolean(),
-  "fallbackIsoCode": zod.string().nullish(),
-  "isoCode": zod.string().min(1)
-})
-
-
-export const deleteLanguageByIsoCodeParams = zod.object({
-  "isoCode": zod.string()
-})
-
-
-export const putLanguageByIsoCodeParams = zod.object({
-  "isoCode": zod.string()
-})
-
-export const putLanguageByIsoCodeBody = zod.object({
-  "name": zod.string().min(1),
-  "isDefault": zod.boolean(),
-  "isMandatory": zod.boolean(),
-  "fallbackIsoCode": zod.string().nullish()
-})
-
-
-export const getLogViewerLevelQuerySkipDefault = 0;export const getLogViewerLevelQueryTakeDefault = 100;
-
-export const getLogViewerLevelQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerLevelQueryTakeDefault)
-})
-
-export const getLogViewerLevelResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "level": zod.enum(['Verbose', 'Debug', 'Information', 'Warning', 'Error', 'Fatal'])
-}))
-})
-
-
-export const getLogViewerLevelCountQueryParams = zod.object({
-  "startDate": zod.string().datetime({}).optional(),
-  "endDate": zod.string().datetime({}).optional()
-})
-
-export const getLogViewerLevelCountResponse = zod.object({
-  "information": zod.number(),
-  "debug": zod.number(),
-  "warning": zod.number(),
-  "error": zod.number(),
-  "fatal": zod.number()
-})
-
-
-export const getLogViewerLogQuerySkipDefault = 0;export const getLogViewerLogQueryTakeDefault = 100;
-
-export const getLogViewerLogQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerLogQueryTakeDefault),
-  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
-  "filterExpression": zod.string().optional(),
-  "logLevel": zod.array(zod.enum(['Verbose', 'Debug', 'Information', 'Warning', 'Error', 'Fatal'])).optional(),
-  "startDate": zod.string().datetime({}).optional(),
-  "endDate": zod.string().datetime({}).optional()
-})
-
-export const getLogViewerLogResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "timestamp": zod.string().datetime({}),
-  "level": zod.enum(['Verbose', 'Debug', 'Information', 'Warning', 'Error', 'Fatal']),
-  "messageTemplate": zod.string().nullish(),
-  "renderedMessage": zod.string().nullish(),
-  "properties": zod.array(zod.object({
-  "name": zod.string(),
-  "value": zod.string().nullish()
-})),
-  "exception": zod.string().nullish()
-}))
-})
-
-
-export const getLogViewerMessageTemplateQuerySkipDefault = 0;export const getLogViewerMessageTemplateQueryTakeDefault = 100;
-
-export const getLogViewerMessageTemplateQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerMessageTemplateQueryTakeDefault),
-  "startDate": zod.string().datetime({}).optional(),
-  "endDate": zod.string().datetime({}).optional()
-})
-
-export const getLogViewerMessageTemplateResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "messageTemplate": zod.string().nullish(),
-  "count": zod.number()
-}))
-})
-
-
-export const getLogViewerSavedSearchQuerySkipDefault = 0;export const getLogViewerSavedSearchQueryTakeDefault = 100;
-
-export const getLogViewerSavedSearchQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerSavedSearchQueryTakeDefault)
-})
-
-export const getLogViewerSavedSearchResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "query": zod.string()
-}))
-})
-
-
-export const postLogViewerSavedSearchBody = zod.object({
-  "name": zod.string(),
-  "query": zod.string()
-})
-
-
-export const getLogViewerSavedSearchByNameParams = zod.object({
-  "name": zod.string()
-})
-
-export const getLogViewerSavedSearchByNameResponse = zod.object({
-  "name": zod.string(),
-  "query": zod.string()
-})
-
-
-export const deleteLogViewerSavedSearchByNameParams = zod.object({
-  "name": zod.string()
-})
-
-
-export const getLogViewerValidateLogsSizeQueryParams = zod.object({
-  "startDate": zod.string().datetime({}).optional(),
-  "endDate": zod.string().datetime({}).optional()
-})
-
-
-export const getManifestManifestResponseItem = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().nullish(),
-  "version": zod.string().nullish(),
-  "extensions": zod.array(zod.any())
-})
-export const getManifestManifestResponse = zod.array(getManifestManifestResponseItem)
-
-
-export const getManifestManifestPrivateResponseItem = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().nullish(),
-  "version": zod.string().nullish(),
-  "extensions": zod.array(zod.any())
-})
-export const getManifestManifestPrivateResponse = zod.array(getManifestManifestPrivateResponseItem)
-
-
-export const getManifestManifestPublicResponseItem = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().nullish(),
-  "version": zod.string().nullish(),
-  "extensions": zod.array(zod.any())
-})
-export const getManifestManifestPublicResponse = zod.array(getManifestManifestPublicResponseItem)
-
-
-export const getItemMediaTypeQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemMediaTypeResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string().nullish()
-})
-export const getItemMediaTypeResponse = zod.array(getItemMediaTypeResponseItem)
-
-
-export const getItemMediaTypeAllowedQuerySkipDefault = 0;export const getItemMediaTypeAllowedQueryTakeDefault = 100;
-
-export const getItemMediaTypeAllowedQueryParams = zod.object({
-  "fileExtension": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaTypeAllowedQueryTakeDefault)
-})
-
-export const getItemMediaTypeAllowedResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string().nullish()
-})),
-  "total": zod.number()
-})
-
-
-export const getItemMediaTypeFoldersQuerySkipDefault = 0;export const getItemMediaTypeFoldersQueryTakeDefault = 100;
-
-export const getItemMediaTypeFoldersQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaTypeFoldersQueryTakeDefault)
-})
-
-export const getItemMediaTypeFoldersResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string().nullish()
-})),
-  "total": zod.number()
-})
-
-
-export const getItemMediaTypeSearchQuerySkipDefault = 0;export const getItemMediaTypeSearchQueryTakeDefault = 100;
-
-export const getItemMediaTypeSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaTypeSearchQueryTakeDefault)
-})
-
-export const getItemMediaTypeSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string().nullish()
-})),
-  "total": zod.number()
-})
-
-
-export const postMediaTypeBody = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "allowedMediaTypes": zod.array(zod.object({
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "sortOrder": zod.number()
-})),
-  "compositions": zod.array(zod.object({
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-})),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getMediaTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaTypeByIdResponse = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "id": zod.string().uuid(),
-  "allowedMediaTypes": zod.array(zod.object({
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "sortOrder": zod.number()
-})),
-  "compositions": zod.array(zod.object({
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-})),
-  "isDeletable": zod.boolean(),
-  "aliasCanBeChanged": zod.boolean()
-})
-
-
-export const deleteMediaTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putMediaTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMediaTypeByIdBody = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "allowedMediaTypes": zod.array(zod.object({
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "sortOrder": zod.number()
-})),
-  "compositions": zod.array(zod.object({
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-}))
-})
-
-
-export const getMediaTypeByIdAllowedChildrenParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaTypeByIdAllowedChildrenQuerySkipDefault = 0;export const getMediaTypeByIdAllowedChildrenQueryTakeDefault = 100;
-
-export const getMediaTypeByIdAllowedChildrenQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaTypeByIdAllowedChildrenQueryTakeDefault)
-})
-
-export const getMediaTypeByIdAllowedChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "icon": zod.string().nullish()
-}))
-})
-
-
-export const getMediaTypeByIdCompositionReferencesParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaTypeByIdCompositionReferencesResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string()
-})
-export const getMediaTypeByIdCompositionReferencesResponse = zod.array(getMediaTypeByIdCompositionReferencesResponseItem)
-
-
-export const postMediaTypeByIdCopyParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postMediaTypeByIdCopyBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getMediaTypeByIdExportParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaTypeByIdExportResponse = zod.instanceof(File)
-
-
-export const putMediaTypeByIdImportParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMediaTypeByIdImportBody = zod.object({
-  "file": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const putMediaTypeByIdMoveParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMediaTypeByIdMoveBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getMediaTypeAllowedAtRootQuerySkipDefault = 0;export const getMediaTypeAllowedAtRootQueryTakeDefault = 100;
-
-export const getMediaTypeAllowedAtRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaTypeAllowedAtRootQueryTakeDefault)
-})
-
-export const getMediaTypeAllowedAtRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "description": zod.string().nullish(),
-  "icon": zod.string().nullish()
-}))
-})
-
-
-export const postMediaTypeAvailableCompositionsBody = zod.object({
-  "id": zod.string().uuid().nullish(),
-  "currentPropertyAliases": zod.array(zod.string()),
-  "currentCompositeIds": zod.array(zod.string().uuid())
-})
-
-export const postMediaTypeAvailableCompositionsResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string(),
-  "folderPath": zod.array(zod.string()),
-  "isCompatible": zod.boolean()
-})
-export const postMediaTypeAvailableCompositionsResponse = zod.array(postMediaTypeAvailableCompositionsResponseItem)
-
-
-export const getMediaTypeConfigurationResponse = zod.object({
-  "reservedFieldNames": zod.array(zod.string())
-})
-
-
-export const postMediaTypeFolderBody = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getMediaTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaTypeFolderByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "id": zod.string().uuid()
-})
-
-
-export const deleteMediaTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putMediaTypeFolderByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMediaTypeFolderByIdBody = zod.object({
-  "name": zod.string().min(1)
-})
-
-
-export const postMediaTypeImportBody = zod.object({
-  "file": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const getTreeMediaTypeAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeMediaTypeAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "icon": zod.string(),
-  "isDeletable": zod.boolean()
-})
-export const getTreeMediaTypeAncestorsResponse = zod.array(getTreeMediaTypeAncestorsResponseItem)
-
-
-export const getTreeMediaTypeChildrenQuerySkipDefault = 0;export const getTreeMediaTypeChildrenQueryTakeDefault = 100;export const getTreeMediaTypeChildrenQueryFoldersOnlyDefault = false;
-
-export const getTreeMediaTypeChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaTypeChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeMediaTypeChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "icon": zod.string(),
-  "isDeletable": zod.boolean()
-}))
-})
-
-
-export const getTreeMediaTypeRootQuerySkipDefault = 0;export const getTreeMediaTypeRootQueryTakeDefault = 100;export const getTreeMediaTypeRootQueryFoldersOnlyDefault = false;
-
-export const getTreeMediaTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaTypeRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
-})
-
-export const getTreeMediaTypeRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "isFolder": zod.boolean(),
-  "icon": zod.string(),
-  "isDeletable": zod.boolean()
-}))
-})
-
-
-export const getCollectionMediaQueryOrderByDefault = "updateDate";export const getCollectionMediaQuerySkipDefault = 0;export const getCollectionMediaQueryTakeDefault = 100;
-
-export const getCollectionMediaQueryParams = zod.object({
-  "id": zod.string().uuid().optional(),
-  "dataTypeId": zod.string().uuid().optional(),
-  "orderBy": zod.string().default(getCollectionMediaQueryOrderByDefault),
-  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
-  "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getCollectionMediaQueryTakeDefault)
-})
-
-export const getCollectionMediaResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({})
-})),
-  "id": zod.string().uuid(),
-  "creator": zod.string().nullish(),
-  "sortOrder": zod.number(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "alias": zod.string(),
-  "icon": zod.string()
-})
-}))
-})
-
-
-export const getItemMediaQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemMediaResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "isTrashed": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "hasChildren": zod.boolean(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-}))
-})
-export const getItemMediaResponse = zod.array(getItemMediaResponseItem)
-
-
-export const getItemMediaSearchQuerySkipDefault = 0;export const getItemMediaSearchQueryTakeDefault = 100;
-
-export const getItemMediaSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaSearchQueryTakeDefault),
-  "parentId": zod.string().uuid().optional(),
-  "allowedMediaTypes": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemMediaSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "isTrashed": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "hasChildren": zod.boolean(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-}))
-})),
-  "total": zod.number()
-})
-
-
-export const postMediaBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const getMediaByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaByIdResponse = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({})
-})),
-  "id": zod.string().uuid(),
-  "urls": zod.array(zod.object({
-  "culture": zod.string().nullable(),
-  "url": zod.string()
-})),
-  "isTrashed": zod.boolean(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-})
-
-
-export const deleteMediaByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putMediaByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMediaByIdBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-}))
-})
-
-
-export const getMediaByIdAuditLogParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaByIdAuditLogQuerySkipDefault = 0;export const getMediaByIdAuditLogQueryTakeDefault = 100;
-
-export const getMediaByIdAuditLogQueryParams = zod.object({
-  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
-  "sinceDate": zod.string().datetime({}).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaByIdAuditLogQueryTakeDefault)
-})
-
-export const getMediaByIdAuditLogResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "timestamp": zod.string().datetime({}),
-  "logType": zod.enum(['New', 'Save', 'SaveVariant', 'Open', 'Delete', 'Publish', 'PublishVariant', 'SendToPublish', 'SendToPublishVariant', 'Unpublish', 'UnpublishVariant', 'Move', 'Copy', 'AssignDomain', 'PublicAccess', 'Sort', 'Notify', 'System', 'RollBack', 'PackagerInstall', 'PackagerUninstall', 'Custom', 'ContentVersionPreventCleanup', 'ContentVersionEnableCleanup']),
-  "comment": zod.string().nullish(),
-  "parameters": zod.string().nullish()
-}))
-})
-
-
-export const putMediaByIdMoveParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMediaByIdMoveBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const putMediaByIdMoveToRecycleBinParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const getMediaByIdReferencedByParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaByIdReferencedByQuerySkipDefault = 0;export const getMediaByIdReferencedByQueryTakeDefault = 20;
-
-export const getMediaByIdReferencedByQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaByIdReferencedByQueryTakeDefault)
-})
-
-export const getMediaByIdReferencedByResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "$type": zod.enum(['DefaultReferenceResponseModel']),
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "icon": zod.string().nullish()
-}).or(zod.object({
-  "$type": zod.enum(['DocumentReferenceResponseModel']),
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish(),
-  "published": zod.boolean().nullish(),
-  "documentType": zod.object({
-  "icon": zod.string().nullish(),
-  "alias": zod.string().nullish(),
-  "name": zod.string().nullish()
-})
-})).or(zod.object({
-  "$type": zod.enum(['MediaReferenceResponseModel']),
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish(),
-  "mediaType": zod.object({
-  "icon": zod.string().nullish(),
-  "alias": zod.string().nullish(),
-  "name": zod.string().nullish()
-})
-})))
-})
-
-
-export const getMediaByIdReferencedDescendantsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMediaByIdReferencedDescendantsQuerySkipDefault = 0;export const getMediaByIdReferencedDescendantsQueryTakeDefault = 20;
-
-export const getMediaByIdReferencedDescendantsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaByIdReferencedDescendantsQueryTakeDefault)
-})
-
-export const getMediaByIdReferencedDescendantsResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const putMediaByIdValidateParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMediaByIdValidateBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-}))
-})
-
-
-export const getMediaAreReferencedQuerySkipDefault = 0;export const getMediaAreReferencedQueryTakeDefault = 20;
-
-export const getMediaAreReferencedQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaAreReferencedQueryTakeDefault)
-})
-
-export const getMediaAreReferencedResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const getMediaConfigurationResponse = zod.object({
-  "disableDeleteWhenReferenced": zod.boolean(),
-  "disableUnpublishWhenReferenced": zod.boolean(),
-  "reservedFieldNames": zod.array(zod.string())
-})
-
-
-export const putMediaSortBody = zod.object({
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sorting": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "sortOrder": zod.number()
-}))
-})
-
-
-export const getMediaUrlsQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getMediaUrlsResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "urlInfos": zod.array(zod.object({
-  "culture": zod.string().nullable(),
-  "url": zod.string()
-}))
-})
-export const getMediaUrlsResponse = zod.array(getMediaUrlsResponseItem)
-
-
-export const postMediaValidateBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const deleteRecycleBinMediaByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const getRecycleBinMediaByIdOriginalParentParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getRecycleBinMediaByIdOriginalParentResponse = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putRecycleBinMediaByIdRestoreParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putRecycleBinMediaByIdRestoreBody = zod.object({
-  "target": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getRecycleBinMediaChildrenQuerySkipDefault = 0;export const getRecycleBinMediaChildrenQueryTakeDefault = 100;
-
-export const getRecycleBinMediaChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinMediaChildrenQueryTakeDefault)
-})
-
-export const getRecycleBinMediaChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-}))
-}))
-})
-
-
-export const getRecycleBinMediaRootQuerySkipDefault = 0;export const getRecycleBinMediaRootQueryTakeDefault = 100;
-
-export const getRecycleBinMediaRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinMediaRootQueryTakeDefault)
-})
-
-export const getRecycleBinMediaRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-}))
-}))
-})
-
-
-export const getTreeMediaAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeMediaAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "noAccess": zod.boolean(),
-  "isTrashed": zod.boolean(),
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-}))
-})
-export const getTreeMediaAncestorsResponse = zod.array(getTreeMediaAncestorsResponseItem)
-
-
-export const getTreeMediaChildrenQuerySkipDefault = 0;export const getTreeMediaChildrenQueryTakeDefault = 100;
-
-export const getTreeMediaChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaChildrenQueryTakeDefault),
-  "dataTypeId": zod.string().uuid().optional()
-})
-
-export const getTreeMediaChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "noAccess": zod.boolean(),
-  "isTrashed": zod.boolean(),
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-}))
-}))
-})
-
-
-export const getTreeMediaRootQuerySkipDefault = 0;export const getTreeMediaRootQueryTakeDefault = 100;
-
-export const getTreeMediaRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaRootQueryTakeDefault),
-  "dataTypeId": zod.string().uuid().optional()
-})
-
-export const getTreeMediaRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "noAccess": zod.boolean(),
-  "isTrashed": zod.boolean(),
-  "id": zod.string().uuid(),
-  "createDate": zod.string().datetime({}),
-  "mediaType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-}))
-}))
-})
-
-
-export const getItemMemberGroupQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemMemberGroupResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string()
-})
-export const getItemMemberGroupResponse = zod.array(getItemMemberGroupResponseItem)
-
-
-export const getMemberGroupQuerySkipDefault = 0;export const getMemberGroupQueryTakeDefault = 100;
-
-export const getMemberGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMemberGroupQueryTakeDefault)
-})
-
-export const getMemberGroupResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const postMemberGroupBody = zod.object({
-  "name": zod.string(),
-  "id": zod.string().uuid().nullish()
-})
-
-
-export const getMemberGroupByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMemberGroupByIdResponse = zod.object({
-  "name": zod.string(),
-  "id": zod.string().uuid()
-})
-
-
-export const deleteMemberGroupByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putMemberGroupByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMemberGroupByIdBody = zod.object({
-  "name": zod.string()
-})
-
-
-export const getTreeMemberGroupRootQuerySkipDefault = 0;export const getTreeMemberGroupRootQueryTakeDefault = 100;
-
-export const getTreeMemberGroupRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMemberGroupRootQueryTakeDefault)
-})
-
-export const getTreeMemberGroupRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string()
-}))
-})
-
-
-export const getItemMemberTypeQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemMemberTypeResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string().nullish()
-})
-export const getItemMemberTypeResponse = zod.array(getItemMemberTypeResponseItem)
-
-
-export const getItemMemberTypeSearchQuerySkipDefault = 0;export const getItemMemberTypeSearchQueryTakeDefault = 100;
-
-export const getItemMemberTypeSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMemberTypeSearchQueryTakeDefault)
-})
-
-export const getItemMemberTypeSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string().nullish()
-})),
-  "total": zod.number()
-})
-
-
-export const postMemberTypeBody = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-}),
-  "isSensitive": zod.boolean(),
-  "visibility": zod.object({
-  "memberCanView": zod.boolean(),
-  "memberCanEdit": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "id": zod.string().uuid().nullish(),
-  "compositions": zod.array(zod.object({
-  "memberType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-}))
-})
-
-
-export const getMemberTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMemberTypeByIdResponse = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-}),
-  "isSensitive": zod.boolean(),
-  "visibility": zod.object({
-  "memberCanView": zod.boolean(),
-  "memberCanEdit": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "id": zod.string().uuid(),
-  "compositions": zod.array(zod.object({
-  "memberType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-}))
-})
-
-
-export const deleteMemberTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putMemberTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMemberTypeByIdBody = zod.object({
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "icon": zod.string().min(1),
-  "allowedAsRoot": zod.boolean(),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "isElement": zod.boolean(),
-  "properties": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "container": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "sortOrder": zod.number(),
-  "alias": zod.string().min(1),
-  "name": zod.string().min(1),
-  "description": zod.string().nullish(),
-  "dataType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "variesByCulture": zod.boolean(),
-  "variesBySegment": zod.boolean(),
-  "validation": zod.object({
-  "mandatory": zod.boolean(),
-  "mandatoryMessage": zod.string().nullish(),
-  "regEx": zod.string().nullish(),
-  "regExMessage": zod.string().nullish()
-}),
-  "appearance": zod.object({
-  "labelOnTop": zod.boolean()
-}),
-  "isSensitive": zod.boolean(),
-  "visibility": zod.object({
-  "memberCanView": zod.boolean(),
-  "memberCanEdit": zod.boolean()
-})
-})),
-  "containers": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string().nullish(),
-  "type": zod.string().min(1),
-  "sortOrder": zod.number()
-})),
-  "compositions": zod.array(zod.object({
-  "memberType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "compositionType": zod.enum(['Composition', 'Inheritance'])
-}))
-})
-
-
-export const getMemberTypeByIdCompositionReferencesParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMemberTypeByIdCompositionReferencesResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string()
-})
-export const getMemberTypeByIdCompositionReferencesResponse = zod.array(getMemberTypeByIdCompositionReferencesResponseItem)
-
-
-export const postMemberTypeByIdCopyParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const postMemberTypeAvailableCompositionsBody = zod.object({
-  "id": zod.string().uuid().nullish(),
-  "currentPropertyAliases": zod.array(zod.string()),
-  "currentCompositeIds": zod.array(zod.string().uuid())
-})
-
-export const postMemberTypeAvailableCompositionsResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string(),
-  "folderPath": zod.array(zod.string()),
-  "isCompatible": zod.boolean()
-})
-export const postMemberTypeAvailableCompositionsResponse = zod.array(postMemberTypeAvailableCompositionsResponseItem)
-
-
-export const getMemberTypeConfigurationResponse = zod.object({
-  "reservedFieldNames": zod.array(zod.string())
-})
-
-
-export const getTreeMemberTypeRootQuerySkipDefault = 0;export const getTreeMemberTypeRootQueryTakeDefault = 100;
-
-export const getTreeMemberTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMemberTypeRootQueryTakeDefault)
-})
-
-export const getTreeMemberTypeRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string(),
-  "icon": zod.string()
-}))
-})
-
-
-export const getFilterMemberQueryOrderByDefault = "username";export const getFilterMemberQuerySkipDefault = 0;export const getFilterMemberQueryTakeDefault = 100;
-
-export const getFilterMemberQueryParams = zod.object({
-  "memberTypeId": zod.string().uuid().optional(),
-  "memberGroupName": zod.string().optional(),
-  "isApproved": zod.boolean().optional(),
-  "isLockedOut": zod.boolean().optional(),
-  "orderBy": zod.string().default(getFilterMemberQueryOrderByDefault),
-  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
-  "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterMemberQueryTakeDefault)
-})
-
-export const getFilterMemberResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({})
-})),
-  "id": zod.string().uuid(),
-  "email": zod.string(),
-  "username": zod.string(),
-  "memberType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "isApproved": zod.boolean(),
-  "isLockedOut": zod.boolean(),
-  "isTwoFactorEnabled": zod.boolean(),
-  "failedPasswordAttempts": zod.number(),
-  "lastLoginDate": zod.string().datetime({}).nullish(),
-  "lastLockoutDate": zod.string().datetime({}).nullish(),
-  "lastPasswordChangeDate": zod.string().datetime({}).nullish(),
-  "groups": zod.array(zod.string().uuid()),
-  "kind": zod.enum(['Default', 'Api'])
-}))
-})
-
-
-export const getItemMemberQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemMemberResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "memberType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-})),
-  "kind": zod.enum(['Default', 'Api'])
-})
-export const getItemMemberResponse = zod.array(getItemMemberResponseItem)
-
-
-export const getItemMemberSearchQuerySkipDefault = 0;export const getItemMemberSearchQueryTakeDefault = 100;
-
-export const getItemMemberSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMemberSearchQueryTakeDefault),
-  "allowedMemberTypes": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemMemberSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "memberType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "variants": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string().nullish()
-})),
-  "kind": zod.enum(['Default', 'Api'])
-})),
-  "total": zod.number()
-})
-
-
-export const postMemberBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "email": zod.string(),
-  "username": zod.string(),
-  "password": zod.string(),
-  "memberType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "groups": zod.array(zod.string().uuid()).nullish(),
-  "isApproved": zod.boolean()
-})
-
-
-export const getMemberByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getMemberByIdResponse = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish(),
-  "editorAlias": zod.string().min(1)
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({})
-})),
-  "id": zod.string().uuid(),
-  "email": zod.string(),
-  "username": zod.string(),
-  "memberType": zod.object({
-  "id": zod.string().uuid(),
-  "icon": zod.string(),
-  "collection": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-}),
-  "isApproved": zod.boolean(),
-  "isLockedOut": zod.boolean(),
-  "isTwoFactorEnabled": zod.boolean(),
-  "failedPasswordAttempts": zod.number(),
-  "lastLoginDate": zod.string().datetime({}).nullish(),
-  "lastLockoutDate": zod.string().datetime({}).nullish(),
-  "lastPasswordChangeDate": zod.string().datetime({}).nullish(),
-  "groups": zod.array(zod.string().uuid()),
-  "kind": zod.enum(['Default', 'Api'])
-})
-
-
-export const deleteMemberByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putMemberByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMemberByIdBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "email": zod.string(),
-  "username": zod.string(),
-  "oldPassword": zod.string().nullish(),
-  "newPassword": zod.string().nullish(),
-  "groups": zod.array(zod.string().uuid()).nullish(),
-  "isApproved": zod.boolean(),
-  "isLockedOut": zod.boolean(),
-  "isTwoFactorEnabled": zod.boolean()
-})
-
-
-export const putMemberByIdValidateParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putMemberByIdValidateBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "email": zod.string(),
-  "username": zod.string(),
-  "oldPassword": zod.string().nullish(),
-  "newPassword": zod.string().nullish(),
-  "groups": zod.array(zod.string().uuid()).nullish(),
-  "isApproved": zod.boolean(),
-  "isLockedOut": zod.boolean(),
-  "isTwoFactorEnabled": zod.boolean()
-})
-
-
-export const getMemberConfigurationResponse = zod.object({
-  "reservedFieldNames": zod.array(zod.string())
-})
-
-
-export const postMemberValidateBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "id": zod.string().uuid().nullish(),
-  "email": zod.string(),
-  "username": zod.string(),
-  "password": zod.string(),
-  "memberType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "groups": zod.array(zod.string().uuid()).nullish(),
-  "isApproved": zod.boolean()
-})
-
-
-export const getModelsBuilderDashboardResponse = zod.object({
-  "mode": zod.enum(['Nothing', 'InMemoryAuto', 'SourceCodeManual', 'SourceCodeAuto']),
-  "canGenerate": zod.boolean(),
-  "outOfDateModels": zod.boolean(),
-  "lastError": zod.string().nullish(),
-  "version": zod.string().nullish(),
-  "modelsNamespace": zod.string().nullish(),
-  "trackingOutOfDateModels": zod.boolean()
-})
-
-
-export const getModelsBuilderStatusResponse = zod.object({
-  "status": zod.enum(['OutOfDate', 'Current', 'Unknown'])
-})
-
-
-export const getObjectTypesQuerySkipDefault = 0;export const getObjectTypesQueryTakeDefault = 100;
-
-export const getObjectTypesQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getObjectTypesQueryTakeDefault)
-})
-
-export const getObjectTypesResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().nullish(),
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const getOembedQueryQueryParams = zod.object({
-  "url": zod.string().url().optional(),
-  "maxWidth": zod.number().optional(),
-  "maxHeight": zod.number().optional()
-})
-
-export const getOembedQueryResponse = zod.object({
-  "markup": zod.string()
-})
-
-
-export const postPackageByNameRunMigrationParams = zod.object({
-  "name": zod.string()
-})
-
-
-export const getPackageConfigurationResponse = zod.object({
-  "marketplaceUrl": zod.string()
-})
-
-
-export const getPackageCreatedQuerySkipDefault = 0;export const getPackageCreatedQueryTakeDefault = 100;
-
-export const getPackageCreatedQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getPackageCreatedQueryTakeDefault)
-})
-
-export const getPackageCreatedResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "contentNodeId": zod.string().nullish(),
-  "contentLoadChildNodes": zod.boolean(),
-  "mediaIds": zod.array(zod.string().uuid()),
-  "mediaLoadChildNodes": zod.boolean(),
-  "documentTypes": zod.array(zod.string()),
-  "mediaTypes": zod.array(zod.string()),
-  "dataTypes": zod.array(zod.string()),
-  "templates": zod.array(zod.string()),
-  "partialViews": zod.array(zod.string()),
-  "stylesheets": zod.array(zod.string()),
-  "scripts": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "dictionaryItems": zod.array(zod.string()),
-  "id": zod.string().uuid(),
-  "packagePath": zod.string()
-}))
-})
-
-
-export const postPackageCreatedBody = zod.object({
-  "name": zod.string(),
-  "contentNodeId": zod.string().nullish(),
-  "contentLoadChildNodes": zod.boolean(),
-  "mediaIds": zod.array(zod.string().uuid()),
-  "mediaLoadChildNodes": zod.boolean(),
-  "documentTypes": zod.array(zod.string()),
-  "mediaTypes": zod.array(zod.string()),
-  "dataTypes": zod.array(zod.string()),
-  "templates": zod.array(zod.string()),
-  "partialViews": zod.array(zod.string()),
-  "stylesheets": zod.array(zod.string()),
-  "scripts": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "dictionaryItems": zod.array(zod.string()),
-  "id": zod.string().uuid().nullish()
-})
-
-
-export const getPackageCreatedByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getPackageCreatedByIdResponse = zod.object({
-  "name": zod.string(),
-  "contentNodeId": zod.string().nullish(),
-  "contentLoadChildNodes": zod.boolean(),
-  "mediaIds": zod.array(zod.string().uuid()),
-  "mediaLoadChildNodes": zod.boolean(),
-  "documentTypes": zod.array(zod.string()),
-  "mediaTypes": zod.array(zod.string()),
-  "dataTypes": zod.array(zod.string()),
-  "templates": zod.array(zod.string()),
-  "partialViews": zod.array(zod.string()),
-  "stylesheets": zod.array(zod.string()),
-  "scripts": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "dictionaryItems": zod.array(zod.string()),
-  "id": zod.string().uuid(),
-  "packagePath": zod.string()
-})
-
-
-export const deletePackageCreatedByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putPackageCreatedByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putPackageCreatedByIdBody = zod.object({
-  "name": zod.string(),
-  "contentNodeId": zod.string().nullish(),
-  "contentLoadChildNodes": zod.boolean(),
-  "mediaIds": zod.array(zod.string().uuid()),
-  "mediaLoadChildNodes": zod.boolean(),
-  "documentTypes": zod.array(zod.string()),
-  "mediaTypes": zod.array(zod.string()),
-  "dataTypes": zod.array(zod.string()),
-  "templates": zod.array(zod.string()),
-  "partialViews": zod.array(zod.string()),
-  "stylesheets": zod.array(zod.string()),
-  "scripts": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "dictionaryItems": zod.array(zod.string()),
-  "packagePath": zod.string()
-})
-
-
-export const getPackageCreatedByIdDownloadParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getPackageCreatedByIdDownloadResponse = zod.instanceof(File)
-
-
-export const getPackageMigrationStatusQuerySkipDefault = 0;export const getPackageMigrationStatusQueryTakeDefault = 100;
-
-export const getPackageMigrationStatusQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getPackageMigrationStatusQueryTakeDefault)
-})
-
-export const getPackageMigrationStatusResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "packageName": zod.string(),
-  "hasPendingMigrations": zod.boolean()
-}))
-})
-
-
-export const getItemPartialViewQueryParams = zod.object({
-  "path": zod.array(zod.string()).optional()
-})
-
-export const getItemPartialViewResponseItem = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getItemPartialViewResponse = zod.array(getItemPartialViewResponseItem)
-
-
-export const postPartialViewBody = zod.object({
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "content": zod.string()
-})
-
-
-export const getPartialViewByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const getPartialViewByPathResponse = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "content": zod.string()
-})
-
-
-export const deletePartialViewByPathParams = zod.object({
-  "path": zod.string()
-})
-
-
-export const putPartialViewByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const putPartialViewByPathBody = zod.object({
-  "content": zod.string()
-})
-
-
-export const putPartialViewByPathRenameParams = zod.object({
-  "path": zod.string()
-})
-
-export const putPartialViewByPathRenameBody = zod.object({
-  "name": zod.string()
-})
-
-
-export const postPartialViewFolderBody = zod.object({
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish()
-})
-
-
-export const getPartialViewFolderByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const getPartialViewFolderByPathResponse = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish()
-})
-
-
-export const deletePartialViewFolderByPathParams = zod.object({
-  "path": zod.string()
-})
-
-
-export const getPartialViewSnippetQuerySkipDefault = 0;export const getPartialViewSnippetQueryTakeDefault = 100;
-
-export const getPartialViewSnippetQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getPartialViewSnippetQueryTakeDefault)
-})
-
-export const getPartialViewSnippetResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string()
-}))
-})
-
-
-export const getPartialViewSnippetByIdParams = zod.object({
-  "id": zod.string()
-})
-
-export const getPartialViewSnippetByIdResponse = zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "content": zod.string()
-})
-
-
-export const getTreePartialViewAncestorsQueryParams = zod.object({
-  "descendantPath": zod.string().optional()
-})
-
-export const getTreePartialViewAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getTreePartialViewAncestorsResponse = zod.array(getTreePartialViewAncestorsResponseItem)
-
-
-export const getTreePartialViewChildrenQuerySkipDefault = 0;export const getTreePartialViewChildrenQueryTakeDefault = 100;
-
-export const getTreePartialViewChildrenQueryParams = zod.object({
-  "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreePartialViewChildrenQueryTakeDefault)
-})
-
-export const getTreePartialViewChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getTreePartialViewRootQuerySkipDefault = 0;export const getTreePartialViewRootQueryTakeDefault = 100;
-
-export const getTreePartialViewRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreePartialViewRootQueryTakeDefault)
-})
-
-export const getTreePartialViewRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getProfilingStatusResponse = zod.object({
-  "enabled": zod.boolean()
-})
-
-
-export const putProfilingStatusBody = zod.object({
-  "enabled": zod.boolean()
-})
-
-
-export const getPropertyTypeIsUsedQueryParams = zod.object({
-  "contentTypeId": zod.string().uuid().optional(),
-  "propertyAlias": zod.string().optional()
-})
-
-export const getPropertyTypeIsUsedResponse = zod.boolean()
-
-
-export const getRedirectManagementQuerySkipDefault = 0;export const getRedirectManagementQueryTakeDefault = 100;
-
-export const getRedirectManagementQueryParams = zod.object({
-  "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRedirectManagementQueryTakeDefault)
-})
-
-export const getRedirectManagementResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "originalUrl": zod.string(),
-  "destinationUrl": zod.string(),
-  "created": zod.string().datetime({}),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "culture": zod.string().nullish()
-}))
-})
-
-
-export const getRedirectManagementByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getRedirectManagementByIdQuerySkipDefault = 0;export const getRedirectManagementByIdQueryTakeDefault = 100;
-
-export const getRedirectManagementByIdQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRedirectManagementByIdQueryTakeDefault)
-})
-
-export const getRedirectManagementByIdResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "originalUrl": zod.string(),
-  "destinationUrl": zod.string(),
-  "created": zod.string().datetime({}),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "culture": zod.string().nullish()
-}))
-})
-
-
-export const deleteRedirectManagementByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const getRedirectManagementStatusResponse = zod.object({
-  "status": zod.enum(['Enabled', 'Disabled']),
-  "userIsAdmin": zod.boolean()
-})
-
-
-export const postRedirectManagementStatusQueryParams = zod.object({
-  "status": zod.enum(['Enabled', 'Disabled']).optional()
-})
-
-
-export const getItemRelationTypeQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemRelationTypeResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "isDeletable": zod.boolean()
-})
-export const getItemRelationTypeResponse = zod.array(getItemRelationTypeResponseItem)
-
-
-export const getRelationTypeQuerySkipDefault = 0;export const getRelationTypeQueryTakeDefault = 100;
-
-export const getRelationTypeQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRelationTypeQueryTakeDefault)
-})
-
-export const getRelationTypeResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().min(1),
-  "isBidirectional": zod.boolean(),
-  "isDependency": zod.boolean(),
-  "id": zod.string().uuid(),
-  "alias": zod.string().nullish(),
-  "parentObject": zod.object({
-  "name": zod.string().nullish(),
-  "id": zod.string().uuid()
-}).nullish(),
-  "childObject": zod.object({
-  "name": zod.string().nullish(),
-  "id": zod.string().uuid()
-}).nullish()
-}))
-})
-
-
-export const getRelationTypeByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getRelationTypeByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "isBidirectional": zod.boolean(),
-  "isDependency": zod.boolean(),
-  "id": zod.string().uuid(),
-  "alias": zod.string().nullish(),
-  "parentObject": zod.object({
-  "name": zod.string().nullish(),
-  "id": zod.string().uuid()
-}).nullish(),
-  "childObject": zod.object({
-  "name": zod.string().nullish(),
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const getRelationByRelationTypeIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getRelationByRelationTypeIdQuerySkipDefault = 0;export const getRelationByRelationTypeIdQueryTakeDefault = 100;
-
-export const getRelationByRelationTypeIdQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRelationByRelationTypeIdQueryTakeDefault)
-})
-
-export const getRelationByRelationTypeIdResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "relationType": zod.object({
-  "id": zod.string().uuid()
-}),
-  "parent": zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish()
-}),
-  "child": zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string().nullish()
-}),
-  "createDate": zod.string().datetime({}),
-  "comment": zod.string().nullish()
-}))
-})
-
-
-export const getItemScriptQueryParams = zod.object({
-  "path": zod.array(zod.string()).optional()
-})
-
-export const getItemScriptResponseItem = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getItemScriptResponse = zod.array(getItemScriptResponseItem)
-
-
-export const postScriptBody = zod.object({
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "content": zod.string()
-})
-
-
-export const getScriptByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const getScriptByPathResponse = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "content": zod.string()
-})
-
-
-export const deleteScriptByPathParams = zod.object({
-  "path": zod.string()
-})
-
-
-export const putScriptByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const putScriptByPathBody = zod.object({
-  "content": zod.string()
-})
-
-
-export const putScriptByPathRenameParams = zod.object({
-  "path": zod.string()
-})
-
-export const putScriptByPathRenameBody = zod.object({
-  "name": zod.string()
-})
-
-
-export const postScriptFolderBody = zod.object({
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish()
-})
-
-
-export const getScriptFolderByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const getScriptFolderByPathResponse = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish()
-})
-
-
-export const deleteScriptFolderByPathParams = zod.object({
-  "path": zod.string()
-})
-
-
-export const getTreeScriptAncestorsQueryParams = zod.object({
-  "descendantPath": zod.string().optional()
-})
-
-export const getTreeScriptAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getTreeScriptAncestorsResponse = zod.array(getTreeScriptAncestorsResponseItem)
-
-
-export const getTreeScriptChildrenQuerySkipDefault = 0;export const getTreeScriptChildrenQueryTakeDefault = 100;
-
-export const getTreeScriptChildrenQueryParams = zod.object({
-  "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeScriptChildrenQueryTakeDefault)
-})
-
-export const getTreeScriptChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getTreeScriptRootQuerySkipDefault = 0;export const getTreeScriptRootQueryTakeDefault = 100;
-
-export const getTreeScriptRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeScriptRootQueryTakeDefault)
-})
-
-export const getTreeScriptRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getSearcherQuerySkipDefault = 0;export const getSearcherQueryTakeDefault = 100;
-
-export const getSearcherQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getSearcherQueryTakeDefault)
-})
-
-export const getSearcherResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string().min(1)
-}))
-})
-
-
-export const getSearcherBySearcherNameQueryParams = zod.object({
-  "searcherName": zod.string()
-})
-
-export const getSearcherBySearcherNameQueryQuerySkipDefault = 0;export const getSearcherBySearcherNameQueryQueryTakeDefault = 100;
-
-export const getSearcherBySearcherNameQueryQueryParams = zod.object({
-  "term": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getSearcherBySearcherNameQueryQueryTakeDefault)
-})
-
-export const getSearcherBySearcherNameQueryResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().min(1),
-  "score": zod.number(),
-  "fieldCount": zod.number(),
-  "fields": zod.array(zod.object({
-  "name": zod.string(),
-  "values": zod.array(zod.string())
-}))
-}))
-})
-
-
-export const getSecurityConfigurationResponse = zod.object({
-  "passwordConfiguration": zod.object({
-  "minimumPasswordLength": zod.number(),
-  "requireNonLetterOrDigit": zod.boolean(),
-  "requireDigit": zod.boolean(),
-  "requireLowercase": zod.boolean(),
-  "requireUppercase": zod.boolean()
-})
-})
-
-
-export const postSecurityForgotPasswordBody = zod.object({
-  "email": zod.string().min(1)
-})
-
-
-export const postSecurityForgotPasswordResetBody = zod.object({
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "resetCode": zod.string(),
-  "password": zod.string().min(1)
-})
-
-
-export const postSecurityForgotPasswordVerifyBody = zod.object({
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "resetCode": zod.string()
-})
-
-export const postSecurityForgotPasswordVerifyResponse = zod.object({
-  "passwordConfiguration": zod.object({
-  "minimumPasswordLength": zod.number(),
-  "requireNonLetterOrDigit": zod.boolean(),
-  "requireDigit": zod.boolean(),
-  "requireLowercase": zod.boolean(),
-  "requireUppercase": zod.boolean()
-})
-})
-
-
-export const getSegmentQuerySkipDefault = 0;export const getSegmentQueryTakeDefault = 100;
-
-export const getSegmentQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getSegmentQueryTakeDefault)
-})
-
-export const getSegmentResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "alias": zod.string()
-}))
-})
-
-
-export const getServerConfigurationResponse = zod.object({
-  "allowPasswordReset": zod.boolean(),
-  "versionCheckPeriod": zod.number(),
-  "allowLocalLogin": zod.boolean()
-})
-
-
-export const getServerInformationResponse = zod.object({
-  "version": zod.string(),
-  "assemblyVersion": zod.string(),
-  "baseUtcOffset": zod.string(),
-  "runtimeMode": zod.enum(['BackofficeDevelopment', 'Development', 'Production'])
-})
-
-
-export const getServerStatusResponse = zod.object({
-  "serverStatus": zod.enum(['Unknown', 'Boot', 'Install', 'Upgrade', 'Run', 'BootFailed'])
-})
-
-
-export const getServerTroubleshootingResponse = zod.object({
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "data": zod.string()
-}))
-})
-
-
-export const getServerUpgradeCheckResponse = zod.object({
-  "type": zod.string(),
-  "comment": zod.string(),
-  "url": zod.string()
-})
-
-
-export const getItemStaticFileQueryParams = zod.object({
-  "path": zod.array(zod.string()).optional()
-})
-
-export const getItemStaticFileResponseItem = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getItemStaticFileResponse = zod.array(getItemStaticFileResponseItem)
-
-
-export const getTreeStaticFileAncestorsQueryParams = zod.object({
-  "descendantPath": zod.string().optional()
-})
-
-export const getTreeStaticFileAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getTreeStaticFileAncestorsResponse = zod.array(getTreeStaticFileAncestorsResponseItem)
-
-
-export const getTreeStaticFileChildrenQuerySkipDefault = 0;export const getTreeStaticFileChildrenQueryTakeDefault = 100;
-
-export const getTreeStaticFileChildrenQueryParams = zod.object({
-  "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStaticFileChildrenQueryTakeDefault)
-})
-
-export const getTreeStaticFileChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getTreeStaticFileRootQuerySkipDefault = 0;export const getTreeStaticFileRootQueryTakeDefault = 100;
-
-export const getTreeStaticFileRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStaticFileRootQueryTakeDefault)
-})
-
-export const getTreeStaticFileRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getItemStylesheetQueryParams = zod.object({
-  "path": zod.array(zod.string()).optional()
-})
-
-export const getItemStylesheetResponseItem = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getItemStylesheetResponse = zod.array(getItemStylesheetResponseItem)
-
-
-export const postStylesheetBody = zod.object({
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "content": zod.string()
-})
-
-
-export const getStylesheetByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const getStylesheetByPathResponse = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "content": zod.string()
-})
-
-
-export const deleteStylesheetByPathParams = zod.object({
-  "path": zod.string()
-})
-
-
-export const putStylesheetByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const putStylesheetByPathBody = zod.object({
-  "content": zod.string()
-})
-
-
-export const putStylesheetByPathRenameParams = zod.object({
-  "path": zod.string()
-})
-
-export const putStylesheetByPathRenameBody = zod.object({
-  "name": zod.string()
-})
-
-
-export const postStylesheetFolderBody = zod.object({
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish()
-})
-
-
-export const getStylesheetFolderByPathParams = zod.object({
-  "path": zod.string()
-})
-
-export const getStylesheetFolderByPathResponse = zod.object({
-  "path": zod.string(),
-  "name": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish()
-})
-
-
-export const deleteStylesheetFolderByPathParams = zod.object({
-  "path": zod.string()
-})
-
-
-export const getTreeStylesheetAncestorsQueryParams = zod.object({
-  "descendantPath": zod.string().optional()
-})
-
-export const getTreeStylesheetAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-})
-export const getTreeStylesheetAncestorsResponse = zod.array(getTreeStylesheetAncestorsResponseItem)
-
-
-export const getTreeStylesheetChildrenQuerySkipDefault = 0;export const getTreeStylesheetChildrenQueryTakeDefault = 100;
-
-export const getTreeStylesheetChildrenQueryParams = zod.object({
-  "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStylesheetChildrenQueryTakeDefault)
-})
-
-export const getTreeStylesheetChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getTreeStylesheetRootQuerySkipDefault = 0;export const getTreeStylesheetRootQueryTakeDefault = 100;
-
-export const getTreeStylesheetRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStylesheetRootQueryTakeDefault)
-})
-
-export const getTreeStylesheetRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "name": zod.string(),
-  "path": zod.string(),
-  "parent": zod.object({
-  "path": zod.string()
-}).nullish(),
-  "isFolder": zod.boolean()
-}))
-})
-
-
-export const getTagQuerySkipDefault = 0;export const getTagQueryTakeDefault = 100;
-
-export const getTagQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "tagGroup": zod.string().optional(),
-  "culture": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTagQueryTakeDefault)
-})
-
-export const getTagResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "text": zod.string().nullish(),
-  "group": zod.string().nullish(),
-  "nodeCount": zod.number()
-}))
-})
-
-
-export const getTelemetryQuerySkipDefault = 0;export const getTelemetryQueryTakeDefault = 100;
-
-export const getTelemetryQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTelemetryQueryTakeDefault)
-})
-
-export const getTelemetryResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "telemetryLevel": zod.enum(['Minimal', 'Basic', 'Detailed'])
-}))
-})
-
-
-export const getTelemetryLevelResponse = zod.object({
-  "telemetryLevel": zod.enum(['Minimal', 'Basic', 'Detailed'])
-})
-
-
-export const postTelemetryLevelBody = zod.object({
-  "telemetryLevel": zod.enum(['Minimal', 'Basic', 'Detailed'])
-})
-
-
-export const getItemTemplateQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemTemplateResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "alias": zod.string()
-})
-export const getItemTemplateResponse = zod.array(getItemTemplateResponseItem)
-
-
-export const getItemTemplateSearchQuerySkipDefault = 0;export const getItemTemplateSearchQueryTakeDefault = 100;
-
-export const getItemTemplateSearchQueryParams = zod.object({
-  "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemTemplateSearchQueryTakeDefault)
-})
-
-export const getItemTemplateSearchResponse = zod.object({
-  "items": zod.array(zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "alias": zod.string()
-})),
-  "total": zod.number()
-})
-
-
-export const postTemplateBody = zod.object({
-  "name": zod.string().min(1),
-  "alias": zod.string().min(1),
-  "content": zod.string().nullish(),
-  "id": zod.string().uuid().nullish()
-})
-
-
-export const getTemplateByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getTemplateByIdResponse = zod.object({
-  "name": zod.string().min(1),
-  "alias": zod.string().min(1),
-  "content": zod.string().nullish(),
-  "id": zod.string().uuid(),
-  "masterTemplate": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
-})
-
-
-export const deleteTemplateByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putTemplateByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putTemplateByIdBody = zod.object({
-  "name": zod.string().min(1),
-  "alias": zod.string().min(1),
-  "content": zod.string().nullish()
-})
-
-
-export const getTemplateConfigurationResponse = zod.object({
-  "disabled": zod.boolean()
-})
-
-
-export const postTemplateQueryExecuteBody = zod.object({
-  "rootDocument": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentTypeAlias": zod.string().nullish(),
-  "filters": zod.array(zod.object({
-  "propertyAlias": zod.string().min(1),
-  "constraintValue": zod.string().min(1),
-  "operator": zod.enum(['Equals', 'NotEquals', 'Contains', 'NotContains', 'LessThan', 'LessThanEqualTo', 'GreaterThan', 'GreaterThanEqualTo'])
-})).nullish(),
-  "sort": zod.object({
-  "propertyAlias": zod.string(),
-  "direction": zod.string().nullish()
-}).nullish(),
-  "take": zod.number()
-})
-
-export const postTemplateQueryExecuteResponse = zod.object({
-  "queryExpression": zod.string(),
-  "sampleResults": zod.array(zod.object({
-  "icon": zod.string(),
-  "name": zod.string()
-})),
-  "resultCount": zod.number(),
-  "executionTime": zod.number()
-})
-
-
-export const getTemplateQuerySettingsResponse = zod.object({
-  "documentTypeAliases": zod.array(zod.string()),
-  "properties": zod.array(zod.object({
-  "alias": zod.string(),
-  "type": zod.enum(['String', 'DateTime', 'Integer'])
-})),
-  "operators": zod.array(zod.object({
-  "operator": zod.enum(['Equals', 'NotEquals', 'Contains', 'NotContains', 'LessThan', 'LessThanEqualTo', 'GreaterThan', 'GreaterThanEqualTo']),
-  "applicableTypes": zod.array(zod.enum(['String', 'DateTime', 'Integer']))
-}))
-})
-
-
-export const getTreeTemplateAncestorsQueryParams = zod.object({
-  "descendantId": zod.string().uuid().optional()
-})
-
-export const getTreeTemplateAncestorsResponseItem = zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string()
-})
-export const getTreeTemplateAncestorsResponse = zod.array(getTreeTemplateAncestorsResponseItem)
-
-
-export const getTreeTemplateChildrenQuerySkipDefault = 0;export const getTreeTemplateChildrenQueryTakeDefault = 100;
-
-export const getTreeTemplateChildrenQueryParams = zod.object({
-  "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeTemplateChildrenQueryTakeDefault)
-})
-
-export const getTreeTemplateChildrenResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string()
-}))
-})
-
-
-export const getTreeTemplateRootQuerySkipDefault = 0;export const getTreeTemplateRootQueryTakeDefault = 100;
-
-export const getTreeTemplateRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeTemplateRootQueryTakeDefault)
-})
-
-export const getTreeTemplateRootResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "hasChildren": zod.boolean(),
-  "id": zod.string().uuid(),
-  "parent": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "name": zod.string()
-}))
-})
-
-
-export const postTemporaryFileBody = zod.object({
-  "Id": zod.string().uuid(),
-  "File": zod.instanceof(File)
-})
-
-
-export const getTemporaryFileByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getTemporaryFileByIdResponse = zod.object({
-  "id": zod.string().uuid(),
-  "availableUntil": zod.string().datetime({}).nullish(),
-  "fileName": zod.string().min(1)
-})
-
-
-export const deleteTemporaryFileByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const getTemporaryFileConfigurationResponse = zod.object({
-  "imageFileTypes": zod.array(zod.string()),
-  "disallowedUploadedFilesExtensions": zod.array(zod.string()),
-  "allowedUploadedFileExtensions": zod.array(zod.string()),
-  "maxFileSize": zod.number().nullish()
-})
-
-
-export const getUpgradeSettingsResponse = zod.object({
-  "currentState": zod.string().min(1),
-  "newState": zod.string().min(1),
-  "newVersion": zod.string().min(1),
-  "oldVersion": zod.string().min(1),
-  "reportUrl": zod.string()
-})
-
-
-export const postUserDataBody = zod.object({
-  "group": zod.string(),
-  "identifier": zod.string(),
-  "value": zod.string(),
-  "key": zod.string().uuid().nullish()
-})
-
-
-export const getUserDataQuerySkipDefault = 0;export const getUserDataQueryTakeDefault = 100;
-
-export const getUserDataQueryParams = zod.object({
-  "groups": zod.array(zod.string()).optional(),
-  "identifiers": zod.array(zod.string()).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getUserDataQueryTakeDefault)
-})
-
-export const getUserDataResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "group": zod.string(),
-  "identifier": zod.string(),
-  "value": zod.string(),
-  "key": zod.string().uuid()
-}))
-})
-
-
-export const putUserDataBody = zod.object({
-  "group": zod.string(),
-  "identifier": zod.string(),
-  "value": zod.string(),
-  "key": zod.string().uuid()
-})
-
-
-export const getUserDataByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getUserDataByIdResponse = zod.object({
-  "group": zod.string(),
-  "identifier": zod.string(),
-  "value": zod.string()
-})
-
-
-export const getFilterUserGroupQuerySkipDefault = 0;export const getFilterUserGroupQueryTakeDefault = 100;export const getFilterUserGroupQueryFilterDefault = "";
-
-export const getFilterUserGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterUserGroupQueryTakeDefault),
-  "filter": zod.string().optional()
-})
-
-export const getFilterUserGroupResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "alias": zod.string(),
-  "icon": zod.string().nullish(),
-  "sections": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "hasAccessToAllLanguages": zod.boolean(),
-  "documentStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentRootAccess": zod.boolean(),
-  "mediaStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaRootAccess": zod.boolean(),
-  "fallbackPermissions": zod.array(zod.string()),
-  "permissions": zod.array(zod.object({
-  "$type": zod.enum(['DocumentPermissionPresentationModel']),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "verbs": zod.array(zod.string())
-}).or(zod.object({
-  "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
-  "verbs": zod.array(zod.string()),
-  "context": zod.string()
-}))),
-  "id": zod.string().uuid(),
-  "isDeletable": zod.boolean(),
-  "aliasCanBeChanged": zod.boolean()
-}))
-})
-
-
-export const getItemUserGroupQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemUserGroupResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "icon": zod.string().nullish(),
-  "alias": zod.string().nullish()
-})
-export const getItemUserGroupResponse = zod.array(getItemUserGroupResponseItem)
-
-
-export const deleteUserGroupBody = zod.object({
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const postUserGroupBody = zod.object({
-  "name": zod.string(),
-  "alias": zod.string(),
-  "icon": zod.string().nullish(),
-  "sections": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "hasAccessToAllLanguages": zod.boolean(),
-  "documentStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentRootAccess": zod.boolean(),
-  "mediaStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaRootAccess": zod.boolean(),
-  "fallbackPermissions": zod.array(zod.string()),
-  "permissions": zod.array(zod.object({
-  "$type": zod.enum(['DocumentPermissionPresentationModel']),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "verbs": zod.array(zod.string())
-}).or(zod.object({
-  "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
-  "verbs": zod.array(zod.string()),
-  "context": zod.string()
-}))),
-  "id": zod.string().uuid().nullish()
-})
-
-
-export const getUserGroupQuerySkipDefault = 0;export const getUserGroupQueryTakeDefault = 100;
-
-export const getUserGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getUserGroupQueryTakeDefault)
-})
-
-export const getUserGroupResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "name": zod.string(),
-  "alias": zod.string(),
-  "icon": zod.string().nullish(),
-  "sections": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "hasAccessToAllLanguages": zod.boolean(),
-  "documentStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentRootAccess": zod.boolean(),
-  "mediaStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaRootAccess": zod.boolean(),
-  "fallbackPermissions": zod.array(zod.string()),
-  "permissions": zod.array(zod.object({
-  "$type": zod.enum(['DocumentPermissionPresentationModel']),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "verbs": zod.array(zod.string())
-}).or(zod.object({
-  "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
-  "verbs": zod.array(zod.string()),
-  "context": zod.string()
-}))),
-  "id": zod.string().uuid(),
-  "isDeletable": zod.boolean(),
-  "aliasCanBeChanged": zod.boolean()
-}))
-})
-
-
-export const getUserGroupByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getUserGroupByIdResponse = zod.object({
-  "name": zod.string(),
-  "alias": zod.string(),
-  "icon": zod.string().nullish(),
-  "sections": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "hasAccessToAllLanguages": zod.boolean(),
-  "documentStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentRootAccess": zod.boolean(),
-  "mediaStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaRootAccess": zod.boolean(),
-  "fallbackPermissions": zod.array(zod.string()),
-  "permissions": zod.array(zod.object({
-  "$type": zod.enum(['DocumentPermissionPresentationModel']),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "verbs": zod.array(zod.string())
-}).or(zod.object({
-  "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
-  "verbs": zod.array(zod.string()),
-  "context": zod.string()
-}))),
-  "id": zod.string().uuid(),
-  "isDeletable": zod.boolean(),
-  "aliasCanBeChanged": zod.boolean()
-})
-
-
-export const deleteUserGroupByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putUserGroupByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putUserGroupByIdBody = zod.object({
-  "name": zod.string(),
-  "alias": zod.string(),
-  "icon": zod.string().nullish(),
-  "sections": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "hasAccessToAllLanguages": zod.boolean(),
-  "documentStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "documentRootAccess": zod.boolean(),
-  "mediaStartNode": zod.object({
-  "id": zod.string().uuid()
-}).nullish(),
-  "mediaRootAccess": zod.boolean(),
-  "fallbackPermissions": zod.array(zod.string()),
-  "permissions": zod.array(zod.object({
-  "$type": zod.enum(['DocumentPermissionPresentationModel']),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "verbs": zod.array(zod.string())
-}).or(zod.object({
-  "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
-  "verbs": zod.array(zod.string()),
-  "context": zod.string()
-})))
-})
-
-
-export const deleteUserGroupByIdUsersParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const deleteUserGroupByIdUsersBodyItem = zod.object({
-  "id": zod.string().uuid()
-})
-export const deleteUserGroupByIdUsersBody = zod.array(deleteUserGroupByIdUsersBodyItem)
-
-
-export const postUserGroupByIdUsersParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postUserGroupByIdUsersBodyItem = zod.object({
-  "id": zod.string().uuid()
-})
-export const postUserGroupByIdUsersBody = zod.array(postUserGroupByIdUsersBodyItem)
-
-
-export const getFilterUserQuerySkipDefault = 0;export const getFilterUserQueryTakeDefault = 100;export const getFilterUserQueryFilterDefault = "";
-
-export const getFilterUserQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterUserQueryTakeDefault),
-  "orderBy": zod.enum(['UserName', 'Language', 'Name', 'Email', 'Id', 'CreateDate', 'UpdateDate', 'IsApproved', 'IsLockedOut', 'LastLoginDate']).optional(),
-  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
-  "userGroupIds": zod.array(zod.string().uuid()).optional(),
-  "userStates": zod.array(zod.enum(['Active', 'Disabled', 'LockedOut', 'Invited', 'Inactive', 'All'])).optional(),
-  "filter": zod.string().optional()
-})
-
-export const getFilterUserResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "email": zod.string(),
-  "userName": zod.string(),
-  "name": zod.string(),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "id": zod.string().uuid(),
-  "languageIsoCode": zod.string().nullish(),
-  "documentStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasDocumentRootAccess": zod.boolean(),
-  "mediaStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasMediaRootAccess": zod.boolean(),
-  "avatarUrls": zod.array(zod.string()),
-  "state": zod.enum(['Active', 'Disabled', 'LockedOut', 'Invited', 'Inactive', 'All']),
-  "failedLoginAttempts": zod.number(),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "lastLoginDate": zod.string().datetime({}).nullish(),
-  "lastLockoutDate": zod.string().datetime({}).nullish(),
-  "lastPasswordChangeDate": zod.string().datetime({}).nullish(),
-  "isAdmin": zod.boolean(),
-  "kind": zod.enum(['Default', 'Api'])
-}))
-})
-
-
-export const getItemUserQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemUserResponseItem = zod.object({
-  "id": zod.string().uuid(),
-  "name": zod.string(),
-  "avatarUrls": zod.array(zod.string()),
-  "kind": zod.enum(['Default', 'Api'])
-})
-export const getItemUserResponse = zod.array(getItemUserResponseItem)
-
-
-export const postUserBody = zod.object({
-  "email": zod.string(),
-  "userName": zod.string(),
-  "name": zod.string(),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "id": zod.string().uuid().nullish(),
-  "kind": zod.enum(['Default', 'Api'])
-})
-
-
-export const deleteUserBody = zod.object({
-  "userIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const getUserQuerySkipDefault = 0;export const getUserQueryTakeDefault = 100;
-
-export const getUserQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getUserQueryTakeDefault)
-})
-
-export const getUserResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "email": zod.string(),
-  "userName": zod.string(),
-  "name": zod.string(),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "id": zod.string().uuid(),
-  "languageIsoCode": zod.string().nullish(),
-  "documentStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasDocumentRootAccess": zod.boolean(),
-  "mediaStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasMediaRootAccess": zod.boolean(),
-  "avatarUrls": zod.array(zod.string()),
-  "state": zod.enum(['Active', 'Disabled', 'LockedOut', 'Invited', 'Inactive', 'All']),
-  "failedLoginAttempts": zod.number(),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "lastLoginDate": zod.string().datetime({}).nullish(),
-  "lastLockoutDate": zod.string().datetime({}).nullish(),
-  "lastPasswordChangeDate": zod.string().datetime({}).nullish(),
-  "isAdmin": zod.boolean(),
-  "kind": zod.enum(['Default', 'Api'])
-}))
-})
-
-
-export const getUserByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getUserByIdResponse = zod.object({
-  "email": zod.string(),
-  "userName": zod.string(),
-  "name": zod.string(),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "id": zod.string().uuid(),
-  "languageIsoCode": zod.string().nullish(),
-  "documentStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasDocumentRootAccess": zod.boolean(),
-  "mediaStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasMediaRootAccess": zod.boolean(),
-  "avatarUrls": zod.array(zod.string()),
-  "state": zod.enum(['Active', 'Disabled', 'LockedOut', 'Invited', 'Inactive', 'All']),
-  "failedLoginAttempts": zod.number(),
-  "createDate": zod.string().datetime({}),
-  "updateDate": zod.string().datetime({}),
-  "lastLoginDate": zod.string().datetime({}).nullish(),
-  "lastLockoutDate": zod.string().datetime({}).nullish(),
-  "lastPasswordChangeDate": zod.string().datetime({}).nullish(),
-  "isAdmin": zod.boolean(),
-  "kind": zod.enum(['Default', 'Api'])
-})
-
-
-export const deleteUserByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putUserByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putUserByIdBody = zod.object({
-  "email": zod.string(),
-  "userName": zod.string(),
-  "name": zod.string(),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "languageIsoCode": zod.string(),
-  "documentStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasDocumentRootAccess": zod.boolean(),
-  "mediaStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasMediaRootAccess": zod.boolean()
-})
-
-
-export const getUserById2faParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getUserById2faResponseItem = zod.object({
-  "providerName": zod.string(),
-  "isEnabledOnUser": zod.boolean()
-})
-export const getUserById2faResponse = zod.array(getUserById2faResponseItem)
-
-
-export const deleteUserById2faByProviderNameParams = zod.object({
-  "id": zod.string().uuid(),
-  "providerName": zod.string()
-})
-
-
-export const getUserByIdCalculateStartNodesParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getUserByIdCalculateStartNodesResponse = zod.object({
-  "id": zod.string().uuid(),
-  "documentStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasDocumentRootAccess": zod.boolean(),
-  "mediaStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasMediaRootAccess": zod.boolean()
-})
-
-
-export const postUserByIdChangePasswordParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postUserByIdChangePasswordBody = zod.object({
-  "newPassword": zod.string()
-})
-
-
-export const postUserByIdClientCredentialsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postUserByIdClientCredentialsBody = zod.object({
-  "clientId": zod.string(),
-  "clientSecret": zod.string()
-})
-
-
-export const getUserByIdClientCredentialsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getUserByIdClientCredentialsResponseItem = zod.string()
-export const getUserByIdClientCredentialsResponse = zod.array(getUserByIdClientCredentialsResponseItem)
-
-
-export const deleteUserByIdClientCredentialsByClientIdParams = zod.object({
-  "id": zod.string().uuid(),
-  "clientId": zod.string()
-})
-
-
-export const postUserByIdResetPasswordParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postUserByIdResetPasswordResponse = zod.object({
-  "resetPassword": zod.string().nullish()
-})
-
-
-export const deleteUserAvatarByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const postUserAvatarByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const postUserAvatarByIdBody = zod.object({
-  "file": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const getUserConfigurationResponse = zod.object({
-  "canInviteUsers": zod.boolean(),
-  "usernameIsEmail": zod.boolean(),
-  "passwordConfiguration": zod.object({
-  "minimumPasswordLength": zod.number(),
-  "requireNonLetterOrDigit": zod.boolean(),
-  "requireDigit": zod.boolean(),
-  "requireLowercase": zod.boolean(),
-  "requireUppercase": zod.boolean()
-}),
-  "allowChangePassword": zod.boolean(),
-  "allowTwoFactor": zod.boolean()
-})
-
-
-export const getUserCurrentResponse = zod.object({
-  "email": zod.string(),
-  "userName": zod.string(),
-  "name": zod.string(),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "id": zod.string().uuid(),
-  "languageIsoCode": zod.string().nullable(),
-  "documentStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasDocumentRootAccess": zod.boolean(),
-  "mediaStartNodeIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "hasMediaRootAccess": zod.boolean(),
-  "avatarUrls": zod.array(zod.string()),
-  "languages": zod.array(zod.string()),
-  "hasAccessToAllLanguages": zod.boolean(),
-  "hasAccessToSensitiveData": zod.boolean(),
-  "fallbackPermissions": zod.array(zod.string()),
-  "permissions": zod.array(zod.object({
-  "$type": zod.enum(['DocumentPermissionPresentationModel']),
-  "document": zod.object({
-  "id": zod.string().uuid()
-}),
-  "verbs": zod.array(zod.string())
-}).or(zod.object({
-  "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
-  "verbs": zod.array(zod.string()),
-  "context": zod.string()
-}))),
-  "allowedSections": zod.array(zod.string()),
-  "isAdmin": zod.boolean()
-})
-
-
-export const getUserCurrent2faResponseItem = zod.object({
-  "providerName": zod.string(),
-  "isEnabledOnUser": zod.boolean()
-})
-export const getUserCurrent2faResponse = zod.array(getUserCurrent2faResponseItem)
-
-
-export const deleteUserCurrent2faByProviderNameParams = zod.object({
-  "providerName": zod.string()
-})
-
-export const deleteUserCurrent2faByProviderNameQueryParams = zod.object({
-  "code": zod.string().optional()
-})
-
-
-export const postUserCurrent2faByProviderNameParams = zod.object({
-  "providerName": zod.string()
-})
-
-export const postUserCurrent2faByProviderNameBody = zod.object({
-  "code": zod.string(),
-  "secret": zod.string()
-})
-
-export const postUserCurrent2faByProviderNameResponse = zod.object({
-
-})
-
-
-export const getUserCurrent2faByProviderNameParams = zod.object({
-  "providerName": zod.string()
-})
-
-export const getUserCurrent2faByProviderNameResponse = zod.object({
-
-})
-
-
-export const postUserCurrentAvatarBody = zod.object({
-  "file": zod.object({
-  "id": zod.string().uuid()
-})
-})
-
-
-export const postUserCurrentChangePasswordBody = zod.object({
-  "newPassword": zod.string(),
-  "oldPassword": zod.string().nullish()
-})
-
-
-export const getUserCurrentConfigurationResponse = zod.object({
-  "keepUserLoggedIn": zod.boolean(),
-  "usernameIsEmail": zod.boolean(),
-  "passwordConfiguration": zod.object({
-  "minimumPasswordLength": zod.number(),
-  "requireNonLetterOrDigit": zod.boolean(),
-  "requireDigit": zod.boolean(),
-  "requireLowercase": zod.boolean(),
-  "requireUppercase": zod.boolean()
-}),
-  "allowChangePassword": zod.boolean(),
-  "allowTwoFactor": zod.boolean()
-})
-
-
-export const getUserCurrentLoginProvidersResponseItem = zod.object({
-  "providerSchemeName": zod.string(),
-  "providerKey": zod.string().nullish(),
-  "isLinkedOnUser": zod.boolean(),
-  "hasManualLinkingEnabled": zod.boolean()
-})
-export const getUserCurrentLoginProvidersResponse = zod.array(getUserCurrentLoginProvidersResponseItem)
-
-
-export const getUserCurrentPermissionsQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getUserCurrentPermissionsResponse = zod.object({
-  "permissions": zod.array(zod.object({
-  "nodeKey": zod.string().uuid(),
-  "permissions": zod.array(zod.string())
-}))
-})
-
-
-export const getUserCurrentPermissionsDocumentQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getUserCurrentPermissionsDocumentResponseItem = zod.object({
-  "permissions": zod.array(zod.object({
-  "nodeKey": zod.string().uuid(),
-  "permissions": zod.array(zod.string())
-}))
-})
-export const getUserCurrentPermissionsDocumentResponse = zod.array(getUserCurrentPermissionsDocumentResponseItem)
-
-
-export const getUserCurrentPermissionsMediaQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getUserCurrentPermissionsMediaResponse = zod.object({
-  "permissions": zod.array(zod.object({
-  "nodeKey": zod.string().uuid(),
-  "permissions": zod.array(zod.string())
-}))
-})
-
-
-export const postUserDisableBody = zod.object({
-  "userIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const postUserEnableBody = zod.object({
-  "userIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const postUserInviteBody = zod.object({
-  "email": zod.string(),
-  "userName": zod.string(),
-  "name": zod.string(),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "id": zod.string().uuid().nullish(),
-  "message": zod.string().nullish()
-})
-
-
-export const postUserInviteCreatePasswordBody = zod.object({
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "token": zod.string().min(1),
-  "password": zod.string()
-})
-
-
-export const postUserInviteResendBody = zod.object({
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "message": zod.string().nullish()
-})
-
-
-export const postUserInviteVerifyBody = zod.object({
-  "user": zod.object({
-  "id": zod.string().uuid()
-}),
-  "token": zod.string().min(1)
-})
-
-export const postUserInviteVerifyResponse = zod.object({
-  "passwordConfiguration": zod.object({
-  "minimumPasswordLength": zod.number(),
-  "requireNonLetterOrDigit": zod.boolean(),
-  "requireDigit": zod.boolean(),
-  "requireLowercase": zod.boolean(),
-  "requireUppercase": zod.boolean()
-})
-})
-
-
-export const postUserSetUserGroupsBody = zod.object({
-  "userIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-})),
-  "userGroupIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const postUserUnlockBody = zod.object({
-  "userIds": zod.array(zod.object({
-  "id": zod.string().uuid()
-}))
-})
-
-
-export const getItemWebhookQueryParams = zod.object({
-  "id": zod.array(zod.string().uuid()).optional()
-})
-
-export const getItemWebhookResponseItem = zod.object({
-  "enabled": zod.boolean(),
-  "name": zod.string(),
-  "events": zod.string(),
-  "url": zod.string(),
-  "types": zod.string()
-})
-export const getItemWebhookResponse = zod.array(getItemWebhookResponseItem)
-
-
-export const getWebhookQuerySkipDefault = 0;export const getWebhookQueryTakeDefault = 100;
-
-export const getWebhookQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookQueryTakeDefault)
-})
-
-export const getWebhookResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "enabled": zod.boolean(),
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "url": zod.string().min(1),
-  "contentTypeKeys": zod.array(zod.string().uuid()),
-  "headers": zod.record(zod.string(), zod.string()),
-  "id": zod.string().uuid(),
-  "events": zod.array(zod.object({
-  "eventName": zod.string(),
-  "eventType": zod.string(),
-  "alias": zod.string()
-}))
-}))
-})
-
-
-export const postWebhookBody = zod.object({
-  "enabled": zod.boolean(),
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "url": zod.string().min(1),
-  "contentTypeKeys": zod.array(zod.string().uuid()),
-  "headers": zod.record(zod.string(), zod.string()),
-  "id": zod.string().uuid().nullish(),
-  "events": zod.array(zod.string())
-})
-
-
-export const getWebhookByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getWebhookByIdResponse = zod.object({
-  "enabled": zod.boolean(),
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "url": zod.string().min(1),
-  "contentTypeKeys": zod.array(zod.string().uuid()),
-  "headers": zod.record(zod.string(), zod.string()),
-  "id": zod.string().uuid(),
-  "events": zod.array(zod.object({
-  "eventName": zod.string(),
-  "eventType": zod.string(),
-  "alias": zod.string()
-}))
-})
-
-
-export const deleteWebhookByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-
-export const putWebhookByIdParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putWebhookByIdBody = zod.object({
-  "enabled": zod.boolean(),
-  "name": zod.string().nullish(),
-  "description": zod.string().nullish(),
-  "url": zod.string().min(1),
-  "contentTypeKeys": zod.array(zod.string().uuid()),
-  "headers": zod.record(zod.string(), zod.string()),
-  "events": zod.array(zod.string())
-})
-
-
-export const getWebhookByIdLogsParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const getWebhookByIdLogsQuerySkipDefault = 0;export const getWebhookByIdLogsQueryTakeDefault = 100;
-
-export const getWebhookByIdLogsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookByIdLogsQueryTakeDefault)
-})
-
-export const getWebhookByIdLogsResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "key": zod.string().uuid(),
-  "webhookKey": zod.string().uuid(),
-  "statusCode": zod.string(),
-  "isSuccessStatusCode": zod.boolean(),
-  "date": zod.string().datetime({}),
-  "eventAlias": zod.string(),
-  "url": zod.string(),
-  "retryCount": zod.number(),
-  "requestHeaders": zod.string(),
-  "requestBody": zod.string(),
-  "responseHeaders": zod.string(),
-  "responseBody": zod.string(),
-  "exceptionOccured": zod.boolean()
-}))
-})
-
-
-export const getWebhookEventsQuerySkipDefault = 0;export const getWebhookEventsQueryTakeDefault = 100;
-
-export const getWebhookEventsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookEventsQueryTakeDefault)
-})
-
-export const getWebhookEventsResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "eventName": zod.string(),
-  "eventType": zod.string(),
-  "alias": zod.string()
-}))
-})
-
-
-export const getWebhookLogsQuerySkipDefault = 0;export const getWebhookLogsQueryTakeDefault = 100;
-
-export const getWebhookLogsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookLogsQueryTakeDefault)
-})
-
-export const getWebhookLogsResponse = zod.object({
-  "total": zod.number(),
-  "items": zod.array(zod.object({
-  "key": zod.string().uuid(),
-  "webhookKey": zod.string().uuid(),
-  "statusCode": zod.string(),
-  "isSuccessStatusCode": zod.boolean(),
-  "date": zod.string().datetime({}),
-  "eventAlias": zod.string(),
-  "url": zod.string(),
-  "retryCount": zod.number(),
-  "requestHeaders": zod.string(),
-  "requestBody": zod.string(),
-  "responseHeaders": zod.string(),
-  "responseBody": zod.string(),
-  "exceptionOccured": zod.boolean()
-}))
-})
-
-
+const putDocumentByIdValidate = (
+    id: string,
+    updateDocumentRequestModel: UpdateDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentRequestModel
+    },
+      options);
+    }
+  
+const putUmbracoManagementApiV11DocumentByIdValidate11 = (
+    id: string,
+    validateUpdateDocumentRequestModel: ValidateUpdateDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1.1/document/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: validateUpdateDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentAreReferenced = (
+    params?: GetDocumentAreReferencedParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/document/are-referenced`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/document/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentSort = (
+    sortingRequestModel: SortingRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/sort`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sortingRequestModel
+    },
+      options);
+    }
+  
+const getDocumentUrls = (
+    params?: GetDocumentUrlsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentUrlInfoResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document/urls`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentValidate = (
+    createDocumentRequestModel: CreateDocumentRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/validate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentRequestModel
+    },
+      options);
+    }
+  
+const getItemDocument = (
+    params?: GetItemDocumentParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/document`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDocumentSearch = (
+    params?: GetItemDocumentSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelDocumentItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/document/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deleteRecycleBinDocument = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const deleteRecycleBinDocumentById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getRecycleBinDocumentByIdOriginalParent = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/${id}/original-parent`, method: 'GET'
+    },
+      options);
+    }
+  
+const putRecycleBinDocumentByIdRestore = (
+    id: string,
+    moveMediaRequestModel: MoveMediaRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/${id}/restore`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaRequestModel
+    },
+      options);
+    }
+  
+const getRecycleBinDocumentChildren = (
+    params?: GetRecycleBinDocumentChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRecycleBinDocumentRoot = (
+    params?: GetRecycleBinDocumentRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentAncestors = (
+    params?: GetTreeDocumentAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/document/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentChildren = (
+    params?: GetTreeDocumentChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentRoot = (
+    params?: GetTreeDocumentRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDynamicRootQuery = (
+    dynamicRootRequestModel: DynamicRootRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DynamicRootResponseModel>(
+      {url: `/umbraco/management/api/v1/dynamic-root/query`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: dynamicRootRequestModel
+    },
+      options);
+    }
+  
+const getDynamicRootSteps = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<string[]>(
+      {url: `/umbraco/management/api/v1/dynamic-root/steps`, method: 'GET'
+    },
+      options);
+    }
+  
+const getHealthCheckGroup = (
+    params?: GetHealthCheckGroupParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedHealthCheckGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/health-check-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getHealthCheckGroupByName = (
+    name: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<HealthCheckGroupPresentationModel>(
+      {url: `/umbraco/management/api/v1/health-check-group/${name}`, method: 'GET'
+    },
+      options);
+    }
+  
+const postHealthCheckGroupByNameCheck = (
+    name: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<HealthCheckGroupWithResultResponseModel>(
+      {url: `/umbraco/management/api/v1/health-check-group/${name}/check`, method: 'POST'
+    },
+      options);
+    }
+  
+const postHealthCheckExecuteAction = (
+    healthCheckActionRequestModel: HealthCheckActionRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<HealthCheckResultResponseModel>(
+      {url: `/umbraco/management/api/v1/health-check/execute-action`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: healthCheckActionRequestModel
+    },
+      options);
+    }
+  
+const getHelp = (
+    params?: GetHelpParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedHelpPageResponseModel>(
+      {url: `/umbraco/management/api/v1/help`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getImagingResizeUrls = (
+    params?: GetImagingResizeUrlsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaUrlInfoResponseModel[]>(
+      {url: `/umbraco/management/api/v1/imaging/resize/urls`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getImportAnalyze = (
+    params?: GetImportAnalyzeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<EntityImportAnalysisResponseModel>(
+      {url: `/umbraco/management/api/v1/import/analyze`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getIndexer = (
+    params?: GetIndexerParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedIndexResponseModel>(
+      {url: `/umbraco/management/api/v1/indexer`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getIndexerByIndexName = (
+    indexName: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<IndexResponseModel>(
+      {url: `/umbraco/management/api/v1/indexer/${indexName}`, method: 'GET'
+    },
+      options);
+    }
+  
+const postIndexerByIndexNameRebuild = (
+    indexName: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/indexer/${indexName}/rebuild`, method: 'POST'
+    },
+      options);
+    }
+  
+const getInstallSettings = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<InstallSettingsResponseModel>(
+      {url: `/umbraco/management/api/v1/install/settings`, method: 'GET'
+    },
+      options);
+    }
+  
+const postInstallSetup = (
+    installRequestModel: InstallRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/install/setup`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: installRequestModel
+    },
+      options);
+    }
+  
+const postInstallValidateDatabase = (
+    databaseInstallRequestModel: DatabaseInstallRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/install/validate-database`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: databaseInstallRequestModel
+    },
+      options);
+    }
+  
+const getItemLanguage = (
+    params?: GetItemLanguageParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LanguageItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/language`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemLanguageDefault = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LanguageItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/language/default`, method: 'GET'
+    },
+      options);
+    }
+  
+const getLanguage = (
+    params?: GetLanguageParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLanguageResponseModel>(
+      {url: `/umbraco/management/api/v1/language`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postLanguage = (
+    createLanguageRequestModel: CreateLanguageRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/language`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createLanguageRequestModel
+    },
+      options);
+    }
+  
+const getLanguageByIsoCode = (
+    isoCode: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LanguageResponseModel>(
+      {url: `/umbraco/management/api/v1/language/${isoCode}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteLanguageByIsoCode = (
+    isoCode: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/language/${isoCode}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putLanguageByIsoCode = (
+    isoCode: string,
+    updateLanguageRequestModel: UpdateLanguageRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/language/${isoCode}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateLanguageRequestModel
+    },
+      options);
+    }
+  
+const getLogViewerLevel = (
+    params?: GetLogViewerLevelParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLoggerResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/level`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerLevelCount = (
+    params?: GetLogViewerLevelCountParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LogLevelCountsReponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/level-count`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerLog = (
+    params?: GetLogViewerLogParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLogMessageResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerMessageTemplate = (
+    params?: GetLogViewerMessageTemplateParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLogTemplateResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/message-template`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerSavedSearch = (
+    params?: GetLogViewerSavedSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSavedLogSearchResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postLogViewerSavedSearch = (
+    savedLogSearchRequestModel: SavedLogSearchRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: savedLogSearchRequestModel
+    },
+      options);
+    }
+  
+const getLogViewerSavedSearchByName = (
+    name: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<SavedLogSearchResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search/${name}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteLogViewerSavedSearchByName = (
+    name: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search/${name}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getLogViewerValidateLogsSize = (
+    params?: GetLogViewerValidateLogsSizeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/log-viewer/validate-logs-size`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getManifestManifest = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ManifestResponseModel[]>(
+      {url: `/umbraco/management/api/v1/manifest/manifest`, method: 'GET'
+    },
+      options);
+    }
+  
+const getManifestManifestPrivate = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ManifestResponseModel[]>(
+      {url: `/umbraco/management/api/v1/manifest/manifest/private`, method: 'GET'
+    },
+      options);
+    }
+  
+const getManifestManifestPublic = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ManifestResponseModel[]>(
+      {url: `/umbraco/management/api/v1/manifest/manifest/public`, method: 'GET'
+    },
+      options);
+    }
+  
+const getItemMediaType = (
+    params?: GetItemMediaTypeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/media-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaTypeAllowed = (
+    params?: GetItemMediaTypeAllowedParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media-type/allowed`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaTypeFolders = (
+    params?: GetItemMediaTypeFoldersParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media-type/folders`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaTypeSearch = (
+    params?: GetItemMediaTypeSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMediaType = (
+    createMediaTypeRequestModel: CreateMediaTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/media-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMediaTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMediaTypeById = (
+    id: string,
+    updateMediaTypeRequestModel: UpdateMediaTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeByIdAllowedChildren = (
+    id: string,
+    params?: GetMediaTypeByIdAllowedChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedMediaTypeModel>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/allowed-children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMediaTypeByIdCompositionReferences = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/composition-references`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMediaTypeByIdCopy = (
+    id: string,
+    copyMediaTypeRequestModel: CopyMediaTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeByIdExport = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/export`, method: 'GET',
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const putMediaTypeByIdImport = (
+    id: string,
+    importMediaTypeRequestModel: ImportMediaTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/import`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: importMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const putMediaTypeByIdMove = (
+    id: string,
+    moveMediaTypeRequestModel: MoveMediaTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeAllowedAtRoot = (
+    params?: GetMediaTypeAllowedAtRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedMediaTypeModel>(
+      {url: `/umbraco/management/api/v1/media-type/allowed-at-root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMediaTypeAvailableCompositions = (
+    mediaTypeCompositionRequestModel: MediaTypeCompositionRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<AvailableMediaTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/media-type/available-compositions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: mediaTypeCompositionRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/media-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMediaTypeFolder = (
+    createFolderRequestModel: CreateFolderRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/media-type/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMediaTypeFolderById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMediaTypeFolderById = (
+    id: string,
+    updateFolderResponseModel: UpdateFolderResponseModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const postMediaTypeImport = (
+    importMediaTypeRequestModel: ImportMediaTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/import`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: importMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getTreeMediaTypeAncestors = (
+    params?: GetTreeMediaTypeAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/media-type/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaTypeChildren = (
+    params?: GetTreeMediaTypeChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media-type/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaTypeRoot = (
+    params?: GetTreeMediaTypeRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getCollectionMedia = (
+    params?: GetCollectionMediaParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaCollectionResponseModel>(
+      {url: `/umbraco/management/api/v1/collection/media`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMedia = (
+    params?: GetItemMediaParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/media`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaSearch = (
+    params?: GetItemMediaSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMedia = (
+    createMediaRequestModel: CreateMediaRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMediaRequestModel
+    },
+      options);
+    }
+  
+const getMediaById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaResponseModel>(
+      {url: `/umbraco/management/api/v1/media/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMediaById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMediaById = (
+    id: string,
+    updateMediaRequestModel: UpdateMediaRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMediaRequestModel
+    },
+      options);
+    }
+  
+const getMediaByIdAuditLog = (
+    id: string,
+    params?: GetMediaByIdAuditLogParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAuditLogResponseModel>(
+      {url: `/umbraco/management/api/v1/media/${id}/audit-log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putMediaByIdMove = (
+    id: string,
+    moveMediaRequestModel: MoveMediaRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaRequestModel
+    },
+      options);
+    }
+  
+const putMediaByIdMoveToRecycleBin = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}/move-to-recycle-bin`, method: 'PUT'
+    },
+      options);
+    }
+  
+const getMediaByIdReferencedBy = (
+    id: string,
+    params?: GetMediaByIdReferencedByParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedIReferenceResponseModel>(
+      {url: `/umbraco/management/api/v1/media/${id}/referenced-by`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMediaByIdReferencedDescendants = (
+    id: string,
+    params?: GetMediaByIdReferencedDescendantsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/media/${id}/referenced-descendants`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putMediaByIdValidate = (
+    id: string,
+    updateMediaRequestModel: UpdateMediaRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMediaRequestModel
+    },
+      options);
+    }
+  
+const getMediaAreReferenced = (
+    params?: GetMediaAreReferencedParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/media/are-referenced`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMediaConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/media/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const putMediaSort = (
+    sortingRequestModel: SortingRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/sort`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sortingRequestModel
+    },
+      options);
+    }
+  
+const getMediaUrls = (
+    params?: GetMediaUrlsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaUrlInfoResponseModel[]>(
+      {url: `/umbraco/management/api/v1/media/urls`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMediaValidate = (
+    createMediaRequestModel: CreateMediaRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/validate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMediaRequestModel
+    },
+      options);
+    }
+  
+const deleteRecycleBinMedia = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const deleteRecycleBinMediaById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getRecycleBinMediaByIdOriginalParent = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/${id}/original-parent`, method: 'GET'
+    },
+      options);
+    }
+  
+const putRecycleBinMediaByIdRestore = (
+    id: string,
+    moveMediaRequestModel: MoveMediaRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/${id}/restore`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaRequestModel
+    },
+      options);
+    }
+  
+const getRecycleBinMediaChildren = (
+    params?: GetRecycleBinMediaChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRecycleBinMediaRoot = (
+    params?: GetRecycleBinMediaRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaAncestors = (
+    params?: GetTreeMediaAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/media/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaChildren = (
+    params?: GetTreeMediaChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaRoot = (
+    params?: GetTreeMediaRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberGroup = (
+    params?: GetItemMemberGroupParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberGroupItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/member-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMemberGroup = (
+    params?: GetMemberGroupParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMemberGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/member-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMemberGroup = (
+    createMemberGroupRequestModel: CreateMemberGroupRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-group`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberGroupRequestModel
+    },
+      options);
+    }
+  
+const getMemberGroupById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/member-group/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMemberGroupById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-group/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMemberGroupById = (
+    id: string,
+    updateMemberGroupRequestModel: UpdateMemberGroupRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-group/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberGroupRequestModel
+    },
+      options);
+    }
+  
+const getTreeMemberGroupRoot = (
+    params?: GetTreeMemberGroupRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/member-group/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberType = (
+    params?: GetItemMemberTypeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/member-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberTypeSearch = (
+    params?: GetItemMemberTypeSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMemberTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/member-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMemberType = (
+    createMemberTypeRequestModel: CreateMemberTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberTypeRequestModel
+    },
+      options);
+    }
+  
+const getMemberTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/member-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMemberTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMemberTypeById = (
+    id: string,
+    updateMemberTypeRequestModel: UpdateMemberTypeRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberTypeRequestModel
+    },
+      options);
+    }
+  
+const getMemberTypeByIdCompositionReferences = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/member-type/${id}/composition-references`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMemberTypeByIdCopy = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type/${id}/copy`, method: 'POST'
+    },
+      options);
+    }
+  
+const postMemberTypeAvailableCompositions = (
+    memberTypeCompositionRequestModel: MemberTypeCompositionRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<AvailableMemberTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/member-type/available-compositions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: memberTypeCompositionRequestModel
+    },
+      options);
+    }
+  
+const getMemberTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/member-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getTreeMemberTypeRoot = (
+    params?: GetTreeMemberTypeRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMemberTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/member-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getFilterMember = (
+    params?: GetFilterMemberParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMemberResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/member`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMember = (
+    params?: GetItemMemberParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/member`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberSearch = (
+    params?: GetItemMemberSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMemberItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/member/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMember = (
+    createMemberRequestModel: CreateMemberRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberRequestModel
+    },
+      options);
+    }
+  
+const getMemberById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberResponseModel>(
+      {url: `/umbraco/management/api/v1/member/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMemberById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMemberById = (
+    id: string,
+    updateMemberRequestModel: UpdateMemberRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberRequestModel
+    },
+      options);
+    }
+  
+const putMemberByIdValidate = (
+    id: string,
+    updateMemberRequestModel: UpdateMemberRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberRequestModel
+    },
+      options);
+    }
+  
+const getMemberConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/member/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMemberValidate = (
+    createMemberRequestModel: CreateMemberRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/validate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberRequestModel
+    },
+      options);
+    }
+  
+const postModelsBuilderBuild = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/models-builder/build`, method: 'POST'
+    },
+      options);
+    }
+  
+const getModelsBuilderDashboard = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ModelsBuilderResponseModel>(
+      {url: `/umbraco/management/api/v1/models-builder/dashboard`, method: 'GET'
+    },
+      options);
+    }
+  
+const getModelsBuilderStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<OutOfDateStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/models-builder/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const getObjectTypes = (
+    params?: GetObjectTypesParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedObjectTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/object-types`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getOembedQuery = (
+    params?: GetOembedQueryParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<OEmbedResponseModel>(
+      {url: `/umbraco/management/api/v1/oembed/query`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postPackageByNameRunMigration = (
+    name: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/${name}/run-migration`, method: 'POST'
+    },
+      options);
+    }
+  
+const getPackageConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PackageConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/package/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getPackageCreated = (
+    params?: GetPackageCreatedParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedPackageDefinitionResponseModel>(
+      {url: `/umbraco/management/api/v1/package/created`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postPackageCreated = (
+    createPackageRequestModel: CreatePackageRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/created`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createPackageRequestModel
+    },
+      options);
+    }
+  
+const getPackageCreatedById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PackageDefinitionResponseModel>(
+      {url: `/umbraco/management/api/v1/package/created/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deletePackageCreatedById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/created/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putPackageCreatedById = (
+    id: string,
+    updatePackageRequestModel: NonReadonly<UpdatePackageRequestModel>,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/created/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updatePackageRequestModel
+    },
+      options);
+    }
+  
+const getPackageCreatedByIdDownload = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/package/created/${id}/download`, method: 'GET',
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const getPackageMigrationStatus = (
+    params?: GetPackageMigrationStatusParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedPackageMigrationStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/package/migration-status`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemPartialView = (
+    params?: GetItemPartialViewParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/partial-view`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postPartialView = (
+    createPartialViewRequestModel: CreatePartialViewRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createPartialViewRequestModel
+    },
+      options);
+    }
+  
+const getPartialViewByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deletePartialViewByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putPartialViewByPath = (
+    path: string,
+    updatePartialViewRequestModel: UpdatePartialViewRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updatePartialViewRequestModel
+    },
+      options);
+    }
+  
+const putPartialViewByPathRename = (
+    path: string,
+    renamePartialViewRequestModel: RenamePartialViewRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}/rename`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: renamePartialViewRequestModel
+    },
+      options);
+    }
+  
+const postPartialViewFolder = (
+    createPartialViewFolderRequestModel: CreatePartialViewFolderRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createPartialViewFolderRequestModel
+    },
+      options);
+    }
+  
+const getPartialViewFolderByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewFolderResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/folder/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deletePartialViewFolderByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/folder/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getPartialViewSnippet = (
+    params?: GetPartialViewSnippetParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedPartialViewSnippetItemResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/snippet`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getPartialViewSnippetById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewSnippetResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/snippet/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const getTreePartialViewAncestors = (
+    params?: GetTreePartialViewAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/partial-view/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreePartialViewChildren = (
+    params?: GetTreePartialViewChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/partial-view/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreePartialViewRoot = (
+    params?: GetTreePartialViewRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/partial-view/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deletePreview = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/preview`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const postPreview = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/preview`, method: 'POST'
+    },
+      options);
+    }
+  
+const getProfilingStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ProfilingStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/profiling/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const putProfilingStatus = (
+    profilingStatusRequestModel: ProfilingStatusRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/profiling/status`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: profilingStatusRequestModel
+    },
+      options);
+    }
+  
+const getPropertyTypeIsUsed = (
+    params?: GetPropertyTypeIsUsedParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<boolean>(
+      {url: `/umbraco/management/api/v1/property-type/is-used`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+/**
+ * @deprecated
+ */
+const postPublishedCacheCollect = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<unknown>(
+      {url: `/umbraco/management/api/v1/published-cache/collect`, method: 'POST'
+    },
+      options);
+    }
+  
+const postPublishedCacheRebuild = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/published-cache/rebuild`, method: 'POST'
+    },
+      options);
+    }
+  
+const postPublishedCacheReload = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/published-cache/reload`, method: 'POST'
+    },
+      options);
+    }
+  
+/**
+ * @deprecated
+ */
+const getPublishedCacheStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<unknown>(
+      {url: `/umbraco/management/api/v1/published-cache/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const getRedirectManagement = (
+    params?: GetRedirectManagementParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRedirectUrlResponseModel>(
+      {url: `/umbraco/management/api/v1/redirect-management`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRedirectManagementById = (
+    id: string,
+    params?: GetRedirectManagementByIdParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRedirectUrlResponseModel>(
+      {url: `/umbraco/management/api/v1/redirect-management/${id}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deleteRedirectManagementById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/redirect-management/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getRedirectManagementStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<RedirectUrlStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/redirect-management/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const postRedirectManagementStatus = (
+    params?: PostRedirectManagementStatusParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/redirect-management/status`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+const getItemRelationType = (
+    params?: GetItemRelationTypeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<RelationTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/relation-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRelationType = (
+    params?: GetRelationTypeParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRelationTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/relation-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRelationTypeById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<RelationTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/relation-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const getRelationByRelationTypeId = (
+    id: string,
+    params?: GetRelationByRelationTypeIdParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRelationResponseModel>(
+      {url: `/umbraco/management/api/v1/relation/type/${id}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemScript = (
+    params?: GetItemScriptParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ScriptItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/script`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postScript = (
+    createScriptRequestModel: CreateScriptRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createScriptRequestModel
+    },
+      options);
+    }
+  
+const getScriptByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ScriptResponseModel>(
+      {url: `/umbraco/management/api/v1/script/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteScriptByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putScriptByPath = (
+    path: string,
+    updateScriptRequestModel: UpdateScriptRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/${path}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateScriptRequestModel
+    },
+      options);
+    }
+  
+const putScriptByPathRename = (
+    path: string,
+    renameScriptRequestModel: RenameScriptRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/${path}/rename`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: renameScriptRequestModel
+    },
+      options);
+    }
+  
+const postScriptFolder = (
+    createScriptFolderRequestModel: CreateScriptFolderRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createScriptFolderRequestModel
+    },
+      options);
+    }
+  
+const getScriptFolderByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ScriptFolderResponseModel>(
+      {url: `/umbraco/management/api/v1/script/folder/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteScriptFolderByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/folder/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getTreeScriptAncestors = (
+    params?: GetTreeScriptAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/script/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeScriptChildren = (
+    params?: GetTreeScriptChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/script/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeScriptRoot = (
+    params?: GetTreeScriptRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/script/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getSearcher = (
+    params?: GetSearcherParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSearcherResponseModel>(
+      {url: `/umbraco/management/api/v1/searcher`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getSearcherBySearcherNameQuery = (
+    searcherName: string,
+    params?: GetSearcherBySearcherNameQueryParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSearchResultResponseModel>(
+      {url: `/umbraco/management/api/v1/searcher/${searcherName}/query`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getSecurityConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<SecurityConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/security/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postSecurityForgotPassword = (
+    resetPasswordRequestModel: ResetPasswordRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/security/forgot-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: resetPasswordRequestModel
+    },
+      options);
+    }
+  
+const postSecurityForgotPasswordReset = (
+    resetPasswordTokenRequestModel: ResetPasswordTokenRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/security/forgot-password/reset`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: resetPasswordTokenRequestModel
+    },
+      options);
+    }
+  
+const postSecurityForgotPasswordVerify = (
+    verifyResetPasswordTokenRequestModel: VerifyResetPasswordTokenRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<VerifyResetPasswordResponseModel>(
+      {url: `/umbraco/management/api/v1/security/forgot-password/verify`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: verifyResetPasswordTokenRequestModel
+    },
+      options);
+    }
+  
+const getSegment = (
+    params?: GetSegmentParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSegmentResponseModel>(
+      {url: `/umbraco/management/api/v1/segment`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getServerConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/server/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerInformation = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerInformationResponseModel>(
+      {url: `/umbraco/management/api/v1/server/information`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/server/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerTroubleshooting = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerTroubleshootingResponseModel>(
+      {url: `/umbraco/management/api/v1/server/troubleshooting`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerUpgradeCheck = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UpgradeCheckResponseModel>(
+      {url: `/umbraco/management/api/v1/server/upgrade-check`, method: 'GET'
+    },
+      options);
+    }
+  
+const getItemStaticFile = (
+    params?: GetItemStaticFileParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StaticFileItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/static-file`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStaticFileAncestors = (
+    params?: GetTreeStaticFileAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/static-file/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStaticFileChildren = (
+    params?: GetTreeStaticFileChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/static-file/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStaticFileRoot = (
+    params?: GetTreeStaticFileRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/static-file/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemStylesheet = (
+    params?: GetItemStylesheetParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StylesheetItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/stylesheet`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postStylesheet = (
+    createStylesheetRequestModel: CreateStylesheetRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createStylesheetRequestModel
+    },
+      options);
+    }
+  
+const getStylesheetByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StylesheetResponseModel>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteStylesheetByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putStylesheetByPath = (
+    path: string,
+    updateStylesheetRequestModel: UpdateStylesheetRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateStylesheetRequestModel
+    },
+      options);
+    }
+  
+const putStylesheetByPathRename = (
+    path: string,
+    renameStylesheetRequestModel: RenameStylesheetRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}/rename`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: renameStylesheetRequestModel
+    },
+      options);
+    }
+  
+const postStylesheetFolder = (
+    createStylesheetFolderRequestModel: CreateStylesheetFolderRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createStylesheetFolderRequestModel
+    },
+      options);
+    }
+  
+const getStylesheetFolderByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StylesheetFolderResponseModel>(
+      {url: `/umbraco/management/api/v1/stylesheet/folder/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteStylesheetFolderByPath = (
+    path: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/folder/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getTreeStylesheetAncestors = (
+    params?: GetTreeStylesheetAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/stylesheet/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStylesheetChildren = (
+    params?: GetTreeStylesheetChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/stylesheet/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStylesheetRoot = (
+    params?: GetTreeStylesheetRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/stylesheet/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTag = (
+    params?: GetTagParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedTagResponseModel>(
+      {url: `/umbraco/management/api/v1/tag`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTelemetry = (
+    params?: GetTelemetryParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedTelemetryResponseModel>(
+      {url: `/umbraco/management/api/v1/telemetry`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTelemetryLevel = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TelemetryResponseModel>(
+      {url: `/umbraco/management/api/v1/telemetry/level`, method: 'GET'
+    },
+      options);
+    }
+  
+const postTelemetryLevel = (
+    telemetryRequestModel: TelemetryRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/telemetry/level`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: telemetryRequestModel
+    },
+      options);
+    }
+  
+const getItemTemplate = (
+    params?: GetItemTemplateParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/template`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemTemplateSearch = (
+    params?: GetItemTemplateSearchParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelTemplateItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/template/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postTemplate = (
+    createTemplateRequestModel: CreateTemplateRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/template`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createTemplateRequestModel
+    },
+      options);
+    }
+  
+const getTemplateById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateResponseModel>(
+      {url: `/umbraco/management/api/v1/template/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteTemplateById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/template/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putTemplateById = (
+    id: string,
+    updateTemplateRequestModel: UpdateTemplateRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/template/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateTemplateRequestModel
+    },
+      options);
+    }
+  
+const getTemplateConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/template/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postTemplateQueryExecute = (
+    templateQueryExecuteModel: TemplateQueryExecuteModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateQueryResultResponseModel>(
+      {url: `/umbraco/management/api/v1/template/query/execute`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: templateQueryExecuteModel
+    },
+      options);
+    }
+  
+const getTemplateQuerySettings = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateQuerySettingsResponseModel>(
+      {url: `/umbraco/management/api/v1/template/query/settings`, method: 'GET'
+    },
+      options);
+    }
+  
+const getTreeTemplateAncestors = (
+    params?: GetTreeTemplateAncestorsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NamedEntityTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/template/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeTemplateChildren = (
+    params?: GetTreeTemplateChildrenParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/template/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeTemplateRoot = (
+    params?: GetTreeTemplateRootParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/template/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postTemporaryFile = (
+    postTemporaryFileBody: PostTemporaryFileBody,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {const formData = new FormData();
+formData.append('Id', postTemporaryFileBody.Id)
+formData.append('File', postTemporaryFileBody.File)
+
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/temporary-file`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+const getTemporaryFileById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemporaryFileResponseModel>(
+      {url: `/umbraco/management/api/v1/temporary-file/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteTemporaryFileById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/temporary-file/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getTemporaryFileConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemporaryFileConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/temporary-file/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postUpgradeAuthorize = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/upgrade/authorize`, method: 'POST'
+    },
+      options);
+    }
+  
+const getUpgradeSettings = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UpgradeSettingsResponseModel>(
+      {url: `/umbraco/management/api/v1/upgrade/settings`, method: 'GET'
+    },
+      options);
+    }
+  
+const postUserData = (
+    createUserDataRequestModel: CreateUserDataRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-data`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserDataRequestModel
+    },
+      options);
+    }
+  
+const getUserData = (
+    params?: GetUserDataParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserDataResponseModel>(
+      {url: `/umbraco/management/api/v1/user-data`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putUserData = (
+    updateUserDataRequestModel: UpdateUserDataRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-data`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserDataRequestModel
+    },
+      options);
+    }
+  
+const getUserDataById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserDataModel>(
+      {url: `/umbraco/management/api/v1/user-data/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const getFilterUserGroup = (
+    params?: GetFilterUserGroupParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/user-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemUserGroup = (
+    params?: GetItemUserGroupParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserGroupItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/user-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deleteUserGroup = (
+    deleteUserGroupsRequestModel: DeleteUserGroupsRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group`, method: 'DELETE',
+      headers: {'Content-Type': 'application/json', },
+      data: deleteUserGroupsRequestModel
+    },
+      options);
+    }
+  
+const postUserGroup = (
+    createUserGroupRequestModel: CreateUserGroupRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserGroupRequestModel
+    },
+      options);
+    }
+  
+const getUserGroup = (
+    params?: GetUserGroupParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/user-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserGroupById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/user-group/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserGroupById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putUserGroupById = (
+    id: string,
+    updateUserGroupRequestModel: UpdateUserGroupRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserGroupRequestModel
+    },
+      options);
+    }
+  
+const deleteUserGroupByIdUsers = (
+    id: string,
+    referenceByIdModel: ReferenceByIdModel[],
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}/users`, method: 'DELETE',
+      headers: {'Content-Type': 'application/json', },
+      data: referenceByIdModel
+    },
+      options);
+    }
+  
+const postUserGroupByIdUsers = (
+    id: string,
+    referenceByIdModel: ReferenceByIdModel[],
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}/users`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: referenceByIdModel
+    },
+      options);
+    }
+  
+const getFilterUser = (
+    params?: GetFilterUserParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/user`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemUser = (
+    params?: GetItemUserParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/user`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postUser = (
+    createUserRequestModel: CreateUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserRequestModel
+    },
+      options);
+    }
+  
+const deleteUser = (
+    deleteUsersRequestModel: DeleteUsersRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user`, method: 'DELETE',
+      headers: {'Content-Type': 'application/json', },
+      data: deleteUsersRequestModel
+    },
+      options);
+    }
+  
+const getUser = (
+    params?: GetUserParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putUserById = (
+    id: string,
+    updateUserRequestModel: UpdateUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserRequestModel
+    },
+      options);
+    }
+  
+const getUserById2fa = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserTwoFactorProviderModel[]>(
+      {url: `/umbraco/management/api/v1/user/${id}/2fa`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserById2faByProviderName = (
+    id: string,
+    providerName: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/2fa/${providerName}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getUserByIdCalculateStartNodes = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<CalculatedUserStartNodesResponseModel>(
+      {url: `/umbraco/management/api/v1/user/${id}/calculate-start-nodes`, method: 'GET'
+    },
+      options);
+    }
+  
+const postUserByIdChangePassword = (
+    id: string,
+    changePasswordUserRequestModel: ChangePasswordUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/change-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: changePasswordUserRequestModel
+    },
+      options);
+    }
+  
+const postUserByIdClientCredentials = (
+    id: string,
+    createUserClientCredentialsRequestModel: CreateUserClientCredentialsRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/client-credentials`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserClientCredentialsRequestModel
+    },
+      options);
+    }
+  
+const getUserByIdClientCredentials = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<string[]>(
+      {url: `/umbraco/management/api/v1/user/${id}/client-credentials`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserByIdClientCredentialsByClientId = (
+    id: string,
+    clientId: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/client-credentials/${clientId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const postUserByIdResetPassword = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ResetPasswordUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/${id}/reset-password`, method: 'POST'
+    },
+      options);
+    }
+  
+const deleteUserAvatarById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/avatar/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const postUserAvatarById = (
+    id: string,
+    setAvatarRequestModel: SetAvatarRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/avatar/${id}`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: setAvatarRequestModel
+    },
+      options);
+    }
+  
+const getUserConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/user/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrent = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<CurrentUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrent2fa = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserTwoFactorProviderModel[]>(
+      {url: `/umbraco/management/api/v1/user/current/2fa`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserCurrent2faByProviderName = (
+    providerName: string,
+    params?: DeleteUserCurrent2faByProviderNameParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`, method: 'DELETE',
+        params
+    },
+      options);
+    }
+  
+const postUserCurrent2faByProviderName = (
+    providerName: string,
+    enableTwoFactorRequestModel: EnableTwoFactorRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NoopSetupTwoFactorModel>(
+      {url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: enableTwoFactorRequestModel
+    },
+      options);
+    }
+  
+const getUserCurrent2faByProviderName = (
+    providerName: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NoopSetupTwoFactorModel>(
+      {url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`, method: 'GET'
+    },
+      options);
+    }
+  
+const postUserCurrentAvatar = (
+    setAvatarRequestModel: SetAvatarRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/current/avatar`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: setAvatarRequestModel
+    },
+      options);
+    }
+  
+const postUserCurrentChangePassword = (
+    changePasswordCurrentUserRequestModel: ChangePasswordCurrentUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/current/change-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: changePasswordCurrentUserRequestModel
+    },
+      options);
+    }
+  
+const getUserCurrentConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<CurrenUserConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrentLoginProviders = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserExternalLoginProviderModel[]>(
+      {url: `/umbraco/management/api/v1/user/current/login-providers`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrentPermissions = (
+    params?: GetUserCurrentPermissionsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserPermissionsResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current/permissions`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserCurrentPermissionsDocument = (
+    params?: GetUserCurrentPermissionsDocumentParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserPermissionsResponseModel[]>(
+      {url: `/umbraco/management/api/v1/user/current/permissions/document`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserCurrentPermissionsMedia = (
+    params?: GetUserCurrentPermissionsMediaParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserPermissionsResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current/permissions/media`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postUserDisable = (
+    disableUserRequestModel: DisableUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/disable`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: disableUserRequestModel
+    },
+      options);
+    }
+  
+const postUserEnable = (
+    enableUserRequestModel: EnableUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/enable`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: enableUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInvite = (
+    inviteUserRequestModel: InviteUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/invite`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: inviteUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInviteCreatePassword = (
+    createInitialPasswordUserRequestModel: CreateInitialPasswordUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/invite/create-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createInitialPasswordUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInviteResend = (
+    resendInviteUserRequestModel: ResendInviteUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/invite/resend`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: resendInviteUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInviteVerify = (
+    verifyInviteUserRequestModel: VerifyInviteUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<VerifyInviteUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/invite/verify`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: verifyInviteUserRequestModel
+    },
+      options);
+    }
+  
+const postUserSetUserGroups = (
+    updateUserGroupsOnUserRequestModel: UpdateUserGroupsOnUserRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/set-user-groups`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserGroupsOnUserRequestModel
+    },
+      options);
+    }
+  
+const postUserUnlock = (
+    unlockUsersRequestModel: UnlockUsersRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/unlock`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: unlockUsersRequestModel
+    },
+      options);
+    }
+  
+const getItemWebhook = (
+    params?: GetItemWebhookParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<WebhookItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/webhook`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getWebhook = (
+    params?: GetWebhookParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postWebhook = (
+    createWebhookRequestModel: CreateWebhookRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/webhook`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createWebhookRequestModel
+    },
+      options);
+    }
+  
+const getWebhookById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<WebhookResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteWebhookById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/webhook/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putWebhookById = (
+    id: string,
+    updateWebhookRequestModel: UpdateWebhookRequestModel,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/webhook/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateWebhookRequestModel
+    },
+      options);
+    }
+  
+const getWebhookByIdLogs = (
+    id: string,
+    params?: GetWebhookByIdLogsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookLogResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook/${id}/logs`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getWebhookEvents = (
+    params?: GetWebhookEventsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookEventModel>(
+      {url: `/umbraco/management/api/v1/webhook/events`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getWebhookLogs = (
+    params?: GetWebhookLogsParams,
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookLogResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook/logs`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+return {getCulture,postDataType,getDataTypeById,deleteDataTypeById,putDataTypeById,postDataTypeByIdCopy,getDataTypeByIdIsUsed,putDataTypeByIdMove,getDataTypeByIdReferences,getDataTypeConfiguration,postDataTypeFolder,getDataTypeFolderById,deleteDataTypeFolderById,putDataTypeFolderById,getFilterDataType,getItemDataType,getItemDataTypeSearch,getTreeDataTypeAncestors,getTreeDataTypeChildren,getTreeDataTypeRoot,getDictionary,postDictionary,getDictionaryById,deleteDictionaryById,putDictionaryById,getDictionaryByIdExport,putDictionaryByIdMove,postDictionaryImport,getItemDictionary,getTreeDictionaryAncestors,getTreeDictionaryChildren,getTreeDictionaryRoot,postDocumentBlueprint,getDocumentBlueprintById,deleteDocumentBlueprintById,putDocumentBlueprintById,putDocumentBlueprintByIdMove,postDocumentBlueprintFolder,getDocumentBlueprintFolderById,deleteDocumentBlueprintFolderById,putDocumentBlueprintFolderById,postDocumentBlueprintFromDocument,getItemDocumentBlueprint,getTreeDocumentBlueprintAncestors,getTreeDocumentBlueprintChildren,getTreeDocumentBlueprintRoot,postDocumentType,getDocumentTypeById,deleteDocumentTypeById,putDocumentTypeById,getDocumentTypeByIdAllowedChildren,getDocumentTypeByIdBlueprint,getDocumentTypeByIdCompositionReferences,postDocumentTypeByIdCopy,getDocumentTypeByIdExport,putDocumentTypeByIdImport,putDocumentTypeByIdMove,getDocumentTypeAllowedAtRoot,postDocumentTypeAvailableCompositions,getDocumentTypeConfiguration,postDocumentTypeFolder,getDocumentTypeFolderById,deleteDocumentTypeFolderById,putDocumentTypeFolderById,postDocumentTypeImport,getItemDocumentType,getItemDocumentTypeSearch,getTreeDocumentTypeAncestors,getTreeDocumentTypeChildren,getTreeDocumentTypeRoot,getDocumentVersion,getDocumentVersionById,putDocumentVersionByIdPreventCleanup,postDocumentVersionByIdRollback,getCollectionDocumentById,postDocument,getDocumentById,deleteDocumentById,putDocumentById,getDocumentByIdAuditLog,postDocumentByIdCopy,getDocumentByIdDomains,putDocumentByIdDomains,putDocumentByIdMove,putDocumentByIdMoveToRecycleBin,getDocumentByIdNotifications,putDocumentByIdNotifications,postDocumentByIdPublicAccess,deleteDocumentByIdPublicAccess,getDocumentByIdPublicAccess,putDocumentByIdPublicAccess,putDocumentByIdPublish,putDocumentByIdPublishWithDescendants,getDocumentByIdPublished,getDocumentByIdReferencedBy,getDocumentByIdReferencedDescendants,putDocumentByIdUnpublish,putDocumentByIdValidate,putUmbracoManagementApiV11DocumentByIdValidate11,getDocumentAreReferenced,getDocumentConfiguration,putDocumentSort,getDocumentUrls,postDocumentValidate,getItemDocument,getItemDocumentSearch,deleteRecycleBinDocument,deleteRecycleBinDocumentById,getRecycleBinDocumentByIdOriginalParent,putRecycleBinDocumentByIdRestore,getRecycleBinDocumentChildren,getRecycleBinDocumentRoot,getTreeDocumentAncestors,getTreeDocumentChildren,getTreeDocumentRoot,postDynamicRootQuery,getDynamicRootSteps,getHealthCheckGroup,getHealthCheckGroupByName,postHealthCheckGroupByNameCheck,postHealthCheckExecuteAction,getHelp,getImagingResizeUrls,getImportAnalyze,getIndexer,getIndexerByIndexName,postIndexerByIndexNameRebuild,getInstallSettings,postInstallSetup,postInstallValidateDatabase,getItemLanguage,getItemLanguageDefault,getLanguage,postLanguage,getLanguageByIsoCode,deleteLanguageByIsoCode,putLanguageByIsoCode,getLogViewerLevel,getLogViewerLevelCount,getLogViewerLog,getLogViewerMessageTemplate,getLogViewerSavedSearch,postLogViewerSavedSearch,getLogViewerSavedSearchByName,deleteLogViewerSavedSearchByName,getLogViewerValidateLogsSize,getManifestManifest,getManifestManifestPrivate,getManifestManifestPublic,getItemMediaType,getItemMediaTypeAllowed,getItemMediaTypeFolders,getItemMediaTypeSearch,postMediaType,getMediaTypeById,deleteMediaTypeById,putMediaTypeById,getMediaTypeByIdAllowedChildren,getMediaTypeByIdCompositionReferences,postMediaTypeByIdCopy,getMediaTypeByIdExport,putMediaTypeByIdImport,putMediaTypeByIdMove,getMediaTypeAllowedAtRoot,postMediaTypeAvailableCompositions,getMediaTypeConfiguration,postMediaTypeFolder,getMediaTypeFolderById,deleteMediaTypeFolderById,putMediaTypeFolderById,postMediaTypeImport,getTreeMediaTypeAncestors,getTreeMediaTypeChildren,getTreeMediaTypeRoot,getCollectionMedia,getItemMedia,getItemMediaSearch,postMedia,getMediaById,deleteMediaById,putMediaById,getMediaByIdAuditLog,putMediaByIdMove,putMediaByIdMoveToRecycleBin,getMediaByIdReferencedBy,getMediaByIdReferencedDescendants,putMediaByIdValidate,getMediaAreReferenced,getMediaConfiguration,putMediaSort,getMediaUrls,postMediaValidate,deleteRecycleBinMedia,deleteRecycleBinMediaById,getRecycleBinMediaByIdOriginalParent,putRecycleBinMediaByIdRestore,getRecycleBinMediaChildren,getRecycleBinMediaRoot,getTreeMediaAncestors,getTreeMediaChildren,getTreeMediaRoot,getItemMemberGroup,getMemberGroup,postMemberGroup,getMemberGroupById,deleteMemberGroupById,putMemberGroupById,getTreeMemberGroupRoot,getItemMemberType,getItemMemberTypeSearch,postMemberType,getMemberTypeById,deleteMemberTypeById,putMemberTypeById,getMemberTypeByIdCompositionReferences,postMemberTypeByIdCopy,postMemberTypeAvailableCompositions,getMemberTypeConfiguration,getTreeMemberTypeRoot,getFilterMember,getItemMember,getItemMemberSearch,postMember,getMemberById,deleteMemberById,putMemberById,putMemberByIdValidate,getMemberConfiguration,postMemberValidate,postModelsBuilderBuild,getModelsBuilderDashboard,getModelsBuilderStatus,getObjectTypes,getOembedQuery,postPackageByNameRunMigration,getPackageConfiguration,getPackageCreated,postPackageCreated,getPackageCreatedById,deletePackageCreatedById,putPackageCreatedById,getPackageCreatedByIdDownload,getPackageMigrationStatus,getItemPartialView,postPartialView,getPartialViewByPath,deletePartialViewByPath,putPartialViewByPath,putPartialViewByPathRename,postPartialViewFolder,getPartialViewFolderByPath,deletePartialViewFolderByPath,getPartialViewSnippet,getPartialViewSnippetById,getTreePartialViewAncestors,getTreePartialViewChildren,getTreePartialViewRoot,deletePreview,postPreview,getProfilingStatus,putProfilingStatus,getPropertyTypeIsUsed,postPublishedCacheCollect,postPublishedCacheRebuild,postPublishedCacheReload,getPublishedCacheStatus,getRedirectManagement,getRedirectManagementById,deleteRedirectManagementById,getRedirectManagementStatus,postRedirectManagementStatus,getItemRelationType,getRelationType,getRelationTypeById,getRelationByRelationTypeId,getItemScript,postScript,getScriptByPath,deleteScriptByPath,putScriptByPath,putScriptByPathRename,postScriptFolder,getScriptFolderByPath,deleteScriptFolderByPath,getTreeScriptAncestors,getTreeScriptChildren,getTreeScriptRoot,getSearcher,getSearcherBySearcherNameQuery,getSecurityConfiguration,postSecurityForgotPassword,postSecurityForgotPasswordReset,postSecurityForgotPasswordVerify,getSegment,getServerConfiguration,getServerInformation,getServerStatus,getServerTroubleshooting,getServerUpgradeCheck,getItemStaticFile,getTreeStaticFileAncestors,getTreeStaticFileChildren,getTreeStaticFileRoot,getItemStylesheet,postStylesheet,getStylesheetByPath,deleteStylesheetByPath,putStylesheetByPath,putStylesheetByPathRename,postStylesheetFolder,getStylesheetFolderByPath,deleteStylesheetFolderByPath,getTreeStylesheetAncestors,getTreeStylesheetChildren,getTreeStylesheetRoot,getTag,getTelemetry,getTelemetryLevel,postTelemetryLevel,getItemTemplate,getItemTemplateSearch,postTemplate,getTemplateById,deleteTemplateById,putTemplateById,getTemplateConfiguration,postTemplateQueryExecute,getTemplateQuerySettings,getTreeTemplateAncestors,getTreeTemplateChildren,getTreeTemplateRoot,postTemporaryFile,getTemporaryFileById,deleteTemporaryFileById,getTemporaryFileConfiguration,postUpgradeAuthorize,getUpgradeSettings,postUserData,getUserData,putUserData,getUserDataById,getFilterUserGroup,getItemUserGroup,deleteUserGroup,postUserGroup,getUserGroup,getUserGroupById,deleteUserGroupById,putUserGroupById,deleteUserGroupByIdUsers,postUserGroupByIdUsers,getFilterUser,getItemUser,postUser,deleteUser,getUser,getUserById,deleteUserById,putUserById,getUserById2fa,deleteUserById2faByProviderName,getUserByIdCalculateStartNodes,postUserByIdChangePassword,postUserByIdClientCredentials,getUserByIdClientCredentials,deleteUserByIdClientCredentialsByClientId,postUserByIdResetPassword,deleteUserAvatarById,postUserAvatarById,getUserConfiguration,getUserCurrent,getUserCurrent2fa,deleteUserCurrent2faByProviderName,postUserCurrent2faByProviderName,getUserCurrent2faByProviderName,postUserCurrentAvatar,postUserCurrentChangePassword,getUserCurrentConfiguration,getUserCurrentLoginProviders,getUserCurrentPermissions,getUserCurrentPermissionsDocument,getUserCurrentPermissionsMedia,postUserDisable,postUserEnable,postUserInvite,postUserInviteCreatePassword,postUserInviteResend,postUserInviteVerify,postUserSetUserGroups,postUserUnlock,getItemWebhook,getWebhook,postWebhook,getWebhookById,deleteWebhookById,putWebhookById,getWebhookByIdLogs,getWebhookEvents,getWebhookLogs}};
+export type GetCultureResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getCulture']>>>
+export type PostDataTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDataType']>>>
+export type GetDataTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeById']>>>
+export type DeleteDataTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDataTypeById']>>>
+export type PutDataTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDataTypeById']>>>
+export type PostDataTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDataTypeByIdCopy']>>>
+export type GetDataTypeByIdIsUsedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeByIdIsUsed']>>>
+export type PutDataTypeByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDataTypeByIdMove']>>>
+export type GetDataTypeByIdReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeByIdReferences']>>>
+export type GetDataTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeConfiguration']>>>
+export type PostDataTypeFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDataTypeFolder']>>>
+export type GetDataTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeFolderById']>>>
+export type DeleteDataTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDataTypeFolderById']>>>
+export type PutDataTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDataTypeFolderById']>>>
+export type GetFilterDataTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterDataType']>>>
+export type GetItemDataTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDataType']>>>
+export type GetItemDataTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDataTypeSearch']>>>
+export type GetTreeDataTypeAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDataTypeAncestors']>>>
+export type GetTreeDataTypeChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDataTypeChildren']>>>
+export type GetTreeDataTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDataTypeRoot']>>>
+export type GetDictionaryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDictionary']>>>
+export type PostDictionaryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDictionary']>>>
+export type GetDictionaryByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDictionaryById']>>>
+export type DeleteDictionaryByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDictionaryById']>>>
+export type PutDictionaryByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDictionaryById']>>>
+export type GetDictionaryByIdExportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDictionaryByIdExport']>>>
+export type PutDictionaryByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDictionaryByIdMove']>>>
+export type PostDictionaryImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDictionaryImport']>>>
+export type GetItemDictionaryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDictionary']>>>
+export type GetTreeDictionaryAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDictionaryAncestors']>>>
+export type GetTreeDictionaryChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDictionaryChildren']>>>
+export type GetTreeDictionaryRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDictionaryRoot']>>>
+export type PostDocumentBlueprintResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentBlueprint']>>>
+export type GetDocumentBlueprintByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentBlueprintById']>>>
+export type DeleteDocumentBlueprintByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentBlueprintById']>>>
+export type PutDocumentBlueprintByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentBlueprintById']>>>
+export type PutDocumentBlueprintByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentBlueprintByIdMove']>>>
+export type PostDocumentBlueprintFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentBlueprintFolder']>>>
+export type GetDocumentBlueprintFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentBlueprintFolderById']>>>
+export type DeleteDocumentBlueprintFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentBlueprintFolderById']>>>
+export type PutDocumentBlueprintFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentBlueprintFolderById']>>>
+export type PostDocumentBlueprintFromDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentBlueprintFromDocument']>>>
+export type GetItemDocumentBlueprintResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentBlueprint']>>>
+export type GetTreeDocumentBlueprintAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentBlueprintAncestors']>>>
+export type GetTreeDocumentBlueprintChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentBlueprintChildren']>>>
+export type GetTreeDocumentBlueprintRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentBlueprintRoot']>>>
+export type PostDocumentTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentType']>>>
+export type GetDocumentTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeById']>>>
+export type DeleteDocumentTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentTypeById']>>>
+export type PutDocumentTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeById']>>>
+export type GetDocumentTypeByIdAllowedChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdAllowedChildren']>>>
+export type GetDocumentTypeByIdBlueprintResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdBlueprint']>>>
+export type GetDocumentTypeByIdCompositionReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdCompositionReferences']>>>
+export type PostDocumentTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeByIdCopy']>>>
+export type GetDocumentTypeByIdExportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdExport']>>>
+export type PutDocumentTypeByIdImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeByIdImport']>>>
+export type PutDocumentTypeByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeByIdMove']>>>
+export type GetDocumentTypeAllowedAtRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeAllowedAtRoot']>>>
+export type PostDocumentTypeAvailableCompositionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeAvailableCompositions']>>>
+export type GetDocumentTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeConfiguration']>>>
+export type PostDocumentTypeFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeFolder']>>>
+export type GetDocumentTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeFolderById']>>>
+export type DeleteDocumentTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentTypeFolderById']>>>
+export type PutDocumentTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeFolderById']>>>
+export type PostDocumentTypeImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeImport']>>>
+export type GetItemDocumentTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentType']>>>
+export type GetItemDocumentTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentTypeSearch']>>>
+export type GetTreeDocumentTypeAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentTypeAncestors']>>>
+export type GetTreeDocumentTypeChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentTypeChildren']>>>
+export type GetTreeDocumentTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentTypeRoot']>>>
+export type GetDocumentVersionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentVersion']>>>
+export type GetDocumentVersionByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentVersionById']>>>
+export type PutDocumentVersionByIdPreventCleanupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentVersionByIdPreventCleanup']>>>
+export type PostDocumentVersionByIdRollbackResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentVersionByIdRollback']>>>
+export type GetCollectionDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getCollectionDocumentById']>>>
+export type PostDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocument']>>>
+export type GetDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentById']>>>
+export type DeleteDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentById']>>>
+export type PutDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentById']>>>
+export type GetDocumentByIdAuditLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdAuditLog']>>>
+export type PostDocumentByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentByIdCopy']>>>
+export type GetDocumentByIdDomainsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdDomains']>>>
+export type PutDocumentByIdDomainsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdDomains']>>>
+export type PutDocumentByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdMove']>>>
+export type PutDocumentByIdMoveToRecycleBinResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdMoveToRecycleBin']>>>
+export type GetDocumentByIdNotificationsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdNotifications']>>>
+export type PutDocumentByIdNotificationsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdNotifications']>>>
+export type PostDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentByIdPublicAccess']>>>
+export type DeleteDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentByIdPublicAccess']>>>
+export type GetDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdPublicAccess']>>>
+export type PutDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdPublicAccess']>>>
+export type PutDocumentByIdPublishResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdPublish']>>>
+export type PutDocumentByIdPublishWithDescendantsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdPublishWithDescendants']>>>
+export type GetDocumentByIdPublishedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdPublished']>>>
+export type GetDocumentByIdReferencedByResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdReferencedBy']>>>
+export type GetDocumentByIdReferencedDescendantsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdReferencedDescendants']>>>
+export type PutDocumentByIdUnpublishResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdUnpublish']>>>
+export type PutDocumentByIdValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdValidate']>>>
+export type PutUmbracoManagementApiV11DocumentByIdValidate11Result = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUmbracoManagementApiV11DocumentByIdValidate11']>>>
+export type GetDocumentAreReferencedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentAreReferenced']>>>
+export type GetDocumentConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentConfiguration']>>>
+export type PutDocumentSortResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentSort']>>>
+export type GetDocumentUrlsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentUrls']>>>
+export type PostDocumentValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentValidate']>>>
+export type GetItemDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocument']>>>
+export type GetItemDocumentSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentSearch']>>>
+export type DeleteRecycleBinDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinDocument']>>>
+export type DeleteRecycleBinDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinDocumentById']>>>
+export type GetRecycleBinDocumentByIdOriginalParentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinDocumentByIdOriginalParent']>>>
+export type PutRecycleBinDocumentByIdRestoreResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putRecycleBinDocumentByIdRestore']>>>
+export type GetRecycleBinDocumentChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinDocumentChildren']>>>
+export type GetRecycleBinDocumentRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinDocumentRoot']>>>
+export type GetTreeDocumentAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentAncestors']>>>
+export type GetTreeDocumentChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentChildren']>>>
+export type GetTreeDocumentRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentRoot']>>>
+export type PostDynamicRootQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDynamicRootQuery']>>>
+export type GetDynamicRootStepsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDynamicRootSteps']>>>
+export type GetHealthCheckGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getHealthCheckGroup']>>>
+export type GetHealthCheckGroupByNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getHealthCheckGroupByName']>>>
+export type PostHealthCheckGroupByNameCheckResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postHealthCheckGroupByNameCheck']>>>
+export type PostHealthCheckExecuteActionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postHealthCheckExecuteAction']>>>
+export type GetHelpResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getHelp']>>>
+export type GetImagingResizeUrlsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getImagingResizeUrls']>>>
+export type GetImportAnalyzeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getImportAnalyze']>>>
+export type GetIndexerResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getIndexer']>>>
+export type GetIndexerByIndexNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getIndexerByIndexName']>>>
+export type PostIndexerByIndexNameRebuildResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postIndexerByIndexNameRebuild']>>>
+export type GetInstallSettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getInstallSettings']>>>
+export type PostInstallSetupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postInstallSetup']>>>
+export type PostInstallValidateDatabaseResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postInstallValidateDatabase']>>>
+export type GetItemLanguageResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemLanguage']>>>
+export type GetItemLanguageDefaultResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemLanguageDefault']>>>
+export type GetLanguageResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLanguage']>>>
+export type PostLanguageResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postLanguage']>>>
+export type GetLanguageByIsoCodeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLanguageByIsoCode']>>>
+export type DeleteLanguageByIsoCodeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteLanguageByIsoCode']>>>
+export type PutLanguageByIsoCodeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putLanguageByIsoCode']>>>
+export type GetLogViewerLevelResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerLevel']>>>
+export type GetLogViewerLevelCountResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerLevelCount']>>>
+export type GetLogViewerLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerLog']>>>
+export type GetLogViewerMessageTemplateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerMessageTemplate']>>>
+export type GetLogViewerSavedSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerSavedSearch']>>>
+export type PostLogViewerSavedSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postLogViewerSavedSearch']>>>
+export type GetLogViewerSavedSearchByNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerSavedSearchByName']>>>
+export type DeleteLogViewerSavedSearchByNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteLogViewerSavedSearchByName']>>>
+export type GetLogViewerValidateLogsSizeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerValidateLogsSize']>>>
+export type GetManifestManifestResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getManifestManifest']>>>
+export type GetManifestManifestPrivateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getManifestManifestPrivate']>>>
+export type GetManifestManifestPublicResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getManifestManifestPublic']>>>
+export type GetItemMediaTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaType']>>>
+export type GetItemMediaTypeAllowedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaTypeAllowed']>>>
+export type GetItemMediaTypeFoldersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaTypeFolders']>>>
+export type GetItemMediaTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaTypeSearch']>>>
+export type PostMediaTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaType']>>>
+export type GetMediaTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeById']>>>
+export type DeleteMediaTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMediaTypeById']>>>
+export type PutMediaTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeById']>>>
+export type GetMediaTypeByIdAllowedChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeByIdAllowedChildren']>>>
+export type GetMediaTypeByIdCompositionReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeByIdCompositionReferences']>>>
+export type PostMediaTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeByIdCopy']>>>
+export type GetMediaTypeByIdExportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeByIdExport']>>>
+export type PutMediaTypeByIdImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeByIdImport']>>>
+export type PutMediaTypeByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeByIdMove']>>>
+export type GetMediaTypeAllowedAtRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeAllowedAtRoot']>>>
+export type PostMediaTypeAvailableCompositionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeAvailableCompositions']>>>
+export type GetMediaTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeConfiguration']>>>
+export type PostMediaTypeFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeFolder']>>>
+export type GetMediaTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeFolderById']>>>
+export type DeleteMediaTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMediaTypeFolderById']>>>
+export type PutMediaTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeFolderById']>>>
+export type PostMediaTypeImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeImport']>>>
+export type GetTreeMediaTypeAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaTypeAncestors']>>>
+export type GetTreeMediaTypeChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaTypeChildren']>>>
+export type GetTreeMediaTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaTypeRoot']>>>
+export type GetCollectionMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getCollectionMedia']>>>
+export type GetItemMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMedia']>>>
+export type GetItemMediaSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaSearch']>>>
+export type PostMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMedia']>>>
+export type GetMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaById']>>>
+export type DeleteMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMediaById']>>>
+export type PutMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaById']>>>
+export type GetMediaByIdAuditLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaByIdAuditLog']>>>
+export type PutMediaByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaByIdMove']>>>
+export type PutMediaByIdMoveToRecycleBinResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaByIdMoveToRecycleBin']>>>
+export type GetMediaByIdReferencedByResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaByIdReferencedBy']>>>
+export type GetMediaByIdReferencedDescendantsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaByIdReferencedDescendants']>>>
+export type PutMediaByIdValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaByIdValidate']>>>
+export type GetMediaAreReferencedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaAreReferenced']>>>
+export type GetMediaConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaConfiguration']>>>
+export type PutMediaSortResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaSort']>>>
+export type GetMediaUrlsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaUrls']>>>
+export type PostMediaValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaValidate']>>>
+export type DeleteRecycleBinMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinMedia']>>>
+export type DeleteRecycleBinMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinMediaById']>>>
+export type GetRecycleBinMediaByIdOriginalParentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinMediaByIdOriginalParent']>>>
+export type PutRecycleBinMediaByIdRestoreResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putRecycleBinMediaByIdRestore']>>>
+export type GetRecycleBinMediaChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinMediaChildren']>>>
+export type GetRecycleBinMediaRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinMediaRoot']>>>
+export type GetTreeMediaAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaAncestors']>>>
+export type GetTreeMediaChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaChildren']>>>
+export type GetTreeMediaRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaRoot']>>>
+export type GetItemMemberGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberGroup']>>>
+export type GetMemberGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberGroup']>>>
+export type PostMemberGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberGroup']>>>
+export type GetMemberGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberGroupById']>>>
+export type DeleteMemberGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMemberGroupById']>>>
+export type PutMemberGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberGroupById']>>>
+export type GetTreeMemberGroupRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMemberGroupRoot']>>>
+export type GetItemMemberTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberType']>>>
+export type GetItemMemberTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberTypeSearch']>>>
+export type PostMemberTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberType']>>>
+export type GetMemberTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberTypeById']>>>
+export type DeleteMemberTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMemberTypeById']>>>
+export type PutMemberTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberTypeById']>>>
+export type GetMemberTypeByIdCompositionReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberTypeByIdCompositionReferences']>>>
+export type PostMemberTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberTypeByIdCopy']>>>
+export type PostMemberTypeAvailableCompositionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberTypeAvailableCompositions']>>>
+export type GetMemberTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberTypeConfiguration']>>>
+export type GetTreeMemberTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMemberTypeRoot']>>>
+export type GetFilterMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterMember']>>>
+export type GetItemMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMember']>>>
+export type GetItemMemberSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberSearch']>>>
+export type PostMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMember']>>>
+export type GetMemberByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberById']>>>
+export type DeleteMemberByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMemberById']>>>
+export type PutMemberByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberById']>>>
+export type PutMemberByIdValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberByIdValidate']>>>
+export type GetMemberConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberConfiguration']>>>
+export type PostMemberValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberValidate']>>>
+export type PostModelsBuilderBuildResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postModelsBuilderBuild']>>>
+export type GetModelsBuilderDashboardResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getModelsBuilderDashboard']>>>
+export type GetModelsBuilderStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getModelsBuilderStatus']>>>
+export type GetObjectTypesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getObjectTypes']>>>
+export type GetOembedQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getOembedQuery']>>>
+export type PostPackageByNameRunMigrationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPackageByNameRunMigration']>>>
+export type GetPackageConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageConfiguration']>>>
+export type GetPackageCreatedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageCreated']>>>
+export type PostPackageCreatedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPackageCreated']>>>
+export type GetPackageCreatedByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageCreatedById']>>>
+export type DeletePackageCreatedByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePackageCreatedById']>>>
+export type PutPackageCreatedByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putPackageCreatedById']>>>
+export type GetPackageCreatedByIdDownloadResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageCreatedByIdDownload']>>>
+export type GetPackageMigrationStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageMigrationStatus']>>>
+export type GetItemPartialViewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemPartialView']>>>
+export type PostPartialViewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPartialView']>>>
+export type GetPartialViewByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewByPath']>>>
+export type DeletePartialViewByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePartialViewByPath']>>>
+export type PutPartialViewByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putPartialViewByPath']>>>
+export type PutPartialViewByPathRenameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putPartialViewByPathRename']>>>
+export type PostPartialViewFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPartialViewFolder']>>>
+export type GetPartialViewFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewFolderByPath']>>>
+export type DeletePartialViewFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePartialViewFolderByPath']>>>
+export type GetPartialViewSnippetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewSnippet']>>>
+export type GetPartialViewSnippetByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewSnippetById']>>>
+export type GetTreePartialViewAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreePartialViewAncestors']>>>
+export type GetTreePartialViewChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreePartialViewChildren']>>>
+export type GetTreePartialViewRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreePartialViewRoot']>>>
+export type DeletePreviewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePreview']>>>
+export type PostPreviewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPreview']>>>
+export type GetProfilingStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getProfilingStatus']>>>
+export type PutProfilingStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putProfilingStatus']>>>
+export type GetPropertyTypeIsUsedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPropertyTypeIsUsed']>>>
+export type PostPublishedCacheCollectResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPublishedCacheCollect']>>>
+export type PostPublishedCacheRebuildResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPublishedCacheRebuild']>>>
+export type PostPublishedCacheReloadResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPublishedCacheReload']>>>
+export type GetPublishedCacheStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPublishedCacheStatus']>>>
+export type GetRedirectManagementResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRedirectManagement']>>>
+export type GetRedirectManagementByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRedirectManagementById']>>>
+export type DeleteRedirectManagementByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRedirectManagementById']>>>
+export type GetRedirectManagementStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRedirectManagementStatus']>>>
+export type PostRedirectManagementStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postRedirectManagementStatus']>>>
+export type GetItemRelationTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemRelationType']>>>
+export type GetRelationTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRelationType']>>>
+export type GetRelationTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRelationTypeById']>>>
+export type GetRelationByRelationTypeIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRelationByRelationTypeId']>>>
+export type GetItemScriptResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemScript']>>>
+export type PostScriptResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postScript']>>>
+export type GetScriptByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getScriptByPath']>>>
+export type DeleteScriptByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteScriptByPath']>>>
+export type PutScriptByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putScriptByPath']>>>
+export type PutScriptByPathRenameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putScriptByPathRename']>>>
+export type PostScriptFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postScriptFolder']>>>
+export type GetScriptFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getScriptFolderByPath']>>>
+export type DeleteScriptFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteScriptFolderByPath']>>>
+export type GetTreeScriptAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeScriptAncestors']>>>
+export type GetTreeScriptChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeScriptChildren']>>>
+export type GetTreeScriptRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeScriptRoot']>>>
+export type GetSearcherResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSearcher']>>>
+export type GetSearcherBySearcherNameQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSearcherBySearcherNameQuery']>>>
+export type GetSecurityConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSecurityConfiguration']>>>
+export type PostSecurityForgotPasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postSecurityForgotPassword']>>>
+export type PostSecurityForgotPasswordResetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postSecurityForgotPasswordReset']>>>
+export type PostSecurityForgotPasswordVerifyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postSecurityForgotPasswordVerify']>>>
+export type GetSegmentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSegment']>>>
+export type GetServerConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerConfiguration']>>>
+export type GetServerInformationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerInformation']>>>
+export type GetServerStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerStatus']>>>
+export type GetServerTroubleshootingResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerTroubleshooting']>>>
+export type GetServerUpgradeCheckResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerUpgradeCheck']>>>
+export type GetItemStaticFileResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemStaticFile']>>>
+export type GetTreeStaticFileAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStaticFileAncestors']>>>
+export type GetTreeStaticFileChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStaticFileChildren']>>>
+export type GetTreeStaticFileRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStaticFileRoot']>>>
+export type GetItemStylesheetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemStylesheet']>>>
+export type PostStylesheetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postStylesheet']>>>
+export type GetStylesheetByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getStylesheetByPath']>>>
+export type DeleteStylesheetByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteStylesheetByPath']>>>
+export type PutStylesheetByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putStylesheetByPath']>>>
+export type PutStylesheetByPathRenameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putStylesheetByPathRename']>>>
+export type PostStylesheetFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postStylesheetFolder']>>>
+export type GetStylesheetFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getStylesheetFolderByPath']>>>
+export type DeleteStylesheetFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteStylesheetFolderByPath']>>>
+export type GetTreeStylesheetAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStylesheetAncestors']>>>
+export type GetTreeStylesheetChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStylesheetChildren']>>>
+export type GetTreeStylesheetRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStylesheetRoot']>>>
+export type GetTagResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTag']>>>
+export type GetTelemetryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTelemetry']>>>
+export type GetTelemetryLevelResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTelemetryLevel']>>>
+export type PostTelemetryLevelResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postTelemetryLevel']>>>
+export type GetItemTemplateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemTemplate']>>>
+export type GetItemTemplateSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemTemplateSearch']>>>
+export type PostTemplateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postTemplate']>>>
+export type GetTemplateByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemplateById']>>>
+export type DeleteTemplateByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteTemplateById']>>>
+export type PutTemplateByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putTemplateById']>>>
+export type GetTemplateConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemplateConfiguration']>>>
+export type PostTemplateQueryExecuteResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postTemplateQueryExecute']>>>
+export type GetTemplateQuerySettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemplateQuerySettings']>>>
+export type GetTreeTemplateAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeTemplateAncestors']>>>
+export type GetTreeTemplateChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeTemplateChildren']>>>
+export type GetTreeTemplateRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeTemplateRoot']>>>
+export type PostTemporaryFileResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postTemporaryFile']>>>
+export type GetTemporaryFileByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemporaryFileById']>>>
+export type DeleteTemporaryFileByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteTemporaryFileById']>>>
+export type GetTemporaryFileConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemporaryFileConfiguration']>>>
+export type PostUpgradeAuthorizeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUpgradeAuthorize']>>>
+export type GetUpgradeSettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUpgradeSettings']>>>
+export type PostUserDataResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserData']>>>
+export type GetUserDataResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserData']>>>
+export type PutUserDataResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUserData']>>>
+export type GetUserDataByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserDataById']>>>
+export type GetFilterUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterUserGroup']>>>
+export type GetItemUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemUserGroup']>>>
+export type DeleteUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserGroup']>>>
+export type PostUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserGroup']>>>
+export type GetUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserGroup']>>>
+export type GetUserGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserGroupById']>>>
+export type DeleteUserGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserGroupById']>>>
+export type PutUserGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUserGroupById']>>>
+export type DeleteUserGroupByIdUsersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserGroupByIdUsers']>>>
+export type PostUserGroupByIdUsersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserGroupByIdUsers']>>>
+export type GetFilterUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterUser']>>>
+export type GetItemUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemUser']>>>
+export type PostUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUser']>>>
+export type DeleteUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUser']>>>
+export type GetUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUser']>>>
+export type GetUserByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserById']>>>
+export type DeleteUserByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserById']>>>
+export type PutUserByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUserById']>>>
+export type GetUserById2faResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserById2fa']>>>
+export type DeleteUserById2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserById2faByProviderName']>>>
+export type GetUserByIdCalculateStartNodesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserByIdCalculateStartNodes']>>>
+export type PostUserByIdChangePasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserByIdChangePassword']>>>
+export type PostUserByIdClientCredentialsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserByIdClientCredentials']>>>
+export type GetUserByIdClientCredentialsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserByIdClientCredentials']>>>
+export type DeleteUserByIdClientCredentialsByClientIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserByIdClientCredentialsByClientId']>>>
+export type PostUserByIdResetPasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserByIdResetPassword']>>>
+export type DeleteUserAvatarByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserAvatarById']>>>
+export type PostUserAvatarByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserAvatarById']>>>
+export type GetUserConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserConfiguration']>>>
+export type GetUserCurrentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrent']>>>
+export type GetUserCurrent2faResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrent2fa']>>>
+export type DeleteUserCurrent2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserCurrent2faByProviderName']>>>
+export type PostUserCurrent2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserCurrent2faByProviderName']>>>
+export type GetUserCurrent2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrent2faByProviderName']>>>
+export type PostUserCurrentAvatarResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserCurrentAvatar']>>>
+export type PostUserCurrentChangePasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserCurrentChangePassword']>>>
+export type GetUserCurrentConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentConfiguration']>>>
+export type GetUserCurrentLoginProvidersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentLoginProviders']>>>
+export type GetUserCurrentPermissionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentPermissions']>>>
+export type GetUserCurrentPermissionsDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentPermissionsDocument']>>>
+export type GetUserCurrentPermissionsMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentPermissionsMedia']>>>
+export type PostUserDisableResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserDisable']>>>
+export type PostUserEnableResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserEnable']>>>
+export type PostUserInviteResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInvite']>>>
+export type PostUserInviteCreatePasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInviteCreatePassword']>>>
+export type PostUserInviteResendResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInviteResend']>>>
+export type PostUserInviteVerifyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInviteVerify']>>>
+export type PostUserSetUserGroupsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserSetUserGroups']>>>
+export type PostUserUnlockResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserUnlock']>>>
+export type GetItemWebhookResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemWebhook']>>>
+export type GetWebhookResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhook']>>>
+export type PostWebhookResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postWebhook']>>>
+export type GetWebhookByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookById']>>>
+export type DeleteWebhookByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteWebhookById']>>>
+export type PutWebhookByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putWebhookById']>>>
+export type GetWebhookByIdLogsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookByIdLogs']>>>
+export type GetWebhookEventsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookEvents']>>>
+export type GetWebhookLogsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookLogs']>>>

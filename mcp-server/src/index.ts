@@ -1,73 +1,21 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+#!/usr/bin/env node
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import axios from "axios";
+import { UmbracoMcpServer } from "./server/umbraco-mcp-server.js";
+import { ToolFactory } from "./tools/tool-factory.js";
 
-import * as delivery from "./api/umbraco/delivery/umbracoDeliveryAPI.js";
-import * as deliverySchemas from "./api/umbraco/delivery/schemas/index.js";
+const main = async () => {
+  // Create an MCP server
+  const server = UmbracoMcpServer.GetServer();
 
-// import * as management from "./api/umbraco/management/umbracoManagementAPI.js";
-// import * as managementSchemas from "./api/umbraco/management/schemas/index.js";
+  ToolFactory(server);
 
-const server = new McpServer({
-  name: "umbraco-api-server",
-  version: "1.0.0",
-  capabilities: {
-    tools: {},
-  },
-});
-
-server.tool(
-  "get_content",
-  "Get content all content items",
-  { input: delivery.getContent20QueryParams },
-  async ({ input }) => {
-    try {
-      var parsed = delivery.getContent20QueryParams.parse(input);
-      console.info("callTool", parsed);
-      const response = await axios.get(
-        `http://localhost:56472/umbraco/delivery/api/v2/content/`,
-        { params: parsed }
-      );
-      var data = delivery.getContent20Response.parse(response.data);
-      console.info("response", data);
-      return {
-        content: [
-          { type: "text", text: `Content: ${JSON.stringify(response.data)}` },
-          // http status code
-          { type: "text", text: `HTTP Status Code: ${response.status}` },
-        ],
-      };
-    } catch (error) {
-      console.error(`Error:`, error);
-      if (axios.isAxiosError(error) && error.response) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Error ${error.response.status}: ${JSON.stringify(
-                error.response.data,
-                null,
-                2
-              )}`,
-            },
-          ],
-        };
-      }
-      return {
-        content: [{ type: "text", text: `Error: ${error}` }],
-      };
-    }
-  }
-);
-
-async function main() {
+  // Start receiving messages on stdin and sending messages on stdout
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Umbraco API server running on stdio");
-}
+};
 
-main().catch((err) => {
-  console.error("Fatal error:", err);
+main().catch((error) => {
+  console.error("Error:", error);
   process.exit(1);
 });
