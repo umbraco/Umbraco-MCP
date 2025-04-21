@@ -3,7 +3,7 @@ import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { GetTreeDataTypeRootParams } from "@/umb-management-api/schemas/index.js";
 import { getCultureQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const GetDataTypeTool = CreateUmbracoTool(
+const GetDataTypeRootTool = CreateUmbracoTool(
   "get-data-type-root",
   "Gets the root level of the data type tree.",
   getCultureQueryParams.shape,
@@ -21,4 +21,4 @@ const GetDataTypeTool = CreateUmbracoTool(
   }
 );
 
-export default GetDataTypeTool;
+export default GetDataTypeRootTool;

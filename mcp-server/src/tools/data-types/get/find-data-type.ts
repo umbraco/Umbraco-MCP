@@ -1,16 +1,16 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { CreateDataTypeRequestModel } from "@/umb-management-api/schemas/index.js";
-import { postDataTypeBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { GetFilterDataTypeParams } from "@/umb-management-api/schemas/index.js";
+import { getFilterDataTypeQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const CreateDataTypeTool = CreateUmbracoTool(
-  "create-data-type",
-  "Creates a new data type",
-  postDataTypeBody.shape,
-  async (model: CreateDataTypeRequestModel) => {
+const FindDataTypeTool = CreateUmbracoTool(
+  "find-data-type",
+  "Finds a data type by Id or name",
+  getFilterDataTypeQueryParams.shape,
+  async (model: GetFilterDataTypeParams) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      var response = await client.postDataType(model);
+      var response = await client.getFilterDataType(model);
 
       return {
         content: [
@@ -34,4 +34,4 @@ const CreateDataTypeTool = CreateUmbracoTool(
   }
 );
 
-export default CreateDataTypeTool;
+export default FindDataTypeTool;

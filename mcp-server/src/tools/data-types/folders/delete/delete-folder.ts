@@ -1,16 +1,15 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { CreateDataTypeRequestModel } from "@/umb-management-api/schemas/index.js";
-import { postDataTypeBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { deleteDataTypeFolderByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const CreateDataTypeTool = CreateUmbracoTool(
-  "create-data-type",
-  "Creates a new data type",
-  postDataTypeBody.shape,
-  async (model: CreateDataTypeRequestModel) => {
+const DeleteDataTypeFolderTool = CreateUmbracoTool(
+  "delete-data-type-folder",
+  "Deletes a data type folder by Id",
+  deleteDataTypeFolderByIdParams.shape,
+  async ({ id }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      var response = await client.postDataType(model);
+      var response = await client.deleteDataTypeFolderById(id);
 
       return {
         content: [
@@ -34,4 +33,4 @@ const CreateDataTypeTool = CreateUmbracoTool(
   }
 );
 
-export default CreateDataTypeTool;
+export default DeleteDataTypeFolderTool;

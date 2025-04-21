@@ -1,16 +1,24 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { CreateDataTypeRequestModel } from "@/umb-management-api/schemas/index.js";
-import { postDataTypeBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { UpdateDataTypeRequestModel } from "@/umb-management-api/schemas/index.js";
+import {
+  putDataTypeByIdBody,
+  putDataTypeByIdParams,
+} from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const CreateDataTypeTool = CreateUmbracoTool(
-  "create-data-type",
-  "Creates a new data type",
-  postDataTypeBody.shape,
-  async (model: CreateDataTypeRequestModel) => {
+import { z } from "zod";
+
+const UpdateDataTypeTool = CreateUmbracoTool(
+  "update-data-type",
+  "Updates a data type by Id",
+  {
+    id: putDataTypeByIdParams.shape.id,
+    data: z.object(putDataTypeByIdBody.shape),
+  },
+  async (model: { id: string; data: UpdateDataTypeRequestModel }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      var response = await client.postDataType(model);
+      var response = await client.putDataTypeById(model.id, model.data);
 
       return {
         content: [
@@ -34,4 +42,4 @@ const CreateDataTypeTool = CreateUmbracoTool(
   }
 );
 
-export default CreateDataTypeTool;
+export default UpdateDataTypeTool;

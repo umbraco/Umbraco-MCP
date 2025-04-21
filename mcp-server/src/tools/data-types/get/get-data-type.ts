@@ -1,16 +1,15 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { CreateDataTypeRequestModel } from "@/umb-management-api/schemas/index.js";
-import { postDataTypeBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { getDataTypeByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const CreateDataTypeTool = CreateUmbracoTool(
-  "create-data-type",
-  "Creates a new data type",
-  postDataTypeBody.shape,
-  async (model: CreateDataTypeRequestModel) => {
+const GetDataTypeTool = CreateUmbracoTool(
+  "get-data-type",
+  "Gets a data type by Id",
+  getDataTypeByIdParams.shape,
+  async ({ id }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      var response = await client.postDataType(model);
+      const response = await client.getDataTypeById(id);
 
       return {
         content: [
@@ -19,6 +18,11 @@ const CreateDataTypeTool = CreateUmbracoTool(
             text: JSON.stringify(response),
           },
         ],
+        resource: {
+          type: "data-type" as const,
+          ...response,
+          uri: `${process.env.UMBRACO_BASE_URL}/umbraco/section/settings/workspace/data-type/edit/${response.id}`,
+        },
       };
     } catch (error) {
       console.error("Error creating data type:", error);
@@ -34,4 +38,4 @@ const CreateDataTypeTool = CreateUmbracoTool(
   }
 );
 
-export default CreateDataTypeTool;
+export default GetDataTypeTool;

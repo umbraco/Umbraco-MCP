@@ -4106,58 +4106,6 @@ var CreateUmbracoTool = (name, description, schema, handler) => () => ({
   handler
 });
 
-// src/tools/culture/get-cultures.ts
-import { z } from "zod";
-var GetCulturesTool = CreateUmbracoTool(
-  "get-culture",
-  "Retrieves a paginated list of cultures that Umbraco can be configured to use",
-  {
-    skip: z.number().nonnegative().default(0),
-    take: z.number().positive().default(100)
-  },
-  async ({ skip, take }) => {
-    const client = UmbracoManagementClient2.getClient();
-    var response = await client.getCulture({ skip, take });
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(response)
-        }
-      ]
-    };
-  }
-);
-var get_cultures_default = GetCulturesTool;
-
-// src/tools/culture/index.ts
-var CultureTools = [get_cultures_default];
-
-// src/tools/data-types/get/get-root.ts
-import { z as z2 } from "zod";
-var GetDataTypeTool = CreateUmbracoTool(
-  "get-data-type-root",
-  "Gets the root level of the data type tree.",
-  {
-    skip: z2.number().nonnegative().default(0),
-    take: z2.number().positive().default(100),
-    foldersOnly: z2.boolean().default(false).describe("If true, only folders will be returned.")
-  },
-  async (params) => {
-    const client = UmbracoManagementClient2.getClient();
-    var response = await client.getTreeDataTypeRoot(params);
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(response)
-        }
-      ]
-    };
-  }
-);
-var get_root_default = GetDataTypeTool;
-
 // src/api/umbraco/management/umbracoManagementAPI.zod.ts
 import {
   z as zod
@@ -9545,21 +9493,58 @@ var getWebhookLogsResponse = zod.object({
   }))
 });
 
+// src/tools/culture/get-cultures.ts
+var GetCulturesTool = CreateUmbracoTool(
+  "get-culture",
+  "Retrieves a paginated list of cultures that Umbraco can be configured to use",
+  getCultureQueryParams.shape,
+  async (params) => {
+    const client = UmbracoManagementClient2.getClient();
+    var response = await client.getCulture(params);
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(response)
+        }
+      ]
+    };
+  }
+);
+var get_cultures_default = GetCulturesTool;
+
+// src/tools/culture/index.ts
+var CultureTools = [get_cultures_default];
+
+// src/tools/data-types/get/get-root.ts
+var GetDataTypeRootTool = CreateUmbracoTool(
+  "get-data-type-root",
+  "Gets the root level of the data type tree.",
+  getCultureQueryParams.shape,
+  async (params) => {
+    const client = UmbracoManagementClient2.getClient();
+    var response = await client.getTreeDataTypeRoot(params);
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(response)
+        }
+      ]
+    };
+  }
+);
+var get_root_default = GetDataTypeRootTool;
+
 // src/tools/data-types/post/create-data-type.ts
 var CreateDataTypeTool = CreateUmbracoTool(
   "create-data-type",
   "Creates a new data type",
   postDataTypeBody.shape,
-  async (input) => {
+  async (model) => {
     try {
-      console.log("Creating data type with params:", input);
       const client = UmbracoManagementClient2.getClient();
-      const body = postDataTypeBody.parse(input);
-      console.log(body);
-      var response = await client.postDataType(
-        body
-      );
-      console.log(response);
+      var response = await client.postDataType(model);
       return {
         content: [
           {
@@ -9583,8 +9568,391 @@ var CreateDataTypeTool = CreateUmbracoTool(
 );
 var create_data_type_default = CreateDataTypeTool;
 
+// src/tools/data-types/delete/delete-data-type.ts
+var DeleteDataTypeTool = CreateUmbracoTool(
+  "delete-data-type",
+  "Deletes a data type by Id",
+  deleteDataTypeByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.deleteDataTypeById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_data_type_default = DeleteDataTypeTool;
+
+// src/tools/data-types/get/find-data-type.ts
+var FindDataTypeTool = CreateUmbracoTool(
+  "find-data-type",
+  "Finds a data type by Id or name",
+  getFilterDataTypeQueryParams.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getFilterDataType(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var find_data_type_default = FindDataTypeTool;
+
+// src/tools/data-types/get/get-data-type.ts
+var GetDataTypeTool = CreateUmbracoTool(
+  "get-data-type",
+  "Gets a data type by Id",
+  getDataTypeByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDataTypeById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ],
+        resource: {
+          type: "data-type",
+          ...response,
+          uri: `/umbraco/section/settings/workspace/data-type/edit/${response.id}`
+        }
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_data_type_default = GetDataTypeTool;
+
+// src/tools/data-types/put/update-data-type.ts
+import { z } from "zod";
+var UpdateDataTypeTool = CreateUmbracoTool(
+  "update-data-type",
+  "Updates a data type by Id",
+  {
+    id: putDataTypeByIdParams.shape.id,
+    data: z.object(putDataTypeByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.putDataTypeById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_data_type_default = UpdateDataTypeTool;
+
+// src/tools/data-types/post/copy-data-type.ts
+import { z as z2 } from "zod";
+var CopyDataTypeTool = CreateUmbracoTool(
+  "copy-data-type",
+  "Copy a data type by Id",
+  {
+    id: postDataTypeByIdCopyParams.shape.id,
+    body: z2.object(postDataTypeByIdCopyBody.shape)
+  },
+  async ({ id, body }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.postDataTypeByIdCopy(id, body);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error copying data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var copy_data_type_default = CopyDataTypeTool;
+
+// src/tools/data-types/get/is-used-data-type.ts
+var IsUsedDataTypeTool = CreateUmbracoTool(
+  "is-used-data-type",
+  "Checks if a data type is used within Umbraco",
+  getDataTypeByIdIsUsedParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getDataTypeByIdIsUsed(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var is_used_data_type_default = IsUsedDataTypeTool;
+
+// src/tools/data-types/put/move-data-type.ts
+import { z as z3 } from "zod";
+var MoveDataTypeTool = CreateUmbracoTool(
+  "move-data-type",
+  "Updates a data type by Id",
+  {
+    id: putDataTypeByIdMoveParams.shape.id,
+    data: z3.object(putDataTypeByIdMoveBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.putDataTypeByIdMove(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var move_data_type_default = MoveDataTypeTool;
+
+// src/tools/data-types/get/get-references-data-type.ts
+var GetReferencesDataTypeTool = CreateUmbracoTool(
+  "get-references-data-type",
+  "Gets a data type by Id",
+  getDataTypeByIdReferencesParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getDataTypeByIdReferences(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_references_data_type_default = GetReferencesDataTypeTool;
+
+// src/tools/data-types/folders/post/create-folder.ts
+var CreateDataTypeFolderTool = CreateUmbracoTool(
+  "create-data-type-folder",
+  "Creates a new data type folder",
+  postDataTypeFolderBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.postDataTypeFolder(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var create_folder_default = CreateDataTypeFolderTool;
+
+// src/tools/data-types/folders/delete/delete-folder.ts
+var DeleteDataTypeFolderTool = CreateUmbracoTool(
+  "delete-data-type-folder",
+  "Deletes a data type folder by Id",
+  deleteDataTypeFolderByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.deleteDataTypeFolderById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_folder_default = DeleteDataTypeFolderTool;
+
+// src/tools/data-types/folders/get/get-folder.ts
+var GetDataTypeFolderTool = CreateUmbracoTool(
+  "get-data-type-folder",
+  "Gets a data typ folder by Id",
+  getDataTypeFolderByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getDataTypeFolderById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_folder_default = GetDataTypeFolderTool;
+
 // src/tools/data-types/index.ts
-var DataTypeTools = [get_root_default, create_data_type_default];
+var DataTypeTools = [
+  get_root_default,
+  create_data_type_default,
+  delete_data_type_default,
+  find_data_type_default,
+  get_data_type_default,
+  update_data_type_default,
+  copy_data_type_default,
+  is_used_data_type_default,
+  move_data_type_default,
+  get_references_data_type_default,
+  create_folder_default,
+  delete_folder_default,
+  get_folder_default
+];
 
 // src/tools/tool-factory.ts
 function ToolFactory(server) {
