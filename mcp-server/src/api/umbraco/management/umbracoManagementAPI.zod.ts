@@ -9,6 +9,14 @@ import {
   z as zod
 } from 'zod';
 
+class FileLike {
+  constructor(
+    public name: string,
+    public size: number,
+    public type: string
+  ) {}
+}
+
 
 export const getCultureQuerySkipDefault = 0;export const getCultureQueryTakeDefault = 100;
 
@@ -366,7 +374,7 @@ export const getDictionaryByIdExportQueryParams = zod.object({
   "includeChildren": zod.boolean().optional()
 })
 
-export const getDictionaryByIdExportResponse = zod.instanceof(File)
+export const getDictionaryByIdExportResponse = zod.instanceof(FileLike)
 
 
 export const putDictionaryByIdMoveParams = zod.object({
@@ -993,7 +1001,7 @@ export const getDocumentTypeByIdExportParams = zod.object({
   "id": zod.string().uuid()
 })
 
-export const getDocumentTypeByIdExportResponse = zod.instanceof(File)
+export const getDocumentTypeByIdExportResponse = zod.instanceof(FileLike)
 
 
 export const putDocumentTypeByIdImportParams = zod.object({
@@ -2943,7 +2951,7 @@ export const getMediaTypeByIdExportParams = zod.object({
   "id": zod.string().uuid()
 })
 
-export const getMediaTypeByIdExportResponse = zod.instanceof(File)
+export const getMediaTypeByIdExportResponse = zod.instanceof(FileLike)
 
 
 export const putMediaTypeByIdImportParams = zod.object({
@@ -4448,7 +4456,7 @@ export const getPackageCreatedByIdDownloadParams = zod.object({
   "id": zod.string().uuid()
 })
 
-export const getPackageCreatedByIdDownloadResponse = zod.instanceof(File)
+export const getPackageCreatedByIdDownloadResponse = zod.instanceof(FileLike)
 
 
 export const getPackageMigrationStatusQuerySkipDefault = 0;export const getPackageMigrationStatusQueryTakeDefault = 100;
@@ -5535,7 +5543,7 @@ export const getTreeTemplateRootResponse = zod.object({
 
 export const postTemporaryFileBody = zod.object({
   "Id": zod.string().uuid(),
-  "File": zod.instanceof(File)
+  "File": zod.instanceof(FileLike)
 })
 
 

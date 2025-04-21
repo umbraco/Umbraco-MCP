@@ -421,7 +421,7 @@ import type {
   VerifyResetPasswordTokenRequestModel,
   WebhookItemResponseModel,
   WebhookResponseModel
-} from './schemas/index.js';
+} from './schemas';
 
 import { UmbracoManagementClient } from '../clients/umbraco-management-client.js';
 
