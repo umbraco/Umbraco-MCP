@@ -7,20 +7,12 @@ const CreateDataTypeTool = CreateUmbracoTool(
   "create-data-type",
   "Creates a new data type",
   postDataTypeBody.shape,
-  async (input) => {
+  async (model: CreateDataTypeRequestModel) => {
     try {
-      console.log("Creating data type with params:", input);
+      console.log("Creating data type with params:", model);
+
       const client = UmbracoManagementClient.getClient();
-      const body = postDataTypeBody.parse(input);
-      body.id = "4df462e9-5045-4879-a1e4-0c28c9fb3fdb";
-      body.values = [
-        { alias: "maxChars", value: "1000"},
-        { alias: "inputType", value: "text"},
-      ]
-      console.log(body);
-      var response = await client.postDataType(
-        body as CreateDataTypeRequestModel
-      );
+      var response = await client.postDataType(model);
 
       return {
         content: [

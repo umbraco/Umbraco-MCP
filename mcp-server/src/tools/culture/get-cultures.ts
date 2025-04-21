@@ -1,17 +1,15 @@
-import { UmbracoManagementClient } from "../../clients/umbraco-management-client.js";
-import { CreateUmbracoTool } from "../../helpers/create-umbraco-tool.js";
-import { z } from "zod";
+import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
+import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { GetCultureParams } from "@/umb-management-api/schemas/index.js";
+import { getCultureQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
 const GetCulturesTool = CreateUmbracoTool(
   "get-culture",
   "Retrieves a paginated list of cultures that Umbraco can be configured to use",
-  {
-    skip: z.number().nonnegative().default(0),
-    take: z.number().positive().default(100),
-  },
-  async ({ skip, take }) => {
+  getCultureQueryParams.shape,
+  async (params: GetCultureParams) => {
     const client = UmbracoManagementClient.getClient();
-    var response = await client.getCulture({ skip, take });
+    var response = await client.getCulture(params);
     return {
       content: [
         {

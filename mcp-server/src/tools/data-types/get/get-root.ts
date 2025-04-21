@@ -1,19 +1,12 @@
-import { UmbracoManagementClient } from "../../../clients/umbraco-management-client.js";
-import { CreateUmbracoTool } from "../../../helpers/create-umbraco-tool.js";
-import { GetTreeDataTypeRootParams } from "../../../api/umbraco/management/schemas/index.js";
-import { z } from "zod";
+import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
+import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { GetTreeDataTypeRootParams } from "@/umb-management-api/schemas/index.js";
+import { getCultureQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
 const GetDataTypeTool = CreateUmbracoTool(
   "get-data-type-root",
   "Gets the root level of the data type tree.",
-  {
-    skip: z.number().nonnegative().default(0),
-    take: z.number().positive().default(100),
-    foldersOnly: z
-      .boolean()
-      .default(false)
-      .describe("If true, only folders will be returned."),
-  },
+  getCultureQueryParams.shape,
   async (params: GetTreeDataTypeRootParams) => {
     const client = UmbracoManagementClient.getClient();
     var response = await client.getTreeDataTypeRoot(params);
