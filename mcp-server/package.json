@@ -9,7 +9,8 @@
   },
   "scripts": {
     "clean": "rimraf build",
-    "build": "npm run clean && tsc",
+    "build2": "npm run clean && tsc",
+    "build": "tsup ./src/index.ts",
     "generate": "orval --config orval.config.cjs"
   },
   "files": [
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@types/node": "^22.14.1",
     "orval": "^7.8.0",
+    "tsup": "^8.4.0",
     "typescript": "^5.8.3"
   }
 }

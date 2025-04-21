@@ -8,6 +8,11 @@
 import { z as zod } from 'zod';
 export const getCultureQuerySkipDefault = 0;
 export const getCultureQueryTakeDefault = 100;
+const FileLike = zod.object({
+    name: zod.string(),
+    size: zod.number(),
+    type: zod.string(),
+  });
 export const getCultureQueryParams = zod.object({
     "skip": zod.number().optional(),
     "take": zod.number().default(getCultureQueryTakeDefault)
@@ -294,7 +299,7 @@ export const getDictionaryByIdExportQueryIncludeChildrenDefault = false;
 export const getDictionaryByIdExportQueryParams = zod.object({
     "includeChildren": zod.boolean().optional()
 });
-export const getDictionaryByIdExportResponse = zod.instanceof(File);
+export const getDictionaryByIdExportResponse = zod.instanceof(FileLike);
 export const putDictionaryByIdMoveParams = zod.object({
     "id": zod.string().uuid()
 });
@@ -842,7 +847,7 @@ export const postDocumentTypeByIdCopyBody = zod.object({
 export const getDocumentTypeByIdExportParams = zod.object({
     "id": zod.string().uuid()
 });
-export const getDocumentTypeByIdExportResponse = zod.instanceof(File);
+export const getDocumentTypeByIdExportResponse = zod.instanceof(FileLike);
 export const putDocumentTypeByIdImportParams = zod.object({
     "id": zod.string().uuid()
 });
@@ -2501,7 +2506,7 @@ export const postMediaTypeByIdCopyBody = zod.object({
 export const getMediaTypeByIdExportParams = zod.object({
     "id": zod.string().uuid()
 });
-export const getMediaTypeByIdExportResponse = zod.instanceof(File);
+export const getMediaTypeByIdExportResponse = zod.instanceof(FileLike);
 export const putMediaTypeByIdImportParams = zod.object({
     "id": zod.string().uuid()
 });
@@ -3797,7 +3802,7 @@ export const putPackageCreatedByIdBody = zod.object({
 export const getPackageCreatedByIdDownloadParams = zod.object({
     "id": zod.string().uuid()
 });
-export const getPackageCreatedByIdDownloadResponse = zod.instanceof(File);
+export const getPackageCreatedByIdDownloadResponse = zod.instanceof(FileLike);
 export const getPackageMigrationStatusQuerySkipDefault = 0;
 export const getPackageMigrationStatusQueryTakeDefault = 100;
 export const getPackageMigrationStatusQueryParams = zod.object({
@@ -4661,7 +4666,7 @@ export const getTreeTemplateRootResponse = zod.object({
 });
 export const postTemporaryFileBody = zod.object({
     "Id": zod.string().uuid(),
-    "File": zod.instanceof(File)
+    "File": zod.instanceof(FileLike)
 });
 export const getTemporaryFileByIdParams = zod.object({
     "id": zod.string().uuid()
