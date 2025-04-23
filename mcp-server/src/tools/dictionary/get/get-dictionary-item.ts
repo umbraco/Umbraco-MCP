@@ -1,15 +1,15 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { getDataTypeFolderByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { getDictionaryByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const GetDataTypeFolderTool = CreateUmbracoTool(
-  "get-data-type-folder",
-  "Gets a data type folder by Id",
-  getDataTypeFolderByIdParams.shape,
+const GetDictionaryItemTool = CreateUmbracoTool(
+  "get-dictionary",
+  "Gets a dictionary by Id",
+  getDictionaryByIdParams.shape,
   async ({ id }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      var response = await client.getDataTypeFolderById(id);
+      const response = await client.getDictionaryById(id);
 
       return {
         content: [
@@ -20,7 +20,7 @@ const GetDataTypeFolderTool = CreateUmbracoTool(
         ],
       };
     } catch (error) {
-      console.error("Error creating data type:", error);
+      console.error("Error getting dictionary:", error);
       return {
         content: [
           {
@@ -33,4 +33,4 @@ const GetDataTypeFolderTool = CreateUmbracoTool(
   }
 );
 
-export default GetDataTypeFolderTool;
+export default GetDictionaryItemTool;

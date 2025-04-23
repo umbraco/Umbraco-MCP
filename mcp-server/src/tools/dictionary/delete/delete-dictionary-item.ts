@@ -1,15 +1,15 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { getDataTypeFolderByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { deleteDictionaryByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const GetDataTypeFolderTool = CreateUmbracoTool(
-  "get-data-type-folder",
-  "Gets a data type folder by Id",
-  getDataTypeFolderByIdParams.shape,
+const DeleteDictionaryItemTool = CreateUmbracoTool(
+  "delete-dictionary-item",
+  "Deletes a dictionary item by Id",
+  deleteDictionaryByIdParams.shape,
   async ({ id }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      var response = await client.getDataTypeFolderById(id);
+      var response = await client.deleteDictionaryById(id);
 
       return {
         content: [
@@ -33,4 +33,4 @@ const GetDataTypeFolderTool = CreateUmbracoTool(
   }
 );
 
-export default GetDataTypeFolderTool;
+export default DeleteDictionaryItemTool;

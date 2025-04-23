@@ -1,15 +1,16 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { getDataTypeFolderByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { CreateDictionaryItemRequestModel } from "@/umb-management-api/schemas/index.js";
+import { postDictionaryBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const GetDataTypeFolderTool = CreateUmbracoTool(
-  "get-data-type-folder",
-  "Gets a data type folder by Id",
-  getDataTypeFolderByIdParams.shape,
-  async ({ id }) => {
+const CreateDictionaryItemTool = CreateUmbracoTool(
+  "create-dictionary",
+  "Creates a new dictionary item",
+  postDictionaryBody.shape,
+  async (model: CreateDictionaryItemRequestModel) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      var response = await client.getDataTypeFolderById(id);
+      var response = await client.postDictionary(model);
 
       return {
         content: [
@@ -33,4 +34,4 @@ const GetDataTypeFolderTool = CreateUmbracoTool(
   }
 );
 
-export default GetDataTypeFolderTool;
+export default CreateDictionaryItemTool;

@@ -9520,7 +9520,7 @@ var CultureTools = [get_cultures_default];
 var GetDataTypeRootTool = CreateUmbracoTool(
   "get-data-type-root",
   "Gets the root level of the data type tree.",
-  getCultureQueryParams.shape,
+  getTreeDataTypeRootQueryParams.shape,
   async (params) => {
     const client = UmbracoManagementClient2.getClient();
     var response = await client.getTreeDataTypeRoot(params);
@@ -9651,7 +9651,7 @@ var GetDataTypeTool = CreateUmbracoTool(
         resource: {
           type: "data-type",
           ...response,
-          uri: `/umbraco/section/settings/workspace/data-type/edit/${response.id}`
+          uri: `${process.env.UMBRACO_BASE_URL}/umbraco/section/settings/workspace/data-type/edit/${response.id}`
         }
       };
     } catch (error) {
@@ -9908,7 +9908,7 @@ var delete_folder_default = DeleteDataTypeFolderTool;
 // src/tools/data-types/folders/get/get-folder.ts
 var GetDataTypeFolderTool = CreateUmbracoTool(
   "get-data-type-folder",
-  "Gets a data typ folder by Id",
+  "Gets a data type folder by Id",
   getDataTypeFolderByIdParams.shape,
   async ({ id }) => {
     try {
@@ -9937,9 +9937,30 @@ var GetDataTypeFolderTool = CreateUmbracoTool(
 );
 var get_folder_default = GetDataTypeFolderTool;
 
+// src/tools/data-types/get/get-search.ts
+var GetDataTypeSearchTool = CreateUmbracoTool(
+  "get-data-type-search",
+  "Searches the data type tree for a data type or a folder.",
+  getTreeDataTypeRootQueryParams.shape,
+  async (params) => {
+    const client = UmbracoManagementClient2.getClient();
+    var response = await client.getItemDataTypeSearch(params);
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(response)
+        }
+      ]
+    };
+  }
+);
+var get_search_default = GetDataTypeSearchTool;
+
 // src/tools/data-types/index.ts
 var DataTypeTools = [
   get_root_default,
+  get_search_default,
   create_data_type_default,
   delete_data_type_default,
   find_data_type_default,
@@ -9954,12 +9975,188 @@ var DataTypeTools = [
   get_folder_default
 ];
 
+// src/tools/dictionary/delete/delete-dictionary-item.ts
+var DeleteDictionaryItemTool = CreateUmbracoTool(
+  "delete-dictionary-item",
+  "Deletes a dictionary item by Id",
+  deleteDictionaryByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.deleteDictionaryById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_dictionary_item_default = DeleteDictionaryItemTool;
+
+// src/tools/dictionary/get/find-dictionary-item.ts
+var FindDictionaryItemTool = CreateUmbracoTool(
+  "find-dictionary",
+  "Finds a dictionary by Id or name",
+  getDictionaryQueryParams.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getDictionary(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var find_dictionary_item_default = FindDictionaryItemTool;
+
+// src/tools/dictionary/get/get-dictionary-item.ts
+var GetDictionaryItemTool = CreateUmbracoTool(
+  "get-dictionary",
+  "Gets a dictionary by Id",
+  getDictionaryByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDictionaryById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting dictionary:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_dictionary_item_default = GetDictionaryItemTool;
+
+// src/tools/dictionary/post/create-dictionary-item.ts
+var CreateDictionaryItemTool = CreateUmbracoTool(
+  "create-dictionary",
+  "Creates a new dictionary item",
+  postDictionaryBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.postDictionary(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var create_dictionary_item_default = CreateDictionaryItemTool;
+
+// src/tools/dictionary/put/update-dictionary-item.ts
+
+var UpdateDictionaryItemTool = CreateUmbracoTool(
+  "update-dictionary-item",
+  "Updates a dictionary item by Id",
+  {
+    id: putDictionaryByIdParams.shape.id,
+    data: _zod.z.object(putDictionaryByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.putDictionaryById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_dictionary_item_default = UpdateDictionaryItemTool;
+
+// src/tools/dictionary/index.ts
+var DictionaryTools = [
+  get_dictionary_item_default,
+  find_dictionary_item_default,
+  create_dictionary_item_default,
+  delete_dictionary_item_default,
+  update_dictionary_item_default
+];
+
 // src/tools/tool-factory.ts
 function ToolFactory(server) {
   CultureTools.map((tool) => tool()).forEach(
     (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
   DataTypeTools.map((tool) => tool()).forEach(
+    (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  DictionaryTools.map((tool) => tool()).forEach(
     (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
 }

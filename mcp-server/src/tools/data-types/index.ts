@@ -11,9 +11,11 @@ import GetReferencesDataTypeTool from "./get/get-references-data-type.js";
 import CreateDataTypeFolderTool from "./folders/post/create-folder.js";
 import DeleteDataTypeFolderTool from "./folders/delete/delete-folder.js";
 import GetDataTypeFolderTool from "./folders/get/get-folder.js";
+import GetDataTypeSearchTool from "./get/get-search.js";
 
 export const DataTypeTools = [
   GetDataTypeRootTool,
+  GetDataTypeSearchTool,
   CreateDataTypeTool,
   DeleteDataTypeTool,
   FindDataTypeTool,
