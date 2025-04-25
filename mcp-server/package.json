@@ -12,7 +12,8 @@
     "build2": "npm run clean && tsc",
     "build": "tsup ./src/index.ts",
     "watch": "tsup ./src/index.ts --watch",
-    "generate": "orval --config orval.config.cjs"
+    "generate": "orval --config orval.config.cjs",
+    "inspect": "npx @modelcontextprotocol/inspector node build/index.js"
   },
   "files": [
     "build"

@@ -4119,8 +4119,8 @@ var FileLike = class {
 };
 var getCultureQueryTakeDefault = 100;
 var getCultureQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getCultureQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getCultureQueryTakeDefault)
 });
 var getCultureResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4238,8 +4238,8 @@ var putDataTypeFolderByIdBody = _zod.z.object({
 });
 var getFilterDataTypeQueryTakeDefault = 100;
 var getFilterDataTypeQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getFilterDataTypeQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getFilterDataTypeQueryTakeDefault),
   "name": _zod.z.string().optional(),
   "editorUiAlias": _zod.z.string().optional(),
   "editorAlias": _zod.z.string().optional()
@@ -4268,8 +4268,8 @@ var getItemDataTypeResponse = _zod.z.array(getItemDataTypeResponseItem);
 var getItemDataTypeSearchQueryTakeDefault = 100;
 var getItemDataTypeSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemDataTypeSearchQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemDataTypeSearchQueryTakeDefault)
 });
 var getItemDataTypeSearchResponse = _zod.z.object({
   "items": _zod.z.array(_zod.z.object({
@@ -4299,9 +4299,9 @@ var getTreeDataTypeAncestorsResponse = _zod.z.array(getTreeDataTypeAncestorsResp
 var getTreeDataTypeChildrenQueryTakeDefault = 100;
 var getTreeDataTypeChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDataTypeChildrenQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDataTypeChildrenQueryTakeDefault),
+  "foldersOnly": _zod.z.coerce.boolean().optional()
 });
 var getTreeDataTypeChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4317,11 +4317,10 @@ var getTreeDataTypeChildrenResponse = _zod.z.object({
     "isDeletable": _zod.z.boolean()
   }))
 });
-var getTreeDataTypeRootQueryTakeDefault = 100;
 var getTreeDataTypeRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDataTypeRootQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number(),
+  "take": _zod.z.coerce.number().default(100),
+  "foldersOnly": _zod.z.coerce.boolean()
 });
 var getTreeDataTypeRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4340,8 +4339,8 @@ var getTreeDataTypeRootResponse = _zod.z.object({
 var getDictionaryQueryTakeDefault = 100;
 var getDictionaryQueryParams = _zod.z.object({
   "filter": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDictionaryQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDictionaryQueryTakeDefault)
 });
 var getDictionaryResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4393,7 +4392,7 @@ var getDictionaryByIdExportParams = _zod.z.object({
   "id": _zod.z.string().uuid()
 });
 var getDictionaryByIdExportQueryParams = _zod.z.object({
-  "includeChildren": _zod.z.boolean().optional()
+  "includeChildren": _zod.z.coerce.boolean().optional()
 });
 var getDictionaryByIdExportResponse = _zod.z.instanceof(FileLike);
 var putDictionaryByIdMoveParams = _zod.z.object({
@@ -4435,8 +4434,8 @@ var getTreeDictionaryAncestorsResponse = _zod.z.array(getTreeDictionaryAncestors
 var getTreeDictionaryChildrenQueryTakeDefault = 100;
 var getTreeDictionaryChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDictionaryChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDictionaryChildrenQueryTakeDefault)
 });
 var getTreeDictionaryChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4451,8 +4450,8 @@ var getTreeDictionaryChildrenResponse = _zod.z.object({
 });
 var getTreeDictionaryRootQueryTakeDefault = 100;
 var getTreeDictionaryRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDictionaryRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDictionaryRootQueryTakeDefault)
 });
 var getTreeDictionaryRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4614,9 +4613,9 @@ var getTreeDocumentBlueprintAncestorsResponse = _zod.z.array(getTreeDocumentBlue
 var getTreeDocumentBlueprintChildrenQueryTakeDefault = 100;
 var getTreeDocumentBlueprintChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDocumentBlueprintChildrenQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDocumentBlueprintChildrenQueryTakeDefault),
+  "foldersOnly": _zod.z.coerce.boolean().optional()
 });
 var getTreeDocumentBlueprintChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4639,9 +4638,9 @@ var getTreeDocumentBlueprintChildrenResponse = _zod.z.object({
 });
 var getTreeDocumentBlueprintRootQueryTakeDefault = 100;
 var getTreeDocumentBlueprintRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDocumentBlueprintRootQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDocumentBlueprintRootQueryTakeDefault),
+  "foldersOnly": _zod.z.coerce.boolean().optional()
 });
 var getTreeDocumentBlueprintRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4888,8 +4887,8 @@ var getDocumentTypeByIdAllowedChildrenParams = _zod.z.object({
 });
 var getDocumentTypeByIdAllowedChildrenQueryTakeDefault = 100;
 var getDocumentTypeByIdAllowedChildrenQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentTypeByIdAllowedChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentTypeByIdAllowedChildrenQueryTakeDefault)
 });
 var getDocumentTypeByIdAllowedChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4905,8 +4904,8 @@ var getDocumentTypeByIdBlueprintParams = _zod.z.object({
 });
 var getDocumentTypeByIdBlueprintQueryTakeDefault = 100;
 var getDocumentTypeByIdBlueprintQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentTypeByIdBlueprintQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentTypeByIdBlueprintQueryTakeDefault)
 });
 var getDocumentTypeByIdBlueprintResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -4954,8 +4953,8 @@ var putDocumentTypeByIdMoveBody = _zod.z.object({
 });
 var getDocumentTypeAllowedAtRootQueryTakeDefault = 100;
 var getDocumentTypeAllowedAtRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentTypeAllowedAtRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentTypeAllowedAtRootQueryTakeDefault)
 });
 var getDocumentTypeAllowedAtRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5028,8 +5027,8 @@ var getItemDocumentTypeResponse = _zod.z.array(getItemDocumentTypeResponseItem);
 var getItemDocumentTypeSearchQueryTakeDefault = 100;
 var getItemDocumentTypeSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemDocumentTypeSearchQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemDocumentTypeSearchQueryTakeDefault)
 });
 var getItemDocumentTypeSearchResponse = _zod.z.object({
   "items": _zod.z.array(_zod.z.object({
@@ -5059,9 +5058,9 @@ var getTreeDocumentTypeAncestorsResponse = _zod.z.array(getTreeDocumentTypeAnces
 var getTreeDocumentTypeChildrenQueryTakeDefault = 100;
 var getTreeDocumentTypeChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDocumentTypeChildrenQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDocumentTypeChildrenQueryTakeDefault),
+  "foldersOnly": _zod.z.coerce.boolean().optional()
 });
 var getTreeDocumentTypeChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5079,9 +5078,9 @@ var getTreeDocumentTypeChildrenResponse = _zod.z.object({
 });
 var getTreeDocumentTypeRootQueryTakeDefault = 100;
 var getTreeDocumentTypeRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDocumentTypeRootQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDocumentTypeRootQueryTakeDefault),
+  "foldersOnly": _zod.z.coerce.boolean().optional()
 });
 var getTreeDocumentTypeRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5101,8 +5100,8 @@ var getDocumentVersionQueryTakeDefault = 100;
 var getDocumentVersionQueryParams = _zod.z.object({
   "documentId": _zod.z.string().uuid(),
   "culture": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentVersionQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentVersionQueryTakeDefault)
 });
 var getDocumentVersionResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5161,7 +5160,7 @@ var putDocumentVersionByIdPreventCleanupParams = _zod.z.object({
   "id": _zod.z.string().uuid()
 });
 var putDocumentVersionByIdPreventCleanupQueryParams = _zod.z.object({
-  "preventCleanup": _zod.z.boolean().optional()
+  "preventCleanup": _zod.z.coerce.boolean().optional()
 });
 var postDocumentVersionByIdRollbackParams = _zod.z.object({
   "id": _zod.z.string().uuid()
@@ -5180,8 +5179,8 @@ var getCollectionDocumentByIdQueryParams = _zod.z.object({
   "orderCulture": _zod.z.string().optional(),
   "orderDirection": _zod.z.enum(["Ascending", "Descending"]).optional(),
   "filter": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getCollectionDocumentByIdQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getCollectionDocumentByIdQueryTakeDefault)
 });
 var getCollectionDocumentByIdResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5308,8 +5307,8 @@ var getDocumentByIdAuditLogQueryTakeDefault = 100;
 var getDocumentByIdAuditLogQueryParams = _zod.z.object({
   "orderDirection": _zod.z.enum(["Ascending", "Descending"]).optional(),
   "sinceDate": _zod.z.string().datetime({ "local": true }).optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentByIdAuditLogQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentByIdAuditLogQueryTakeDefault)
 });
 var getDocumentByIdAuditLogResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5501,8 +5500,8 @@ var getDocumentByIdReferencedByParams = _zod.z.object({
 });
 var getDocumentByIdReferencedByQueryTakeDefault = 20;
 var getDocumentByIdReferencedByQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentByIdReferencedByQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentByIdReferencedByQueryTakeDefault)
 });
 var getDocumentByIdReferencedByResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5538,8 +5537,8 @@ var getDocumentByIdReferencedDescendantsParams = _zod.z.object({
 });
 var getDocumentByIdReferencedDescendantsQueryTakeDefault = 20;
 var getDocumentByIdReferencedDescendantsQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentByIdReferencedDescendantsQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentByIdReferencedDescendantsQueryTakeDefault)
 });
 var getDocumentByIdReferencedDescendantsResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5595,8 +5594,8 @@ var putUmbracoManagementApiV11DocumentByIdValidate11Body = _zod.z.object({
 var getDocumentAreReferencedQueryTakeDefault = 20;
 var getDocumentAreReferencedQueryParams = _zod.z.object({
   "id": _zod.z.array(_zod.z.string().uuid()).optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getDocumentAreReferencedQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getDocumentAreReferencedQueryTakeDefault)
 });
 var getDocumentAreReferencedResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5682,8 +5681,8 @@ var getItemDocumentResponse = _zod.z.array(getItemDocumentResponseItem);
 var getItemDocumentSearchQueryTakeDefault = 100;
 var getItemDocumentSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemDocumentSearchQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemDocumentSearchQueryTakeDefault),
   "parentId": _zod.z.string().uuid().optional(),
   "allowedDocumentTypes": _zod.z.array(_zod.z.string().uuid()).optional()
 });
@@ -5731,8 +5730,8 @@ var putRecycleBinDocumentByIdRestoreBody = _zod.z.object({
 var getRecycleBinDocumentChildrenQueryTakeDefault = 100;
 var getRecycleBinDocumentChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRecycleBinDocumentChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRecycleBinDocumentChildrenQueryTakeDefault)
 });
 var getRecycleBinDocumentChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5759,8 +5758,8 @@ var getRecycleBinDocumentChildrenResponse = _zod.z.object({
 });
 var getRecycleBinDocumentRootQueryTakeDefault = 100;
 var getRecycleBinDocumentRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRecycleBinDocumentRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRecycleBinDocumentRootQueryTakeDefault)
 });
 var getRecycleBinDocumentRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5815,8 +5814,8 @@ var getTreeDocumentAncestorsResponse = _zod.z.array(getTreeDocumentAncestorsResp
 var getTreeDocumentChildrenQueryTakeDefault = 100;
 var getTreeDocumentChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDocumentChildrenQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDocumentChildrenQueryTakeDefault),
   "dataTypeId": _zod.z.string().uuid().optional()
 });
 var getTreeDocumentChildrenResponse = _zod.z.object({
@@ -5847,8 +5846,8 @@ var getTreeDocumentChildrenResponse = _zod.z.object({
 });
 var getTreeDocumentRootQueryTakeDefault = 100;
 var getTreeDocumentRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeDocumentRootQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeDocumentRootQueryTakeDefault),
   "dataTypeId": _zod.z.string().uuid().optional()
 });
 var getTreeDocumentRootResponse = _zod.z.object({
@@ -5904,8 +5903,8 @@ var getDynamicRootStepsResponseItem = _zod.z.string();
 var getDynamicRootStepsResponse = _zod.z.array(getDynamicRootStepsResponseItem);
 var getHealthCheckGroupQueryTakeDefault = 100;
 var getHealthCheckGroupQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getHealthCheckGroupQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getHealthCheckGroupQueryTakeDefault)
 });
 var getHealthCheckGroupResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -5986,8 +5985,8 @@ var getHelpQueryBaseUrlDefault = "https://our.umbraco.com";
 var getHelpQueryParams = _zod.z.object({
   "section": _zod.z.string().optional(),
   "tree": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getHelpQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getHelpQueryTakeDefault),
   "baseUrl": _zod.z.string().default(getHelpQueryBaseUrlDefault)
 });
 var getHelpResponse = _zod.z.object({
@@ -6003,8 +6002,8 @@ var getImagingResizeUrlsQueryHeightDefault = 200;
 var getImagingResizeUrlsQueryWidthDefault = 200;
 var getImagingResizeUrlsQueryParams = _zod.z.object({
   "id": _zod.z.array(_zod.z.string().uuid()).optional(),
-  "height": _zod.z.number().default(getImagingResizeUrlsQueryHeightDefault),
-  "width": _zod.z.number().default(getImagingResizeUrlsQueryWidthDefault),
+  "height": _zod.z.coerce.number().default(getImagingResizeUrlsQueryHeightDefault),
+  "width": _zod.z.coerce.number().default(getImagingResizeUrlsQueryWidthDefault),
   "mode": _zod.z.enum(["Crop", "Max", "Stretch", "Pad", "BoxPad", "Min"]).optional()
 });
 var getImagingResizeUrlsResponseItem = _zod.z.object({
@@ -6025,8 +6024,8 @@ var getImportAnalyzeResponse = _zod.z.object({
 });
 var getIndexerQueryTakeDefault = 100;
 var getIndexerQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getIndexerQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getIndexerQueryTakeDefault)
 });
 var getIndexerResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6131,8 +6130,8 @@ var getItemLanguageDefaultResponse = _zod.z.object({
 });
 var getLanguageQueryTakeDefault = 100;
 var getLanguageQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getLanguageQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getLanguageQueryTakeDefault)
 });
 var getLanguageResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6175,8 +6174,8 @@ var putLanguageByIsoCodeBody = _zod.z.object({
 });
 var getLogViewerLevelQueryTakeDefault = 100;
 var getLogViewerLevelQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getLogViewerLevelQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getLogViewerLevelQueryTakeDefault)
 });
 var getLogViewerLevelResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6198,8 +6197,8 @@ var getLogViewerLevelCountResponse = _zod.z.object({
 });
 var getLogViewerLogQueryTakeDefault = 100;
 var getLogViewerLogQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getLogViewerLogQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getLogViewerLogQueryTakeDefault),
   "orderDirection": _zod.z.enum(["Ascending", "Descending"]).optional(),
   "filterExpression": _zod.z.string().optional(),
   "logLevel": _zod.z.array(_zod.z.enum(["Verbose", "Debug", "Information", "Warning", "Error", "Fatal"])).optional(),
@@ -6222,8 +6221,8 @@ var getLogViewerLogResponse = _zod.z.object({
 });
 var getLogViewerMessageTemplateQueryTakeDefault = 100;
 var getLogViewerMessageTemplateQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getLogViewerMessageTemplateQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getLogViewerMessageTemplateQueryTakeDefault),
   "startDate": _zod.z.string().datetime({ "local": true }).optional(),
   "endDate": _zod.z.string().datetime({ "local": true }).optional()
 });
@@ -6236,8 +6235,8 @@ var getLogViewerMessageTemplateResponse = _zod.z.object({
 });
 var getLogViewerSavedSearchQueryTakeDefault = 100;
 var getLogViewerSavedSearchQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getLogViewerSavedSearchQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getLogViewerSavedSearchQueryTakeDefault)
 });
 var getLogViewerSavedSearchResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6297,8 +6296,8 @@ var getItemMediaTypeResponse = _zod.z.array(getItemMediaTypeResponseItem);
 var getItemMediaTypeAllowedQueryTakeDefault = 100;
 var getItemMediaTypeAllowedQueryParams = _zod.z.object({
   "fileExtension": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemMediaTypeAllowedQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemMediaTypeAllowedQueryTakeDefault)
 });
 var getItemMediaTypeAllowedResponse = _zod.z.object({
   "items": _zod.z.array(_zod.z.object({
@@ -6310,8 +6309,8 @@ var getItemMediaTypeAllowedResponse = _zod.z.object({
 });
 var getItemMediaTypeFoldersQueryTakeDefault = 100;
 var getItemMediaTypeFoldersQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemMediaTypeFoldersQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemMediaTypeFoldersQueryTakeDefault)
 });
 var getItemMediaTypeFoldersResponse = _zod.z.object({
   "items": _zod.z.array(_zod.z.object({
@@ -6324,8 +6323,8 @@ var getItemMediaTypeFoldersResponse = _zod.z.object({
 var getItemMediaTypeSearchQueryTakeDefault = 100;
 var getItemMediaTypeSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemMediaTypeSearchQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemMediaTypeSearchQueryTakeDefault)
 });
 var getItemMediaTypeSearchResponse = _zod.z.object({
   "items": _zod.z.array(_zod.z.object({
@@ -6530,8 +6529,8 @@ var getMediaTypeByIdAllowedChildrenParams = _zod.z.object({
 });
 var getMediaTypeByIdAllowedChildrenQueryTakeDefault = 100;
 var getMediaTypeByIdAllowedChildrenQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getMediaTypeByIdAllowedChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getMediaTypeByIdAllowedChildrenQueryTakeDefault)
 });
 var getMediaTypeByIdAllowedChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6581,8 +6580,8 @@ var putMediaTypeByIdMoveBody = _zod.z.object({
 });
 var getMediaTypeAllowedAtRootQueryTakeDefault = 100;
 var getMediaTypeAllowedAtRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getMediaTypeAllowedAtRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getMediaTypeAllowedAtRootQueryTakeDefault)
 });
 var getMediaTypeAllowedAtRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6655,9 +6654,9 @@ var getTreeMediaTypeAncestorsResponse = _zod.z.array(getTreeMediaTypeAncestorsRe
 var getTreeMediaTypeChildrenQueryTakeDefault = 100;
 var getTreeMediaTypeChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeMediaTypeChildrenQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeMediaTypeChildrenQueryTakeDefault),
+  "foldersOnly": _zod.z.coerce.boolean().optional()
 });
 var getTreeMediaTypeChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6675,9 +6674,9 @@ var getTreeMediaTypeChildrenResponse = _zod.z.object({
 });
 var getTreeMediaTypeRootQueryTakeDefault = 100;
 var getTreeMediaTypeRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeMediaTypeRootQueryTakeDefault),
-  "foldersOnly": _zod.z.boolean().optional()
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeMediaTypeRootQueryTakeDefault),
+  "foldersOnly": _zod.z.coerce.boolean().optional()
 });
 var getTreeMediaTypeRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6701,8 +6700,8 @@ var getCollectionMediaQueryParams = _zod.z.object({
   "orderBy": _zod.z.string().default(getCollectionMediaQueryOrderByDefault),
   "orderDirection": _zod.z.enum(["Ascending", "Descending"]).optional(),
   "filter": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getCollectionMediaQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getCollectionMediaQueryTakeDefault)
 });
 var getCollectionMediaResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6757,8 +6756,8 @@ var getItemMediaResponse = _zod.z.array(getItemMediaResponseItem);
 var getItemMediaSearchQueryTakeDefault = 100;
 var getItemMediaSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemMediaSearchQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemMediaSearchQueryTakeDefault),
   "parentId": _zod.z.string().uuid().optional(),
   "allowedMediaTypes": _zod.z.array(_zod.z.string().uuid()).optional()
 });
@@ -6862,8 +6861,8 @@ var getMediaByIdAuditLogQueryTakeDefault = 100;
 var getMediaByIdAuditLogQueryParams = _zod.z.object({
   "orderDirection": _zod.z.enum(["Ascending", "Descending"]).optional(),
   "sinceDate": _zod.z.string().datetime({ "local": true }).optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getMediaByIdAuditLogQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getMediaByIdAuditLogQueryTakeDefault)
 });
 var getMediaByIdAuditLogResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6893,8 +6892,8 @@ var getMediaByIdReferencedByParams = _zod.z.object({
 });
 var getMediaByIdReferencedByQueryTakeDefault = 20;
 var getMediaByIdReferencedByQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getMediaByIdReferencedByQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getMediaByIdReferencedByQueryTakeDefault)
 });
 var getMediaByIdReferencedByResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6930,8 +6929,8 @@ var getMediaByIdReferencedDescendantsParams = _zod.z.object({
 });
 var getMediaByIdReferencedDescendantsQueryTakeDefault = 20;
 var getMediaByIdReferencedDescendantsQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getMediaByIdReferencedDescendantsQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getMediaByIdReferencedDescendantsQueryTakeDefault)
 });
 var getMediaByIdReferencedDescendantsResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -6958,8 +6957,8 @@ var putMediaByIdValidateBody = _zod.z.object({
 var getMediaAreReferencedQueryTakeDefault = 20;
 var getMediaAreReferencedQueryParams = _zod.z.object({
   "id": _zod.z.array(_zod.z.string().uuid()).optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getMediaAreReferencedQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getMediaAreReferencedQueryTakeDefault)
 });
 var getMediaAreReferencedResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7032,8 +7031,8 @@ var putRecycleBinMediaByIdRestoreBody = _zod.z.object({
 var getRecycleBinMediaChildrenQueryTakeDefault = 100;
 var getRecycleBinMediaChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRecycleBinMediaChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRecycleBinMediaChildrenQueryTakeDefault)
 });
 var getRecycleBinMediaChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7059,8 +7058,8 @@ var getRecycleBinMediaChildrenResponse = _zod.z.object({
 });
 var getRecycleBinMediaRootQueryTakeDefault = 100;
 var getRecycleBinMediaRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRecycleBinMediaRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRecycleBinMediaRootQueryTakeDefault)
 });
 var getRecycleBinMediaRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7112,8 +7111,8 @@ var getTreeMediaAncestorsResponse = _zod.z.array(getTreeMediaAncestorsResponseIt
 var getTreeMediaChildrenQueryTakeDefault = 100;
 var getTreeMediaChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeMediaChildrenQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeMediaChildrenQueryTakeDefault),
   "dataTypeId": _zod.z.string().uuid().optional()
 });
 var getTreeMediaChildrenResponse = _zod.z.object({
@@ -7142,8 +7141,8 @@ var getTreeMediaChildrenResponse = _zod.z.object({
 });
 var getTreeMediaRootQueryTakeDefault = 100;
 var getTreeMediaRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeMediaRootQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeMediaRootQueryTakeDefault),
   "dataTypeId": _zod.z.string().uuid().optional()
 });
 var getTreeMediaRootResponse = _zod.z.object({
@@ -7180,8 +7179,8 @@ var getItemMemberGroupResponseItem = _zod.z.object({
 var getItemMemberGroupResponse = _zod.z.array(getItemMemberGroupResponseItem);
 var getMemberGroupQueryTakeDefault = 100;
 var getMemberGroupQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getMemberGroupQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getMemberGroupQueryTakeDefault)
 });
 var getMemberGroupResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7212,8 +7211,8 @@ var putMemberGroupByIdBody = _zod.z.object({
 });
 var getTreeMemberGroupRootQueryTakeDefault = 100;
 var getTreeMemberGroupRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeMemberGroupRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeMemberGroupRootQueryTakeDefault)
 });
 var getTreeMemberGroupRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7238,8 +7237,8 @@ var getItemMemberTypeResponse = _zod.z.array(getItemMemberTypeResponseItem);
 var getItemMemberTypeSearchQueryTakeDefault = 100;
 var getItemMemberTypeSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemMemberTypeSearchQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemMemberTypeSearchQueryTakeDefault)
 });
 var getItemMemberTypeSearchResponse = _zod.z.object({
   "items": _zod.z.array(_zod.z.object({
@@ -7461,8 +7460,8 @@ var getMemberTypeConfigurationResponse = _zod.z.object({
 });
 var getTreeMemberTypeRootQueryTakeDefault = 100;
 var getTreeMemberTypeRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeMemberTypeRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeMemberTypeRootQueryTakeDefault)
 });
 var getTreeMemberTypeRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7481,13 +7480,13 @@ var getFilterMemberQueryTakeDefault = 100;
 var getFilterMemberQueryParams = _zod.z.object({
   "memberTypeId": _zod.z.string().uuid().optional(),
   "memberGroupName": _zod.z.string().optional(),
-  "isApproved": _zod.z.boolean().optional(),
-  "isLockedOut": _zod.z.boolean().optional(),
+  "isApproved": _zod.z.coerce.boolean().optional(),
+  "isLockedOut": _zod.z.coerce.boolean().optional(),
   "orderBy": _zod.z.string().default(getFilterMemberQueryOrderByDefault),
   "orderDirection": _zod.z.enum(["Ascending", "Descending"]).optional(),
   "filter": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getFilterMemberQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getFilterMemberQueryTakeDefault)
 });
 var getFilterMemberResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7549,8 +7548,8 @@ var getItemMemberResponse = _zod.z.array(getItemMemberResponseItem);
 var getItemMemberSearchQueryTakeDefault = 100;
 var getItemMemberSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemMemberSearchQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemMemberSearchQueryTakeDefault),
   "allowedMemberTypes": _zod.z.array(_zod.z.string().uuid()).optional()
 });
 var getItemMemberSearchResponse = _zod.z.object({
@@ -7721,8 +7720,8 @@ var getModelsBuilderStatusResponse = _zod.z.object({
 });
 var getObjectTypesQueryTakeDefault = 100;
 var getObjectTypesQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getObjectTypesQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getObjectTypesQueryTakeDefault)
 });
 var getObjectTypesResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7733,8 +7732,8 @@ var getObjectTypesResponse = _zod.z.object({
 });
 var getOembedQueryQueryParams = _zod.z.object({
   "url": _zod.z.string().url().optional(),
-  "maxWidth": _zod.z.number().optional(),
-  "maxHeight": _zod.z.number().optional()
+  "maxWidth": _zod.z.coerce.number().optional(),
+  "maxHeight": _zod.z.coerce.number().optional()
 });
 var getOembedQueryResponse = _zod.z.object({
   "markup": _zod.z.string()
@@ -7747,8 +7746,8 @@ var getPackageConfigurationResponse = _zod.z.object({
 });
 var getPackageCreatedQueryTakeDefault = 100;
 var getPackageCreatedQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getPackageCreatedQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getPackageCreatedQueryTakeDefault)
 });
 var getPackageCreatedResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7838,8 +7837,8 @@ var getPackageCreatedByIdDownloadParams = _zod.z.object({
 var getPackageCreatedByIdDownloadResponse = _zod.z.instanceof(FileLike);
 var getPackageMigrationStatusQueryTakeDefault = 100;
 var getPackageMigrationStatusQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getPackageMigrationStatusQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getPackageMigrationStatusQueryTakeDefault)
 });
 var getPackageMigrationStatusResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7914,8 +7913,8 @@ var deletePartialViewFolderByPathParams = _zod.z.object({
 });
 var getPartialViewSnippetQueryTakeDefault = 100;
 var getPartialViewSnippetQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getPartialViewSnippetQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getPartialViewSnippetQueryTakeDefault)
 });
 var getPartialViewSnippetResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7948,8 +7947,8 @@ var getTreePartialViewAncestorsResponse = _zod.z.array(getTreePartialViewAncesto
 var getTreePartialViewChildrenQueryTakeDefault = 100;
 var getTreePartialViewChildrenQueryParams = _zod.z.object({
   "parentPath": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreePartialViewChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreePartialViewChildrenQueryTakeDefault)
 });
 var getTreePartialViewChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7965,8 +7964,8 @@ var getTreePartialViewChildrenResponse = _zod.z.object({
 });
 var getTreePartialViewRootQueryTakeDefault = 100;
 var getTreePartialViewRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreePartialViewRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreePartialViewRootQueryTakeDefault)
 });
 var getTreePartialViewRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -7994,8 +7993,8 @@ var getPropertyTypeIsUsedResponse = _zod.z.boolean();
 var getRedirectManagementQueryTakeDefault = 100;
 var getRedirectManagementQueryParams = _zod.z.object({
   "filter": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRedirectManagementQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRedirectManagementQueryTakeDefault)
 });
 var getRedirectManagementResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8015,8 +8014,8 @@ var getRedirectManagementByIdParams = _zod.z.object({
 });
 var getRedirectManagementByIdQueryTakeDefault = 100;
 var getRedirectManagementByIdQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRedirectManagementByIdQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRedirectManagementByIdQueryTakeDefault)
 });
 var getRedirectManagementByIdResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8052,8 +8051,8 @@ var getItemRelationTypeResponseItem = _zod.z.object({
 var getItemRelationTypeResponse = _zod.z.array(getItemRelationTypeResponseItem);
 var getRelationTypeQueryTakeDefault = 100;
 var getRelationTypeQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRelationTypeQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRelationTypeQueryTakeDefault)
 });
 var getRelationTypeResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8096,8 +8095,8 @@ var getRelationByRelationTypeIdParams = _zod.z.object({
 });
 var getRelationByRelationTypeIdQueryTakeDefault = 100;
 var getRelationByRelationTypeIdQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getRelationByRelationTypeIdQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getRelationByRelationTypeIdQueryTakeDefault)
 });
 var getRelationByRelationTypeIdResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8198,8 +8197,8 @@ var getTreeScriptAncestorsResponse = _zod.z.array(getTreeScriptAncestorsResponse
 var getTreeScriptChildrenQueryTakeDefault = 100;
 var getTreeScriptChildrenQueryParams = _zod.z.object({
   "parentPath": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeScriptChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeScriptChildrenQueryTakeDefault)
 });
 var getTreeScriptChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8215,8 +8214,8 @@ var getTreeScriptChildrenResponse = _zod.z.object({
 });
 var getTreeScriptRootQueryTakeDefault = 100;
 var getTreeScriptRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeScriptRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeScriptRootQueryTakeDefault)
 });
 var getTreeScriptRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8232,8 +8231,8 @@ var getTreeScriptRootResponse = _zod.z.object({
 });
 var getSearcherQueryTakeDefault = 100;
 var getSearcherQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getSearcherQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getSearcherQueryTakeDefault)
 });
 var getSearcherResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8247,8 +8246,8 @@ var getSearcherBySearcherNameQueryParams = _zod.z.object({
 var getSearcherBySearcherNameQueryQueryTakeDefault = 100;
 var getSearcherBySearcherNameQueryQueryParams = _zod.z.object({
   "term": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getSearcherBySearcherNameQueryQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getSearcherBySearcherNameQueryQueryTakeDefault)
 });
 var getSearcherBySearcherNameQueryResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8298,8 +8297,8 @@ var postSecurityForgotPasswordVerifyResponse = _zod.z.object({
 });
 var getSegmentQueryTakeDefault = 100;
 var getSegmentQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getSegmentQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getSegmentQueryTakeDefault)
 });
 var getSegmentResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8361,8 +8360,8 @@ var getTreeStaticFileAncestorsResponse = _zod.z.array(getTreeStaticFileAncestors
 var getTreeStaticFileChildrenQueryTakeDefault = 100;
 var getTreeStaticFileChildrenQueryParams = _zod.z.object({
   "parentPath": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeStaticFileChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeStaticFileChildrenQueryTakeDefault)
 });
 var getTreeStaticFileChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8378,8 +8377,8 @@ var getTreeStaticFileChildrenResponse = _zod.z.object({
 });
 var getTreeStaticFileRootQueryTakeDefault = 100;
 var getTreeStaticFileRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeStaticFileRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeStaticFileRootQueryTakeDefault)
 });
 var getTreeStaticFileRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8473,8 +8472,8 @@ var getTreeStylesheetAncestorsResponse = _zod.z.array(getTreeStylesheetAncestors
 var getTreeStylesheetChildrenQueryTakeDefault = 100;
 var getTreeStylesheetChildrenQueryParams = _zod.z.object({
   "parentPath": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeStylesheetChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeStylesheetChildrenQueryTakeDefault)
 });
 var getTreeStylesheetChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8490,8 +8489,8 @@ var getTreeStylesheetChildrenResponse = _zod.z.object({
 });
 var getTreeStylesheetRootQueryTakeDefault = 100;
 var getTreeStylesheetRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeStylesheetRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeStylesheetRootQueryTakeDefault)
 });
 var getTreeStylesheetRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8510,8 +8509,8 @@ var getTagQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
   "tagGroup": _zod.z.string().optional(),
   "culture": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTagQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTagQueryTakeDefault)
 });
 var getTagResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8524,8 +8523,8 @@ var getTagResponse = _zod.z.object({
 });
 var getTelemetryQueryTakeDefault = 100;
 var getTelemetryQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTelemetryQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTelemetryQueryTakeDefault)
 });
 var getTelemetryResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8551,8 +8550,8 @@ var getItemTemplateResponse = _zod.z.array(getItemTemplateResponseItem);
 var getItemTemplateSearchQueryTakeDefault = 100;
 var getItemTemplateSearchQueryParams = _zod.z.object({
   "query": _zod.z.string().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getItemTemplateSearchQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getItemTemplateSearchQueryTakeDefault)
 });
 var getItemTemplateSearchResponse = _zod.z.object({
   "items": _zod.z.array(_zod.z.object({
@@ -8645,8 +8644,8 @@ var getTreeTemplateAncestorsResponse = _zod.z.array(getTreeTemplateAncestorsResp
 var getTreeTemplateChildrenQueryTakeDefault = 100;
 var getTreeTemplateChildrenQueryParams = _zod.z.object({
   "parentId": _zod.z.string().uuid().optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeTemplateChildrenQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeTemplateChildrenQueryTakeDefault)
 });
 var getTreeTemplateChildrenResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8661,8 +8660,8 @@ var getTreeTemplateChildrenResponse = _zod.z.object({
 });
 var getTreeTemplateRootQueryTakeDefault = 100;
 var getTreeTemplateRootQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getTreeTemplateRootQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getTreeTemplateRootQueryTakeDefault)
 });
 var getTreeTemplateRootResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8713,8 +8712,8 @@ var getUserDataQueryTakeDefault = 100;
 var getUserDataQueryParams = _zod.z.object({
   "groups": _zod.z.array(_zod.z.string()).optional(),
   "identifiers": _zod.z.array(_zod.z.string()).optional(),
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getUserDataQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getUserDataQueryTakeDefault)
 });
 var getUserDataResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8741,8 +8740,8 @@ var getUserDataByIdResponse = _zod.z.object({
 });
 var getFilterUserGroupQueryTakeDefault = 100;
 var getFilterUserGroupQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getFilterUserGroupQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getFilterUserGroupQueryTakeDefault),
   "filter": _zod.z.string().optional()
 });
 var getFilterUserGroupResponse = _zod.z.object({
@@ -8825,8 +8824,8 @@ var postUserGroupBody = _zod.z.object({
 });
 var getUserGroupQueryTakeDefault = 100;
 var getUserGroupQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getUserGroupQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getUserGroupQueryTakeDefault)
 });
 var getUserGroupResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -8946,8 +8945,8 @@ var postUserGroupByIdUsersBodyItem = _zod.z.object({
 var postUserGroupByIdUsersBody = _zod.z.array(postUserGroupByIdUsersBodyItem);
 var getFilterUserQueryTakeDefault = 100;
 var getFilterUserQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getFilterUserQueryTakeDefault),
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getFilterUserQueryTakeDefault),
   "orderBy": _zod.z.enum(["UserName", "Language", "Name", "Email", "Id", "CreateDate", "UpdateDate", "IsApproved", "IsLockedOut", "LastLoginDate"]).optional(),
   "orderDirection": _zod.z.enum(["Ascending", "Descending"]).optional(),
   "userGroupIds": _zod.z.array(_zod.z.string().uuid()).optional(),
@@ -9012,8 +9011,8 @@ var deleteUserBody = _zod.z.object({
 });
 var getUserQueryTakeDefault = 100;
 var getUserQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getUserQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getUserQueryTakeDefault)
 });
 var getUserResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -9368,8 +9367,8 @@ var getItemWebhookResponseItem = _zod.z.object({
 var getItemWebhookResponse = _zod.z.array(getItemWebhookResponseItem);
 var getWebhookQueryTakeDefault = 100;
 var getWebhookQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getWebhookQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getWebhookQueryTakeDefault)
 });
 var getWebhookResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -9435,8 +9434,8 @@ var getWebhookByIdLogsParams = _zod.z.object({
 });
 var getWebhookByIdLogsQueryTakeDefault = 100;
 var getWebhookByIdLogsQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getWebhookByIdLogsQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getWebhookByIdLogsQueryTakeDefault)
 });
 var getWebhookByIdLogsResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -9458,8 +9457,8 @@ var getWebhookByIdLogsResponse = _zod.z.object({
 });
 var getWebhookEventsQueryTakeDefault = 100;
 var getWebhookEventsQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getWebhookEventsQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getWebhookEventsQueryTakeDefault)
 });
 var getWebhookEventsResponse = _zod.z.object({
   "total": _zod.z.number(),
@@ -9471,8 +9470,8 @@ var getWebhookEventsResponse = _zod.z.object({
 });
 var getWebhookLogsQueryTakeDefault = 100;
 var getWebhookLogsQueryParams = _zod.z.object({
-  "skip": _zod.z.number().optional(),
-  "take": _zod.z.number().default(getWebhookLogsQueryTakeDefault)
+  "skip": _zod.z.coerce.number().optional(),
+  "take": _zod.z.coerce.number().default(getWebhookLogsQueryTakeDefault)
 });
 var getWebhookLogsResponse = _zod.z.object({
   "total": _zod.z.number(),

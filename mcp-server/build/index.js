@@ -4119,8 +4119,8 @@ var FileLike = class {
 };
 var getCultureQueryTakeDefault = 100;
 var getCultureQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getCultureQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getCultureQueryTakeDefault)
 });
 var getCultureResponse = zod.object({
   "total": zod.number(),
@@ -4238,8 +4238,8 @@ var putDataTypeFolderByIdBody = zod.object({
 });
 var getFilterDataTypeQueryTakeDefault = 100;
 var getFilterDataTypeQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterDataTypeQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getFilterDataTypeQueryTakeDefault),
   "name": zod.string().optional(),
   "editorUiAlias": zod.string().optional(),
   "editorAlias": zod.string().optional()
@@ -4268,8 +4268,8 @@ var getItemDataTypeResponse = zod.array(getItemDataTypeResponseItem);
 var getItemDataTypeSearchQueryTakeDefault = 100;
 var getItemDataTypeSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemDataTypeSearchQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemDataTypeSearchQueryTakeDefault)
 });
 var getItemDataTypeSearchResponse = zod.object({
   "items": zod.array(zod.object({
@@ -4299,9 +4299,9 @@ var getTreeDataTypeAncestorsResponse = zod.array(getTreeDataTypeAncestorsRespons
 var getTreeDataTypeChildrenQueryTakeDefault = 100;
 var getTreeDataTypeChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDataTypeChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDataTypeChildrenQueryTakeDefault),
+  "foldersOnly": zod.coerce.boolean().optional()
 });
 var getTreeDataTypeChildrenResponse = zod.object({
   "total": zod.number(),
@@ -4317,11 +4317,10 @@ var getTreeDataTypeChildrenResponse = zod.object({
     "isDeletable": zod.boolean()
   }))
 });
-var getTreeDataTypeRootQueryTakeDefault = 100;
 var getTreeDataTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDataTypeRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number(),
+  "take": zod.coerce.number().default(100),
+  "foldersOnly": zod.coerce.boolean()
 });
 var getTreeDataTypeRootResponse = zod.object({
   "total": zod.number(),
@@ -4340,8 +4339,8 @@ var getTreeDataTypeRootResponse = zod.object({
 var getDictionaryQueryTakeDefault = 100;
 var getDictionaryQueryParams = zod.object({
   "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDictionaryQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDictionaryQueryTakeDefault)
 });
 var getDictionaryResponse = zod.object({
   "total": zod.number(),
@@ -4393,7 +4392,7 @@ var getDictionaryByIdExportParams = zod.object({
   "id": zod.string().uuid()
 });
 var getDictionaryByIdExportQueryParams = zod.object({
-  "includeChildren": zod.boolean().optional()
+  "includeChildren": zod.coerce.boolean().optional()
 });
 var getDictionaryByIdExportResponse = zod.instanceof(FileLike);
 var putDictionaryByIdMoveParams = zod.object({
@@ -4435,8 +4434,8 @@ var getTreeDictionaryAncestorsResponse = zod.array(getTreeDictionaryAncestorsRes
 var getTreeDictionaryChildrenQueryTakeDefault = 100;
 var getTreeDictionaryChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDictionaryChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDictionaryChildrenQueryTakeDefault)
 });
 var getTreeDictionaryChildrenResponse = zod.object({
   "total": zod.number(),
@@ -4451,8 +4450,8 @@ var getTreeDictionaryChildrenResponse = zod.object({
 });
 var getTreeDictionaryRootQueryTakeDefault = 100;
 var getTreeDictionaryRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDictionaryRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDictionaryRootQueryTakeDefault)
 });
 var getTreeDictionaryRootResponse = zod.object({
   "total": zod.number(),
@@ -4614,9 +4613,9 @@ var getTreeDocumentBlueprintAncestorsResponse = zod.array(getTreeDocumentBluepri
 var getTreeDocumentBlueprintChildrenQueryTakeDefault = 100;
 var getTreeDocumentBlueprintChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentBlueprintChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDocumentBlueprintChildrenQueryTakeDefault),
+  "foldersOnly": zod.coerce.boolean().optional()
 });
 var getTreeDocumentBlueprintChildrenResponse = zod.object({
   "total": zod.number(),
@@ -4639,9 +4638,9 @@ var getTreeDocumentBlueprintChildrenResponse = zod.object({
 });
 var getTreeDocumentBlueprintRootQueryTakeDefault = 100;
 var getTreeDocumentBlueprintRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentBlueprintRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDocumentBlueprintRootQueryTakeDefault),
+  "foldersOnly": zod.coerce.boolean().optional()
 });
 var getTreeDocumentBlueprintRootResponse = zod.object({
   "total": zod.number(),
@@ -4888,8 +4887,8 @@ var getDocumentTypeByIdAllowedChildrenParams = zod.object({
 });
 var getDocumentTypeByIdAllowedChildrenQueryTakeDefault = 100;
 var getDocumentTypeByIdAllowedChildrenQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentTypeByIdAllowedChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentTypeByIdAllowedChildrenQueryTakeDefault)
 });
 var getDocumentTypeByIdAllowedChildrenResponse = zod.object({
   "total": zod.number(),
@@ -4905,8 +4904,8 @@ var getDocumentTypeByIdBlueprintParams = zod.object({
 });
 var getDocumentTypeByIdBlueprintQueryTakeDefault = 100;
 var getDocumentTypeByIdBlueprintQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentTypeByIdBlueprintQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentTypeByIdBlueprintQueryTakeDefault)
 });
 var getDocumentTypeByIdBlueprintResponse = zod.object({
   "total": zod.number(),
@@ -4954,8 +4953,8 @@ var putDocumentTypeByIdMoveBody = zod.object({
 });
 var getDocumentTypeAllowedAtRootQueryTakeDefault = 100;
 var getDocumentTypeAllowedAtRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentTypeAllowedAtRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentTypeAllowedAtRootQueryTakeDefault)
 });
 var getDocumentTypeAllowedAtRootResponse = zod.object({
   "total": zod.number(),
@@ -5028,8 +5027,8 @@ var getItemDocumentTypeResponse = zod.array(getItemDocumentTypeResponseItem);
 var getItemDocumentTypeSearchQueryTakeDefault = 100;
 var getItemDocumentTypeSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemDocumentTypeSearchQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemDocumentTypeSearchQueryTakeDefault)
 });
 var getItemDocumentTypeSearchResponse = zod.object({
   "items": zod.array(zod.object({
@@ -5059,9 +5058,9 @@ var getTreeDocumentTypeAncestorsResponse = zod.array(getTreeDocumentTypeAncestor
 var getTreeDocumentTypeChildrenQueryTakeDefault = 100;
 var getTreeDocumentTypeChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentTypeChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDocumentTypeChildrenQueryTakeDefault),
+  "foldersOnly": zod.coerce.boolean().optional()
 });
 var getTreeDocumentTypeChildrenResponse = zod.object({
   "total": zod.number(),
@@ -5079,9 +5078,9 @@ var getTreeDocumentTypeChildrenResponse = zod.object({
 });
 var getTreeDocumentTypeRootQueryTakeDefault = 100;
 var getTreeDocumentTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentTypeRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDocumentTypeRootQueryTakeDefault),
+  "foldersOnly": zod.coerce.boolean().optional()
 });
 var getTreeDocumentTypeRootResponse = zod.object({
   "total": zod.number(),
@@ -5101,8 +5100,8 @@ var getDocumentVersionQueryTakeDefault = 100;
 var getDocumentVersionQueryParams = zod.object({
   "documentId": zod.string().uuid(),
   "culture": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentVersionQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentVersionQueryTakeDefault)
 });
 var getDocumentVersionResponse = zod.object({
   "total": zod.number(),
@@ -5161,7 +5160,7 @@ var putDocumentVersionByIdPreventCleanupParams = zod.object({
   "id": zod.string().uuid()
 });
 var putDocumentVersionByIdPreventCleanupQueryParams = zod.object({
-  "preventCleanup": zod.boolean().optional()
+  "preventCleanup": zod.coerce.boolean().optional()
 });
 var postDocumentVersionByIdRollbackParams = zod.object({
   "id": zod.string().uuid()
@@ -5180,8 +5179,8 @@ var getCollectionDocumentByIdQueryParams = zod.object({
   "orderCulture": zod.string().optional(),
   "orderDirection": zod.enum(["Ascending", "Descending"]).optional(),
   "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getCollectionDocumentByIdQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getCollectionDocumentByIdQueryTakeDefault)
 });
 var getCollectionDocumentByIdResponse = zod.object({
   "total": zod.number(),
@@ -5308,8 +5307,8 @@ var getDocumentByIdAuditLogQueryTakeDefault = 100;
 var getDocumentByIdAuditLogQueryParams = zod.object({
   "orderDirection": zod.enum(["Ascending", "Descending"]).optional(),
   "sinceDate": zod.string().datetime({ "local": true }).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentByIdAuditLogQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentByIdAuditLogQueryTakeDefault)
 });
 var getDocumentByIdAuditLogResponse = zod.object({
   "total": zod.number(),
@@ -5501,8 +5500,8 @@ var getDocumentByIdReferencedByParams = zod.object({
 });
 var getDocumentByIdReferencedByQueryTakeDefault = 20;
 var getDocumentByIdReferencedByQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentByIdReferencedByQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentByIdReferencedByQueryTakeDefault)
 });
 var getDocumentByIdReferencedByResponse = zod.object({
   "total": zod.number(),
@@ -5538,8 +5537,8 @@ var getDocumentByIdReferencedDescendantsParams = zod.object({
 });
 var getDocumentByIdReferencedDescendantsQueryTakeDefault = 20;
 var getDocumentByIdReferencedDescendantsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentByIdReferencedDescendantsQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentByIdReferencedDescendantsQueryTakeDefault)
 });
 var getDocumentByIdReferencedDescendantsResponse = zod.object({
   "total": zod.number(),
@@ -5595,8 +5594,8 @@ var putUmbracoManagementApiV11DocumentByIdValidate11Body = zod.object({
 var getDocumentAreReferencedQueryTakeDefault = 20;
 var getDocumentAreReferencedQueryParams = zod.object({
   "id": zod.array(zod.string().uuid()).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getDocumentAreReferencedQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDocumentAreReferencedQueryTakeDefault)
 });
 var getDocumentAreReferencedResponse = zod.object({
   "total": zod.number(),
@@ -5682,8 +5681,8 @@ var getItemDocumentResponse = zod.array(getItemDocumentResponseItem);
 var getItemDocumentSearchQueryTakeDefault = 100;
 var getItemDocumentSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemDocumentSearchQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemDocumentSearchQueryTakeDefault),
   "parentId": zod.string().uuid().optional(),
   "allowedDocumentTypes": zod.array(zod.string().uuid()).optional()
 });
@@ -5731,8 +5730,8 @@ var putRecycleBinDocumentByIdRestoreBody = zod.object({
 var getRecycleBinDocumentChildrenQueryTakeDefault = 100;
 var getRecycleBinDocumentChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinDocumentChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRecycleBinDocumentChildrenQueryTakeDefault)
 });
 var getRecycleBinDocumentChildrenResponse = zod.object({
   "total": zod.number(),
@@ -5759,8 +5758,8 @@ var getRecycleBinDocumentChildrenResponse = zod.object({
 });
 var getRecycleBinDocumentRootQueryTakeDefault = 100;
 var getRecycleBinDocumentRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinDocumentRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRecycleBinDocumentRootQueryTakeDefault)
 });
 var getRecycleBinDocumentRootResponse = zod.object({
   "total": zod.number(),
@@ -5815,8 +5814,8 @@ var getTreeDocumentAncestorsResponse = zod.array(getTreeDocumentAncestorsRespons
 var getTreeDocumentChildrenQueryTakeDefault = 100;
 var getTreeDocumentChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentChildrenQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDocumentChildrenQueryTakeDefault),
   "dataTypeId": zod.string().uuid().optional()
 });
 var getTreeDocumentChildrenResponse = zod.object({
@@ -5847,8 +5846,8 @@ var getTreeDocumentChildrenResponse = zod.object({
 });
 var getTreeDocumentRootQueryTakeDefault = 100;
 var getTreeDocumentRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeDocumentRootQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeDocumentRootQueryTakeDefault),
   "dataTypeId": zod.string().uuid().optional()
 });
 var getTreeDocumentRootResponse = zod.object({
@@ -5904,8 +5903,8 @@ var getDynamicRootStepsResponseItem = zod.string();
 var getDynamicRootStepsResponse = zod.array(getDynamicRootStepsResponseItem);
 var getHealthCheckGroupQueryTakeDefault = 100;
 var getHealthCheckGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getHealthCheckGroupQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getHealthCheckGroupQueryTakeDefault)
 });
 var getHealthCheckGroupResponse = zod.object({
   "total": zod.number(),
@@ -5986,8 +5985,8 @@ var getHelpQueryBaseUrlDefault = "https://our.umbraco.com";
 var getHelpQueryParams = zod.object({
   "section": zod.string().optional(),
   "tree": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getHelpQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getHelpQueryTakeDefault),
   "baseUrl": zod.string().default(getHelpQueryBaseUrlDefault)
 });
 var getHelpResponse = zod.object({
@@ -6003,8 +6002,8 @@ var getImagingResizeUrlsQueryHeightDefault = 200;
 var getImagingResizeUrlsQueryWidthDefault = 200;
 var getImagingResizeUrlsQueryParams = zod.object({
   "id": zod.array(zod.string().uuid()).optional(),
-  "height": zod.number().default(getImagingResizeUrlsQueryHeightDefault),
-  "width": zod.number().default(getImagingResizeUrlsQueryWidthDefault),
+  "height": zod.coerce.number().default(getImagingResizeUrlsQueryHeightDefault),
+  "width": zod.coerce.number().default(getImagingResizeUrlsQueryWidthDefault),
   "mode": zod.enum(["Crop", "Max", "Stretch", "Pad", "BoxPad", "Min"]).optional()
 });
 var getImagingResizeUrlsResponseItem = zod.object({
@@ -6025,8 +6024,8 @@ var getImportAnalyzeResponse = zod.object({
 });
 var getIndexerQueryTakeDefault = 100;
 var getIndexerQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getIndexerQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getIndexerQueryTakeDefault)
 });
 var getIndexerResponse = zod.object({
   "total": zod.number(),
@@ -6131,8 +6130,8 @@ var getItemLanguageDefaultResponse = zod.object({
 });
 var getLanguageQueryTakeDefault = 100;
 var getLanguageQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLanguageQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getLanguageQueryTakeDefault)
 });
 var getLanguageResponse = zod.object({
   "total": zod.number(),
@@ -6175,8 +6174,8 @@ var putLanguageByIsoCodeBody = zod.object({
 });
 var getLogViewerLevelQueryTakeDefault = 100;
 var getLogViewerLevelQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerLevelQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getLogViewerLevelQueryTakeDefault)
 });
 var getLogViewerLevelResponse = zod.object({
   "total": zod.number(),
@@ -6198,8 +6197,8 @@ var getLogViewerLevelCountResponse = zod.object({
 });
 var getLogViewerLogQueryTakeDefault = 100;
 var getLogViewerLogQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerLogQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getLogViewerLogQueryTakeDefault),
   "orderDirection": zod.enum(["Ascending", "Descending"]).optional(),
   "filterExpression": zod.string().optional(),
   "logLevel": zod.array(zod.enum(["Verbose", "Debug", "Information", "Warning", "Error", "Fatal"])).optional(),
@@ -6222,8 +6221,8 @@ var getLogViewerLogResponse = zod.object({
 });
 var getLogViewerMessageTemplateQueryTakeDefault = 100;
 var getLogViewerMessageTemplateQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerMessageTemplateQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getLogViewerMessageTemplateQueryTakeDefault),
   "startDate": zod.string().datetime({ "local": true }).optional(),
   "endDate": zod.string().datetime({ "local": true }).optional()
 });
@@ -6236,8 +6235,8 @@ var getLogViewerMessageTemplateResponse = zod.object({
 });
 var getLogViewerSavedSearchQueryTakeDefault = 100;
 var getLogViewerSavedSearchQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getLogViewerSavedSearchQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getLogViewerSavedSearchQueryTakeDefault)
 });
 var getLogViewerSavedSearchResponse = zod.object({
   "total": zod.number(),
@@ -6297,8 +6296,8 @@ var getItemMediaTypeResponse = zod.array(getItemMediaTypeResponseItem);
 var getItemMediaTypeAllowedQueryTakeDefault = 100;
 var getItemMediaTypeAllowedQueryParams = zod.object({
   "fileExtension": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaTypeAllowedQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemMediaTypeAllowedQueryTakeDefault)
 });
 var getItemMediaTypeAllowedResponse = zod.object({
   "items": zod.array(zod.object({
@@ -6310,8 +6309,8 @@ var getItemMediaTypeAllowedResponse = zod.object({
 });
 var getItemMediaTypeFoldersQueryTakeDefault = 100;
 var getItemMediaTypeFoldersQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaTypeFoldersQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemMediaTypeFoldersQueryTakeDefault)
 });
 var getItemMediaTypeFoldersResponse = zod.object({
   "items": zod.array(zod.object({
@@ -6324,8 +6323,8 @@ var getItemMediaTypeFoldersResponse = zod.object({
 var getItemMediaTypeSearchQueryTakeDefault = 100;
 var getItemMediaTypeSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaTypeSearchQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemMediaTypeSearchQueryTakeDefault)
 });
 var getItemMediaTypeSearchResponse = zod.object({
   "items": zod.array(zod.object({
@@ -6530,8 +6529,8 @@ var getMediaTypeByIdAllowedChildrenParams = zod.object({
 });
 var getMediaTypeByIdAllowedChildrenQueryTakeDefault = 100;
 var getMediaTypeByIdAllowedChildrenQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaTypeByIdAllowedChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMediaTypeByIdAllowedChildrenQueryTakeDefault)
 });
 var getMediaTypeByIdAllowedChildrenResponse = zod.object({
   "total": zod.number(),
@@ -6581,8 +6580,8 @@ var putMediaTypeByIdMoveBody = zod.object({
 });
 var getMediaTypeAllowedAtRootQueryTakeDefault = 100;
 var getMediaTypeAllowedAtRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaTypeAllowedAtRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMediaTypeAllowedAtRootQueryTakeDefault)
 });
 var getMediaTypeAllowedAtRootResponse = zod.object({
   "total": zod.number(),
@@ -6655,9 +6654,9 @@ var getTreeMediaTypeAncestorsResponse = zod.array(getTreeMediaTypeAncestorsRespo
 var getTreeMediaTypeChildrenQueryTakeDefault = 100;
 var getTreeMediaTypeChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaTypeChildrenQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeMediaTypeChildrenQueryTakeDefault),
+  "foldersOnly": zod.coerce.boolean().optional()
 });
 var getTreeMediaTypeChildrenResponse = zod.object({
   "total": zod.number(),
@@ -6675,9 +6674,9 @@ var getTreeMediaTypeChildrenResponse = zod.object({
 });
 var getTreeMediaTypeRootQueryTakeDefault = 100;
 var getTreeMediaTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaTypeRootQueryTakeDefault),
-  "foldersOnly": zod.boolean().optional()
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeMediaTypeRootQueryTakeDefault),
+  "foldersOnly": zod.coerce.boolean().optional()
 });
 var getTreeMediaTypeRootResponse = zod.object({
   "total": zod.number(),
@@ -6701,8 +6700,8 @@ var getCollectionMediaQueryParams = zod.object({
   "orderBy": zod.string().default(getCollectionMediaQueryOrderByDefault),
   "orderDirection": zod.enum(["Ascending", "Descending"]).optional(),
   "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getCollectionMediaQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getCollectionMediaQueryTakeDefault)
 });
 var getCollectionMediaResponse = zod.object({
   "total": zod.number(),
@@ -6757,8 +6756,8 @@ var getItemMediaResponse = zod.array(getItemMediaResponseItem);
 var getItemMediaSearchQueryTakeDefault = 100;
 var getItemMediaSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMediaSearchQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemMediaSearchQueryTakeDefault),
   "parentId": zod.string().uuid().optional(),
   "allowedMediaTypes": zod.array(zod.string().uuid()).optional()
 });
@@ -6862,8 +6861,8 @@ var getMediaByIdAuditLogQueryTakeDefault = 100;
 var getMediaByIdAuditLogQueryParams = zod.object({
   "orderDirection": zod.enum(["Ascending", "Descending"]).optional(),
   "sinceDate": zod.string().datetime({ "local": true }).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaByIdAuditLogQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMediaByIdAuditLogQueryTakeDefault)
 });
 var getMediaByIdAuditLogResponse = zod.object({
   "total": zod.number(),
@@ -6893,8 +6892,8 @@ var getMediaByIdReferencedByParams = zod.object({
 });
 var getMediaByIdReferencedByQueryTakeDefault = 20;
 var getMediaByIdReferencedByQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaByIdReferencedByQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMediaByIdReferencedByQueryTakeDefault)
 });
 var getMediaByIdReferencedByResponse = zod.object({
   "total": zod.number(),
@@ -6930,8 +6929,8 @@ var getMediaByIdReferencedDescendantsParams = zod.object({
 });
 var getMediaByIdReferencedDescendantsQueryTakeDefault = 20;
 var getMediaByIdReferencedDescendantsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaByIdReferencedDescendantsQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMediaByIdReferencedDescendantsQueryTakeDefault)
 });
 var getMediaByIdReferencedDescendantsResponse = zod.object({
   "total": zod.number(),
@@ -6958,8 +6957,8 @@ var putMediaByIdValidateBody = zod.object({
 var getMediaAreReferencedQueryTakeDefault = 20;
 var getMediaAreReferencedQueryParams = zod.object({
   "id": zod.array(zod.string().uuid()).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMediaAreReferencedQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMediaAreReferencedQueryTakeDefault)
 });
 var getMediaAreReferencedResponse = zod.object({
   "total": zod.number(),
@@ -7032,8 +7031,8 @@ var putRecycleBinMediaByIdRestoreBody = zod.object({
 var getRecycleBinMediaChildrenQueryTakeDefault = 100;
 var getRecycleBinMediaChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinMediaChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRecycleBinMediaChildrenQueryTakeDefault)
 });
 var getRecycleBinMediaChildrenResponse = zod.object({
   "total": zod.number(),
@@ -7059,8 +7058,8 @@ var getRecycleBinMediaChildrenResponse = zod.object({
 });
 var getRecycleBinMediaRootQueryTakeDefault = 100;
 var getRecycleBinMediaRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRecycleBinMediaRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRecycleBinMediaRootQueryTakeDefault)
 });
 var getRecycleBinMediaRootResponse = zod.object({
   "total": zod.number(),
@@ -7112,8 +7111,8 @@ var getTreeMediaAncestorsResponse = zod.array(getTreeMediaAncestorsResponseItem)
 var getTreeMediaChildrenQueryTakeDefault = 100;
 var getTreeMediaChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaChildrenQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeMediaChildrenQueryTakeDefault),
   "dataTypeId": zod.string().uuid().optional()
 });
 var getTreeMediaChildrenResponse = zod.object({
@@ -7142,8 +7141,8 @@ var getTreeMediaChildrenResponse = zod.object({
 });
 var getTreeMediaRootQueryTakeDefault = 100;
 var getTreeMediaRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMediaRootQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeMediaRootQueryTakeDefault),
   "dataTypeId": zod.string().uuid().optional()
 });
 var getTreeMediaRootResponse = zod.object({
@@ -7180,8 +7179,8 @@ var getItemMemberGroupResponseItem = zod.object({
 var getItemMemberGroupResponse = zod.array(getItemMemberGroupResponseItem);
 var getMemberGroupQueryTakeDefault = 100;
 var getMemberGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getMemberGroupQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMemberGroupQueryTakeDefault)
 });
 var getMemberGroupResponse = zod.object({
   "total": zod.number(),
@@ -7212,8 +7211,8 @@ var putMemberGroupByIdBody = zod.object({
 });
 var getTreeMemberGroupRootQueryTakeDefault = 100;
 var getTreeMemberGroupRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMemberGroupRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeMemberGroupRootQueryTakeDefault)
 });
 var getTreeMemberGroupRootResponse = zod.object({
   "total": zod.number(),
@@ -7238,8 +7237,8 @@ var getItemMemberTypeResponse = zod.array(getItemMemberTypeResponseItem);
 var getItemMemberTypeSearchQueryTakeDefault = 100;
 var getItemMemberTypeSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMemberTypeSearchQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemMemberTypeSearchQueryTakeDefault)
 });
 var getItemMemberTypeSearchResponse = zod.object({
   "items": zod.array(zod.object({
@@ -7461,8 +7460,8 @@ var getMemberTypeConfigurationResponse = zod.object({
 });
 var getTreeMemberTypeRootQueryTakeDefault = 100;
 var getTreeMemberTypeRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeMemberTypeRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeMemberTypeRootQueryTakeDefault)
 });
 var getTreeMemberTypeRootResponse = zod.object({
   "total": zod.number(),
@@ -7481,13 +7480,13 @@ var getFilterMemberQueryTakeDefault = 100;
 var getFilterMemberQueryParams = zod.object({
   "memberTypeId": zod.string().uuid().optional(),
   "memberGroupName": zod.string().optional(),
-  "isApproved": zod.boolean().optional(),
-  "isLockedOut": zod.boolean().optional(),
+  "isApproved": zod.coerce.boolean().optional(),
+  "isLockedOut": zod.coerce.boolean().optional(),
   "orderBy": zod.string().default(getFilterMemberQueryOrderByDefault),
   "orderDirection": zod.enum(["Ascending", "Descending"]).optional(),
   "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterMemberQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getFilterMemberQueryTakeDefault)
 });
 var getFilterMemberResponse = zod.object({
   "total": zod.number(),
@@ -7549,8 +7548,8 @@ var getItemMemberResponse = zod.array(getItemMemberResponseItem);
 var getItemMemberSearchQueryTakeDefault = 100;
 var getItemMemberSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemMemberSearchQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemMemberSearchQueryTakeDefault),
   "allowedMemberTypes": zod.array(zod.string().uuid()).optional()
 });
 var getItemMemberSearchResponse = zod.object({
@@ -7721,8 +7720,8 @@ var getModelsBuilderStatusResponse = zod.object({
 });
 var getObjectTypesQueryTakeDefault = 100;
 var getObjectTypesQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getObjectTypesQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getObjectTypesQueryTakeDefault)
 });
 var getObjectTypesResponse = zod.object({
   "total": zod.number(),
@@ -7733,8 +7732,8 @@ var getObjectTypesResponse = zod.object({
 });
 var getOembedQueryQueryParams = zod.object({
   "url": zod.string().url().optional(),
-  "maxWidth": zod.number().optional(),
-  "maxHeight": zod.number().optional()
+  "maxWidth": zod.coerce.number().optional(),
+  "maxHeight": zod.coerce.number().optional()
 });
 var getOembedQueryResponse = zod.object({
   "markup": zod.string()
@@ -7747,8 +7746,8 @@ var getPackageConfigurationResponse = zod.object({
 });
 var getPackageCreatedQueryTakeDefault = 100;
 var getPackageCreatedQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getPackageCreatedQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getPackageCreatedQueryTakeDefault)
 });
 var getPackageCreatedResponse = zod.object({
   "total": zod.number(),
@@ -7838,8 +7837,8 @@ var getPackageCreatedByIdDownloadParams = zod.object({
 var getPackageCreatedByIdDownloadResponse = zod.instanceof(FileLike);
 var getPackageMigrationStatusQueryTakeDefault = 100;
 var getPackageMigrationStatusQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getPackageMigrationStatusQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getPackageMigrationStatusQueryTakeDefault)
 });
 var getPackageMigrationStatusResponse = zod.object({
   "total": zod.number(),
@@ -7914,8 +7913,8 @@ var deletePartialViewFolderByPathParams = zod.object({
 });
 var getPartialViewSnippetQueryTakeDefault = 100;
 var getPartialViewSnippetQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getPartialViewSnippetQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getPartialViewSnippetQueryTakeDefault)
 });
 var getPartialViewSnippetResponse = zod.object({
   "total": zod.number(),
@@ -7948,8 +7947,8 @@ var getTreePartialViewAncestorsResponse = zod.array(getTreePartialViewAncestorsR
 var getTreePartialViewChildrenQueryTakeDefault = 100;
 var getTreePartialViewChildrenQueryParams = zod.object({
   "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreePartialViewChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreePartialViewChildrenQueryTakeDefault)
 });
 var getTreePartialViewChildrenResponse = zod.object({
   "total": zod.number(),
@@ -7965,8 +7964,8 @@ var getTreePartialViewChildrenResponse = zod.object({
 });
 var getTreePartialViewRootQueryTakeDefault = 100;
 var getTreePartialViewRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreePartialViewRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreePartialViewRootQueryTakeDefault)
 });
 var getTreePartialViewRootResponse = zod.object({
   "total": zod.number(),
@@ -7994,8 +7993,8 @@ var getPropertyTypeIsUsedResponse = zod.boolean();
 var getRedirectManagementQueryTakeDefault = 100;
 var getRedirectManagementQueryParams = zod.object({
   "filter": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRedirectManagementQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRedirectManagementQueryTakeDefault)
 });
 var getRedirectManagementResponse = zod.object({
   "total": zod.number(),
@@ -8015,8 +8014,8 @@ var getRedirectManagementByIdParams = zod.object({
 });
 var getRedirectManagementByIdQueryTakeDefault = 100;
 var getRedirectManagementByIdQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRedirectManagementByIdQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRedirectManagementByIdQueryTakeDefault)
 });
 var getRedirectManagementByIdResponse = zod.object({
   "total": zod.number(),
@@ -8052,8 +8051,8 @@ var getItemRelationTypeResponseItem = zod.object({
 var getItemRelationTypeResponse = zod.array(getItemRelationTypeResponseItem);
 var getRelationTypeQueryTakeDefault = 100;
 var getRelationTypeQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRelationTypeQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRelationTypeQueryTakeDefault)
 });
 var getRelationTypeResponse = zod.object({
   "total": zod.number(),
@@ -8096,8 +8095,8 @@ var getRelationByRelationTypeIdParams = zod.object({
 });
 var getRelationByRelationTypeIdQueryTakeDefault = 100;
 var getRelationByRelationTypeIdQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getRelationByRelationTypeIdQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRelationByRelationTypeIdQueryTakeDefault)
 });
 var getRelationByRelationTypeIdResponse = zod.object({
   "total": zod.number(),
@@ -8198,8 +8197,8 @@ var getTreeScriptAncestorsResponse = zod.array(getTreeScriptAncestorsResponseIte
 var getTreeScriptChildrenQueryTakeDefault = 100;
 var getTreeScriptChildrenQueryParams = zod.object({
   "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeScriptChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeScriptChildrenQueryTakeDefault)
 });
 var getTreeScriptChildrenResponse = zod.object({
   "total": zod.number(),
@@ -8215,8 +8214,8 @@ var getTreeScriptChildrenResponse = zod.object({
 });
 var getTreeScriptRootQueryTakeDefault = 100;
 var getTreeScriptRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeScriptRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeScriptRootQueryTakeDefault)
 });
 var getTreeScriptRootResponse = zod.object({
   "total": zod.number(),
@@ -8232,8 +8231,8 @@ var getTreeScriptRootResponse = zod.object({
 });
 var getSearcherQueryTakeDefault = 100;
 var getSearcherQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getSearcherQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getSearcherQueryTakeDefault)
 });
 var getSearcherResponse = zod.object({
   "total": zod.number(),
@@ -8247,8 +8246,8 @@ var getSearcherBySearcherNameQueryParams = zod.object({
 var getSearcherBySearcherNameQueryQueryTakeDefault = 100;
 var getSearcherBySearcherNameQueryQueryParams = zod.object({
   "term": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getSearcherBySearcherNameQueryQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getSearcherBySearcherNameQueryQueryTakeDefault)
 });
 var getSearcherBySearcherNameQueryResponse = zod.object({
   "total": zod.number(),
@@ -8298,8 +8297,8 @@ var postSecurityForgotPasswordVerifyResponse = zod.object({
 });
 var getSegmentQueryTakeDefault = 100;
 var getSegmentQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getSegmentQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getSegmentQueryTakeDefault)
 });
 var getSegmentResponse = zod.object({
   "total": zod.number(),
@@ -8361,8 +8360,8 @@ var getTreeStaticFileAncestorsResponse = zod.array(getTreeStaticFileAncestorsRes
 var getTreeStaticFileChildrenQueryTakeDefault = 100;
 var getTreeStaticFileChildrenQueryParams = zod.object({
   "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStaticFileChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeStaticFileChildrenQueryTakeDefault)
 });
 var getTreeStaticFileChildrenResponse = zod.object({
   "total": zod.number(),
@@ -8378,8 +8377,8 @@ var getTreeStaticFileChildrenResponse = zod.object({
 });
 var getTreeStaticFileRootQueryTakeDefault = 100;
 var getTreeStaticFileRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStaticFileRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeStaticFileRootQueryTakeDefault)
 });
 var getTreeStaticFileRootResponse = zod.object({
   "total": zod.number(),
@@ -8473,8 +8472,8 @@ var getTreeStylesheetAncestorsResponse = zod.array(getTreeStylesheetAncestorsRes
 var getTreeStylesheetChildrenQueryTakeDefault = 100;
 var getTreeStylesheetChildrenQueryParams = zod.object({
   "parentPath": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStylesheetChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeStylesheetChildrenQueryTakeDefault)
 });
 var getTreeStylesheetChildrenResponse = zod.object({
   "total": zod.number(),
@@ -8490,8 +8489,8 @@ var getTreeStylesheetChildrenResponse = zod.object({
 });
 var getTreeStylesheetRootQueryTakeDefault = 100;
 var getTreeStylesheetRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeStylesheetRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeStylesheetRootQueryTakeDefault)
 });
 var getTreeStylesheetRootResponse = zod.object({
   "total": zod.number(),
@@ -8510,8 +8509,8 @@ var getTagQueryParams = zod.object({
   "query": zod.string().optional(),
   "tagGroup": zod.string().optional(),
   "culture": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTagQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTagQueryTakeDefault)
 });
 var getTagResponse = zod.object({
   "total": zod.number(),
@@ -8524,8 +8523,8 @@ var getTagResponse = zod.object({
 });
 var getTelemetryQueryTakeDefault = 100;
 var getTelemetryQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTelemetryQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTelemetryQueryTakeDefault)
 });
 var getTelemetryResponse = zod.object({
   "total": zod.number(),
@@ -8551,8 +8550,8 @@ var getItemTemplateResponse = zod.array(getItemTemplateResponseItem);
 var getItemTemplateSearchQueryTakeDefault = 100;
 var getItemTemplateSearchQueryParams = zod.object({
   "query": zod.string().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getItemTemplateSearchQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getItemTemplateSearchQueryTakeDefault)
 });
 var getItemTemplateSearchResponse = zod.object({
   "items": zod.array(zod.object({
@@ -8645,8 +8644,8 @@ var getTreeTemplateAncestorsResponse = zod.array(getTreeTemplateAncestorsRespons
 var getTreeTemplateChildrenQueryTakeDefault = 100;
 var getTreeTemplateChildrenQueryParams = zod.object({
   "parentId": zod.string().uuid().optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeTemplateChildrenQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeTemplateChildrenQueryTakeDefault)
 });
 var getTreeTemplateChildrenResponse = zod.object({
   "total": zod.number(),
@@ -8661,8 +8660,8 @@ var getTreeTemplateChildrenResponse = zod.object({
 });
 var getTreeTemplateRootQueryTakeDefault = 100;
 var getTreeTemplateRootQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getTreeTemplateRootQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getTreeTemplateRootQueryTakeDefault)
 });
 var getTreeTemplateRootResponse = zod.object({
   "total": zod.number(),
@@ -8713,8 +8712,8 @@ var getUserDataQueryTakeDefault = 100;
 var getUserDataQueryParams = zod.object({
   "groups": zod.array(zod.string()).optional(),
   "identifiers": zod.array(zod.string()).optional(),
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getUserDataQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getUserDataQueryTakeDefault)
 });
 var getUserDataResponse = zod.object({
   "total": zod.number(),
@@ -8741,8 +8740,8 @@ var getUserDataByIdResponse = zod.object({
 });
 var getFilterUserGroupQueryTakeDefault = 100;
 var getFilterUserGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterUserGroupQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getFilterUserGroupQueryTakeDefault),
   "filter": zod.string().optional()
 });
 var getFilterUserGroupResponse = zod.object({
@@ -8825,8 +8824,8 @@ var postUserGroupBody = zod.object({
 });
 var getUserGroupQueryTakeDefault = 100;
 var getUserGroupQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getUserGroupQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getUserGroupQueryTakeDefault)
 });
 var getUserGroupResponse = zod.object({
   "total": zod.number(),
@@ -8946,8 +8945,8 @@ var postUserGroupByIdUsersBodyItem = zod.object({
 var postUserGroupByIdUsersBody = zod.array(postUserGroupByIdUsersBodyItem);
 var getFilterUserQueryTakeDefault = 100;
 var getFilterUserQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getFilterUserQueryTakeDefault),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getFilterUserQueryTakeDefault),
   "orderBy": zod.enum(["UserName", "Language", "Name", "Email", "Id", "CreateDate", "UpdateDate", "IsApproved", "IsLockedOut", "LastLoginDate"]).optional(),
   "orderDirection": zod.enum(["Ascending", "Descending"]).optional(),
   "userGroupIds": zod.array(zod.string().uuid()).optional(),
@@ -9012,8 +9011,8 @@ var deleteUserBody = zod.object({
 });
 var getUserQueryTakeDefault = 100;
 var getUserQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getUserQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getUserQueryTakeDefault)
 });
 var getUserResponse = zod.object({
   "total": zod.number(),
@@ -9368,8 +9367,8 @@ var getItemWebhookResponseItem = zod.object({
 var getItemWebhookResponse = zod.array(getItemWebhookResponseItem);
 var getWebhookQueryTakeDefault = 100;
 var getWebhookQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getWebhookQueryTakeDefault)
 });
 var getWebhookResponse = zod.object({
   "total": zod.number(),
@@ -9435,8 +9434,8 @@ var getWebhookByIdLogsParams = zod.object({
 });
 var getWebhookByIdLogsQueryTakeDefault = 100;
 var getWebhookByIdLogsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookByIdLogsQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getWebhookByIdLogsQueryTakeDefault)
 });
 var getWebhookByIdLogsResponse = zod.object({
   "total": zod.number(),
@@ -9458,8 +9457,8 @@ var getWebhookByIdLogsResponse = zod.object({
 });
 var getWebhookEventsQueryTakeDefault = 100;
 var getWebhookEventsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookEventsQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getWebhookEventsQueryTakeDefault)
 });
 var getWebhookEventsResponse = zod.object({
   "total": zod.number(),
@@ -9471,8 +9470,8 @@ var getWebhookEventsResponse = zod.object({
 });
 var getWebhookLogsQueryTakeDefault = 100;
 var getWebhookLogsQueryParams = zod.object({
-  "skip": zod.number().optional(),
-  "take": zod.number().default(getWebhookLogsQueryTakeDefault)
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getWebhookLogsQueryTakeDefault)
 });
 var getWebhookLogsResponse = zod.object({
   "total": zod.number(),

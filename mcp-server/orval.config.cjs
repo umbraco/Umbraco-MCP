@@ -84,6 +84,9 @@ module.exports = {
           dateTimeOptions: {
             local: true,
           },
+          coerce: {
+            query: ['number', 'boolean']
+          }
         },
       },
     },
