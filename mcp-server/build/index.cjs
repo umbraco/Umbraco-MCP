@@ -10172,6 +10172,7 @@ var CreateUmbracoTemplateResource = (name, description, template, handler) => ()
 
 var GetDataTypeRootResource = CreateUmbracoTemplateResource(
   "List Data Types at Root",
+  "List the data types at the root of the Umbraco instance",
   new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/root?skip={skip}&take={take}&foldersOnly={foldersOnly}", {
     list: void 0,
     complete: {
@@ -10200,9 +10201,218 @@ var GetDataTypeRootResource = CreateUmbracoTemplateResource(
 );
 var get_root_default2 = GetDataTypeRootResource;
 
+// src/resources/data-types/get/get-children.ts
+
+var GetDataTypeChildrenResource = CreateUmbracoTemplateResource(
+  "List Data Type Children",
+  "List the children of a data type folder",
+  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/children?parentId={parentId}&skip={skip}&take={take}&foldersOnly={foldersOnly}", {
+    list: void 0,
+    complete: {
+      parentId: (value) => [],
+      // This will be populated dynamically
+      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
+      take: (value) => ["10", "20", "50", "100"],
+      foldersOnly: (value) => ["true", "false"]
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getTreeDataTypeChildrenQueryParams.parse(variables);
+      const response = await client.getTreeDataTypeChildren(params);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeChildrenResource:", error);
+      throw error;
+    }
+  }
+);
+var get_children_default = GetDataTypeChildrenResource;
+
+// src/resources/data-types/get/get-search.ts
+
+var GetDataTypeSearchResource = CreateUmbracoTemplateResource(
+  "Search Data Types",
+  "Search for data types by name",
+  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/search?query={query}&skip={skip}&take={take}", {
+    list: void 0,
+    complete: {
+      query: (value) => [],
+      // This will be populated dynamically
+      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
+      take: (value) => ["10", "20", "50", "100"]
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getItemDataTypeSearchQueryParams.parse(variables);
+      const response = await client.getItemDataTypeSearch(params);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeSearchResource:", error);
+      throw error;
+    }
+  }
+);
+var get_search_default2 = GetDataTypeSearchResource;
+
+// src/resources/data-types/get/get-ancestors.ts
+
+var GetDataTypeAncestorsResource = CreateUmbracoTemplateResource(
+  "List Ancestor Data Types",
+  "List the ancestors of a data type",
+  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/ancestors?descendantId={descendantId}", {
+    list: void 0,
+    complete: {
+      descendantId: (value) => []
+      // This will be populated dynamically
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getTreeDataTypeAncestorsQueryParams.parse(variables);
+      const response = await client.getTreeDataTypeAncestors(params);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeAncestorsResource:", error);
+      throw error;
+    }
+  }
+);
+var get_ancestors_default = GetDataTypeAncestorsResource;
+
+// src/resources/data-types/get/get-filter.ts
+
+var GetDataTypeFilterResource = CreateUmbracoTemplateResource(
+  "Filter Data Types",
+  "Filter data types by name, editor UI alias, or editor alias",
+  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/filter?name={name}&editorUiAlias={editorUiAlias}&editorAlias={editorAlias}&skip={skip}&take={take}", {
+    list: void 0,
+    complete: {
+      name: (value) => [],
+      // This will be populated dynamically
+      editorUiAlias: (value) => [],
+      // This will be populated dynamically
+      editorAlias: (value) => [],
+      // This will be populated dynamically
+      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
+      take: (value) => ["10", "20", "50", "100"]
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getFilterDataTypeQueryParams.parse(variables);
+      const response = await client.getFilterDataType(params);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeFilterResource:", error);
+      throw error;
+    }
+  }
+);
+var get_filter_default = GetDataTypeFilterResource;
+
+// src/resources/data-types/get/get-folder.ts
+
+var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
+  "Get Data Type Folder",
+  "Get details of a data type folder",
+  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/folder/{id}", {
+    list: void 0,
+    complete: {
+      id: (value) => []
+      // This will be populated dynamically
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getDataTypeFolderByIdParams.parse(variables);
+      const response = await client.getDataTypeFolderById(params.id);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeFolderResource:", error);
+      throw error;
+    }
+  }
+);
+var get_folder_default2 = GetDataTypeFolderResource;
+
+// src/resources/data-types/get/get-is-used.ts
+
+var GetDataTypeIsUsedResource = CreateUmbracoTemplateResource(
+  "Check Data Type Usage",
+  "Check if a data type is used within Umbraco",
+  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/{id}/is-used", {
+    list: void 0,
+    complete: {
+      id: (value) => []
+      // This will be populated dynamically
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getDataTypeByIdIsUsedParams.parse(variables);
+      const response = await client.getDataTypeByIdIsUsed(params.id);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeIsUsedResource:", error);
+      throw error;
+    }
+  }
+);
+var get_is_used_default = GetDataTypeIsUsedResource;
+
 // src/resources/data-types/index.ts
 var DataTypeTemplateResources = [
-  get_root_default2
+  get_root_default2,
+  get_children_default,
+  get_search_default2,
+  get_ancestors_default,
+  get_filter_default,
+  get_folder_default2,
+  get_is_used_default
 ];
 
 // src/helpers/create-umbraco-read-resource.ts
