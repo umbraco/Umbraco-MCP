@@ -7,5 +7,8 @@ export interface ToolDefinition<
   name: string;
   description: string;
   schema: Args;
-  handler: ToolCallback<Args>;
+  handler: ToolCallback<Args>;  
 }
+
+
+

@@ -10160,9 +10160,102 @@ function ToolFactory(server) {
   );
 }
 
+// src/helpers/create-umbraco-template-resource.ts
+var CreateUmbracoTemplateResource = (name, description, template, handler) => () => ({
+  name,
+  description,
+  template,
+  handler
+});
+
+// src/resources/data-types/get/get-root.ts
+
+var GetDataTypeRootResource = CreateUmbracoTemplateResource(
+  "List Data Types at Root",
+  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/root?skip={skip}&take={take}&foldersOnly={foldersOnly}", {
+    list: void 0,
+    complete: {
+      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
+      take: (value) => ["10", "20", "50", "100"],
+      foldersOnly: (value) => ["true", "false"]
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getTreeDataTypeRootQueryParams.parse(variables);
+      const response = await client.getTreeDataTypeRoot(params);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeRootResource:", error);
+      throw error;
+    }
+  }
+);
+var get_root_default2 = GetDataTypeRootResource;
+
+// src/resources/data-types/index.ts
+var DataTypeTemplateResources = [
+  get_root_default2
+];
+
+// src/helpers/create-umbraco-read-resource.ts
+var CreateUmbracoReadResource = (uri, name, description, handler) => () => ({
+  uri,
+  name,
+  description,
+  handler
+});
+
+// src/resources/language/get/get-default.ts
+var GetLangagueDefaultResource = CreateUmbracoReadResource(
+  "umbraco://item/langage/default",
+  "List default language",
+  "List the default language for the current Umbraco instance",
+  async (uri) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getItemLanguageDefault();
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetItemLanguageDefault:", error);
+      throw error;
+    }
+  }
+);
+var get_default_default = GetLangagueDefaultResource;
+
+// src/resources/language/index.ts
+var LanugageReadResources = [
+  get_default_default
+];
+
+// src/resources/resource-factory.ts
+function ResourceFactory(server) {
+  LanugageReadResources.map((resource) => resource()).forEach(
+    (resource) => server.resource(resource.name, resource.uri, { description: resource.description }, resource.handler)
+  );
+  DataTypeTemplateResources.map((resource) => resource()).forEach(
+    (resource) => server.resource(resource.name, resource.template, { description: resource.description }, resource.handler)
+  );
+}
+
 // src/index.ts
 var main = async () => {
   const server = UmbracoMcpServer.GetServer();
+  ResourceFactory(server);
   ToolFactory(server);
   const transport = new (0, _stdiojs.StdioServerTransport)();
   await server.connect(transport);
