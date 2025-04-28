@@ -10302,9 +10302,9 @@ var GetDataTypeAncestorsResource = CreateUmbracoTemplateResource(
 );
 var get_ancestors_default = GetDataTypeAncestorsResource;
 
-// src/resources/data-types/get/get-filter.ts
+// src/resources/data-types/get/get-query.ts
 
-var GetDataTypeFilterResource = CreateUmbracoTemplateResource(
+var GetDataTypeQueryResource = CreateUmbracoTemplateResource(
   "Filter Data Types",
   "Filter data types by name, editor UI alias, or editor alias",
   new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/filter?name={name}&editorUiAlias={editorUiAlias}&editorAlias={editorAlias}&skip={skip}&take={take}", {
@@ -10338,7 +10338,7 @@ var GetDataTypeFilterResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_filter_default = GetDataTypeFilterResource;
+var get_query_default = GetDataTypeQueryResource;
 
 // src/resources/data-types/get/get-folder.ts
 
@@ -10410,7 +10410,7 @@ var DataTypeTemplateResources = [
   get_children_default,
   get_search_default2,
   get_ancestors_default,
-  get_filter_default,
+  get_query_default,
   get_folder_default2,
   get_is_used_default
 ];

@@ -3,7 +3,7 @@ import { CreateUmbracoTemplateResource } from "@/helpers/create-umbraco-template
 import { getFilterDataTypeQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-const GetDataTypeFilterResource = CreateUmbracoTemplateResource(
+const GetDataTypeQueryResource = CreateUmbracoTemplateResource(
   "Filter Data Types",
   "Filter data types by name, editor UI alias, or editor alias",
   new ResourceTemplate("umbraco://data-type/filter?name={name}&editorUiAlias={editorUiAlias}&editorAlias={editorAlias}&skip={skip}&take={take}", {
@@ -35,4 +35,4 @@ const GetDataTypeFilterResource = CreateUmbracoTemplateResource(
   }
 );
 
-export default GetDataTypeFilterResource; 
+export default GetDataTypeQueryResource; 
