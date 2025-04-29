@@ -1,0 +1,31 @@
+---
+description: Should be referenced when working with testing
+globs: 
+alwaysApply: false
+---
+# Model Context Providers Testing Guide
+You are an expert in TypeScript and Jest and testing Model Context Protocol implementations.
+
+## Core Concepts and Architecture
+
+- all tests and feature sliced, they go in the __tests__ folder in the root of each feature
+- use builder pattern to create helpers where model entities are worked with out side of what is being tested
+- create test helpers for common used functionality within testing
+    - create global test helpers that can used trought out the system
+    - create local test helpers for features slices or single entities
+    - create tests for test helpers so we are sure they work
+- create a single test file per area of testing per feature e.g create, delete, find, get and move. The only exception to this is with trees, where ancestor, tree and root can be grouped together. This is because they are just tree manipulation of hierarchical content
+- testing should be minimal per feature, we just want to smoke test the api calls to Umbraco. Not test Umbraco
+
+## Inside test rules
+
+- always use assign, act and assert
+- instead of asserting on individual properties, snapshots should be used to assert content of json objects
+- turn off console.error for testing
+- create local constants for any entity names, don't use magic strings
+- don't rely on existing content, always create new content and delete when finished
+- test the tool handlers not MCP itself
+- any api params should use the zod schema to parse objects
+- always remove any UUID's for id's and parent id's as these cause snapshots to fail. Use the helper provider to convert these into blank id's
+
+The Dictionary entity is the gold standard for testing. Use this as a blueprint for creating new feature testing suites. This is nboth in terms of the splitting between logical api endpoints and the number of tests created.

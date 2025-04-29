@@ -1,5 +1,5 @@
 import CreateDictionaryItemTool from "../post/create-dictionary-item.js";
-import { DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
+import { DEFAULT_ISO_CODE, DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
 import { jest } from "@jest/globals";
 
 const TEST_DICTIONARY_NAME = "_Test Dictionary Created";
@@ -25,7 +25,7 @@ describe("create-dictionary-item", () => {
   it("should create a dictionary item", async () => {
     const result = await CreateDictionaryItemTool().handler({
       name: TEST_DICTIONARY_NAME,
-      translations: [{ isoCode: "en-US", translation: TEST_DICTIONARY_TRANSLATION }]
+      translations: [{ isoCode: DEFAULT_ISO_CODE, translation: TEST_DICTIONARY_TRANSLATION }]
     }, { signal: new AbortController().signal });
 
     // Verify the handler response using snapshot
@@ -40,13 +40,13 @@ describe("create-dictionary-item", () => {
     // First create the item
     await CreateDictionaryItemTool().handler({
       name: EXISTING_DICTIONARY_NAME,
-      translations: [{ isoCode: "en-US", translation: EXISTING_DICTIONARY_TRANSLATION }]
+      translations: [{ isoCode: DEFAULT_ISO_CODE, translation: EXISTING_DICTIONARY_TRANSLATION }]
     }, { signal: new AbortController().signal });
 
     // Try to create it again
     const result = await CreateDictionaryItemTool().handler({
       name: EXISTING_DICTIONARY_NAME,
-      translations: [{ isoCode: "en-US", translation: EXISTING_DICTIONARY_TRANSLATION }]
+      translations: [{ isoCode: DEFAULT_ISO_CODE, translation: EXISTING_DICTIONARY_TRANSLATION }]
     }, { signal: new AbortController().signal });
 
     // Verify the error response using snapshot
