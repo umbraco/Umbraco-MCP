@@ -3,12 +3,12 @@ import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
 import { BLANK_UUID, DEFAULT_ISO_CODE, DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
 import { jest } from "@jest/globals";
 
-const TEST_DICTIONARY_NAME = "Test Dictionary Update";
-const TEST_DICTIONARY_TRANSLATION = "Test Translation Update";
-const UPDATED_DICTIONARY_NAME = "Updated Dictionary";
-const UPDATED_DICTIONARY_TRANSLATION = "Updated Translation";
-const NON_EXISTENT_DICTIONARY_NAME = "Non Existent Dictionary";
-const NON_EXISTENT_DICTIONARY_TRANSLATION = "Non Existent Translation";
+const TEST_DICTIONARY_NAME = "_Test Dictionary Update";
+const TEST_DICTIONARY_TRANSLATION = "_Test Translation Update";
+const UPDATED_DICTIONARY_NAME = "_Updated Dictionary";
+const UPDATED_DICTIONARY_TRANSLATION = "_Updated Translation";
+const NON_EXISTENT_DICTIONARY_NAME = "_Non Existent Dictionary";
+const NON_EXISTENT_DICTIONARY_TRANSLATION = "_Non Existent Translation";
 
 describe("update-dictionary-item", () => {
   let originalConsoleError: typeof console.error;

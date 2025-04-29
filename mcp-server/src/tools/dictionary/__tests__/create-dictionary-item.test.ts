@@ -2,10 +2,10 @@ import CreateDictionaryItemTool from "../post/create-dictionary-item.js";
 import { DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
 import { jest } from "@jest/globals";
 
-const TEST_DICTIONARY_NAME = "Test Dictionary Created";
-const TEST_DICTIONARY_TRANSLATION = "Test Translation";
-const EXISTING_DICTIONARY_NAME = "Existing Dictionary";
-const EXISTING_DICTIONARY_TRANSLATION = "Existing Translation";
+const TEST_DICTIONARY_NAME = "_Test Dictionary Created";
+const TEST_DICTIONARY_TRANSLATION = "_Test Translation";
+const EXISTING_DICTIONARY_NAME = "_Existing Dictionary";
+const EXISTING_DICTIONARY_TRANSLATION = "_Existing Translation";
 
 describe("create-dictionary-item", () => {
   let originalConsoleError: typeof console.error;

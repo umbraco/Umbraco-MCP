@@ -3,8 +3,8 @@ import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
 import { BLANK_UUID, DEFAULT_ISO_CODE, DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
 import { jest } from "@jest/globals";
 
-const TEST_DICTIONARY_NAME = "Test Dictionary Delete";
-const TEST_DICTIONARY_TRANSLATION = "Test Translation Delete";
+const TEST_DICTIONARY_NAME = "_Test Dictionary Delete";
+const TEST_DICTIONARY_TRANSLATION = "_Test Translation Delete";
 
 describe("delete-dictionary-item", () => {
   let originalConsoleError: typeof console.error;

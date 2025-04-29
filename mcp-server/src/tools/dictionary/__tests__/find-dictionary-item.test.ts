@@ -1,11 +1,11 @@
 import FindDictionaryItemTool from "../get/find-dictionary-item.js";
 import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
 import { DEFAULT_ISO_CODE } from "./helpers/dictionary-verification-helper.js";
-import { createSnapshotResult } from "./helpers/test-utils.js";
+import { createSnapshotResult } from "../../../helpers/test-utils.js";
 import { jest } from "@jest/globals";
 
-const TEST_DICTIONARY_NAME = "Test Dictionary Find";
-const TEST_DICTIONARY_TRANSLATION = "Test Translation Find";
+const TEST_DICTIONARY_NAME = "_Test Dictionary Find";
+const TEST_DICTIONARY_TRANSLATION = "_Test Translation Find";
 
 describe("find-dictionary-item", () => {
   let originalConsoleError: typeof console.error;

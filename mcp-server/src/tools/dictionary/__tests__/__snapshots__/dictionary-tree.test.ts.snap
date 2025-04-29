@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dictionary-tree get-ancestors should get ancestors of child dictionary 1`] = `
+{
+  "content": [
+    {
+      "text": "[{"name":"_Root Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":true},{"name":"_Child Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":true}]",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`dictionary-tree get-ancestors should get ancestors of grandchild dictionary 1`] = `
+{
+  "content": [
+    {
+      "text": "[{"name":"_Root Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":true},{"name":"_Child Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":true},{"name":"_Grandchild Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`dictionary-tree get-ancestors should get empty ancestors for root dictionary 1`] = `
+{
+  "content": [
+    {
+      "text": "[{"name":"_Root Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":true}]",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`dictionary-tree get-children should get children of child dictionary 1`] = `
+{
+  "content": [
+    {
+      "text": "{"total":1,"items":[{"name":"_Grandchild Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]}",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`dictionary-tree get-children should get children of root dictionary 1`] = `
+{
+  "content": [
+    {
+      "text": "{"total":1,"items":[{"name":"_Child Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":true}]}",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`dictionary-tree get-children should get empty children for leaf dictionary 1`] = `
+{
+  "content": [
+    {
+      "text": "{"total":0,"items":[]}",
+      "type": "text",
+    },
+  ],
+}
+`;
