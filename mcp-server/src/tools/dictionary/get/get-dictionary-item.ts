@@ -9,7 +9,6 @@ const GetDictionaryItemTool = CreateUmbracoTool(
   async ({ id }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      console.log(id);
       const response = await client.getDictionaryById(id);
 
       return {

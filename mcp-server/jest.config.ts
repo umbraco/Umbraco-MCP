@@ -17,7 +17,9 @@ const config = {
     testMatch: [
         '**/src/**/__tests__/**/*.test.ts'
     ],
-    setupFiles: ['<rootDir>/jest.setup.ts'] 
+    setupFiles: ['<rootDir>/jest.setup.ts'],
+    maxConcurrency: 1, // we have to this because Umbraco using SQLite and it doesn't support concurrent connections
+    maxWorkers: 1
 };
 
 module.exports = config;

@@ -1,0 +1,55 @@
+import CreateDictionaryItemTool from "../post/create-dictionary-item.js";
+import { DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
+import { jest } from "@jest/globals";
+
+const TEST_DICTIONARY_NAME = "Test Dictionary Created";
+const TEST_DICTIONARY_TRANSLATION = "Test Translation";
+const EXISTING_DICTIONARY_NAME = "Existing Dictionary";
+const EXISTING_DICTIONARY_TRANSLATION = "Existing Translation";
+
+describe("create-dictionary-item", () => {
+  let originalConsoleError: typeof console.error;
+
+  beforeEach(() => {
+    originalConsoleError = console.error;
+    console.error = jest.fn();
+  });
+
+  afterEach(async () => {
+    console.error = originalConsoleError;
+    // Clean up any test dictionary items
+    await DictionaryVerificationHelper.cleanup(TEST_DICTIONARY_NAME);
+    await DictionaryVerificationHelper.cleanup(EXISTING_DICTIONARY_NAME);
+  });
+
+  it("should create a dictionary item", async () => {
+    const result = await CreateDictionaryItemTool().handler({
+      name: TEST_DICTIONARY_NAME,
+      translations: [{ isoCode: "en-US", translation: TEST_DICTIONARY_TRANSLATION }]
+    }, { signal: new AbortController().signal });
+
+    // Verify the handler response using snapshot
+    expect(result).toMatchSnapshot();
+
+    // Verify the created item exists and matches expected values
+    const items = await DictionaryVerificationHelper.findDictionaryItems(TEST_DICTIONARY_NAME, true);
+    expect(items).toMatchSnapshot();
+  });
+
+  it("should handle existing dictionary item", async () => {
+    // First create the item
+    await CreateDictionaryItemTool().handler({
+      name: EXISTING_DICTIONARY_NAME,
+      translations: [{ isoCode: "en-US", translation: EXISTING_DICTIONARY_TRANSLATION }]
+    }, { signal: new AbortController().signal });
+
+    // Try to create it again
+    const result = await CreateDictionaryItemTool().handler({
+      name: EXISTING_DICTIONARY_NAME,
+      translations: [{ isoCode: "en-US", translation: EXISTING_DICTIONARY_TRANSLATION }]
+    }, { signal: new AbortController().signal });
+
+    // Verify the error response using snapshot
+    expect(result).toMatchSnapshot();
+  });
+}); 

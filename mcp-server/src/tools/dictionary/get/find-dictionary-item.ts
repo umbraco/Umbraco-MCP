@@ -21,7 +21,7 @@ const FindDictionaryItemTool = CreateUmbracoTool(
         ],
       };
     } catch (error) {
-      console.error("Error creating data type:", error);
+      console.error("Error getting dictionary item:", error);
       return {
         content: [
           {

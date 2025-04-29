@@ -1,6 +1,7 @@
 import { getDictionaryByIdParams } from "../../../api/umbraco/management/umbracoManagementAPI.zod.js";
 import GetDictionaryItemTool from "../get/get-dictionary-item.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "./helpers/dictionary-verification-helper.js";
 
 describe("get-dictionary-item", () => {
   let originalConsoleError: typeof console.error;
@@ -24,7 +25,7 @@ describe("get-dictionary-item", () => {
   });
 
   it("should handle non-existent dictionary item", async () => {
-    const nonExistentId = "00000000-0000-0000-0000-000000000000";
+    const nonExistentId = BLANK_UUID;
     const params = getDictionaryByIdParams.parse({ id: nonExistentId });
 
     const result = await GetDictionaryItemTool().handler(params, { signal: new AbortController().signal });

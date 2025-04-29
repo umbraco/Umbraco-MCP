@@ -20,7 +20,7 @@ const DeleteDictionaryItemTool = CreateUmbracoTool(
         ],
       };
     } catch (error) {
-      console.error("Error creating data type:", error);
+      console.error("Error creating dictionary item:", error);
       return {
         content: [
           {
