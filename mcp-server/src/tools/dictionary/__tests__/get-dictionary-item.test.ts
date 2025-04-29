@@ -2,6 +2,7 @@ import { getDictionaryByIdParams } from "../../../api/umbraco/management/umbraco
 import GetDictionaryItemTool from "../get/get-dictionary-item.js";
 import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
 import { BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-verification-helper.js";
+import { createSnapshotResult } from "./helpers/test-utils.js";
 import { jest } from "@jest/globals";
 
 const TEST_DICTIONARY_NAME = "Test Dictionary Get";
@@ -33,21 +34,7 @@ describe("get-dictionary-item", () => {
 
     const result = await GetDictionaryItemTool().handler(params, { signal: new AbortController().signal });
 
-    // Replace the dynamic ID with BLANK_UUID for snapshot testing
-    const snapshotResult = {
-      ...result,
-      content: result.content.map((item: any) => {
-        if (item.type === "text") {
-          return {
-            ...item,
-            text: item.text.replace(helper.getId(), BLANK_UUID)
-          };
-        }
-        return item;
-      })
-    };
-
-    expect(snapshotResult).toMatchSnapshot();
+    expect(createSnapshotResult(result, helper.getId())).toMatchSnapshot();
   });
 
   it("should handle non-existent dictionary item", async () => {
