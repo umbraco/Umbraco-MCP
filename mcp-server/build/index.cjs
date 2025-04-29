@@ -1,17 +1,3226 @@
 #!/usr/bin/env node
-"use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _nullishCoalesce(lhs, rhsFn) { if (lhs != null) { return lhs; } else { return rhsFn(); } } var _class; var _class2;
-// src/index.ts
-var _stdiojs = require('@modelcontextprotocol/sdk/server/stdio.js');
+"use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _nullishCoalesce(lhs, rhsFn) { if (lhs != null) { return lhs; } else { return rhsFn(); } } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; } var _class; var _class2;
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+var _process = require('process'); var _process2 = _interopRequireDefault(_process);
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/types.js
+var _zod = require('zod');
+var LATEST_PROTOCOL_VERSION = "2024-11-05";
+var SUPPORTED_PROTOCOL_VERSIONS = [
+  LATEST_PROTOCOL_VERSION,
+  "2024-10-07"
+];
+var JSONRPC_VERSION = "2.0";
+var ProgressTokenSchema = _zod.z.union([_zod.z.string(), _zod.z.number().int()]);
+var CursorSchema = _zod.z.string();
+var BaseRequestParamsSchema = _zod.z.object({
+  _meta: _zod.z.optional(_zod.z.object({
+    /**
+     * If specified, the caller is requesting out-of-band progress notifications for this request (as represented by notifications/progress). The value of this parameter is an opaque token that will be attached to any subsequent notifications. The receiver is not obligated to provide these notifications.
+     */
+    progressToken: _zod.z.optional(ProgressTokenSchema)
+  }).passthrough())
+}).passthrough();
+var RequestSchema = _zod.z.object({
+  method: _zod.z.string(),
+  params: _zod.z.optional(BaseRequestParamsSchema)
+});
+var BaseNotificationParamsSchema = _zod.z.object({
+  /**
+   * This parameter name is reserved by MCP to allow clients and servers to attach additional metadata to their notifications.
+   */
+  _meta: _zod.z.optional(_zod.z.object({}).passthrough())
+}).passthrough();
+var NotificationSchema = _zod.z.object({
+  method: _zod.z.string(),
+  params: _zod.z.optional(BaseNotificationParamsSchema)
+});
+var ResultSchema = _zod.z.object({
+  /**
+   * This result property is reserved by the protocol to allow clients and servers to attach additional metadata to their responses.
+   */
+  _meta: _zod.z.optional(_zod.z.object({}).passthrough())
+}).passthrough();
+var RequestIdSchema = _zod.z.union([_zod.z.string(), _zod.z.number().int()]);
+var JSONRPCRequestSchema = _zod.z.object({
+  jsonrpc: _zod.z.literal(JSONRPC_VERSION),
+  id: RequestIdSchema
+}).merge(RequestSchema).strict();
+var JSONRPCNotificationSchema = _zod.z.object({
+  jsonrpc: _zod.z.literal(JSONRPC_VERSION)
+}).merge(NotificationSchema).strict();
+var JSONRPCResponseSchema = _zod.z.object({
+  jsonrpc: _zod.z.literal(JSONRPC_VERSION),
+  id: RequestIdSchema,
+  result: ResultSchema
+}).strict();
+var ErrorCode;
+(function(ErrorCode2) {
+  ErrorCode2[ErrorCode2["ConnectionClosed"] = -32e3] = "ConnectionClosed";
+  ErrorCode2[ErrorCode2["RequestTimeout"] = -32001] = "RequestTimeout";
+  ErrorCode2[ErrorCode2["ParseError"] = -32700] = "ParseError";
+  ErrorCode2[ErrorCode2["InvalidRequest"] = -32600] = "InvalidRequest";
+  ErrorCode2[ErrorCode2["MethodNotFound"] = -32601] = "MethodNotFound";
+  ErrorCode2[ErrorCode2["InvalidParams"] = -32602] = "InvalidParams";
+  ErrorCode2[ErrorCode2["InternalError"] = -32603] = "InternalError";
+})(ErrorCode || (ErrorCode = {}));
+var JSONRPCErrorSchema = _zod.z.object({
+  jsonrpc: _zod.z.literal(JSONRPC_VERSION),
+  id: RequestIdSchema,
+  error: _zod.z.object({
+    /**
+     * The error type that occurred.
+     */
+    code: _zod.z.number().int(),
+    /**
+     * A short description of the error. The message SHOULD be limited to a concise single sentence.
+     */
+    message: _zod.z.string(),
+    /**
+     * Additional information about the error. The value of this member is defined by the sender (e.g. detailed error information, nested errors etc.).
+     */
+    data: _zod.z.optional(_zod.z.unknown())
+  })
+}).strict();
+var JSONRPCMessageSchema = _zod.z.union([
+  JSONRPCRequestSchema,
+  JSONRPCNotificationSchema,
+  JSONRPCResponseSchema,
+  JSONRPCErrorSchema
+]);
+var EmptyResultSchema = ResultSchema.strict();
+var CancelledNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/cancelled"),
+  params: BaseNotificationParamsSchema.extend({
+    /**
+     * The ID of the request to cancel.
+     *
+     * This MUST correspond to the ID of a request previously issued in the same direction.
+     */
+    requestId: RequestIdSchema,
+    /**
+     * An optional string describing the reason for the cancellation. This MAY be logged or presented to the user.
+     */
+    reason: _zod.z.string().optional()
+  })
+});
+var ImplementationSchema = _zod.z.object({
+  name: _zod.z.string(),
+  version: _zod.z.string()
+}).passthrough();
+var ClientCapabilitiesSchema = _zod.z.object({
+  /**
+   * Experimental, non-standard capabilities that the client supports.
+   */
+  experimental: _zod.z.optional(_zod.z.object({}).passthrough()),
+  /**
+   * Present if the client supports sampling from an LLM.
+   */
+  sampling: _zod.z.optional(_zod.z.object({}).passthrough()),
+  /**
+   * Present if the client supports listing roots.
+   */
+  roots: _zod.z.optional(_zod.z.object({
+    /**
+     * Whether the client supports issuing notifications for changes to the roots list.
+     */
+    listChanged: _zod.z.optional(_zod.z.boolean())
+  }).passthrough())
+}).passthrough();
+var InitializeRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("initialize"),
+  params: BaseRequestParamsSchema.extend({
+    /**
+     * The latest version of the Model Context Protocol that the client supports. The client MAY decide to support older versions as well.
+     */
+    protocolVersion: _zod.z.string(),
+    capabilities: ClientCapabilitiesSchema,
+    clientInfo: ImplementationSchema
+  })
+});
+var ServerCapabilitiesSchema = _zod.z.object({
+  /**
+   * Experimental, non-standard capabilities that the server supports.
+   */
+  experimental: _zod.z.optional(_zod.z.object({}).passthrough()),
+  /**
+   * Present if the server supports sending log messages to the client.
+   */
+  logging: _zod.z.optional(_zod.z.object({}).passthrough()),
+  /**
+   * Present if the server supports sending completions to the client.
+   */
+  completions: _zod.z.optional(_zod.z.object({}).passthrough()),
+  /**
+   * Present if the server offers any prompt templates.
+   */
+  prompts: _zod.z.optional(_zod.z.object({
+    /**
+     * Whether this server supports issuing notifications for changes to the prompt list.
+     */
+    listChanged: _zod.z.optional(_zod.z.boolean())
+  }).passthrough()),
+  /**
+   * Present if the server offers any resources to read.
+   */
+  resources: _zod.z.optional(_zod.z.object({
+    /**
+     * Whether this server supports clients subscribing to resource updates.
+     */
+    subscribe: _zod.z.optional(_zod.z.boolean()),
+    /**
+     * Whether this server supports issuing notifications for changes to the resource list.
+     */
+    listChanged: _zod.z.optional(_zod.z.boolean())
+  }).passthrough()),
+  /**
+   * Present if the server offers any tools to call.
+   */
+  tools: _zod.z.optional(_zod.z.object({
+    /**
+     * Whether this server supports issuing notifications for changes to the tool list.
+     */
+    listChanged: _zod.z.optional(_zod.z.boolean())
+  }).passthrough())
+}).passthrough();
+var InitializeResultSchema = ResultSchema.extend({
+  /**
+   * The version of the Model Context Protocol that the server wants to use. This may not match the version that the client requested. If the client cannot support this version, it MUST disconnect.
+   */
+  protocolVersion: _zod.z.string(),
+  capabilities: ServerCapabilitiesSchema,
+  serverInfo: ImplementationSchema,
+  /**
+   * Instructions describing how to use the server and its features.
+   *
+   * This can be used by clients to improve the LLM's understanding of available tools, resources, etc. It can be thought of like a "hint" to the model. For example, this information MAY be added to the system prompt.
+   */
+  instructions: _zod.z.optional(_zod.z.string())
+});
+var InitializedNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/initialized")
+});
+var PingRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("ping")
+});
+var ProgressSchema = _zod.z.object({
+  /**
+   * The progress thus far. This should increase every time progress is made, even if the total is unknown.
+   */
+  progress: _zod.z.number(),
+  /**
+   * Total number of items to process (or total progress required), if known.
+   */
+  total: _zod.z.optional(_zod.z.number())
+}).passthrough();
+var ProgressNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/progress"),
+  params: BaseNotificationParamsSchema.merge(ProgressSchema).extend({
+    /**
+     * The progress token which was given in the initial request, used to associate this notification with the request that is proceeding.
+     */
+    progressToken: ProgressTokenSchema
+  })
+});
+var PaginatedRequestSchema = RequestSchema.extend({
+  params: BaseRequestParamsSchema.extend({
+    /**
+     * An opaque token representing the current pagination position.
+     * If provided, the server should return results starting after this cursor.
+     */
+    cursor: _zod.z.optional(CursorSchema)
+  }).optional()
+});
+var PaginatedResultSchema = ResultSchema.extend({
+  /**
+   * An opaque token representing the pagination position after the last returned result.
+   * If present, there may be more results available.
+   */
+  nextCursor: _zod.z.optional(CursorSchema)
+});
+var ResourceContentsSchema = _zod.z.object({
+  /**
+   * The URI of this resource.
+   */
+  uri: _zod.z.string(),
+  /**
+   * The MIME type of this resource, if known.
+   */
+  mimeType: _zod.z.optional(_zod.z.string())
+}).passthrough();
+var TextResourceContentsSchema = ResourceContentsSchema.extend({
+  /**
+   * The text of the item. This must only be set if the item can actually be represented as text (not binary data).
+   */
+  text: _zod.z.string()
+});
+var BlobResourceContentsSchema = ResourceContentsSchema.extend({
+  /**
+   * A base64-encoded string representing the binary data of the item.
+   */
+  blob: _zod.z.string().base64()
+});
+var ResourceSchema = _zod.z.object({
+  /**
+   * The URI of this resource.
+   */
+  uri: _zod.z.string(),
+  /**
+   * A human-readable name for this resource.
+   *
+   * This can be used by clients to populate UI elements.
+   */
+  name: _zod.z.string(),
+  /**
+   * A description of what this resource represents.
+   *
+   * This can be used by clients to improve the LLM's understanding of available resources. It can be thought of like a "hint" to the model.
+   */
+  description: _zod.z.optional(_zod.z.string()),
+  /**
+   * The MIME type of this resource, if known.
+   */
+  mimeType: _zod.z.optional(_zod.z.string())
+}).passthrough();
+var ResourceTemplateSchema = _zod.z.object({
+  /**
+   * A URI template (according to RFC 6570) that can be used to construct resource URIs.
+   */
+  uriTemplate: _zod.z.string(),
+  /**
+   * A human-readable name for the type of resource this template refers to.
+   *
+   * This can be used by clients to populate UI elements.
+   */
+  name: _zod.z.string(),
+  /**
+   * A description of what this template is for.
+   *
+   * This can be used by clients to improve the LLM's understanding of available resources. It can be thought of like a "hint" to the model.
+   */
+  description: _zod.z.optional(_zod.z.string()),
+  /**
+   * The MIME type for all resources that match this template. This should only be included if all resources matching this template have the same type.
+   */
+  mimeType: _zod.z.optional(_zod.z.string())
+}).passthrough();
+var ListResourcesRequestSchema = PaginatedRequestSchema.extend({
+  method: _zod.z.literal("resources/list")
+});
+var ListResourcesResultSchema = PaginatedResultSchema.extend({
+  resources: _zod.z.array(ResourceSchema)
+});
+var ListResourceTemplatesRequestSchema = PaginatedRequestSchema.extend({
+  method: _zod.z.literal("resources/templates/list")
+});
+var ListResourceTemplatesResultSchema = PaginatedResultSchema.extend({
+  resourceTemplates: _zod.z.array(ResourceTemplateSchema)
+});
+var ReadResourceRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("resources/read"),
+  params: BaseRequestParamsSchema.extend({
+    /**
+     * The URI of the resource to read. The URI can use any protocol; it is up to the server how to interpret it.
+     */
+    uri: _zod.z.string()
+  })
+});
+var ReadResourceResultSchema = ResultSchema.extend({
+  contents: _zod.z.array(_zod.z.union([TextResourceContentsSchema, BlobResourceContentsSchema]))
+});
+var ResourceListChangedNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/resources/list_changed")
+});
+var SubscribeRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("resources/subscribe"),
+  params: BaseRequestParamsSchema.extend({
+    /**
+     * The URI of the resource to subscribe to. The URI can use any protocol; it is up to the server how to interpret it.
+     */
+    uri: _zod.z.string()
+  })
+});
+var UnsubscribeRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("resources/unsubscribe"),
+  params: BaseRequestParamsSchema.extend({
+    /**
+     * The URI of the resource to unsubscribe from.
+     */
+    uri: _zod.z.string()
+  })
+});
+var ResourceUpdatedNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/resources/updated"),
+  params: BaseNotificationParamsSchema.extend({
+    /**
+     * The URI of the resource that has been updated. This might be a sub-resource of the one that the client actually subscribed to.
+     */
+    uri: _zod.z.string()
+  })
+});
+var PromptArgumentSchema = _zod.z.object({
+  /**
+   * The name of the argument.
+   */
+  name: _zod.z.string(),
+  /**
+   * A human-readable description of the argument.
+   */
+  description: _zod.z.optional(_zod.z.string()),
+  /**
+   * Whether this argument must be provided.
+   */
+  required: _zod.z.optional(_zod.z.boolean())
+}).passthrough();
+var PromptSchema = _zod.z.object({
+  /**
+   * The name of the prompt or prompt template.
+   */
+  name: _zod.z.string(),
+  /**
+   * An optional description of what this prompt provides
+   */
+  description: _zod.z.optional(_zod.z.string()),
+  /**
+   * A list of arguments to use for templating the prompt.
+   */
+  arguments: _zod.z.optional(_zod.z.array(PromptArgumentSchema))
+}).passthrough();
+var ListPromptsRequestSchema = PaginatedRequestSchema.extend({
+  method: _zod.z.literal("prompts/list")
+});
+var ListPromptsResultSchema = PaginatedResultSchema.extend({
+  prompts: _zod.z.array(PromptSchema)
+});
+var GetPromptRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("prompts/get"),
+  params: BaseRequestParamsSchema.extend({
+    /**
+     * The name of the prompt or prompt template.
+     */
+    name: _zod.z.string(),
+    /**
+     * Arguments to use for templating the prompt.
+     */
+    arguments: _zod.z.optional(_zod.z.record(_zod.z.string()))
+  })
+});
+var TextContentSchema = _zod.z.object({
+  type: _zod.z.literal("text"),
+  /**
+   * The text content of the message.
+   */
+  text: _zod.z.string()
+}).passthrough();
+var ImageContentSchema = _zod.z.object({
+  type: _zod.z.literal("image"),
+  /**
+   * The base64-encoded image data.
+   */
+  data: _zod.z.string().base64(),
+  /**
+   * The MIME type of the image. Different providers may support different image types.
+   */
+  mimeType: _zod.z.string()
+}).passthrough();
+var AudioContentSchema = _zod.z.object({
+  type: _zod.z.literal("audio"),
+  /**
+   * The base64-encoded audio data.
+   */
+  data: _zod.z.string().base64(),
+  /**
+   * The MIME type of the audio. Different providers may support different audio types.
+   */
+  mimeType: _zod.z.string()
+}).passthrough();
+var EmbeddedResourceSchema = _zod.z.object({
+  type: _zod.z.literal("resource"),
+  resource: _zod.z.union([TextResourceContentsSchema, BlobResourceContentsSchema])
+}).passthrough();
+var PromptMessageSchema = _zod.z.object({
+  role: _zod.z.enum(["user", "assistant"]),
+  content: _zod.z.union([
+    TextContentSchema,
+    ImageContentSchema,
+    AudioContentSchema,
+    EmbeddedResourceSchema
+  ])
+}).passthrough();
+var GetPromptResultSchema = ResultSchema.extend({
+  /**
+   * An optional description for the prompt.
+   */
+  description: _zod.z.optional(_zod.z.string()),
+  messages: _zod.z.array(PromptMessageSchema)
+});
+var PromptListChangedNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/prompts/list_changed")
+});
+var ToolSchema = _zod.z.object({
+  /**
+   * The name of the tool.
+   */
+  name: _zod.z.string(),
+  /**
+   * A human-readable description of the tool.
+   */
+  description: _zod.z.optional(_zod.z.string()),
+  /**
+   * A JSON Schema object defining the expected parameters for the tool.
+   */
+  inputSchema: _zod.z.object({
+    type: _zod.z.literal("object"),
+    properties: _zod.z.optional(_zod.z.object({}).passthrough())
+  }).passthrough()
+}).passthrough();
+var ListToolsRequestSchema = PaginatedRequestSchema.extend({
+  method: _zod.z.literal("tools/list")
+});
+var ListToolsResultSchema = PaginatedResultSchema.extend({
+  tools: _zod.z.array(ToolSchema)
+});
+var CallToolResultSchema = ResultSchema.extend({
+  content: _zod.z.array(_zod.z.union([TextContentSchema, ImageContentSchema, AudioContentSchema, EmbeddedResourceSchema])),
+  isError: _zod.z.boolean().default(false).optional()
+});
+var CompatibilityCallToolResultSchema = CallToolResultSchema.or(ResultSchema.extend({
+  toolResult: _zod.z.unknown()
+}));
+var CallToolRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("tools/call"),
+  params: BaseRequestParamsSchema.extend({
+    name: _zod.z.string(),
+    arguments: _zod.z.optional(_zod.z.record(_zod.z.unknown()))
+  })
+});
+var ToolListChangedNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/tools/list_changed")
+});
+var LoggingLevelSchema = _zod.z.enum([
+  "debug",
+  "info",
+  "notice",
+  "warning",
+  "error",
+  "critical",
+  "alert",
+  "emergency"
+]);
+var SetLevelRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("logging/setLevel"),
+  params: BaseRequestParamsSchema.extend({
+    /**
+     * The level of logging that the client wants to receive from the server. The server should send all logs at this level and higher (i.e., more severe) to the client as notifications/logging/message.
+     */
+    level: LoggingLevelSchema
+  })
+});
+var LoggingMessageNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/message"),
+  params: BaseNotificationParamsSchema.extend({
+    /**
+     * The severity of this log message.
+     */
+    level: LoggingLevelSchema,
+    /**
+     * An optional name of the logger issuing this message.
+     */
+    logger: _zod.z.optional(_zod.z.string()),
+    /**
+     * The data to be logged, such as a string message or an object. Any JSON serializable type is allowed here.
+     */
+    data: _zod.z.unknown()
+  })
+});
+var ModelHintSchema = _zod.z.object({
+  /**
+   * A hint for a model name.
+   */
+  name: _zod.z.string().optional()
+}).passthrough();
+var ModelPreferencesSchema = _zod.z.object({
+  /**
+   * Optional hints to use for model selection.
+   */
+  hints: _zod.z.optional(_zod.z.array(ModelHintSchema)),
+  /**
+   * How much to prioritize cost when selecting a model.
+   */
+  costPriority: _zod.z.optional(_zod.z.number().min(0).max(1)),
+  /**
+   * How much to prioritize sampling speed (latency) when selecting a model.
+   */
+  speedPriority: _zod.z.optional(_zod.z.number().min(0).max(1)),
+  /**
+   * How much to prioritize intelligence and capabilities when selecting a model.
+   */
+  intelligencePriority: _zod.z.optional(_zod.z.number().min(0).max(1))
+}).passthrough();
+var SamplingMessageSchema = _zod.z.object({
+  role: _zod.z.enum(["user", "assistant"]),
+  content: _zod.z.union([TextContentSchema, ImageContentSchema, AudioContentSchema])
+}).passthrough();
+var CreateMessageRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("sampling/createMessage"),
+  params: BaseRequestParamsSchema.extend({
+    messages: _zod.z.array(SamplingMessageSchema),
+    /**
+     * An optional system prompt the server wants to use for sampling. The client MAY modify or omit this prompt.
+     */
+    systemPrompt: _zod.z.optional(_zod.z.string()),
+    /**
+     * A request to include context from one or more MCP servers (including the caller), to be attached to the prompt. The client MAY ignore this request.
+     */
+    includeContext: _zod.z.optional(_zod.z.enum(["none", "thisServer", "allServers"])),
+    temperature: _zod.z.optional(_zod.z.number()),
+    /**
+     * The maximum number of tokens to sample, as requested by the server. The client MAY choose to sample fewer tokens than requested.
+     */
+    maxTokens: _zod.z.number().int(),
+    stopSequences: _zod.z.optional(_zod.z.array(_zod.z.string())),
+    /**
+     * Optional metadata to pass through to the LLM provider. The format of this metadata is provider-specific.
+     */
+    metadata: _zod.z.optional(_zod.z.object({}).passthrough()),
+    /**
+     * The server's preferences for which model to select.
+     */
+    modelPreferences: _zod.z.optional(ModelPreferencesSchema)
+  })
+});
+var CreateMessageResultSchema = ResultSchema.extend({
+  /**
+   * The name of the model that generated the message.
+   */
+  model: _zod.z.string(),
+  /**
+   * The reason why sampling stopped.
+   */
+  stopReason: _zod.z.optional(_zod.z.enum(["endTurn", "stopSequence", "maxTokens"]).or(_zod.z.string())),
+  role: _zod.z.enum(["user", "assistant"]),
+  content: _zod.z.discriminatedUnion("type", [
+    TextContentSchema,
+    ImageContentSchema,
+    AudioContentSchema
+  ])
+});
+var ResourceReferenceSchema = _zod.z.object({
+  type: _zod.z.literal("ref/resource"),
+  /**
+   * The URI or URI template of the resource.
+   */
+  uri: _zod.z.string()
+}).passthrough();
+var PromptReferenceSchema = _zod.z.object({
+  type: _zod.z.literal("ref/prompt"),
+  /**
+   * The name of the prompt or prompt template
+   */
+  name: _zod.z.string()
+}).passthrough();
+var CompleteRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("completion/complete"),
+  params: BaseRequestParamsSchema.extend({
+    ref: _zod.z.union([PromptReferenceSchema, ResourceReferenceSchema]),
+    /**
+     * The argument's information
+     */
+    argument: _zod.z.object({
+      /**
+       * The name of the argument
+       */
+      name: _zod.z.string(),
+      /**
+       * The value of the argument to use for completion matching.
+       */
+      value: _zod.z.string()
+    }).passthrough()
+  })
+});
+var CompleteResultSchema = ResultSchema.extend({
+  completion: _zod.z.object({
+    /**
+     * An array of completion values. Must not exceed 100 items.
+     */
+    values: _zod.z.array(_zod.z.string()).max(100),
+    /**
+     * The total number of completion options available. This can exceed the number of values actually sent in the response.
+     */
+    total: _zod.z.optional(_zod.z.number().int()),
+    /**
+     * Indicates whether there are additional completion options beyond those provided in the current response, even if the exact total is unknown.
+     */
+    hasMore: _zod.z.optional(_zod.z.boolean())
+  }).passthrough()
+});
+var RootSchema = _zod.z.object({
+  /**
+   * The URI identifying the root. This *must* start with file:// for now.
+   */
+  uri: _zod.z.string().startsWith("file://"),
+  /**
+   * An optional name for the root.
+   */
+  name: _zod.z.optional(_zod.z.string())
+}).passthrough();
+var ListRootsRequestSchema = RequestSchema.extend({
+  method: _zod.z.literal("roots/list")
+});
+var ListRootsResultSchema = ResultSchema.extend({
+  roots: _zod.z.array(RootSchema)
+});
+var RootsListChangedNotificationSchema = NotificationSchema.extend({
+  method: _zod.z.literal("notifications/roots/list_changed")
+});
+var ClientRequestSchema = _zod.z.union([
+  PingRequestSchema,
+  InitializeRequestSchema,
+  CompleteRequestSchema,
+  SetLevelRequestSchema,
+  GetPromptRequestSchema,
+  ListPromptsRequestSchema,
+  ListResourcesRequestSchema,
+  ListResourceTemplatesRequestSchema,
+  ReadResourceRequestSchema,
+  SubscribeRequestSchema,
+  UnsubscribeRequestSchema,
+  CallToolRequestSchema,
+  ListToolsRequestSchema
+]);
+var ClientNotificationSchema = _zod.z.union([
+  CancelledNotificationSchema,
+  ProgressNotificationSchema,
+  InitializedNotificationSchema,
+  RootsListChangedNotificationSchema
+]);
+var ClientResultSchema = _zod.z.union([
+  EmptyResultSchema,
+  CreateMessageResultSchema,
+  ListRootsResultSchema
+]);
+var ServerRequestSchema = _zod.z.union([
+  PingRequestSchema,
+  CreateMessageRequestSchema,
+  ListRootsRequestSchema
+]);
+var ServerNotificationSchema = _zod.z.union([
+  CancelledNotificationSchema,
+  ProgressNotificationSchema,
+  LoggingMessageNotificationSchema,
+  ResourceUpdatedNotificationSchema,
+  ResourceListChangedNotificationSchema,
+  ToolListChangedNotificationSchema,
+  PromptListChangedNotificationSchema
+]);
+var ServerResultSchema = _zod.z.union([
+  EmptyResultSchema,
+  InitializeResultSchema,
+  CompleteResultSchema,
+  GetPromptResultSchema,
+  ListPromptsResultSchema,
+  ListResourcesResultSchema,
+  ListResourceTemplatesResultSchema,
+  ReadResourceResultSchema,
+  CallToolResultSchema,
+  ListToolsResultSchema
+]);
+var McpError = class extends Error {
+  constructor(code, message, data) {
+    super(`MCP error ${code}: ${message}`);
+    this.code = code;
+    this.data = data;
+    this.name = "McpError";
+  }
+};
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
+var ReadBuffer = class {
+  append(chunk) {
+    this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk;
+  }
+  readMessage() {
+    if (!this._buffer) {
+      return null;
+    }
+    const index = this._buffer.indexOf("\n");
+    if (index === -1) {
+      return null;
+    }
+    const line = this._buffer.toString("utf8", 0, index).replace(/\r$/, "");
+    this._buffer = this._buffer.subarray(index + 1);
+    return deserializeMessage(line);
+  }
+  clear() {
+    this._buffer = void 0;
+  }
+};
+function deserializeMessage(line) {
+  return JSONRPCMessageSchema.parse(JSON.parse(line));
+}
+function serializeMessage(message) {
+  return JSON.stringify(message) + "\n";
+}
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+var StdioServerTransport = class {
+  constructor(_stdin = _process2.default.stdin, _stdout = _process2.default.stdout) {
+    this._stdin = _stdin;
+    this._stdout = _stdout;
+    this._readBuffer = new ReadBuffer();
+    this._started = false;
+    this._ondata = (chunk) => {
+      this._readBuffer.append(chunk);
+      this.processReadBuffer();
+    };
+    this._onerror = (error) => {
+      var _a;
+      (_a = this.onerror) === null || _a === void 0 ? void 0 : _a.call(this, error);
+    };
+  }
+  /**
+   * Starts listening for messages on stdin.
+   */
+  async start() {
+    if (this._started) {
+      throw new Error("StdioServerTransport already started! If using Server class, note that connect() calls start() automatically.");
+    }
+    this._started = true;
+    this._stdin.on("data", this._ondata);
+    this._stdin.on("error", this._onerror);
+  }
+  processReadBuffer() {
+    var _a, _b;
+    while (true) {
+      try {
+        const message = this._readBuffer.readMessage();
+        if (message === null) {
+          break;
+        }
+        (_a = this.onmessage) === null || _a === void 0 ? void 0 : _a.call(this, message);
+      } catch (error) {
+        (_b = this.onerror) === null || _b === void 0 ? void 0 : _b.call(this, error);
+      }
+    }
+  }
+  async close() {
+    var _a;
+    this._stdin.off("data", this._ondata);
+    this._stdin.off("error", this._onerror);
+    const remainingDataListeners = this._stdin.listenerCount("data");
+    if (remainingDataListeners === 0) {
+      this._stdin.pause();
+    }
+    this._readBuffer.clear();
+    (_a = this.onclose) === null || _a === void 0 ? void 0 : _a.call(this);
+  }
+  send(message) {
+    return new Promise((resolve) => {
+      const json = serializeMessage(message);
+      if (this._stdout.write(json)) {
+        resolve();
+      } else {
+        this._stdout.once("drain", resolve);
+      }
+    });
+  }
+};
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js
+var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4;
+var Protocol = class {
+  constructor(_options) {
+    this._options = _options;
+    this._requestMessageId = 0;
+    this._requestHandlers = /* @__PURE__ */ new Map();
+    this._requestHandlerAbortControllers = /* @__PURE__ */ new Map();
+    this._notificationHandlers = /* @__PURE__ */ new Map();
+    this._responseHandlers = /* @__PURE__ */ new Map();
+    this._progressHandlers = /* @__PURE__ */ new Map();
+    this._timeoutInfo = /* @__PURE__ */ new Map();
+    this.setNotificationHandler(CancelledNotificationSchema, (notification) => {
+      const controller = this._requestHandlerAbortControllers.get(notification.params.requestId);
+      controller === null || controller === void 0 ? void 0 : controller.abort(notification.params.reason);
+    });
+    this.setNotificationHandler(ProgressNotificationSchema, (notification) => {
+      this._onprogress(notification);
+    });
+    this.setRequestHandler(
+      PingRequestSchema,
+      // Automatic pong by default.
+      (_request) => ({})
+    );
+  }
+  _setupTimeout(messageId, timeout, maxTotalTimeout, onTimeout, resetTimeoutOnProgress = false) {
+    this._timeoutInfo.set(messageId, {
+      timeoutId: setTimeout(onTimeout, timeout),
+      startTime: Date.now(),
+      timeout,
+      maxTotalTimeout,
+      resetTimeoutOnProgress,
+      onTimeout
+    });
+  }
+  _resetTimeout(messageId) {
+    const info = this._timeoutInfo.get(messageId);
+    if (!info)
+      return false;
+    const totalElapsed = Date.now() - info.startTime;
+    if (info.maxTotalTimeout && totalElapsed >= info.maxTotalTimeout) {
+      this._timeoutInfo.delete(messageId);
+      throw new McpError(ErrorCode.RequestTimeout, "Maximum total timeout exceeded", { maxTotalTimeout: info.maxTotalTimeout, totalElapsed });
+    }
+    clearTimeout(info.timeoutId);
+    info.timeoutId = setTimeout(info.onTimeout, info.timeout);
+    return true;
+  }
+  _cleanupTimeout(messageId) {
+    const info = this._timeoutInfo.get(messageId);
+    if (info) {
+      clearTimeout(info.timeoutId);
+      this._timeoutInfo.delete(messageId);
+    }
+  }
+  /**
+   * Attaches to the given transport, starts it, and starts listening for messages.
+   *
+   * The Protocol object assumes ownership of the Transport, replacing any callbacks that have already been set, and expects that it is the only user of the Transport instance going forward.
+   */
+  async connect(transport) {
+    this._transport = transport;
+    this._transport.onclose = () => {
+      this._onclose();
+    };
+    this._transport.onerror = (error) => {
+      this._onerror(error);
+    };
+    this._transport.onmessage = (message) => {
+      if (!("method" in message)) {
+        this._onresponse(message);
+      } else if ("id" in message) {
+        this._onrequest(message);
+      } else {
+        this._onnotification(message);
+      }
+    };
+    await this._transport.start();
+  }
+  _onclose() {
+    var _a;
+    const responseHandlers = this._responseHandlers;
+    this._responseHandlers = /* @__PURE__ */ new Map();
+    this._progressHandlers.clear();
+    this._transport = void 0;
+    (_a = this.onclose) === null || _a === void 0 ? void 0 : _a.call(this);
+    const error = new McpError(ErrorCode.ConnectionClosed, "Connection closed");
+    for (const handler of responseHandlers.values()) {
+      handler(error);
+    }
+  }
+  _onerror(error) {
+    var _a;
+    (_a = this.onerror) === null || _a === void 0 ? void 0 : _a.call(this, error);
+  }
+  _onnotification(notification) {
+    var _a;
+    const handler = (_a = this._notificationHandlers.get(notification.method)) !== null && _a !== void 0 ? _a : this.fallbackNotificationHandler;
+    if (handler === void 0) {
+      return;
+    }
+    Promise.resolve().then(() => handler(notification)).catch((error) => this._onerror(new Error(`Uncaught error in notification handler: ${error}`)));
+  }
+  _onrequest(request) {
+    var _a, _b, _c;
+    const handler = (_a = this._requestHandlers.get(request.method)) !== null && _a !== void 0 ? _a : this.fallbackRequestHandler;
+    if (handler === void 0) {
+      (_b = this._transport) === null || _b === void 0 ? void 0 : _b.send({
+        jsonrpc: "2.0",
+        id: request.id,
+        error: {
+          code: ErrorCode.MethodNotFound,
+          message: "Method not found"
+        }
+      }).catch((error) => this._onerror(new Error(`Failed to send an error response: ${error}`)));
+      return;
+    }
+    const abortController = new AbortController();
+    this._requestHandlerAbortControllers.set(request.id, abortController);
+    const extra = {
+      signal: abortController.signal,
+      sessionId: (_c = this._transport) === null || _c === void 0 ? void 0 : _c.sessionId
+    };
+    Promise.resolve().then(() => handler(request, extra)).then((result) => {
+      var _a2;
+      if (abortController.signal.aborted) {
+        return;
+      }
+      return (_a2 = this._transport) === null || _a2 === void 0 ? void 0 : _a2.send({
+        result,
+        jsonrpc: "2.0",
+        id: request.id
+      });
+    }, (error) => {
+      var _a2, _b2;
+      if (abortController.signal.aborted) {
+        return;
+      }
+      return (_a2 = this._transport) === null || _a2 === void 0 ? void 0 : _a2.send({
+        jsonrpc: "2.0",
+        id: request.id,
+        error: {
+          code: Number.isSafeInteger(error["code"]) ? error["code"] : ErrorCode.InternalError,
+          message: (_b2 = error.message) !== null && _b2 !== void 0 ? _b2 : "Internal error"
+        }
+      });
+    }).catch((error) => this._onerror(new Error(`Failed to send response: ${error}`))).finally(() => {
+      this._requestHandlerAbortControllers.delete(request.id);
+    });
+  }
+  _onprogress(notification) {
+    const { progressToken, ...params } = notification.params;
+    const messageId = Number(progressToken);
+    const handler = this._progressHandlers.get(messageId);
+    if (!handler) {
+      this._onerror(new Error(`Received a progress notification for an unknown token: ${JSON.stringify(notification)}`));
+      return;
+    }
+    const responseHandler = this._responseHandlers.get(messageId);
+    const timeoutInfo = this._timeoutInfo.get(messageId);
+    if (timeoutInfo && responseHandler && timeoutInfo.resetTimeoutOnProgress) {
+      try {
+        this._resetTimeout(messageId);
+      } catch (error) {
+        responseHandler(error);
+        return;
+      }
+    }
+    handler(params);
+  }
+  _onresponse(response) {
+    const messageId = Number(response.id);
+    const handler = this._responseHandlers.get(messageId);
+    if (handler === void 0) {
+      this._onerror(new Error(`Received a response for an unknown message ID: ${JSON.stringify(response)}`));
+      return;
+    }
+    this._responseHandlers.delete(messageId);
+    this._progressHandlers.delete(messageId);
+    this._cleanupTimeout(messageId);
+    if ("result" in response) {
+      handler(response);
+    } else {
+      const error = new McpError(response.error.code, response.error.message, response.error.data);
+      handler(error);
+    }
+  }
+  get transport() {
+    return this._transport;
+  }
+  /**
+   * Closes the connection.
+   */
+  async close() {
+    var _a;
+    await ((_a = this._transport) === null || _a === void 0 ? void 0 : _a.close());
+  }
+  /**
+   * Sends a request and wait for a response.
+   *
+   * Do not use this method to emit notifications! Use notification() instead.
+   */
+  request(request, resultSchema, options) {
+    return new Promise((resolve, reject) => {
+      var _a, _b, _c, _d, _e;
+      if (!this._transport) {
+        reject(new Error("Not connected"));
+        return;
+      }
+      if (((_a = this._options) === null || _a === void 0 ? void 0 : _a.enforceStrictCapabilities) === true) {
+        this.assertCapabilityForMethod(request.method);
+      }
+      (_b = options === null || options === void 0 ? void 0 : options.signal) === null || _b === void 0 ? void 0 : _b.throwIfAborted();
+      const messageId = this._requestMessageId++;
+      const jsonrpcRequest = {
+        ...request,
+        jsonrpc: "2.0",
+        id: messageId
+      };
+      if (options === null || options === void 0 ? void 0 : options.onprogress) {
+        this._progressHandlers.set(messageId, options.onprogress);
+        jsonrpcRequest.params = {
+          ...request.params,
+          _meta: { progressToken: messageId }
+        };
+      }
+      const cancel = (reason) => {
+        var _a2;
+        this._responseHandlers.delete(messageId);
+        this._progressHandlers.delete(messageId);
+        this._cleanupTimeout(messageId);
+        (_a2 = this._transport) === null || _a2 === void 0 ? void 0 : _a2.send({
+          jsonrpc: "2.0",
+          method: "notifications/cancelled",
+          params: {
+            requestId: messageId,
+            reason: String(reason)
+          }
+        }).catch((error) => this._onerror(new Error(`Failed to send cancellation: ${error}`)));
+        reject(reason);
+      };
+      this._responseHandlers.set(messageId, (response) => {
+        var _a2;
+        if ((_a2 = options === null || options === void 0 ? void 0 : options.signal) === null || _a2 === void 0 ? void 0 : _a2.aborted) {
+          return;
+        }
+        if (response instanceof Error) {
+          return reject(response);
+        }
+        try {
+          const result = resultSchema.parse(response.result);
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      });
+      (_c = options === null || options === void 0 ? void 0 : options.signal) === null || _c === void 0 ? void 0 : _c.addEventListener("abort", () => {
+        var _a2;
+        cancel((_a2 = options === null || options === void 0 ? void 0 : options.signal) === null || _a2 === void 0 ? void 0 : _a2.reason);
+      });
+      const timeout = (_d = options === null || options === void 0 ? void 0 : options.timeout) !== null && _d !== void 0 ? _d : DEFAULT_REQUEST_TIMEOUT_MSEC;
+      const timeoutHandler = () => cancel(new McpError(ErrorCode.RequestTimeout, "Request timed out", { timeout }));
+      this._setupTimeout(messageId, timeout, options === null || options === void 0 ? void 0 : options.maxTotalTimeout, timeoutHandler, (_e = options === null || options === void 0 ? void 0 : options.resetTimeoutOnProgress) !== null && _e !== void 0 ? _e : false);
+      this._transport.send(jsonrpcRequest).catch((error) => {
+        this._cleanupTimeout(messageId);
+        reject(error);
+      });
+    });
+  }
+  /**
+   * Emits a notification, which is a one-way message that does not expect a response.
+   */
+  async notification(notification) {
+    if (!this._transport) {
+      throw new Error("Not connected");
+    }
+    this.assertNotificationCapability(notification.method);
+    const jsonrpcNotification = {
+      ...notification,
+      jsonrpc: "2.0"
+    };
+    await this._transport.send(jsonrpcNotification);
+  }
+  /**
+   * Registers a handler to invoke when this protocol object receives a request with the given method.
+   *
+   * Note that this will replace any previous request handler for the same method.
+   */
+  setRequestHandler(requestSchema, handler) {
+    const method = requestSchema.shape.method.value;
+    this.assertRequestHandlerCapability(method);
+    this._requestHandlers.set(method, (request, extra) => Promise.resolve(handler(requestSchema.parse(request), extra)));
+  }
+  /**
+   * Removes the request handler for the given method.
+   */
+  removeRequestHandler(method) {
+    this._requestHandlers.delete(method);
+  }
+  /**
+   * Asserts that a request handler has not already been set for the given method, in preparation for a new one being automatically installed.
+   */
+  assertCanSetRequestHandler(method) {
+    if (this._requestHandlers.has(method)) {
+      throw new Error(`A request handler for ${method} already exists, which would be overridden`);
+    }
+  }
+  /**
+   * Registers a handler to invoke when this protocol object receives a notification with the given method.
+   *
+   * Note that this will replace any previous notification handler for the same method.
+   */
+  setNotificationHandler(notificationSchema, handler) {
+    this._notificationHandlers.set(notificationSchema.shape.method.value, (notification) => Promise.resolve(handler(notificationSchema.parse(notification))));
+  }
+  /**
+   * Removes the notification handler for the given method.
+   */
+  removeNotificationHandler(method) {
+    this._notificationHandlers.delete(method);
+  }
+};
+function mergeCapabilities(base, additional) {
+  return Object.entries(additional).reduce((acc, [key, value]) => {
+    if (value && typeof value === "object") {
+      acc[key] = acc[key] ? { ...acc[key], ...value } : value;
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, { ...base });
+}
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js
+var Server = class extends Protocol {
+  /**
+   * Initializes this server with the given name and version information.
+   */
+  constructor(_serverInfo, options) {
+    var _a;
+    super(options);
+    this._serverInfo = _serverInfo;
+    this._capabilities = (_a = options === null || options === void 0 ? void 0 : options.capabilities) !== null && _a !== void 0 ? _a : {};
+    this._instructions = options === null || options === void 0 ? void 0 : options.instructions;
+    this.setRequestHandler(InitializeRequestSchema, (request) => this._oninitialize(request));
+    this.setNotificationHandler(InitializedNotificationSchema, () => {
+      var _a2;
+      return (_a2 = this.oninitialized) === null || _a2 === void 0 ? void 0 : _a2.call(this);
+    });
+  }
+  /**
+   * Registers new capabilities. This can only be called before connecting to a transport.
+   *
+   * The new capabilities will be merged with any existing capabilities previously given (e.g., at initialization).
+   */
+  registerCapabilities(capabilities) {
+    if (this.transport) {
+      throw new Error("Cannot register capabilities after connecting to transport");
+    }
+    this._capabilities = mergeCapabilities(this._capabilities, capabilities);
+  }
+  assertCapabilityForMethod(method) {
+    var _a, _b;
+    switch (method) {
+      case "sampling/createMessage":
+        if (!((_a = this._clientCapabilities) === null || _a === void 0 ? void 0 : _a.sampling)) {
+          throw new Error(`Client does not support sampling (required for ${method})`);
+        }
+        break;
+      case "roots/list":
+        if (!((_b = this._clientCapabilities) === null || _b === void 0 ? void 0 : _b.roots)) {
+          throw new Error(`Client does not support listing roots (required for ${method})`);
+        }
+        break;
+      case "ping":
+        break;
+    }
+  }
+  assertNotificationCapability(method) {
+    switch (method) {
+      case "notifications/message":
+        if (!this._capabilities.logging) {
+          throw new Error(`Server does not support logging (required for ${method})`);
+        }
+        break;
+      case "notifications/resources/updated":
+      case "notifications/resources/list_changed":
+        if (!this._capabilities.resources) {
+          throw new Error(`Server does not support notifying about resources (required for ${method})`);
+        }
+        break;
+      case "notifications/tools/list_changed":
+        if (!this._capabilities.tools) {
+          throw new Error(`Server does not support notifying of tool list changes (required for ${method})`);
+        }
+        break;
+      case "notifications/prompts/list_changed":
+        if (!this._capabilities.prompts) {
+          throw new Error(`Server does not support notifying of prompt list changes (required for ${method})`);
+        }
+        break;
+      case "notifications/cancelled":
+        break;
+      case "notifications/progress":
+        break;
+    }
+  }
+  assertRequestHandlerCapability(method) {
+    switch (method) {
+      case "sampling/createMessage":
+        if (!this._capabilities.sampling) {
+          throw new Error(`Server does not support sampling (required for ${method})`);
+        }
+        break;
+      case "logging/setLevel":
+        if (!this._capabilities.logging) {
+          throw new Error(`Server does not support logging (required for ${method})`);
+        }
+        break;
+      case "prompts/get":
+      case "prompts/list":
+        if (!this._capabilities.prompts) {
+          throw new Error(`Server does not support prompts (required for ${method})`);
+        }
+        break;
+      case "resources/list":
+      case "resources/templates/list":
+      case "resources/read":
+        if (!this._capabilities.resources) {
+          throw new Error(`Server does not support resources (required for ${method})`);
+        }
+        break;
+      case "tools/call":
+      case "tools/list":
+        if (!this._capabilities.tools) {
+          throw new Error(`Server does not support tools (required for ${method})`);
+        }
+        break;
+      case "ping":
+      case "initialize":
+        break;
+    }
+  }
+  async _oninitialize(request) {
+    const requestedVersion = request.params.protocolVersion;
+    this._clientCapabilities = request.params.capabilities;
+    this._clientVersion = request.params.clientInfo;
+    return {
+      protocolVersion: SUPPORTED_PROTOCOL_VERSIONS.includes(requestedVersion) ? requestedVersion : LATEST_PROTOCOL_VERSION,
+      capabilities: this.getCapabilities(),
+      serverInfo: this._serverInfo,
+      ...this._instructions && { instructions: this._instructions }
+    };
+  }
+  /**
+   * After initialization has completed, this will be populated with the client's reported capabilities.
+   */
+  getClientCapabilities() {
+    return this._clientCapabilities;
+  }
+  /**
+   * After initialization has completed, this will be populated with information about the client's name and version.
+   */
+  getClientVersion() {
+    return this._clientVersion;
+  }
+  getCapabilities() {
+    return this._capabilities;
+  }
+  async ping() {
+    return this.request({ method: "ping" }, EmptyResultSchema);
+  }
+  async createMessage(params, options) {
+    return this.request({ method: "sampling/createMessage", params }, CreateMessageResultSchema, options);
+  }
+  async listRoots(params, options) {
+    return this.request({ method: "roots/list", params }, ListRootsResultSchema, options);
+  }
+  async sendLoggingMessage(params) {
+    return this.notification({ method: "notifications/message", params });
+  }
+  async sendResourceUpdated(params) {
+    return this.notification({
+      method: "notifications/resources/updated",
+      params
+    });
+  }
+  async sendResourceListChanged() {
+    return this.notification({
+      method: "notifications/resources/list_changed"
+    });
+  }
+  async sendToolListChanged() {
+    return this.notification({ method: "notifications/tools/list_changed" });
+  }
+  async sendPromptListChanged() {
+    return this.notification({ method: "notifications/prompts/list_changed" });
+  }
+};
+
+// node_modules/zod-to-json-schema/dist/esm/Options.js
+var ignoreOverride = Symbol("Let zodToJsonSchema decide on which parser to use");
+var defaultOptions = {
+  name: void 0,
+  $refStrategy: "root",
+  basePath: ["#"],
+  effectStrategy: "input",
+  pipeStrategy: "all",
+  dateStrategy: "format:date-time",
+  mapStrategy: "entries",
+  removeAdditionalStrategy: "passthrough",
+  allowedAdditionalProperties: true,
+  rejectedAdditionalProperties: false,
+  definitionPath: "definitions",
+  target: "jsonSchema7",
+  strictUnions: false,
+  definitions: {},
+  errorMessages: false,
+  markdownDescription: false,
+  patternStrategy: "escape",
+  applyRegexFlags: false,
+  emailStrategy: "format:email",
+  base64Strategy: "contentEncoding:base64",
+  nameStrategy: "ref"
+};
+var getDefaultOptions = (options) => typeof options === "string" ? {
+  ...defaultOptions,
+  name: options
+} : {
+  ...defaultOptions,
+  ...options
+};
+
+// node_modules/zod-to-json-schema/dist/esm/Refs.js
+var getRefs = (options) => {
+  const _options = getDefaultOptions(options);
+  const currentPath = _options.name !== void 0 ? [..._options.basePath, _options.definitionPath, _options.name] : _options.basePath;
+  return {
+    ..._options,
+    currentPath,
+    propertyPath: void 0,
+    seen: new Map(Object.entries(_options.definitions).map(([name, def]) => [
+      def._def,
+      {
+        def: def._def,
+        path: [..._options.basePath, _options.definitionPath, name],
+        // Resolution of references will be forced even though seen, so it's ok that the schema is undefined here for now.
+        jsonSchema: void 0
+      }
+    ]))
+  };
+};
+
+// node_modules/zod-to-json-schema/dist/esm/errorMessages.js
+function addErrorMessage(res, key, errorMessage, refs) {
+  if (!_optionalChain([refs, 'optionalAccess', _2 => _2.errorMessages]))
+    return;
+  if (errorMessage) {
+    res.errorMessage = {
+      ...res.errorMessage,
+      [key]: errorMessage
+    };
+  }
+}
+function setResponseValueAndErrors(res, key, value, errorMessage, refs) {
+  res[key] = value;
+  addErrorMessage(res, key, errorMessage, refs);
+}
+
+// node_modules/zod-to-json-schema/dist/esm/selectParser.js
+
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/any.js
+function parseAnyDef() {
+  return {};
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/array.js
+
+function parseArrayDef(def, refs) {
+  const res = {
+    type: "array"
+  };
+  if (_optionalChain([def, 'access', _3 => _3.type, 'optionalAccess', _4 => _4._def]) && _optionalChain([def, 'access', _5 => _5.type, 'optionalAccess', _6 => _6._def, 'optionalAccess', _7 => _7.typeName]) !== _zod.ZodFirstPartyTypeKind.ZodAny) {
+    res.items = parseDef(def.type._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "items"]
+    });
+  }
+  if (def.minLength) {
+    setResponseValueAndErrors(res, "minItems", def.minLength.value, def.minLength.message, refs);
+  }
+  if (def.maxLength) {
+    setResponseValueAndErrors(res, "maxItems", def.maxLength.value, def.maxLength.message, refs);
+  }
+  if (def.exactLength) {
+    setResponseValueAndErrors(res, "minItems", def.exactLength.value, def.exactLength.message, refs);
+    setResponseValueAndErrors(res, "maxItems", def.exactLength.value, def.exactLength.message, refs);
+  }
+  return res;
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/bigint.js
+function parseBigintDef(def, refs) {
+  const res = {
+    type: "integer",
+    format: "int64"
+  };
+  if (!def.checks)
+    return res;
+  for (const check of def.checks) {
+    switch (check.kind) {
+      case "min":
+        if (refs.target === "jsonSchema7") {
+          if (check.inclusive) {
+            setResponseValueAndErrors(res, "minimum", check.value, check.message, refs);
+          } else {
+            setResponseValueAndErrors(res, "exclusiveMinimum", check.value, check.message, refs);
+          }
+        } else {
+          if (!check.inclusive) {
+            res.exclusiveMinimum = true;
+          }
+          setResponseValueAndErrors(res, "minimum", check.value, check.message, refs);
+        }
+        break;
+      case "max":
+        if (refs.target === "jsonSchema7") {
+          if (check.inclusive) {
+            setResponseValueAndErrors(res, "maximum", check.value, check.message, refs);
+          } else {
+            setResponseValueAndErrors(res, "exclusiveMaximum", check.value, check.message, refs);
+          }
+        } else {
+          if (!check.inclusive) {
+            res.exclusiveMaximum = true;
+          }
+          setResponseValueAndErrors(res, "maximum", check.value, check.message, refs);
+        }
+        break;
+      case "multipleOf":
+        setResponseValueAndErrors(res, "multipleOf", check.value, check.message, refs);
+        break;
+    }
+  }
+  return res;
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/boolean.js
+function parseBooleanDef() {
+  return {
+    type: "boolean"
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/branded.js
+function parseBrandedDef(_def, refs) {
+  return parseDef(_def.type._def, refs);
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/catch.js
+var parseCatchDef = (def, refs) => {
+  return parseDef(def.innerType._def, refs);
+};
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/date.js
+function parseDateDef(def, refs, overrideDateStrategy) {
+  const strategy = _nullishCoalesce(overrideDateStrategy, () => ( refs.dateStrategy));
+  if (Array.isArray(strategy)) {
+    return {
+      anyOf: strategy.map((item, i) => parseDateDef(def, refs, item))
+    };
+  }
+  switch (strategy) {
+    case "string":
+    case "format:date-time":
+      return {
+        type: "string",
+        format: "date-time"
+      };
+    case "format:date":
+      return {
+        type: "string",
+        format: "date"
+      };
+    case "integer":
+      return integerDateParser(def, refs);
+  }
+}
+var integerDateParser = (def, refs) => {
+  const res = {
+    type: "integer",
+    format: "unix-time"
+  };
+  if (refs.target === "openApi3") {
+    return res;
+  }
+  for (const check of def.checks) {
+    switch (check.kind) {
+      case "min":
+        setResponseValueAndErrors(
+          res,
+          "minimum",
+          check.value,
+          // This is in milliseconds
+          check.message,
+          refs
+        );
+        break;
+      case "max":
+        setResponseValueAndErrors(
+          res,
+          "maximum",
+          check.value,
+          // This is in milliseconds
+          check.message,
+          refs
+        );
+        break;
+    }
+  }
+  return res;
+};
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/default.js
+function parseDefaultDef(_def, refs) {
+  return {
+    ...parseDef(_def.innerType._def, refs),
+    default: _def.defaultValue()
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/effects.js
+function parseEffectsDef(_def, refs) {
+  return refs.effectStrategy === "input" ? parseDef(_def.schema._def, refs) : {};
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/enum.js
+function parseEnumDef(def) {
+  return {
+    type: "string",
+    enum: Array.from(def.values)
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/intersection.js
+var isJsonSchema7AllOfType = (type) => {
+  if ("type" in type && type.type === "string")
+    return false;
+  return "allOf" in type;
+};
+function parseIntersectionDef(def, refs) {
+  const allOf = [
+    parseDef(def.left._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "allOf", "0"]
+    }),
+    parseDef(def.right._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "allOf", "1"]
+    })
+  ].filter((x) => !!x);
+  let unevaluatedProperties = refs.target === "jsonSchema2019-09" ? { unevaluatedProperties: false } : void 0;
+  const mergedAllOf = [];
+  allOf.forEach((schema) => {
+    if (isJsonSchema7AllOfType(schema)) {
+      mergedAllOf.push(...schema.allOf);
+      if (schema.unevaluatedProperties === void 0) {
+        unevaluatedProperties = void 0;
+      }
+    } else {
+      let nestedSchema = schema;
+      if ("additionalProperties" in schema && schema.additionalProperties === false) {
+        const { additionalProperties, ...rest } = schema;
+        nestedSchema = rest;
+      } else {
+        unevaluatedProperties = void 0;
+      }
+      mergedAllOf.push(nestedSchema);
+    }
+  });
+  return mergedAllOf.length ? {
+    allOf: mergedAllOf,
+    ...unevaluatedProperties
+  } : void 0;
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/literal.js
+function parseLiteralDef(def, refs) {
+  const parsedType = typeof def.value;
+  if (parsedType !== "bigint" && parsedType !== "number" && parsedType !== "boolean" && parsedType !== "string") {
+    return {
+      type: Array.isArray(def.value) ? "array" : "object"
+    };
+  }
+  if (refs.target === "openApi3") {
+    return {
+      type: parsedType === "bigint" ? "integer" : parsedType,
+      enum: [def.value]
+    };
+  }
+  return {
+    type: parsedType === "bigint" ? "integer" : parsedType,
+    const: def.value
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/record.js
+
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/string.js
+var emojiRegex = void 0;
+var zodPatterns = {
+  /**
+   * `c` was changed to `[cC]` to replicate /i flag
+   */
+  cuid: /^[cC][^\s-]{8,}$/,
+  cuid2: /^[0-9a-z]+$/,
+  ulid: /^[0-9A-HJKMNP-TV-Z]{26}$/,
+  /**
+   * `a-z` was added to replicate /i flag
+   */
+  email: /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-\.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9\-]*\.)+[a-zA-Z]{2,}$/,
+  /**
+   * Constructed a valid Unicode RegExp
+   *
+   * Lazily instantiate since this type of regex isn't supported
+   * in all envs (e.g. React Native).
+   *
+   * See:
+   * https://github.com/colinhacks/zod/issues/2433
+   * Fix in Zod:
+   * https://github.com/colinhacks/zod/commit/9340fd51e48576a75adc919bff65dbc4a5d4c99b
+   */
+  emoji: () => {
+    if (emojiRegex === void 0) {
+      emojiRegex = RegExp("^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$", "u");
+    }
+    return emojiRegex;
+  },
+  /**
+   * Unused
+   */
+  uuid: /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
+  /**
+   * Unused
+   */
+  ipv4: /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/,
+  ipv4Cidr: /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/(3[0-2]|[12]?[0-9])$/,
+  /**
+   * Unused
+   */
+  ipv6: /^(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))$/,
+  ipv6Cidr: /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/,
+  base64: /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/,
+  base64url: /^([0-9a-zA-Z-_]{4})*(([0-9a-zA-Z-_]{2}(==)?)|([0-9a-zA-Z-_]{3}(=)?))?$/,
+  nanoid: /^[a-zA-Z0-9_-]{21}$/,
+  jwt: /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/
+};
+function parseStringDef(def, refs) {
+  const res = {
+    type: "string"
+  };
+  if (def.checks) {
+    for (const check of def.checks) {
+      switch (check.kind) {
+        case "min":
+          setResponseValueAndErrors(res, "minLength", typeof res.minLength === "number" ? Math.max(res.minLength, check.value) : check.value, check.message, refs);
+          break;
+        case "max":
+          setResponseValueAndErrors(res, "maxLength", typeof res.maxLength === "number" ? Math.min(res.maxLength, check.value) : check.value, check.message, refs);
+          break;
+        case "email":
+          switch (refs.emailStrategy) {
+            case "format:email":
+              addFormat(res, "email", check.message, refs);
+              break;
+            case "format:idn-email":
+              addFormat(res, "idn-email", check.message, refs);
+              break;
+            case "pattern:zod":
+              addPattern(res, zodPatterns.email, check.message, refs);
+              break;
+          }
+          break;
+        case "url":
+          addFormat(res, "uri", check.message, refs);
+          break;
+        case "uuid":
+          addFormat(res, "uuid", check.message, refs);
+          break;
+        case "regex":
+          addPattern(res, check.regex, check.message, refs);
+          break;
+        case "cuid":
+          addPattern(res, zodPatterns.cuid, check.message, refs);
+          break;
+        case "cuid2":
+          addPattern(res, zodPatterns.cuid2, check.message, refs);
+          break;
+        case "startsWith":
+          addPattern(res, RegExp(`^${escapeLiteralCheckValue(check.value, refs)}`), check.message, refs);
+          break;
+        case "endsWith":
+          addPattern(res, RegExp(`${escapeLiteralCheckValue(check.value, refs)}$`), check.message, refs);
+          break;
+        case "datetime":
+          addFormat(res, "date-time", check.message, refs);
+          break;
+        case "date":
+          addFormat(res, "date", check.message, refs);
+          break;
+        case "time":
+          addFormat(res, "time", check.message, refs);
+          break;
+        case "duration":
+          addFormat(res, "duration", check.message, refs);
+          break;
+        case "length":
+          setResponseValueAndErrors(res, "minLength", typeof res.minLength === "number" ? Math.max(res.minLength, check.value) : check.value, check.message, refs);
+          setResponseValueAndErrors(res, "maxLength", typeof res.maxLength === "number" ? Math.min(res.maxLength, check.value) : check.value, check.message, refs);
+          break;
+        case "includes": {
+          addPattern(res, RegExp(escapeLiteralCheckValue(check.value, refs)), check.message, refs);
+          break;
+        }
+        case "ip": {
+          if (check.version !== "v6") {
+            addFormat(res, "ipv4", check.message, refs);
+          }
+          if (check.version !== "v4") {
+            addFormat(res, "ipv6", check.message, refs);
+          }
+          break;
+        }
+        case "base64url":
+          addPattern(res, zodPatterns.base64url, check.message, refs);
+          break;
+        case "jwt":
+          addPattern(res, zodPatterns.jwt, check.message, refs);
+          break;
+        case "cidr": {
+          if (check.version !== "v6") {
+            addPattern(res, zodPatterns.ipv4Cidr, check.message, refs);
+          }
+          if (check.version !== "v4") {
+            addPattern(res, zodPatterns.ipv6Cidr, check.message, refs);
+          }
+          break;
+        }
+        case "emoji":
+          addPattern(res, zodPatterns.emoji(), check.message, refs);
+          break;
+        case "ulid": {
+          addPattern(res, zodPatterns.ulid, check.message, refs);
+          break;
+        }
+        case "base64": {
+          switch (refs.base64Strategy) {
+            case "format:binary": {
+              addFormat(res, "binary", check.message, refs);
+              break;
+            }
+            case "contentEncoding:base64": {
+              setResponseValueAndErrors(res, "contentEncoding", "base64", check.message, refs);
+              break;
+            }
+            case "pattern:zod": {
+              addPattern(res, zodPatterns.base64, check.message, refs);
+              break;
+            }
+          }
+          break;
+        }
+        case "nanoid": {
+          addPattern(res, zodPatterns.nanoid, check.message, refs);
+        }
+        case "toLowerCase":
+        case "toUpperCase":
+        case "trim":
+          break;
+        default:
+          /* @__PURE__ */ ((_) => {
+          })(check);
+      }
+    }
+  }
+  return res;
+}
+function escapeLiteralCheckValue(literal, refs) {
+  return refs.patternStrategy === "escape" ? escapeNonAlphaNumeric(literal) : literal;
+}
+var ALPHA_NUMERIC = new Set("ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz0123456789");
+function escapeNonAlphaNumeric(source) {
+  let result = "";
+  for (let i = 0; i < source.length; i++) {
+    if (!ALPHA_NUMERIC.has(source[i])) {
+      result += "\\";
+    }
+    result += source[i];
+  }
+  return result;
+}
+function addFormat(schema, value, message, refs) {
+  if (schema.format || _optionalChain([schema, 'access', _8 => _8.anyOf, 'optionalAccess', _9 => _9.some, 'call', _10 => _10((x) => x.format)])) {
+    if (!schema.anyOf) {
+      schema.anyOf = [];
+    }
+    if (schema.format) {
+      schema.anyOf.push({
+        format: schema.format,
+        ...schema.errorMessage && refs.errorMessages && {
+          errorMessage: { format: schema.errorMessage.format }
+        }
+      });
+      delete schema.format;
+      if (schema.errorMessage) {
+        delete schema.errorMessage.format;
+        if (Object.keys(schema.errorMessage).length === 0) {
+          delete schema.errorMessage;
+        }
+      }
+    }
+    schema.anyOf.push({
+      format: value,
+      ...message && refs.errorMessages && { errorMessage: { format: message } }
+    });
+  } else {
+    setResponseValueAndErrors(schema, "format", value, message, refs);
+  }
+}
+function addPattern(schema, regex, message, refs) {
+  if (schema.pattern || _optionalChain([schema, 'access', _11 => _11.allOf, 'optionalAccess', _12 => _12.some, 'call', _13 => _13((x) => x.pattern)])) {
+    if (!schema.allOf) {
+      schema.allOf = [];
+    }
+    if (schema.pattern) {
+      schema.allOf.push({
+        pattern: schema.pattern,
+        ...schema.errorMessage && refs.errorMessages && {
+          errorMessage: { pattern: schema.errorMessage.pattern }
+        }
+      });
+      delete schema.pattern;
+      if (schema.errorMessage) {
+        delete schema.errorMessage.pattern;
+        if (Object.keys(schema.errorMessage).length === 0) {
+          delete schema.errorMessage;
+        }
+      }
+    }
+    schema.allOf.push({
+      pattern: stringifyRegExpWithFlags(regex, refs),
+      ...message && refs.errorMessages && { errorMessage: { pattern: message } }
+    });
+  } else {
+    setResponseValueAndErrors(schema, "pattern", stringifyRegExpWithFlags(regex, refs), message, refs);
+  }
+}
+function stringifyRegExpWithFlags(regex, refs) {
+  if (!refs.applyRegexFlags || !regex.flags) {
+    return regex.source;
+  }
+  const flags = {
+    i: regex.flags.includes("i"),
+    m: regex.flags.includes("m"),
+    s: regex.flags.includes("s")
+    // `.` matches newlines
+  };
+  const source = flags.i ? regex.source.toLowerCase() : regex.source;
+  let pattern = "";
+  let isEscaped = false;
+  let inCharGroup = false;
+  let inCharRange = false;
+  for (let i = 0; i < source.length; i++) {
+    if (isEscaped) {
+      pattern += source[i];
+      isEscaped = false;
+      continue;
+    }
+    if (flags.i) {
+      if (inCharGroup) {
+        if (source[i].match(/[a-z]/)) {
+          if (inCharRange) {
+            pattern += source[i];
+            pattern += `${source[i - 2]}-${source[i]}`.toUpperCase();
+            inCharRange = false;
+          } else if (source[i + 1] === "-" && _optionalChain([source, 'access', _14 => _14[i + 2], 'optionalAccess', _15 => _15.match, 'call', _16 => _16(/[a-z]/)])) {
+            pattern += source[i];
+            inCharRange = true;
+          } else {
+            pattern += `${source[i]}${source[i].toUpperCase()}`;
+          }
+          continue;
+        }
+      } else if (source[i].match(/[a-z]/)) {
+        pattern += `[${source[i]}${source[i].toUpperCase()}]`;
+        continue;
+      }
+    }
+    if (flags.m) {
+      if (source[i] === "^") {
+        pattern += `(^|(?<=[\r
+]))`;
+        continue;
+      } else if (source[i] === "$") {
+        pattern += `($|(?=[\r
+]))`;
+        continue;
+      }
+    }
+    if (flags.s && source[i] === ".") {
+      pattern += inCharGroup ? `${source[i]}\r
+` : `[${source[i]}\r
+]`;
+      continue;
+    }
+    pattern += source[i];
+    if (source[i] === "\\") {
+      isEscaped = true;
+    } else if (inCharGroup && source[i] === "]") {
+      inCharGroup = false;
+    } else if (!inCharGroup && source[i] === "[") {
+      inCharGroup = true;
+    }
+  }
+  try {
+    new RegExp(pattern);
+  } catch (e) {
+    console.warn(`Could not convert regex pattern at ${refs.currentPath.join("/")} to a flag-independent form! Falling back to the flag-ignorant source`);
+    return regex.source;
+  }
+  return pattern;
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/record.js
+function parseRecordDef(def, refs) {
+  if (refs.target === "openAi") {
+    console.warn("Warning: OpenAI may not support records in schemas! Try an array of key-value pairs instead.");
+  }
+  if (refs.target === "openApi3" && _optionalChain([def, 'access', _17 => _17.keyType, 'optionalAccess', _18 => _18._def, 'access', _19 => _19.typeName]) === _zod.ZodFirstPartyTypeKind.ZodEnum) {
+    return {
+      type: "object",
+      required: def.keyType._def.values,
+      properties: def.keyType._def.values.reduce((acc, key) => ({
+        ...acc,
+        [key]: _nullishCoalesce(parseDef(def.valueType._def, {
+          ...refs,
+          currentPath: [...refs.currentPath, "properties", key]
+        }), () => ( {}))
+      }), {}),
+      additionalProperties: refs.rejectedAdditionalProperties
+    };
+  }
+  const schema = {
+    type: "object",
+    additionalProperties: _nullishCoalesce(parseDef(def.valueType._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "additionalProperties"]
+    }), () => ( refs.allowedAdditionalProperties))
+  };
+  if (refs.target === "openApi3") {
+    return schema;
+  }
+  if (_optionalChain([def, 'access', _20 => _20.keyType, 'optionalAccess', _21 => _21._def, 'access', _22 => _22.typeName]) === _zod.ZodFirstPartyTypeKind.ZodString && _optionalChain([def, 'access', _23 => _23.keyType, 'access', _24 => _24._def, 'access', _25 => _25.checks, 'optionalAccess', _26 => _26.length])) {
+    const { type, ...keyType } = parseStringDef(def.keyType._def, refs);
+    return {
+      ...schema,
+      propertyNames: keyType
+    };
+  } else if (_optionalChain([def, 'access', _27 => _27.keyType, 'optionalAccess', _28 => _28._def, 'access', _29 => _29.typeName]) === _zod.ZodFirstPartyTypeKind.ZodEnum) {
+    return {
+      ...schema,
+      propertyNames: {
+        enum: def.keyType._def.values
+      }
+    };
+  } else if (_optionalChain([def, 'access', _30 => _30.keyType, 'optionalAccess', _31 => _31._def, 'access', _32 => _32.typeName]) === _zod.ZodFirstPartyTypeKind.ZodBranded && def.keyType._def.type._def.typeName === _zod.ZodFirstPartyTypeKind.ZodString && _optionalChain([def, 'access', _33 => _33.keyType, 'access', _34 => _34._def, 'access', _35 => _35.type, 'access', _36 => _36._def, 'access', _37 => _37.checks, 'optionalAccess', _38 => _38.length])) {
+    const { type, ...keyType } = parseBrandedDef(def.keyType._def, refs);
+    return {
+      ...schema,
+      propertyNames: keyType
+    };
+  }
+  return schema;
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/map.js
+function parseMapDef(def, refs) {
+  if (refs.mapStrategy === "record") {
+    return parseRecordDef(def, refs);
+  }
+  const keys = parseDef(def.keyType._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "items", "items", "0"]
+  }) || {};
+  const values = parseDef(def.valueType._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "items", "items", "1"]
+  }) || {};
+  return {
+    type: "array",
+    maxItems: 125,
+    items: {
+      type: "array",
+      items: [keys, values],
+      minItems: 2,
+      maxItems: 2
+    }
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/nativeEnum.js
+function parseNativeEnumDef(def) {
+  const object = def.values;
+  const actualKeys = Object.keys(def.values).filter((key) => {
+    return typeof object[object[key]] !== "number";
+  });
+  const actualValues = actualKeys.map((key) => object[key]);
+  const parsedTypes = Array.from(new Set(actualValues.map((values) => typeof values)));
+  return {
+    type: parsedTypes.length === 1 ? parsedTypes[0] === "string" ? "string" : "number" : ["string", "number"],
+    enum: actualValues
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/never.js
+function parseNeverDef() {
+  return {
+    not: {}
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/null.js
+function parseNullDef(refs) {
+  return refs.target === "openApi3" ? {
+    enum: ["null"],
+    nullable: true
+  } : {
+    type: "null"
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/union.js
+var primitiveMappings = {
+  ZodString: "string",
+  ZodNumber: "number",
+  ZodBigInt: "integer",
+  ZodBoolean: "boolean",
+  ZodNull: "null"
+};
+function parseUnionDef(def, refs) {
+  if (refs.target === "openApi3")
+    return asAnyOf(def, refs);
+  const options = def.options instanceof Map ? Array.from(def.options.values()) : def.options;
+  if (options.every((x) => x._def.typeName in primitiveMappings && (!x._def.checks || !x._def.checks.length))) {
+    const types = options.reduce((types2, x) => {
+      const type = primitiveMappings[x._def.typeName];
+      return type && !types2.includes(type) ? [...types2, type] : types2;
+    }, []);
+    return {
+      type: types.length > 1 ? types : types[0]
+    };
+  } else if (options.every((x) => x._def.typeName === "ZodLiteral" && !x.description)) {
+    const types = options.reduce((acc, x) => {
+      const type = typeof x._def.value;
+      switch (type) {
+        case "string":
+        case "number":
+        case "boolean":
+          return [...acc, type];
+        case "bigint":
+          return [...acc, "integer"];
+        case "object":
+          if (x._def.value === null)
+            return [...acc, "null"];
+        case "symbol":
+        case "undefined":
+        case "function":
+        default:
+          return acc;
+      }
+    }, []);
+    if (types.length === options.length) {
+      const uniqueTypes = types.filter((x, i, a) => a.indexOf(x) === i);
+      return {
+        type: uniqueTypes.length > 1 ? uniqueTypes : uniqueTypes[0],
+        enum: options.reduce((acc, x) => {
+          return acc.includes(x._def.value) ? acc : [...acc, x._def.value];
+        }, [])
+      };
+    }
+  } else if (options.every((x) => x._def.typeName === "ZodEnum")) {
+    return {
+      type: "string",
+      enum: options.reduce((acc, x) => [
+        ...acc,
+        ...x._def.values.filter((x2) => !acc.includes(x2))
+      ], [])
+    };
+  }
+  return asAnyOf(def, refs);
+}
+var asAnyOf = (def, refs) => {
+  const anyOf = (def.options instanceof Map ? Array.from(def.options.values()) : def.options).map((x, i) => parseDef(x._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "anyOf", `${i}`]
+  })).filter((x) => !!x && (!refs.strictUnions || typeof x === "object" && Object.keys(x).length > 0));
+  return anyOf.length ? { anyOf } : void 0;
+};
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/nullable.js
+function parseNullableDef(def, refs) {
+  if (["ZodString", "ZodNumber", "ZodBigInt", "ZodBoolean", "ZodNull"].includes(def.innerType._def.typeName) && (!def.innerType._def.checks || !def.innerType._def.checks.length)) {
+    if (refs.target === "openApi3") {
+      return {
+        type: primitiveMappings[def.innerType._def.typeName],
+        nullable: true
+      };
+    }
+    return {
+      type: [
+        primitiveMappings[def.innerType._def.typeName],
+        "null"
+      ]
+    };
+  }
+  if (refs.target === "openApi3") {
+    const base2 = parseDef(def.innerType._def, {
+      ...refs,
+      currentPath: [...refs.currentPath]
+    });
+    if (base2 && "$ref" in base2)
+      return { allOf: [base2], nullable: true };
+    return base2 && { ...base2, nullable: true };
+  }
+  const base = parseDef(def.innerType._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "anyOf", "0"]
+  });
+  return base && { anyOf: [base, { type: "null" }] };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/number.js
+function parseNumberDef(def, refs) {
+  const res = {
+    type: "number"
+  };
+  if (!def.checks)
+    return res;
+  for (const check of def.checks) {
+    switch (check.kind) {
+      case "int":
+        res.type = "integer";
+        addErrorMessage(res, "type", check.message, refs);
+        break;
+      case "min":
+        if (refs.target === "jsonSchema7") {
+          if (check.inclusive) {
+            setResponseValueAndErrors(res, "minimum", check.value, check.message, refs);
+          } else {
+            setResponseValueAndErrors(res, "exclusiveMinimum", check.value, check.message, refs);
+          }
+        } else {
+          if (!check.inclusive) {
+            res.exclusiveMinimum = true;
+          }
+          setResponseValueAndErrors(res, "minimum", check.value, check.message, refs);
+        }
+        break;
+      case "max":
+        if (refs.target === "jsonSchema7") {
+          if (check.inclusive) {
+            setResponseValueAndErrors(res, "maximum", check.value, check.message, refs);
+          } else {
+            setResponseValueAndErrors(res, "exclusiveMaximum", check.value, check.message, refs);
+          }
+        } else {
+          if (!check.inclusive) {
+            res.exclusiveMaximum = true;
+          }
+          setResponseValueAndErrors(res, "maximum", check.value, check.message, refs);
+        }
+        break;
+      case "multipleOf":
+        setResponseValueAndErrors(res, "multipleOf", check.value, check.message, refs);
+        break;
+    }
+  }
+  return res;
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/object.js
+
+function parseObjectDef(def, refs) {
+  const forceOptionalIntoNullable = refs.target === "openAi";
+  const result = {
+    type: "object",
+    properties: {}
+  };
+  const required = [];
+  const shape = def.shape();
+  for (const propName in shape) {
+    let propDef = shape[propName];
+    if (propDef === void 0 || propDef._def === void 0) {
+      continue;
+    }
+    let propOptional = safeIsOptional(propDef);
+    if (propOptional && forceOptionalIntoNullable) {
+      if (propDef instanceof _zod.ZodOptional) {
+        propDef = propDef._def.innerType;
+      }
+      if (!propDef.isNullable()) {
+        propDef = propDef.nullable();
+      }
+      propOptional = false;
+    }
+    const parsedDef = parseDef(propDef._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "properties", propName],
+      propertyPath: [...refs.currentPath, "properties", propName]
+    });
+    if (parsedDef === void 0) {
+      continue;
+    }
+    result.properties[propName] = parsedDef;
+    if (!propOptional) {
+      required.push(propName);
+    }
+  }
+  if (required.length) {
+    result.required = required;
+  }
+  const additionalProperties = decideAdditionalProperties(def, refs);
+  if (additionalProperties !== void 0) {
+    result.additionalProperties = additionalProperties;
+  }
+  return result;
+}
+function decideAdditionalProperties(def, refs) {
+  if (def.catchall._def.typeName !== "ZodNever") {
+    return parseDef(def.catchall._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "additionalProperties"]
+    });
+  }
+  switch (def.unknownKeys) {
+    case "passthrough":
+      return refs.allowedAdditionalProperties;
+    case "strict":
+      return refs.rejectedAdditionalProperties;
+    case "strip":
+      return refs.removeAdditionalStrategy === "strict" ? refs.allowedAdditionalProperties : refs.rejectedAdditionalProperties;
+  }
+}
+function safeIsOptional(schema) {
+  try {
+    return schema.isOptional();
+  } catch (e2) {
+    return true;
+  }
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/optional.js
+var parseOptionalDef = (def, refs) => {
+  if (refs.currentPath.toString() === _optionalChain([refs, 'access', _39 => _39.propertyPath, 'optionalAccess', _40 => _40.toString, 'call', _41 => _41()])) {
+    return parseDef(def.innerType._def, refs);
+  }
+  const innerSchema = parseDef(def.innerType._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "anyOf", "1"]
+  });
+  return innerSchema ? {
+    anyOf: [
+      {
+        not: {}
+      },
+      innerSchema
+    ]
+  } : {};
+};
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/pipeline.js
+var parsePipelineDef = (def, refs) => {
+  if (refs.pipeStrategy === "input") {
+    return parseDef(def.in._def, refs);
+  } else if (refs.pipeStrategy === "output") {
+    return parseDef(def.out._def, refs);
+  }
+  const a = parseDef(def.in._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "allOf", "0"]
+  });
+  const b = parseDef(def.out._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "allOf", a ? "1" : "0"]
+  });
+  return {
+    allOf: [a, b].filter((x) => x !== void 0)
+  };
+};
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/promise.js
+function parsePromiseDef(def, refs) {
+  return parseDef(def.type._def, refs);
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/set.js
+function parseSetDef(def, refs) {
+  const items = parseDef(def.valueType._def, {
+    ...refs,
+    currentPath: [...refs.currentPath, "items"]
+  });
+  const schema = {
+    type: "array",
+    uniqueItems: true,
+    items
+  };
+  if (def.minSize) {
+    setResponseValueAndErrors(schema, "minItems", def.minSize.value, def.minSize.message, refs);
+  }
+  if (def.maxSize) {
+    setResponseValueAndErrors(schema, "maxItems", def.maxSize.value, def.maxSize.message, refs);
+  }
+  return schema;
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/tuple.js
+function parseTupleDef(def, refs) {
+  if (def.rest) {
+    return {
+      type: "array",
+      minItems: def.items.length,
+      items: def.items.map((x, i) => parseDef(x._def, {
+        ...refs,
+        currentPath: [...refs.currentPath, "items", `${i}`]
+      })).reduce((acc, x) => x === void 0 ? acc : [...acc, x], []),
+      additionalItems: parseDef(def.rest._def, {
+        ...refs,
+        currentPath: [...refs.currentPath, "additionalItems"]
+      })
+    };
+  } else {
+    return {
+      type: "array",
+      minItems: def.items.length,
+      maxItems: def.items.length,
+      items: def.items.map((x, i) => parseDef(x._def, {
+        ...refs,
+        currentPath: [...refs.currentPath, "items", `${i}`]
+      })).reduce((acc, x) => x === void 0 ? acc : [...acc, x], [])
+    };
+  }
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/undefined.js
+function parseUndefinedDef() {
+  return {
+    not: {}
+  };
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/unknown.js
+function parseUnknownDef() {
+  return {};
+}
+
+// node_modules/zod-to-json-schema/dist/esm/parsers/readonly.js
+var parseReadonlyDef = (def, refs) => {
+  return parseDef(def.innerType._def, refs);
+};
+
+// node_modules/zod-to-json-schema/dist/esm/selectParser.js
+var selectParser = (def, typeName, refs) => {
+  switch (typeName) {
+    case _zod.ZodFirstPartyTypeKind.ZodString:
+      return parseStringDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodNumber:
+      return parseNumberDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodObject:
+      return parseObjectDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodBigInt:
+      return parseBigintDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodBoolean:
+      return parseBooleanDef();
+    case _zod.ZodFirstPartyTypeKind.ZodDate:
+      return parseDateDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodUndefined:
+      return parseUndefinedDef();
+    case _zod.ZodFirstPartyTypeKind.ZodNull:
+      return parseNullDef(refs);
+    case _zod.ZodFirstPartyTypeKind.ZodArray:
+      return parseArrayDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodUnion:
+    case _zod.ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
+      return parseUnionDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodIntersection:
+      return parseIntersectionDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodTuple:
+      return parseTupleDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodRecord:
+      return parseRecordDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodLiteral:
+      return parseLiteralDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodEnum:
+      return parseEnumDef(def);
+    case _zod.ZodFirstPartyTypeKind.ZodNativeEnum:
+      return parseNativeEnumDef(def);
+    case _zod.ZodFirstPartyTypeKind.ZodNullable:
+      return parseNullableDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodOptional:
+      return parseOptionalDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodMap:
+      return parseMapDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodSet:
+      return parseSetDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodLazy:
+      return () => def.getter()._def;
+    case _zod.ZodFirstPartyTypeKind.ZodPromise:
+      return parsePromiseDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodNaN:
+    case _zod.ZodFirstPartyTypeKind.ZodNever:
+      return parseNeverDef();
+    case _zod.ZodFirstPartyTypeKind.ZodEffects:
+      return parseEffectsDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodAny:
+      return parseAnyDef();
+    case _zod.ZodFirstPartyTypeKind.ZodUnknown:
+      return parseUnknownDef();
+    case _zod.ZodFirstPartyTypeKind.ZodDefault:
+      return parseDefaultDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodBranded:
+      return parseBrandedDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodReadonly:
+      return parseReadonlyDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodCatch:
+      return parseCatchDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodPipeline:
+      return parsePipelineDef(def, refs);
+    case _zod.ZodFirstPartyTypeKind.ZodFunction:
+    case _zod.ZodFirstPartyTypeKind.ZodVoid:
+    case _zod.ZodFirstPartyTypeKind.ZodSymbol:
+      return void 0;
+    default:
+      return /* @__PURE__ */ ((_) => void 0)(typeName);
+  }
+};
+
+// node_modules/zod-to-json-schema/dist/esm/parseDef.js
+function parseDef(def, refs, forceResolution = false) {
+  const seenItem = refs.seen.get(def);
+  if (refs.override) {
+    const overrideResult = _optionalChain([refs, 'access', _42 => _42.override, 'optionalCall', _43 => _43(def, refs, seenItem, forceResolution)]);
+    if (overrideResult !== ignoreOverride) {
+      return overrideResult;
+    }
+  }
+  if (seenItem && !forceResolution) {
+    const seenSchema = get$ref(seenItem, refs);
+    if (seenSchema !== void 0) {
+      return seenSchema;
+    }
+  }
+  const newItem = { def, path: refs.currentPath, jsonSchema: void 0 };
+  refs.seen.set(def, newItem);
+  const jsonSchemaOrGetter = selectParser(def, def.typeName, refs);
+  const jsonSchema = typeof jsonSchemaOrGetter === "function" ? parseDef(jsonSchemaOrGetter(), refs) : jsonSchemaOrGetter;
+  if (jsonSchema) {
+    addMeta(def, refs, jsonSchema);
+  }
+  if (refs.postProcess) {
+    const postProcessResult = refs.postProcess(jsonSchema, def, refs);
+    newItem.jsonSchema = jsonSchema;
+    return postProcessResult;
+  }
+  newItem.jsonSchema = jsonSchema;
+  return jsonSchema;
+}
+var get$ref = (item, refs) => {
+  switch (refs.$refStrategy) {
+    case "root":
+      return { $ref: item.path.join("/") };
+    case "relative":
+      return { $ref: getRelativePath(refs.currentPath, item.path) };
+    case "none":
+    case "seen": {
+      if (item.path.length < refs.currentPath.length && item.path.every((value, index) => refs.currentPath[index] === value)) {
+        console.warn(`Recursive reference detected at ${refs.currentPath.join("/")}! Defaulting to any`);
+        return {};
+      }
+      return refs.$refStrategy === "seen" ? {} : void 0;
+    }
+  }
+};
+var getRelativePath = (pathA, pathB) => {
+  let i = 0;
+  for (; i < pathA.length && i < pathB.length; i++) {
+    if (pathA[i] !== pathB[i])
+      break;
+  }
+  return [(pathA.length - i).toString(), ...pathB.slice(i)].join("/");
+};
+var addMeta = (def, refs, jsonSchema) => {
+  if (def.description) {
+    jsonSchema.description = def.description;
+    if (refs.markdownDescription) {
+      jsonSchema.markdownDescription = def.description;
+    }
+  }
+  return jsonSchema;
+};
+
+// node_modules/zod-to-json-schema/dist/esm/zodToJsonSchema.js
+var zodToJsonSchema = (schema, options) => {
+  const refs = getRefs(options);
+  const definitions = typeof options === "object" && options.definitions ? Object.entries(options.definitions).reduce((acc, [name2, schema2]) => ({
+    ...acc,
+    [name2]: _nullishCoalesce(parseDef(schema2._def, {
+      ...refs,
+      currentPath: [...refs.basePath, refs.definitionPath, name2]
+    }, true), () => ( {}))
+  }), {}) : void 0;
+  const name = typeof options === "string" ? options : _optionalChain([options, 'optionalAccess', _44 => _44.nameStrategy]) === "title" ? void 0 : _optionalChain([options, 'optionalAccess', _45 => _45.name]);
+  const main2 = _nullishCoalesce(parseDef(schema._def, name === void 0 ? refs : {
+    ...refs,
+    currentPath: [...refs.basePath, refs.definitionPath, name]
+  }, false), () => ( {}));
+  const title = typeof options === "object" && options.name !== void 0 && options.nameStrategy === "title" ? options.name : void 0;
+  if (title !== void 0) {
+    main2.title = title;
+  }
+  const combined = name === void 0 ? definitions ? {
+    ...main2,
+    [refs.definitionPath]: definitions
+  } : main2 : {
+    $ref: [
+      ...refs.$refStrategy === "relative" ? [] : refs.basePath,
+      refs.definitionPath,
+      name
+    ].join("/"),
+    [refs.definitionPath]: {
+      ...definitions,
+      [name]: main2
+    }
+  };
+  if (refs.target === "jsonSchema7") {
+    combined.$schema = "http://json-schema.org/draft-07/schema#";
+  } else if (refs.target === "jsonSchema2019-09" || refs.target === "openAi") {
+    combined.$schema = "https://json-schema.org/draft/2019-09/schema#";
+  }
+  if (refs.target === "openAi" && ("anyOf" in combined || "oneOf" in combined || "allOf" in combined || "type" in combined && Array.isArray(combined.type))) {
+    console.warn("Warning: OpenAI may not support schemas with unions as roots! Try wrapping it in an object property.");
+  }
+  return combined;
+};
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp.js
+
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/completable.js
+
+var McpZodTypeKind;
+(function(McpZodTypeKind2) {
+  McpZodTypeKind2["Completable"] = "McpCompletable";
+})(McpZodTypeKind || (McpZodTypeKind = {}));
+var Completable = class extends _zod.ZodType {
+  _parse(input) {
+    const { ctx } = this._processInputParams(input);
+    const data = ctx.data;
+    return this._def.type._parse({
+      data,
+      path: ctx.path,
+      parent: ctx
+    });
+  }
+  unwrap() {
+    return this._def.type;
+  }
+};
+Completable.create = (type, params) => {
+  return new Completable({
+    type,
+    typeName: McpZodTypeKind.Completable,
+    complete: params.complete,
+    ...processCreateParams(params)
+  });
+};
+function processCreateParams(params) {
+  if (!params)
+    return {};
+  const { errorMap, invalid_type_error, required_error, description } = params;
+  if (errorMap && (invalid_type_error || required_error)) {
+    throw new Error(`Can't use "invalid_type_error" or "required_error" in conjunction with custom error map.`);
+  }
+  if (errorMap)
+    return { errorMap, description };
+  const customMap = (iss, ctx) => {
+    var _a, _b;
+    const { message } = params;
+    if (iss.code === "invalid_enum_value") {
+      return { message: message !== null && message !== void 0 ? message : ctx.defaultError };
+    }
+    if (typeof ctx.data === "undefined") {
+      return { message: (_a = message !== null && message !== void 0 ? message : required_error) !== null && _a !== void 0 ? _a : ctx.defaultError };
+    }
+    if (iss.code !== "invalid_type")
+      return { message: ctx.defaultError };
+    return { message: (_b = message !== null && message !== void 0 ? message : invalid_type_error) !== null && _b !== void 0 ? _b : ctx.defaultError };
+  };
+  return { errorMap: customMap, description };
+}
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/shared/uriTemplate.js
+var MAX_TEMPLATE_LENGTH = 1e6;
+var MAX_VARIABLE_LENGTH = 1e6;
+var MAX_TEMPLATE_EXPRESSIONS = 1e4;
+var MAX_REGEX_LENGTH = 1e6;
+var UriTemplate = class _UriTemplate {
+  /**
+   * Returns true if the given string contains any URI template expressions.
+   * A template expression is a sequence of characters enclosed in curly braces,
+   * like {foo} or {?bar}.
+   */
+  static isTemplate(str) {
+    return /\{[^}\s]+\}/.test(str);
+  }
+  static validateLength(str, max, context) {
+    if (str.length > max) {
+      throw new Error(`${context} exceeds maximum length of ${max} characters (got ${str.length})`);
+    }
+  }
+  get variableNames() {
+    return this.parts.flatMap((part) => typeof part === "string" ? [] : part.names);
+  }
+  constructor(template) {
+    _UriTemplate.validateLength(template, MAX_TEMPLATE_LENGTH, "Template");
+    this.template = template;
+    this.parts = this.parse(template);
+  }
+  toString() {
+    return this.template;
+  }
+  parse(template) {
+    const parts = [];
+    let currentText = "";
+    let i = 0;
+    let expressionCount = 0;
+    while (i < template.length) {
+      if (template[i] === "{") {
+        if (currentText) {
+          parts.push(currentText);
+          currentText = "";
+        }
+        const end = template.indexOf("}", i);
+        if (end === -1)
+          throw new Error("Unclosed template expression");
+        expressionCount++;
+        if (expressionCount > MAX_TEMPLATE_EXPRESSIONS) {
+          throw new Error(`Template contains too many expressions (max ${MAX_TEMPLATE_EXPRESSIONS})`);
+        }
+        const expr = template.slice(i + 1, end);
+        const operator = this.getOperator(expr);
+        const exploded = expr.includes("*");
+        const names = this.getNames(expr);
+        const name = names[0];
+        for (const name2 of names) {
+          _UriTemplate.validateLength(name2, MAX_VARIABLE_LENGTH, "Variable name");
+        }
+        parts.push({ name, operator, names, exploded });
+        i = end + 1;
+      } else {
+        currentText += template[i];
+        i++;
+      }
+    }
+    if (currentText) {
+      parts.push(currentText);
+    }
+    return parts;
+  }
+  getOperator(expr) {
+    const operators = ["+", "#", ".", "/", "?", "&"];
+    return operators.find((op) => expr.startsWith(op)) || "";
+  }
+  getNames(expr) {
+    const operator = this.getOperator(expr);
+    return expr.slice(operator.length).split(",").map((name) => name.replace("*", "").trim()).filter((name) => name.length > 0);
+  }
+  encodeValue(value, operator) {
+    _UriTemplate.validateLength(value, MAX_VARIABLE_LENGTH, "Variable value");
+    if (operator === "+" || operator === "#") {
+      return encodeURI(value);
+    }
+    return encodeURIComponent(value);
+  }
+  expandPart(part, variables) {
+    if (part.operator === "?" || part.operator === "&") {
+      const pairs = part.names.map((name) => {
+        const value2 = variables[name];
+        if (value2 === void 0)
+          return "";
+        const encoded2 = Array.isArray(value2) ? value2.map((v) => this.encodeValue(v, part.operator)).join(",") : this.encodeValue(value2.toString(), part.operator);
+        return `${name}=${encoded2}`;
+      }).filter((pair) => pair.length > 0);
+      if (pairs.length === 0)
+        return "";
+      const separator = part.operator === "?" ? "?" : "&";
+      return separator + pairs.join("&");
+    }
+    if (part.names.length > 1) {
+      const values2 = part.names.map((name) => variables[name]).filter((v) => v !== void 0);
+      if (values2.length === 0)
+        return "";
+      return values2.map((v) => Array.isArray(v) ? v[0] : v).join(",");
+    }
+    const value = variables[part.name];
+    if (value === void 0)
+      return "";
+    const values = Array.isArray(value) ? value : [value];
+    const encoded = values.map((v) => this.encodeValue(v, part.operator));
+    switch (part.operator) {
+      case "":
+        return encoded.join(",");
+      case "+":
+        return encoded.join(",");
+      case "#":
+        return "#" + encoded.join(",");
+      case ".":
+        return "." + encoded.join(".");
+      case "/":
+        return "/" + encoded.join("/");
+      default:
+        return encoded.join(",");
+    }
+  }
+  expand(variables) {
+    let result = "";
+    let hasQueryParam = false;
+    for (const part of this.parts) {
+      if (typeof part === "string") {
+        result += part;
+        continue;
+      }
+      const expanded = this.expandPart(part, variables);
+      if (!expanded)
+        continue;
+      if ((part.operator === "?" || part.operator === "&") && hasQueryParam) {
+        result += expanded.replace("?", "&");
+      } else {
+        result += expanded;
+      }
+      if (part.operator === "?" || part.operator === "&") {
+        hasQueryParam = true;
+      }
+    }
+    return result;
+  }
+  escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+  partToRegExp(part) {
+    const patterns = [];
+    for (const name2 of part.names) {
+      _UriTemplate.validateLength(name2, MAX_VARIABLE_LENGTH, "Variable name");
+    }
+    if (part.operator === "?" || part.operator === "&") {
+      for (let i = 0; i < part.names.length; i++) {
+        const name2 = part.names[i];
+        const prefix = i === 0 ? "\\" + part.operator : "&";
+        patterns.push({
+          pattern: prefix + this.escapeRegExp(name2) + "=([^&]+)",
+          name: name2
+        });
+      }
+      return patterns;
+    }
+    let pattern;
+    const name = part.name;
+    switch (part.operator) {
+      case "":
+        pattern = part.exploded ? "([^/]+(?:,[^/]+)*)" : "([^/,]+)";
+        break;
+      case "+":
+      case "#":
+        pattern = "(.+)";
+        break;
+      case ".":
+        pattern = "\\.([^/,]+)";
+        break;
+      case "/":
+        pattern = "/" + (part.exploded ? "([^/]+(?:,[^/]+)*)" : "([^/,]+)");
+        break;
+      default:
+        pattern = "([^/]+)";
+    }
+    patterns.push({ pattern, name });
+    return patterns;
+  }
+  match(uri) {
+    _UriTemplate.validateLength(uri, MAX_TEMPLATE_LENGTH, "URI");
+    let pattern = "^";
+    const names = [];
+    for (const part of this.parts) {
+      if (typeof part === "string") {
+        pattern += this.escapeRegExp(part);
+      } else {
+        const patterns = this.partToRegExp(part);
+        for (const { pattern: partPattern, name } of patterns) {
+          pattern += partPattern;
+          names.push({ name, exploded: part.exploded });
+        }
+      }
+    }
+    pattern += "$";
+    _UriTemplate.validateLength(pattern, MAX_REGEX_LENGTH, "Generated regex pattern");
+    const regex = new RegExp(pattern);
+    const match = uri.match(regex);
+    if (!match)
+      return null;
+    const result = {};
+    for (let i = 0; i < names.length; i++) {
+      const { name, exploded } = names[i];
+      const value = match[i + 1];
+      const cleanName = name.replace("*", "");
+      if (exploded && value.includes(",")) {
+        result[cleanName] = value.split(",");
+      } else {
+        result[cleanName] = value;
+      }
+    }
+    return result;
+  }
+};
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp.js
+var McpServer = class {
+  constructor(serverInfo, options) {
+    this._registeredResources = {};
+    this._registeredResourceTemplates = {};
+    this._registeredTools = {};
+    this._registeredPrompts = {};
+    this._toolHandlersInitialized = false;
+    this._completionHandlerInitialized = false;
+    this._resourceHandlersInitialized = false;
+    this._promptHandlersInitialized = false;
+    this.server = new Server(serverInfo, options);
+  }
+  /**
+   * Attaches to the given transport, starts it, and starts listening for messages.
+   *
+   * The `server` object assumes ownership of the Transport, replacing any callbacks that have already been set, and expects that it is the only user of the Transport instance going forward.
+   */
+  async connect(transport) {
+    return await this.server.connect(transport);
+  }
+  /**
+   * Closes the connection.
+   */
+  async close() {
+    await this.server.close();
+  }
+  setToolRequestHandlers() {
+    if (this._toolHandlersInitialized) {
+      return;
+    }
+    this.server.assertCanSetRequestHandler(ListToolsRequestSchema.shape.method.value);
+    this.server.assertCanSetRequestHandler(CallToolRequestSchema.shape.method.value);
+    this.server.registerCapabilities({
+      tools: {}
+    });
+    this.server.setRequestHandler(ListToolsRequestSchema, () => ({
+      tools: Object.entries(this._registeredTools).map(([name, tool]) => {
+        return {
+          name,
+          description: tool.description,
+          inputSchema: tool.inputSchema ? zodToJsonSchema(tool.inputSchema, {
+            strictUnions: true
+          }) : EMPTY_OBJECT_JSON_SCHEMA
+        };
+      })
+    }));
+    this.server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
+      const tool = this._registeredTools[request.params.name];
+      if (!tool) {
+        throw new McpError(ErrorCode.InvalidParams, `Tool ${request.params.name} not found`);
+      }
+      if (tool.inputSchema) {
+        const parseResult = await tool.inputSchema.safeParseAsync(request.params.arguments);
+        if (!parseResult.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Invalid arguments for tool ${request.params.name}: ${parseResult.error.message}`);
+        }
+        const args = parseResult.data;
+        const cb = tool.callback;
+        try {
+          return await Promise.resolve(cb(args, extra));
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: error instanceof Error ? error.message : String(error)
+              }
+            ],
+            isError: true
+          };
+        }
+      } else {
+        const cb = tool.callback;
+        try {
+          return await Promise.resolve(cb(extra));
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: error instanceof Error ? error.message : String(error)
+              }
+            ],
+            isError: true
+          };
+        }
+      }
+    });
+    this._toolHandlersInitialized = true;
+  }
+  setCompletionRequestHandler() {
+    if (this._completionHandlerInitialized) {
+      return;
+    }
+    this.server.assertCanSetRequestHandler(CompleteRequestSchema.shape.method.value);
+    this.server.setRequestHandler(CompleteRequestSchema, async (request) => {
+      switch (request.params.ref.type) {
+        case "ref/prompt":
+          return this.handlePromptCompletion(request, request.params.ref);
+        case "ref/resource":
+          return this.handleResourceCompletion(request, request.params.ref);
+        default:
+          throw new McpError(ErrorCode.InvalidParams, `Invalid completion reference: ${request.params.ref}`);
+      }
+    });
+    this._completionHandlerInitialized = true;
+  }
+  async handlePromptCompletion(request, ref) {
+    const prompt = this._registeredPrompts[ref.name];
+    if (!prompt) {
+      throw new McpError(ErrorCode.InvalidParams, `Prompt ${request.params.ref.name} not found`);
+    }
+    if (!prompt.argsSchema) {
+      return EMPTY_COMPLETION_RESULT;
+    }
+    const field = prompt.argsSchema.shape[request.params.argument.name];
+    if (!(field instanceof Completable)) {
+      return EMPTY_COMPLETION_RESULT;
+    }
+    const def = field._def;
+    const suggestions = await def.complete(request.params.argument.value);
+    return createCompletionResult(suggestions);
+  }
+  async handleResourceCompletion(request, ref) {
+    const template = Object.values(this._registeredResourceTemplates).find((t) => t.resourceTemplate.uriTemplate.toString() === ref.uri);
+    if (!template) {
+      if (this._registeredResources[ref.uri]) {
+        return EMPTY_COMPLETION_RESULT;
+      }
+      throw new McpError(ErrorCode.InvalidParams, `Resource template ${request.params.ref.uri} not found`);
+    }
+    const completer = template.resourceTemplate.completeCallback(request.params.argument.name);
+    if (!completer) {
+      return EMPTY_COMPLETION_RESULT;
+    }
+    const suggestions = await completer(request.params.argument.value);
+    return createCompletionResult(suggestions);
+  }
+  setResourceRequestHandlers() {
+    if (this._resourceHandlersInitialized) {
+      return;
+    }
+    this.server.assertCanSetRequestHandler(ListResourcesRequestSchema.shape.method.value);
+    this.server.assertCanSetRequestHandler(ListResourceTemplatesRequestSchema.shape.method.value);
+    this.server.assertCanSetRequestHandler(ReadResourceRequestSchema.shape.method.value);
+    this.server.registerCapabilities({
+      resources: {}
+    });
+    this.server.setRequestHandler(ListResourcesRequestSchema, async (request, extra) => {
+      const resources = Object.entries(this._registeredResources).map(([uri, resource]) => ({
+        uri,
+        name: resource.name,
+        ...resource.metadata
+      }));
+      const templateResources = [];
+      for (const template of Object.values(this._registeredResourceTemplates)) {
+        if (!template.resourceTemplate.listCallback) {
+          continue;
+        }
+        const result = await template.resourceTemplate.listCallback(extra);
+        for (const resource of result.resources) {
+          templateResources.push({
+            ...resource,
+            ...template.metadata
+          });
+        }
+      }
+      return { resources: [...resources, ...templateResources] };
+    });
+    this.server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
+      const resourceTemplates = Object.entries(this._registeredResourceTemplates).map(([name, template]) => ({
+        name,
+        uriTemplate: template.resourceTemplate.uriTemplate.toString(),
+        ...template.metadata
+      }));
+      return { resourceTemplates };
+    });
+    this.server.setRequestHandler(ReadResourceRequestSchema, async (request, extra) => {
+      const uri = new URL(request.params.uri);
+      const resource = this._registeredResources[uri.toString()];
+      if (resource) {
+        return resource.readCallback(uri, extra);
+      }
+      for (const template of Object.values(this._registeredResourceTemplates)) {
+        const variables = template.resourceTemplate.uriTemplate.match(uri.toString());
+        if (variables) {
+          return template.readCallback(uri, variables, extra);
+        }
+      }
+      throw new McpError(ErrorCode.InvalidParams, `Resource ${uri} not found`);
+    });
+    this.setCompletionRequestHandler();
+    this._resourceHandlersInitialized = true;
+  }
+  setPromptRequestHandlers() {
+    if (this._promptHandlersInitialized) {
+      return;
+    }
+    this.server.assertCanSetRequestHandler(ListPromptsRequestSchema.shape.method.value);
+    this.server.assertCanSetRequestHandler(GetPromptRequestSchema.shape.method.value);
+    this.server.registerCapabilities({
+      prompts: {}
+    });
+    this.server.setRequestHandler(ListPromptsRequestSchema, () => ({
+      prompts: Object.entries(this._registeredPrompts).map(([name, prompt]) => {
+        return {
+          name,
+          description: prompt.description,
+          arguments: prompt.argsSchema ? promptArgumentsFromSchema(prompt.argsSchema) : void 0
+        };
+      })
+    }));
+    this.server.setRequestHandler(GetPromptRequestSchema, async (request, extra) => {
+      const prompt = this._registeredPrompts[request.params.name];
+      if (!prompt) {
+        throw new McpError(ErrorCode.InvalidParams, `Prompt ${request.params.name} not found`);
+      }
+      if (prompt.argsSchema) {
+        const parseResult = await prompt.argsSchema.safeParseAsync(request.params.arguments);
+        if (!parseResult.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Invalid arguments for prompt ${request.params.name}: ${parseResult.error.message}`);
+        }
+        const args = parseResult.data;
+        const cb = prompt.callback;
+        return await Promise.resolve(cb(args, extra));
+      } else {
+        const cb = prompt.callback;
+        return await Promise.resolve(cb(extra));
+      }
+    });
+    this.setCompletionRequestHandler();
+    this._promptHandlersInitialized = true;
+  }
+  resource(name, uriOrTemplate, ...rest) {
+    let metadata;
+    if (typeof rest[0] === "object") {
+      metadata = rest.shift();
+    }
+    const readCallback = rest[0];
+    if (typeof uriOrTemplate === "string") {
+      if (this._registeredResources[uriOrTemplate]) {
+        throw new Error(`Resource ${uriOrTemplate} is already registered`);
+      }
+      this._registeredResources[uriOrTemplate] = {
+        name,
+        metadata,
+        readCallback
+      };
+    } else {
+      if (this._registeredResourceTemplates[name]) {
+        throw new Error(`Resource template ${name} is already registered`);
+      }
+      this._registeredResourceTemplates[name] = {
+        resourceTemplate: uriOrTemplate,
+        metadata,
+        readCallback
+      };
+    }
+    this.setResourceRequestHandlers();
+  }
+  tool(name, ...rest) {
+    if (this._registeredTools[name]) {
+      throw new Error(`Tool ${name} is already registered`);
+    }
+    let description;
+    if (typeof rest[0] === "string") {
+      description = rest.shift();
+    }
+    let paramsSchema;
+    if (rest.length > 1) {
+      paramsSchema = rest.shift();
+    }
+    const cb = rest[0];
+    this._registeredTools[name] = {
+      description,
+      inputSchema: paramsSchema === void 0 ? void 0 : _zod.z.object(paramsSchema),
+      callback: cb
+    };
+    this.setToolRequestHandlers();
+  }
+  prompt(name, ...rest) {
+    if (this._registeredPrompts[name]) {
+      throw new Error(`Prompt ${name} is already registered`);
+    }
+    let description;
+    if (typeof rest[0] === "string") {
+      description = rest.shift();
+    }
+    let argsSchema;
+    if (rest.length > 1) {
+      argsSchema = rest.shift();
+    }
+    const cb = rest[0];
+    this._registeredPrompts[name] = {
+      description,
+      argsSchema: argsSchema === void 0 ? void 0 : _zod.z.object(argsSchema),
+      callback: cb
+    };
+    this.setPromptRequestHandlers();
+  }
+};
+var ResourceTemplate = class {
+  constructor(uriTemplate, _callbacks) {
+    this._callbacks = _callbacks;
+    this._uriTemplate = typeof uriTemplate === "string" ? new UriTemplate(uriTemplate) : uriTemplate;
+  }
+  /**
+   * Gets the URI template pattern.
+   */
+  get uriTemplate() {
+    return this._uriTemplate;
+  }
+  /**
+   * Gets the list callback, if one was provided.
+   */
+  get listCallback() {
+    return this._callbacks.list;
+  }
+  /**
+   * Gets the callback for completing a specific URI template variable, if one was provided.
+   */
+  completeCallback(variable) {
+    var _a;
+    return (_a = this._callbacks.complete) === null || _a === void 0 ? void 0 : _a[variable];
+  }
+};
+var EMPTY_OBJECT_JSON_SCHEMA = {
+  type: "object"
+};
+function promptArgumentsFromSchema(schema) {
+  return Object.entries(schema.shape).map(([name, field]) => ({
+    name,
+    description: field.description,
+    required: !field.isOptional()
+  }));
+}
+function createCompletionResult(suggestions) {
+  return {
+    completion: {
+      values: suggestions.slice(0, 100),
+      total: suggestions.length,
+      hasMore: suggestions.length > 100
+    }
+  };
+}
+var EMPTY_COMPLETION_RESULT = {
+  completion: {
+    values: [],
+    hasMore: false
+  }
+};
 
 // src/server/umbraco-mcp-server.ts
-var _mcpjs = require('@modelcontextprotocol/sdk/server/mcp.js');
 var UmbracoMcpServer = (_class = class _UmbracoMcpServer {
   static __initStatic() {this.instance = null}
   constructor() {
   }
   static GetServer() {
     if (_UmbracoMcpServer.instance === null) {
-      _UmbracoMcpServer.instance = new (0, _mcpjs.McpServer)({
+      _UmbracoMcpServer.instance = new McpServer({
         name: "Umbraco Server",
         version: "1.0.0",
         capabilities: {
@@ -4109,7 +7318,7 @@ var CreateUmbracoTool = (name, description, schema, handler) => () => ({
 // src/api/umbraco/management/umbracoManagementAPI.zod.ts
 
 
-var _zod = require('zod');
+
 var FileLike = class {
   constructor(name, size, type) {
     this.name = name;
@@ -9515,26 +12724,6 @@ var get_cultures_default = GetCulturesTool;
 // src/tools/culture/index.ts
 var CultureTools = [get_cultures_default];
 
-// src/tools/data-types/get/get-root.ts
-var GetDataTypeRootTool = CreateUmbracoTool(
-  "get-data-type-root",
-  "Gets the root level of the data type tree.",
-  getTreeDataTypeRootQueryParams.shape,
-  async (params) => {
-    const client = UmbracoManagementClient2.getClient();
-    var response = await client.getTreeDataTypeRoot(params);
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(response)
-        }
-      ]
-    };
-  }
-);
-var get_root_default = GetDataTypeRootTool;
-
 // src/tools/data-types/post/create-data-type.ts
 var CreateDataTypeTool = CreateUmbracoTool(
   "create-data-type",
@@ -9602,7 +12791,7 @@ var delete_data_type_default = DeleteDataTypeTool;
 // src/tools/data-types/get/find-data-type.ts
 var FindDataTypeTool = CreateUmbracoTool(
   "find-data-type",
-  "Finds a data type by Id or name",
+  "Finds a data type by Id or Name",
   getFilterDataTypeQueryParams.shape,
   async (model) => {
     try {
@@ -9646,12 +12835,7 @@ var GetDataTypeTool = CreateUmbracoTool(
             type: "text",
             text: JSON.stringify(response)
           }
-        ],
-        resource: {
-          type: "data-type",
-          ...response,
-          uri: `${process.env.UMBRACO_BASE_URL}/umbraco/section/settings/workspace/data-type/edit/${response.id}`
-        }
+        ]
       };
     } catch (error) {
       console.error("Error creating data type:", error);
@@ -9936,25 +13120,169 @@ var GetDataTypeFolderTool = CreateUmbracoTool(
 );
 var get_folder_default = GetDataTypeFolderTool;
 
-// src/tools/data-types/get/get-search.ts
+// src/tools/data-types/items/get/get-search.ts
 var GetDataTypeSearchTool = CreateUmbracoTool(
   "get-data-type-search",
-  "Searches the data type tree for a data type or a folder.",
-  getTreeDataTypeRootQueryParams.shape,
+  "Searches the data type tree for a data type by name. It does NOT allow for searching for data type folders.",
+  getItemDataTypeSearchQueryParams.shape,
   async (params) => {
-    const client = UmbracoManagementClient2.getClient();
-    var response = await client.getItemDataTypeSearch(params);
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(response)
-        }
-      ]
-    };
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getItemDataTypeSearch(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error searching data type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
   }
 );
 var get_search_default = GetDataTypeSearchTool;
+
+// src/tools/data-types/folders/put/update-folder.ts
+
+var UpdateDataTypeFolderTool = CreateUmbracoTool(
+  "update-data-type-folder",
+  "Updates a data type folder by Id",
+  {
+    id: putDataTypeFolderByIdParams.shape.id,
+    data: _zod.z.object(putDataTypeFolderByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.putDataTypeFolderById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating data type folder:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_folder_default = UpdateDataTypeFolderTool;
+
+// src/tools/data-types/items/get/get-root.ts
+var GetDataTypeRootTool = CreateUmbracoTool(
+  "get-data-type-root",
+  "Gets the root level of the data type and data type folders in the tree.",
+  getTreeDataTypeRootQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDataTypeRoot(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting data type root:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_root_default = GetDataTypeRootTool;
+
+// src/tools/data-types/items/get/get-children.ts
+var GetDataTypeChildrenTool = CreateUmbracoTool(
+  "get-data-type-children",
+  "Gets the children data types or data type folders by the parent id",
+  getTreeDataTypeChildrenQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDataTypeChildren(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting data type children:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_children_default = GetDataTypeChildrenTool;
+
+// src/tools/data-types/items/get/get-ancestors.ts
+var GetDataTypeAncestorsTool = CreateUmbracoTool(
+  "get-data-type-ancestors",
+  "Gets the ancestors of a data type by Id",
+  getTreeDataTypeAncestorsQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDataTypeAncestors(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting data type ancestors:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_ancestors_default = GetDataTypeAncestorsTool;
 
 // src/tools/data-types/index.ts
 var DataTypeTools = [
@@ -9971,7 +13299,10 @@ var DataTypeTools = [
   get_references_data_type_default,
   create_folder_default,
   delete_folder_default,
-  get_folder_default
+  get_folder_default,
+  update_folder_default,
+  get_children_default,
+  get_ancestors_default
 ];
 
 // src/tools/dictionary/delete/delete-dictionary-item.ts
@@ -10138,13 +13469,149 @@ var UpdateDictionaryItemTool = CreateUmbracoTool(
 );
 var update_dictionary_item_default = UpdateDictionaryItemTool;
 
+// src/tools/dictionary/put/move-dictionary-item.ts
+
+var MoveDictionaryItemTool = CreateUmbracoTool(
+  "move-dictionary-item",
+  "Moves a dictionary item by Id",
+  {
+    id: putDictionaryByIdMoveParams.shape.id,
+    data: _zod.z.object(putDictionaryByIdMoveBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.putDictionaryByIdMove(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error moving dictionary item:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var move_dictionary_item_default = MoveDictionaryItemTool;
+
+// src/tools/dictionary/items/get/get-root.ts
+var GetDictionaryRootTool = CreateUmbracoTool(
+  "get-dictionary-root",
+  "Gets the root level of the dictionary tree",
+  getTreeDictionaryRootQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDictionaryRoot(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting dictionary root:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_root_default2 = GetDictionaryRootTool;
+
+// src/tools/dictionary/items/get/get-children.ts
+var GetDictionaryChildrenTool = CreateUmbracoTool(
+  "get-dictionary-children",
+  "Gets the children of a dictionary item by Id",
+  getTreeDictionaryChildrenQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDictionaryChildren(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting dictionary children:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_children_default2 = GetDictionaryChildrenTool;
+
+// src/tools/dictionary/items/get/get-ancestors.ts
+var GetDictionaryAncestorsTool = CreateUmbracoTool(
+  "get-dictionary-ancestors",
+  "Gets the ancestors of a dictionary item by Id",
+  getTreeDictionaryAncestorsQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDictionaryAncestors(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting dictionary ancestors:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_ancestors_default2 = GetDictionaryAncestorsTool;
+
 // src/tools/dictionary/index.ts
 var DictionaryTools = [
   get_dictionary_item_default,
   find_dictionary_item_default,
   create_dictionary_item_default,
   delete_dictionary_item_default,
-  update_dictionary_item_default
+  update_dictionary_item_default,
+  move_dictionary_item_default,
+  get_root_default2,
+  get_children_default2,
+  get_ancestors_default2
 ];
 
 // src/tools/tool-factory.ts
@@ -10168,24 +13635,22 @@ var CreateUmbracoTemplateResource = (name, description, template, handler) => ()
   handler
 });
 
-// src/resources/data-types/get/get-root.ts
-
-var GetDataTypeRootResource = CreateUmbracoTemplateResource(
-  "List Data Types at Root",
-  "List the data types at the root of the Umbraco instance",
-  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/root?skip={skip}&take={take}&foldersOnly={foldersOnly}", {
+// src/resources/data-types/get/get-ancestors.ts
+var GetDataTypeAncestorsResource = CreateUmbracoTemplateResource(
+  "List Ancestor Data Types",
+  "List the ancestors of a data type",
+  new ResourceTemplate("umbraco://data-type/ancestors?descendantId={descendantId}", {
     list: void 0,
     complete: {
-      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
-      take: (value) => ["10", "20", "50", "100"],
-      foldersOnly: (value) => ["true", "false"]
+      descendantId: (value) => []
+      // This will be populated dynamically
     }
   }),
   async (uri, variables) => {
     try {
       const client = UmbracoManagementClient2.getClient();
-      const params = getTreeDataTypeRootQueryParams.parse(variables);
-      const response = await client.getTreeDataTypeRoot(params);
+      const params = getTreeDataTypeAncestorsQueryParams.parse(variables);
+      const response = await client.getTreeDataTypeAncestors(params);
       return {
         contents: [{
           uri: uri.href,
@@ -10194,19 +13659,18 @@ var GetDataTypeRootResource = CreateUmbracoTemplateResource(
         }]
       };
     } catch (error) {
-      console.error("Error in GetDataTypeRootResource:", error);
+      console.error("Error in GetDataTypeAncestorsResource:", error);
       throw error;
     }
   }
 );
-var get_root_default2 = GetDataTypeRootResource;
+var get_ancestors_default3 = GetDataTypeAncestorsResource;
 
 // src/resources/data-types/get/get-children.ts
-
 var GetDataTypeChildrenResource = CreateUmbracoTemplateResource(
   "List Data Type Children",
   "List the children of a data type folder",
-  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/children?parentId={parentId}&skip={skip}&take={take}&foldersOnly={foldersOnly}", {
+  new ResourceTemplate("umbraco://data-type/children?parentId={parentId}&skip={skip}&take={take}&foldersOnly={foldersOnly}", {
     list: void 0,
     complete: {
       parentId: (value) => [],
@@ -10234,27 +13698,24 @@ var GetDataTypeChildrenResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_children_default = GetDataTypeChildrenResource;
+var get_children_default3 = GetDataTypeChildrenResource;
 
-// src/resources/data-types/get/get-search.ts
-
-var GetDataTypeSearchResource = CreateUmbracoTemplateResource(
-  "Search Data Types",
-  "Search for data types by name",
-  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/search?query={query}&skip={skip}&take={take}", {
+// src/resources/data-types/get/get-folder.ts
+var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
+  "Get Data Type Folder",
+  "Get details of a data type folder",
+  new ResourceTemplate("umbraco://data-type/folder/{id}", {
     list: void 0,
     complete: {
-      query: (value) => [],
+      id: (value) => []
       // This will be populated dynamically
-      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
-      take: (value) => ["10", "20", "50", "100"]
     }
   }),
   async (uri, variables) => {
     try {
       const client = UmbracoManagementClient2.getClient();
-      const params = getItemDataTypeSearchQueryParams.parse(variables);
-      const response = await client.getItemDataTypeSearch(params);
+      const params = getDataTypeFolderByIdParams.parse(variables);
+      const response = await client.getDataTypeFolderById(params.id);
       return {
         contents: [{
           uri: uri.href,
@@ -10263,30 +13724,29 @@ var GetDataTypeSearchResource = CreateUmbracoTemplateResource(
         }]
       };
     } catch (error) {
-      console.error("Error in GetDataTypeSearchResource:", error);
+      console.error("Error in GetDataTypeFolderResource:", error);
       throw error;
     }
   }
 );
-var get_search_default2 = GetDataTypeSearchResource;
+var get_folder_default2 = GetDataTypeFolderResource;
 
-// src/resources/data-types/get/get-ancestors.ts
-
-var GetDataTypeAncestorsResource = CreateUmbracoTemplateResource(
-  "List Ancestor Data Types",
-  "List the ancestors of a data type",
-  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/ancestors?descendantId={descendantId}", {
+// src/resources/data-types/get/get-is-used.ts
+var GetDataTypeIsUsedResource = CreateUmbracoTemplateResource(
+  "Check Data Type Usage",
+  "Check if a data type is used within Umbraco",
+  new ResourceTemplate("umbraco://data-type/{id}/is-used", {
     list: void 0,
     complete: {
-      descendantId: (value) => []
+      id: (value) => []
       // This will be populated dynamically
     }
   }),
   async (uri, variables) => {
     try {
       const client = UmbracoManagementClient2.getClient();
-      const params = getTreeDataTypeAncestorsQueryParams.parse(variables);
-      const response = await client.getTreeDataTypeAncestors(params);
+      const params = getDataTypeByIdIsUsedParams.parse(variables);
+      const response = await client.getDataTypeByIdIsUsed(params.id);
       return {
         contents: [{
           uri: uri.href,
@@ -10295,19 +13755,18 @@ var GetDataTypeAncestorsResource = CreateUmbracoTemplateResource(
         }]
       };
     } catch (error) {
-      console.error("Error in GetDataTypeAncestorsResource:", error);
+      console.error("Error in GetDataTypeIsUsedResource:", error);
       throw error;
     }
   }
 );
-var get_ancestors_default = GetDataTypeAncestorsResource;
+var get_is_used_default = GetDataTypeIsUsedResource;
 
 // src/resources/data-types/get/get-query.ts
-
 var GetDataTypeQueryResource = CreateUmbracoTemplateResource(
   "Filter Data Types",
   "Filter data types by name, editor UI alias, or editor alias",
-  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/filter?name={name}&editorUiAlias={editorUiAlias}&editorAlias={editorAlias}&skip={skip}&take={take}", {
+  new ResourceTemplate("umbraco://data-type/filter?name={name}&editorUiAlias={editorUiAlias}&editorAlias={editorAlias}&skip={skip}&take={take}", {
     list: void 0,
     complete: {
       name: (value) => [],
@@ -10340,12 +13799,11 @@ var GetDataTypeQueryResource = CreateUmbracoTemplateResource(
 );
 var get_query_default = GetDataTypeQueryResource;
 
-// src/resources/data-types/get/get-folder.ts
-
-var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
-  "Get Data Type Folder",
-  "Get details of a data type folder",
-  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/folder/{id}", {
+// src/resources/data-types/get/get-references.ts
+var GetDataTypeReferencesResource = CreateUmbracoTemplateResource(
+  "Get Data Type References",
+  "Get references to a data type from content types",
+  new ResourceTemplate("umbraco://data-type/{id}/references", {
     list: void 0,
     complete: {
       id: (value) => []
@@ -10355,8 +13813,8 @@ var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
   async (uri, variables) => {
     try {
       const client = UmbracoManagementClient2.getClient();
-      const params = getDataTypeFolderByIdParams.parse(variables);
-      const response = await client.getDataTypeFolderById(params.id);
+      const params = getDataTypeByIdReferencesParams.parse(variables);
+      const response = await client.getDataTypeByIdReferences(params.id);
       return {
         contents: [{
           uri: uri.href,
@@ -10365,30 +13823,30 @@ var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
         }]
       };
     } catch (error) {
-      console.error("Error in GetDataTypeFolderResource:", error);
+      console.error("Error in GetDataTypeReferencesResource:", error);
       throw error;
     }
   }
 );
-var get_folder_default2 = GetDataTypeFolderResource;
+var get_references_default = GetDataTypeReferencesResource;
 
-// src/resources/data-types/get/get-is-used.ts
-
-var GetDataTypeIsUsedResource = CreateUmbracoTemplateResource(
-  "Check Data Type Usage",
-  "Check if a data type is used within Umbraco",
-  new (0, _mcpjs.ResourceTemplate)("umbraco://data-type/{id}/is-used", {
+// src/resources/data-types/get/get-root.ts
+var GetDataTypeRootResource = CreateUmbracoTemplateResource(
+  "List Data Types at Root",
+  "List the data types at the root of the Umbraco instance",
+  new ResourceTemplate("umbraco://data-type/root?skip={skip}&take={take}&foldersOnly={foldersOnly}", {
     list: void 0,
     complete: {
-      id: (value) => []
-      // This will be populated dynamically
+      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
+      take: (value) => ["10", "20", "50", "100"],
+      foldersOnly: (value) => ["true", "false"]
     }
   }),
   async (uri, variables) => {
     try {
       const client = UmbracoManagementClient2.getClient();
-      const params = getDataTypeByIdIsUsedParams.parse(variables);
-      const response = await client.getDataTypeByIdIsUsed(params.id);
+      const params = getTreeDataTypeRootQueryParams.parse(variables);
+      const response = await client.getTreeDataTypeRoot(params);
       return {
         contents: [{
           uri: uri.href,
@@ -10397,22 +13855,56 @@ var GetDataTypeIsUsedResource = CreateUmbracoTemplateResource(
         }]
       };
     } catch (error) {
-      console.error("Error in GetDataTypeIsUsedResource:", error);
+      console.error("Error in GetDataTypeRootResource:", error);
       throw error;
     }
   }
 );
-var get_is_used_default = GetDataTypeIsUsedResource;
+var get_root_default3 = GetDataTypeRootResource;
+
+// src/resources/data-types/get/get-search.ts
+var GetDataTypeSearchResource = CreateUmbracoTemplateResource(
+  "Search Data Types",
+  "Search for data types by name",
+  new ResourceTemplate("umbraco://data-type/search?query={query}&skip={skip}&take={take}", {
+    list: void 0,
+    complete: {
+      query: (value) => [],
+      // This will be populated dynamically
+      skip: (value) => ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"],
+      take: (value) => ["10", "20", "50", "100"]
+    }
+  }),
+  async (uri, variables) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const params = getItemDataTypeSearchQueryParams.parse(variables);
+      const response = await client.getItemDataTypeSearch(params);
+      return {
+        contents: [{
+          uri: uri.href,
+          text: JSON.stringify(response, null, 2),
+          mimeType: "application/json"
+        }]
+      };
+    } catch (error) {
+      console.error("Error in GetDataTypeSearchResource:", error);
+      throw error;
+    }
+  }
+);
+var get_search_default2 = GetDataTypeSearchResource;
 
 // src/resources/data-types/index.ts
 var DataTypeTemplateResources = [
-  get_root_default2,
-  get_children_default,
-  get_search_default2,
-  get_ancestors_default,
-  get_query_default,
+  get_ancestors_default3,
+  get_children_default3,
   get_folder_default2,
-  get_is_used_default
+  get_is_used_default,
+  get_query_default,
+  get_references_default,
+  get_root_default3,
+  get_search_default2
 ];
 
 // src/helpers/create-umbraco-read-resource.ts
@@ -10467,7 +13959,7 @@ var main = async () => {
   const server = UmbracoMcpServer.GetServer();
   ResourceFactory(server);
   ToolFactory(server);
-  const transport = new (0, _stdiojs.StdioServerTransport)();
+  const transport = new StdioServerTransport();
   await server.connect(transport);
 };
 main().catch((error) => {

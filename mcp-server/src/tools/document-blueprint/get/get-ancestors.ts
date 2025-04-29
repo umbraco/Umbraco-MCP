@@ -1,26 +1,25 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { getDataTypeByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { getTreeDocumentBlueprintAncestorsQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const GetDataTypeTool = CreateUmbracoTool(
-  "get-data-type",
-  "Gets a data type by Id",
-  getDataTypeByIdParams.shape,
-  async ({ id }) => {
+const GetDocumentBlueprintAncestorsTool = CreateUmbracoTool(
+  "get-document-blueprint-ancestors",
+  "Gets the ancestors of a document blueprint by Id",
+  getTreeDocumentBlueprintAncestorsQueryParams.shape,
+  async (params) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      const response = await client.getDataTypeById(id);
-
+      var response = await client.getTreeDocumentBlueprintAncestors(params);
       return {
         content: [
           {
             type: "text" as const,
             text: JSON.stringify(response),
           },
-        ]
+        ],
       };
     } catch (error) {
-      console.error("Error creating data type:", error);
+      console.error("Error getting document blueprint ancestors:", error);
       return {
         content: [
           {
@@ -33,4 +32,4 @@ const GetDataTypeTool = CreateUmbracoTool(
   }
 );
 
-export default GetDataTypeTool;
+export default GetDocumentBlueprintAncestorsTool; 

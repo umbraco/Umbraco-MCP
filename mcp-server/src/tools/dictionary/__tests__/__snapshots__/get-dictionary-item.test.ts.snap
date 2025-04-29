@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-dictionary-item should get a dictionary item by id 1`] = `
+{
+  "content": [
+    {
+      "text": "{"id":"7e02a26c-5a42-4e35-92fd-3b4ab480d7d5","name":"Article.Posted","translations":[{"isoCode":"en-US","translation":"Posted"}]}",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`get-dictionary-item should handle non-existent dictionary item 1`] = `
+{
+  "content": [
+    {
+      "text": "Error: AxiosError: Request failed with status code 404",
+      "type": "text",
+    },
+  ],
+}
+`;

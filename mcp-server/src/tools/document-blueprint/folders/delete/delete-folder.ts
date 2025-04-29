@@ -1,26 +1,25 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { getDataTypeByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { deleteDocumentBlueprintFolderByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const GetDataTypeTool = CreateUmbracoTool(
-  "get-data-type",
-  "Gets a data type by Id",
-  getDataTypeByIdParams.shape,
+const DeleteDocumentBlueprintFolderTool = CreateUmbracoTool(
+  "delete-document-blueprint-folder",
+  "Deletes a document blueprint folder by Id",
+  deleteDocumentBlueprintFolderByIdParams.shape,
   async ({ id }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      const response = await client.getDataTypeById(id);
-
+      var response = await client.deleteDocumentBlueprintFolderById(id);
       return {
         content: [
           {
             type: "text" as const,
             text: JSON.stringify(response),
           },
-        ]
+        ],
       };
     } catch (error) {
-      console.error("Error creating data type:", error);
+      console.error("Error deleting document blueprint folder:", error);
       return {
         content: [
           {
@@ -33,4 +32,4 @@ const GetDataTypeTool = CreateUmbracoTool(
   }
 );
 
-export default GetDataTypeTool;
+export default DeleteDocumentBlueprintFolderTool; 

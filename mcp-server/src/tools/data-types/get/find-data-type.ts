@@ -5,7 +5,7 @@ import { getFilterDataTypeQueryParams } from "@/umb-management-api/umbracoManage
 
 const FindDataTypeTool = CreateUmbracoTool(
   "find-data-type",
-  "Finds a data type by Id or name",
+  "Finds a data type by Id or Name",
   getFilterDataTypeQueryParams.shape,
   async (model: GetFilterDataTypeParams) => {
     try {

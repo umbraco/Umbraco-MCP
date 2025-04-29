@@ -40,6 +40,8 @@ You are an expert in TypeScript and Model Context Protocol implementation.
 - All schemas are generated for all data, params, requests and responses.
 - Zod schemas have been generated for all data, params, requests and responses. 
 - Zod schemas should always be used to validate any params into provider files 
+- When placing tools or resources in folders use the rest verb to group the files e.g put actions in the put folder
+- When placing tools in folders also group by common types, so folder actions and item action gets groups together. Also group items by rest verb as above within sub folders.
 
 ## Resources Intergration
 In MCP resources are readonly endpoints for LLM's to query and provide context. They should be used for Get requests.
@@ -141,6 +143,54 @@ const GetDataTypeRootResource = CreateUmbracoTemplateResource(
 export default GetDataTypeRootResource;
 ```
 
+## Tool Intergration
+In MCP tools are endpoints for LLM's to query and perform actions against a resource. They should be used for Get, Post, Put, Delete requests.
+
+- There are 1 types of tool calls. Dynamic tools can be used to query or change the resource by using params.
+    - they always use a name that respresents the umbraco endpoint
+    - they always use a description that represents the endpoint 
+    - they always of the shape of the zod definition to define how the tool interacts with the LLM.
+    - the handler always has a parameter that matches the model for the zod schema definition
+- here is an example of the implementation
+```
+import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
+import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { GetFilterDataTypeParams } from "@/umb-management-api/schemas/index.js";
+import { getFilterDataTypeQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+
+const FindDataTypeTool = CreateUmbracoTool(
+  "find-data-type",
+  "Finds a data type by Id or Name",
+  getFilterDataTypeQueryParams.shape,
+  async (model: GetFilterDataTypeParams) => {
+    try {
+      const client = UmbracoManagementClient.getClient();
+      var response = await client.getFilterDataType(model);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(response),
+          },
+        ],
+      };
+    } catch (error) {
+      console.error("Error creating data type:", error);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: `Error: ${error}`,
+          },
+        ],
+      };
+    }
+  }
+);
+
+export default FindDataTypeTool;
+```
 
 ## TypeScript Implementation
 
