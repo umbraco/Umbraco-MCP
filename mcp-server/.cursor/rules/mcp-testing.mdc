@@ -19,7 +19,7 @@ You are an expert in TypeScript and Jest and testing Model Context Protocol impl
 
 ## Inside test rules
 
-- always use assign, act and assert
+- always use arrange, act and assert
 - instead of asserting on individual properties, snapshots should be used to assert content of json objects
 - turn off console.error for testing
 - create local constants for any entity names, don't use magic strings
@@ -27,5 +27,81 @@ You are an expert in TypeScript and Jest and testing Model Context Protocol impl
 - test the tool handlers not MCP itself
 - any api params should use the zod schema to parse objects
 - always remove any UUID's for id's and parent id's as these cause snapshots to fail. Use the helper provider to convert these into blank id's
+- for the act phase of testing alsways use the call to the tool handle. For the arrange always use the helper or the builder.
 
-The Dictionary entity is the gold standard for testing. Use this as a blueprint for creating new feature testing suites. This is nboth in terms of the splitting between logical api endpoints and the number of tests created.
+The Dictionary entity is the gold standard for testing. Use this as a reference for creating new feature testing suites. This is both in terms of the splitting between logical api endpoints and the number of tests created.
+
+Here is an example of a test as reference
+
+```
+import CreateDictionaryItemTool from "../post/create-dictionary-item.js";
+import { DEFAULT_ISO_CODE, DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
+import { jest } from "@jest/globals";
+
+const TEST_DICTIONARY_NAME = "_Test Dictionary Created";
+const TEST_DICTIONARY_TRANSLATION = "_Test Translation";
+const EXISTING_DICTIONARY_NAME = "_Existing Dictionary";
+const EXISTING_DICTIONARY_TRANSLATION = "_Existing Translation";
+
+describe("create-dictionary-item", () => {
+  let originalConsoleError: typeof console.error;
+
+  beforeEach(() => {
+    originalConsoleError = console.error;
+    console.error = jest.fn();
+  });
+
+  afterEach(async () => {
+    console.error = originalConsoleError;
+    // Clean up any test dictionary items
+    await DictionaryVerificationHelper.cleanup(TEST_DICTIONARY_NAME);
+    await DictionaryVerificationHelper.cleanup(EXISTING_DICTIONARY_NAME);
+  });
+
+  it("should create a dictionary item", async () => {
+    const result = await CreateDictionaryItemTool().handler({
+      name: TEST_DICTIONARY_NAME,
+      translations: [{ isoCode: DEFAULT_ISO_CODE, translation: TEST_DICTIONARY_TRANSLATION }]
+    }, { signal: new AbortController().signal });
+
+    // Verify the handler response using snapshot
+    expect(result).toMatchSnapshot();
+
+    // Verify the created item exists and matches expected values
+    const items = await DictionaryVerificationHelper.findDictionaryItems(TEST_DICTIONARY_NAME, true);
+    expect(items).toMatchSnapshot();
+  });
+
+  it("should handle existing dictionary item", async () => {
+    // First create the item
+    await CreateDictionaryItemTool().handler({
+      name: EXISTING_DICTIONARY_NAME,
+      translations: [{ isoCode: DEFAULT_ISO_CODE, translation: EXISTING_DICTIONARY_TRANSLATION }]
+    }, { signal: new AbortController().signal });
+
+    // Try to create it again
+    const result = await CreateDictionaryItemTool().handler({
+      name: EXISTING_DICTIONARY_NAME,
+      translations: [{ isoCode: DEFAULT_ISO_CODE, translation: EXISTING_DICTIONARY_TRANSLATION }]
+    }, { signal: new AbortController().signal });
+
+    // Verify the error response using snapshot
+    expect(result).toMatchSnapshot();
+  });
+}); 
+```
+
+## Process for generating tests for a feature
+
+Always follow this process when asked to create testing for a new feature. Complete these one at a time, always stop between each step.
+
+- when building tests always build the builder first for the entities present in the feature. There may be more than one, e.g Document Blueprints have Document Blueprint and Document BluePrint folders
+- before actual testing create a helper on top of the builder that will allow easy arrangement. This likely includes methods to 
+    - normalise ids : convert all generated ids to the blank for snapshotting
+    - cleanup : remove any added items for tests
+    - find : find an items from the search / items, dependant on the feature. be careful
+    - create items, there maybe more than one if folders need to be included
+- next start by creating one test for creating a entity then stop and test that
+- then create the CRUD operations
+- then add items tests (ancestor, chidren, root)
+- then add folder tests

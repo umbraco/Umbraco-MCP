@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create-document-blueprint should create a document blueprint 1`] = `
+{
+  "content": [
+    {
+      "text": """",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`create-document-blueprint should create a document blueprint 2`] = `
+{
+  "documentType": {
+    "collection": null,
+    "icon": "icon-settings color-pink",
+    "id": "e68abe48-7646-4ef4-abb8-f1a5b24b27cc",
+  },
+  "hasChildren": false,
+  "id": "00000000-0000-0000-0000-000000000000",
+  "isFolder": false,
+  "name": "_Test Blueprint Created",
+  "parent": null,
+}
+`;
+
+exports[`create-document-blueprint should handle existing document blueprint 1`] = `
+{
+  "content": [
+    {
+      "text": "Error: AxiosError: Request failed with status code 400",
+      "type": "text",
+    },
+  ],
+}
+`;

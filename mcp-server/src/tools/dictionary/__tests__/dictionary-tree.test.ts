@@ -62,6 +62,15 @@ describe("dictionary-tree", () => {
     await rootHelper.cleanup();
   });
 
+  describe("get-root", () => {
+    it("should get root level dictionary items", async () => {
+      const result = await GetDictionaryRootTool().handler({
+        take: 100
+      }, { signal: new AbortController().signal });
+      expect(createSnapshotResult(result)).toMatchSnapshot();
+    });
+  });
+
   describe("get-children", () => {
     it("should get children of root dictionary", async () => {
       const result = await GetDictionaryChildrenTool().handler({

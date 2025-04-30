@@ -65,3 +65,14 @@ exports[`dictionary-tree get-children should get empty children for leaf diction
   ],
 }
 `;
+
+exports[`dictionary-tree get-root should get root level dictionary items 1`] = `
+{
+  "content": [
+    {
+      "text": "{"total":21,"items":[{"name":"_Root Dictionary","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":true},{"name":"Article.By","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Article.On","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Article.Posted","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"ArticleList.ViewAll","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Author.ReadMore","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"ContactForm.Email","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"ContactForm.Message","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"ContactForm.Name","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"ContactForm.Send","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Footer.CopyrightStatement","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Footer.CopyrightTitle","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Navigation.MenuTitle","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Navigation.SiteName","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Paging.Next","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Paging.Of","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Paging.Page","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Paging.Previous","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Search.Placeholder","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Search.Results","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false},{"name":"Search.SearchButton","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false}]}",
+      "type": "text",
+    },
+  ],
+}
+`;
