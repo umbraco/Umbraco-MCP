@@ -1,4 +1,6 @@
 import MoveDocumentBlueprintTool from "../put/move-blueprint.js";
+import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
+import { DocumentBlueprintFolderBuilder } from "./helpers/document-blueprint-folder-builder.js";
 import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
@@ -21,19 +23,19 @@ describe("move-document-blueprint", () => {
 
   it("should move a document blueprint", async () => {
     // Create a folder
-    const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
-    expect(folder).toBeDefined();
+    const folderBuilder = await new DocumentBlueprintFolderBuilder(TEST_FOLDER_NAME)
+      .create();
 
     // Create a blueprint to move
-    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
-    expect(blueprint).toBeDefined();
+    const builder = await new DocumentBlueprintBuilder(TEST_BLUEPRINT_NAME)
+      .create();
 
     // Move the blueprint
     const result = await MoveDocumentBlueprintTool().handler({
-      id: blueprint!.id,
+      id: builder.getId(),
       data: {
         target: {
-          id: folder!.id
+          id: folderBuilder.getId()
         }
       }
     }, { signal: new AbortController().signal });
@@ -44,16 +46,16 @@ describe("move-document-blueprint", () => {
     // Verify the blueprint was moved
     const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(found).toBeDefined();
-    expect(found!.id).toBe(blueprint!.id);
+    expect(found!.id).toBe(builder.getId());
   });
 
   it("should handle moving to non-existent folder", async () => {
     // Create a blueprint to move
-    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
-    expect(blueprint).toBeDefined();
+    const builder = await new DocumentBlueprintBuilder(TEST_BLUEPRINT_NAME)
+      .create();
 
     const result = await MoveDocumentBlueprintTool().handler({
-      id: blueprint!.id,
+      id: builder.getId(),
       data: {
         target: {
           id: "00000000-0000-0000-0000-000000000000"

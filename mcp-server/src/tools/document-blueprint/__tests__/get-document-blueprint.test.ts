@@ -1,4 +1,5 @@
 import GetDocumentBlueprintTool from "../get/get-blueprint.js";
+import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
 import { DocumentBlueprintTestHelper, BLANK_UUID } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
@@ -18,12 +19,12 @@ describe("get-document-blueprint", () => {
 
   it("should get a document blueprint by id", async () => {
     // Create a blueprint to get
-    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
-    expect(blueprint).toBeDefined();
+    const builder = await new DocumentBlueprintBuilder(TEST_BLUEPRINT_NAME)
+      .create();
 
     // Get the blueprint
     const result = await GetDocumentBlueprintTool().handler({
-      id: blueprint!.id
+      id: builder.getId()
     }, { signal: new AbortController().signal });
 
     // Normalize dates and IDs in the response

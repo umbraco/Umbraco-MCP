@@ -8,12 +8,12 @@ const TEST_DICTIONARY_TRANSLATION = "_Test Translation Delete";
 
 describe("delete-dictionary-item", () => {
   let originalConsoleError: typeof console.error;
-  let helper: DictionaryBuilder;
+  let builder: DictionaryBuilder;
 
   beforeEach(() => {
     originalConsoleError = console.error;
     console.error = jest.fn();
-    helper = new DictionaryBuilder();
+    builder = new DictionaryBuilder();
   });
 
   afterEach(async () => {
@@ -22,13 +22,13 @@ describe("delete-dictionary-item", () => {
 
   it("should delete a dictionary item", async () => {
     // Create initial dictionary item
-    await helper
+    await builder
       .withName(TEST_DICTIONARY_NAME)
       .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
       .create();
 
     const result = await DeleteDictionaryItemTool().handler({
-      id: helper.getId()
+      id: builder.getId()
     }, { signal: new AbortController().signal });
 
     // Verify the handler response using snapshot

@@ -1,68 +1,110 @@
+import { DictionaryTestHelper, BLANK_UUID, DEFAULT_ISO_CODE } from "./dictionary-helper.js";
 import { DictionaryBuilder } from "./dictionary-builder.js";
 import { jest } from "@jest/globals";
 
-describe("DictionaryBuilder", () => {
-  let helper: DictionaryBuilder;
-  let parentHelper: DictionaryBuilder;
+const TEST_DICTIONARY_NAME = "_Test Dictionary Helper";
+const TEST_DICTIONARY_TRANSLATION = "_Test Translation Helper";
+
+describe('DictionaryTestHelper', () => {
+  let originalConsoleError: typeof console.error;
+  let builder: DictionaryBuilder;
 
   beforeEach(() => {
-    helper = new DictionaryBuilder();
-    parentHelper = new DictionaryBuilder();
+    originalConsoleError = console.error;
+    console.error = jest.fn();
+    builder = new DictionaryBuilder();
   });
 
   afterEach(async () => {
-    await helper.cleanup();
-    await parentHelper.cleanup();
+    console.error = originalConsoleError;
+    await builder.cleanup();
   });
 
-  it("should create a dictionary item with name and translation", async () => {
-    await helper
-      .withName("Test Dictionary")
-      .withTranslation("en-US", "Test Translation")
-      .create();
+  describe('verifyDictionaryItem', () => {
+    it('should verify an existing dictionary item', async () => {
+      await builder
+        .withName(TEST_DICTIONARY_NAME)
+        .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
+        .create();
 
-    expect(helper.getId()).toBeDefined();
-    expect(await helper.verify()).toBe(true);
+      const exists = await DictionaryTestHelper.verifyDictionaryItem(builder.getId());
+      expect(exists).toBe(true);
+    });
+
+    it('should return false for non-existent dictionary item', async () => {
+      const exists = await DictionaryTestHelper.verifyDictionaryItem(BLANK_UUID);
+      expect(exists).toBe(false);
+    });
   });
 
-  it("should create a dictionary item with parent", async () => {
-    // First create a parent dictionary item
-    await parentHelper
-      .withName("Parent Dictionary")
-      .withTranslation("en-US", "Parent Translation")
-      .create();
+  describe('getDictionaryItem', () => {
+    it('should get dictionary item by id', async () => {
+      await builder
+        .withName(TEST_DICTIONARY_NAME)
+        .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
+        .create();
 
-    const parentId = parentHelper.getId();
+      const item = await DictionaryTestHelper.getDictionaryItem(builder.getId());
+      expect(item).toBeDefined();
+      expect(item.name).toBe(TEST_DICTIONARY_NAME);
+      expect(item.translations).toHaveLength(1);
+      expect(item.translations[0].isoCode).toBe(DEFAULT_ISO_CODE);
+      expect(item.translations[0].translation).toBe(TEST_DICTIONARY_TRANSLATION);
+    });
 
-    // Then create a child dictionary item
-    await helper
-      .withName("Child Dictionary")
-      .withTranslation("en-US", "Child Translation")
-      .withParent(parentId)
-      .create();
+    it('should get dictionary item with blank UUID for snapshot', async () => {
+      await builder
+        .withName(TEST_DICTIONARY_NAME)
+        .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
+        .create();
 
-    expect(helper.getId()).toBeDefined();
-    expect(await helper.verify()).toBe(true);
-    expect(await parentHelper.verify()).toBe(true);
+      const item = await DictionaryTestHelper.getDictionaryItem(builder.getId(), true);
+      expect(item.id).toBe(BLANK_UUID);
+    });
+
+    it('should throw for non-existent dictionary item', async () => {
+      await expect(DictionaryTestHelper.getDictionaryItem(BLANK_UUID))
+        .rejects.toThrow();
+    });
   });
 
-  it("should create a dictionary item with multiple translations", async () => {
-    await helper
-      .withName("Multi Language Dictionary")
-      .withTranslation("en-US", "English Translation")
-      .withTranslation("fr-FR", "French Translation")
-      .withTranslation("de-DE", "German Translation")
-      .create();
+  describe('findDictionaryItems', () => {
+    it('should find dictionary items by name', async () => {
+      await builder
+        .withName(TEST_DICTIONARY_NAME)
+        .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
+        .create();
 
-    expect(helper.getId()).toBeDefined();
-    expect(await helper.verify()).toBe(true);
-  });
+      const items = await DictionaryTestHelper.findDictionaryItems(TEST_DICTIONARY_NAME);
+      expect(items).toHaveLength(1);
+      expect(items[0].name).toBe(TEST_DICTIONARY_NAME);
+    });
 
-  it("should throw error when trying to get ID before creation", () => {
-    expect(() => helper.getId()).toThrow("No dictionary item has been created yet");
-  });
+    it('should find dictionary items with blank UUID for snapshot', async () => {
+      await builder
+        .withName(TEST_DICTIONARY_NAME)
+        .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
+        .create();
 
-  it("should throw error when trying to verify before creation", async () => {
-    await expect(helper.verify()).rejects.toThrow("No dictionary item has been created yet");
+      const items = await DictionaryTestHelper.findDictionaryItems(TEST_DICTIONARY_NAME, true);
+      expect(items).toHaveLength(1);
+      expect(items[0].id).toBe(BLANK_UUID);
+    });
+
+    it('should return empty array for non-existent dictionary items', async () => {
+      const items = await DictionaryTestHelper.findDictionaryItems('Non Existent Dictionary');
+      expect(items).toHaveLength(0);
+    });
+
+    it('should filter items by exact name match', async () => {
+      // Create item with similar name
+      await builder
+        .withName(TEST_DICTIONARY_NAME + ' Extra')
+        .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
+        .create();
+
+      const items = await DictionaryTestHelper.findDictionaryItems(TEST_DICTIONARY_NAME);
+      expect(items).toHaveLength(0);
+    });
   });
 }); 

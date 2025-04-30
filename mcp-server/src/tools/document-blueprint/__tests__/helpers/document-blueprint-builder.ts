@@ -1,26 +1,19 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
+import { DocumentBlueprintTreeItemResponseModel } from "@/umb-management-api/schemas/documentBlueprintTreeItemResponseModel.js";
 import { postDocumentBlueprintBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { DocumentBlueprintTestHelper } from "./document-blueprint-test-helper.js";
+import { CreateDocumentBlueprintRequestModel } from "@/umb-management-api/schemas/index.js";
 
 export const DEFAULT_DOCUMENT_TYPE_ID = "e68abe48-7646-4ef4-abb8-f1a5b24b27cc";
 
 export class DocumentBlueprintBuilder {
-  private model: {
-    values: Array<{
-      culture: string | null;
-      segment: string | null;
-      alias: string;
-      value: any | null;
-    }>;
-    variants: Array<{
-      culture: string | null;
-      segment: string | null;
-      name: string;
-    }>;
-    id?: string;
-    parent?: { id: string } | null;
-    isFolder?: boolean;
-    documentType: { id: string };
+  private model: CreateDocumentBlueprintRequestModel = {
+    values: [],
+    variants: [],
+    documentType: { id: '' }
   };
+
+  private createdItem: DocumentBlueprintTreeItemResponseModel | null = null;
 
   constructor(name: string) {
     this.model = {
@@ -76,14 +69,42 @@ export class DocumentBlueprintBuilder {
     return this.model;
   }
 
-  async create(): Promise<any> {
+  async create(): Promise<DocumentBlueprintBuilder> {
     try {
       const client = UmbracoManagementClient.getClient();
       const validatedModel = postDocumentBlueprintBody.parse(this.model);
-      return await client.postDocumentBlueprint(validatedModel);
+      
+      // Create the blueprint
+      await client.postDocumentBlueprint(validatedModel);
+      
+      // Find the created blueprint by name
+      const name = this.model.variants[0].name;
+      const createdItem = await DocumentBlueprintTestHelper.findDocumentBlueprint(name);
+      
+      if (!createdItem) {
+        throw new Error(`Failed to find created document blueprint with name: ${name}`);
+      }
+      
+      this.createdItem = createdItem;
+      return this;
     } catch (error) {
       console.error("Error creating document blueprint:", error);
       throw error;
     }
   }
+
+  getId(): string {
+    if (!this.createdItem) {
+      throw new Error("No document blueprint has been created yet");
+    }
+    return this.createdItem.id;
+  }
+
+  getItem(): DocumentBlueprintTreeItemResponseModel {
+    if (!this.createdItem) {
+      throw new Error("No document blueprint has been created yet");
+    }
+    return this.createdItem;
+  }
+
 } 

@@ -22,8 +22,8 @@ describe("update-document-blueprint", () => {
 
   it("should update a document blueprint", async () => {
     // Create a blueprint to update
-    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
-    expect(blueprint).toBeDefined();
+    const builder = await new DocumentBlueprintBuilder(TEST_BLUEPRINT_NAME)
+      .create();
 
     // Create update model using builder
     const updateModel = new DocumentBlueprintBuilder(UPDATED_BLUEPRINT_NAME)
@@ -31,7 +31,7 @@ describe("update-document-blueprint", () => {
 
     // Update the blueprint
     const result = await UpdateDocumentBlueprintTool().handler({
-      id: blueprint!.id,
+      id: builder.getId(),
       data: {
         values: updateModel.values,
         variants: updateModel.variants,
@@ -44,7 +44,7 @@ describe("update-document-blueprint", () => {
     // Verify the blueprint was updated
     const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(UPDATED_BLUEPRINT_NAME);
     expect(found).toBeDefined();
-    expect(found!.id).toBe(blueprint!.id);
+    expect(found!.id).toBe(builder.getId());
   });
 
   it("should handle non-existent document blueprint", async () => {

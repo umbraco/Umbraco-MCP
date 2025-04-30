@@ -1,68 +1,26 @@
+import { DocumentBlueprintBuilder } from "./document-blueprint-builder.js";
 import { DocumentBlueprintTestHelper, BLANK_UUID } from "./document-blueprint-test-helper.js";
 import { DocumentBlueprintTreeItemResponseModel } from "@/umb-management-api/schemas/index.js";
 
 describe('DocumentBlueprintVerificationHelper', () => {
-  const TEST_BLUEPRINT_NAME = 'Test Integration Blueprint';
   const TEST_BLUEPRINT_CLEANUP_NAME = 'Test Integration Blueprint Cleanup';
-  const TEST_BLUEPRINT_FOLDER_NAME = 'Test Integration Blueprint Folder';
-  const TEST_CHILD_BLUEPRINT_NAME = 'Test Child Blueprint';
 
   // Clean up any test blueprints that might be left over from previous test runs
   beforeAll(async () => {
-    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_NAME);
-    await DocumentBlueprintTestHelper.cleanup(TEST_CHILD_BLUEPRINT_NAME);
-    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_FOLDER_NAME);
     await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_CLEANUP_NAME);
   });
 
   // Clean up after all tests
   afterAll(async () => {
-    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_NAME);
-    await DocumentBlueprintTestHelper.cleanup(TEST_CHILD_BLUEPRINT_NAME);
-    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_FOLDER_NAME);
     await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_CLEANUP_NAME);
-  });
-
-  describe('createDocumentBlueprint and findDocumentBlueprints', () => {
-    it('should create and find a blueprint', async () => {
-      // Create a blueprint
-      const created = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
-      expect(created).toBeDefined();
-      expect(created?.name).toBe(TEST_BLUEPRINT_NAME);
-
-      // Find the blueprint
-      const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
-      expect(found).toBeDefined();
-      expect(found?.name).toBe(TEST_BLUEPRINT_NAME);
-    });
-
-    it('should create and find a blueprint in a folder', async () => {
-      // Create parent blueprint
-      const parent = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_BLUEPRINT_FOLDER_NAME);
-      expect(parent).toBeDefined();
-
-      // Create child blueprint
-      const child = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_CHILD_BLUEPRINT_NAME, parent?.id);
-      expect(child).toBeDefined();
-      expect(child?.name).toBe(TEST_CHILD_BLUEPRINT_NAME);
-
-      // Find the child blueprint
-      const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_CHILD_BLUEPRINT_NAME);
-      expect(found).toBeDefined();
-      expect(found?.name).toBe(TEST_CHILD_BLUEPRINT_NAME);
-    });
-
-    it('should return empty array when blueprint not found', async () => {
-      const result = await DocumentBlueprintTestHelper.findDocumentBlueprint('Non-existent-Blueprint');
-      expect(result).toEqual(undefined);
-    });
   });
 
   describe('cleanup and cleanupById', () => {
     it('should cleanup blueprint by name', async () => {
-      // Create a blueprint
-      const created = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_CLEANUP_NAME);
-      expect(created).toBeDefined();
+      // Create a blueprint using builder
+      const builder = await new DocumentBlueprintBuilder(TEST_BLUEPRINT_CLEANUP_NAME)
+        .create();
+      expect(builder).toBeDefined();
 
       // Clean it up
       await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_CLEANUP_NAME);

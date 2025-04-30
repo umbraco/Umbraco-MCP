@@ -4,6 +4,7 @@ import DeleteDocumentBlueprintFolderTool from "../folders/delete/delete-folder.j
 import UpdateDocumentBlueprintFolderTool from "../folders/put/update-folder.js";
 import { createSnapshotResult } from "@/helpers/test-utils.js";
 import { jest } from "@jest/globals";
+import { DocumentBlueprintFolderBuilder } from "./helpers/document-blueprint-folder-builder.js";
 
 describe("document-blueprint-folder", () => {
   const TEST_FOLDER_NAME = "_Test Blueprint Folder";
@@ -38,13 +39,14 @@ describe("document-blueprint-folder", () => {
     });
 
     it("should create a folder with parent", async () => {
-      // Create parent folder
-      const parent = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_PARENT_FOLDER_NAME);
-      expect(parent).toBeDefined();
+      // Create parent folder using builder
+      const parentBuilder = await new DocumentBlueprintFolderBuilder(TEST_PARENT_FOLDER_NAME)
+        .create();
+      expect(parentBuilder).toBeDefined();
 
       const result = await CreateDocumentBlueprintFolderTool().handler({
         name: TEST_FOLDER_NAME,
-        parent: { id: parent!.id }
+        parent: { id: parentBuilder.getId() }
       }, { signal: new AbortController().signal });
 
       expect(createSnapshotResult(result)).toMatchSnapshot();
@@ -58,12 +60,13 @@ describe("document-blueprint-folder", () => {
 
   describe("update", () => {
     it("should update a folder name", async () => {
-      // Create folder to update
-      const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(UPDATE_FOLDER_NAME);
-      expect(folder).toBeDefined();
+      // Create folder to update using builder
+      const builder = await new DocumentBlueprintFolderBuilder(UPDATE_FOLDER_NAME)
+        .create();
+      expect(builder).toBeDefined();
 
       const result = await UpdateDocumentBlueprintFolderTool().handler({
-        id: folder!.id,
+        id: builder.getId(),
         data: {
           name: UPDATED_FOLDER_NAME
         }
@@ -92,12 +95,13 @@ describe("document-blueprint-folder", () => {
 
   describe("delete", () => {
     it("should delete a folder", async () => {
-      // Create folder to delete
-      const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
-      expect(folder).toBeDefined();
+      // Create folder to delete using builder
+      const builder = await new DocumentBlueprintFolderBuilder(TEST_FOLDER_NAME)
+        .create();
+      expect(builder).toBeDefined();
 
       const result = await DeleteDocumentBlueprintFolderTool().handler({
-        id: folder!.id
+        id: builder.getId()
       }, { signal: new AbortController().signal });
 
       expect(createSnapshotResult(result)).toMatchSnapshot();

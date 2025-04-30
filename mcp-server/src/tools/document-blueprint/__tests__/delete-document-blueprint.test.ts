@@ -1,4 +1,5 @@
 import DeleteDocumentBlueprintTool from "../delete/delete-blueprint.js";
+import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
 import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
@@ -19,12 +20,12 @@ describe("delete-document-blueprint", () => {
 
   it("should delete a document blueprint", async () => {
     // Create a blueprint to delete
-    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
-    expect(blueprint).toBeDefined();
+    const builder = await new DocumentBlueprintBuilder(TEST_BLUEPRINT_NAME)
+      .create();
 
     // Delete the blueprint
     const result = await DeleteDocumentBlueprintTool().handler({
-      id: blueprint!.id
+      id: builder.getId()
     }, { signal: new AbortController().signal });
 
     // Verify the handler response using snapshot

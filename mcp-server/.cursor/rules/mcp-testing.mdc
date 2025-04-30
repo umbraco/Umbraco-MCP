@@ -95,13 +95,37 @@ describe("create-dictionary-item", () => {
 
 Always follow this process when asked to create testing for a new feature. Complete these one at a time, always stop between each step.
 
-- when building tests always build the builder first for the entities present in the feature. There may be more than one, e.g Document Blueprints have Document Blueprint and Document BluePrint folders
-- before actual testing create a helper on top of the builder that will allow easy arrangement. This likely includes methods to 
+- always build the builder first for the entities present in the feature. There may be more than one, e.g Document Blueprints have Document Blueprint and Document BluePrint folders
+- before actual testing create a helper alongside the builder that will allow easy arrangement. This likely includes methods to 
     - normalise ids : convert all generated ids to the blank for snapshotting
     - cleanup : remove any added items for tests
     - find : find an items from the search / items, dependant on the feature. be careful
-    - create items, there maybe more than one if folders need to be included
 - next start by creating one test for creating a entity then stop and test that
 - then create the CRUD operations
 - then add items tests (ancestor, chidren, root)
 - then add folder tests
+
+## Builders
+
+Test builders help us to create a narrative around the arrange partt of the test. They help us to build up and create instance of the entity. 
+
+- should include the model that is typed the to the create requests RequuestModel i.e CreateDictionaryItemRequestModel for postDictionary
+- should include with methods that add new data to the model. They always return this.
+```
+  withName(name: string): DictionaryBuilder {
+    this.model.name = name;
+    return this;
+  }
+```
+- should include a build method that returns the model
+- should include a create method that is async and returns a Promise<Builder>
+    - the create should use zod to verify the model
+    - the create should create a new entity and set a local createdItem property with the newly create entity
+    - the create should check that the model has been created by either
+        - getting the model directly from the API. only possible if the API includes a endpoint that get by name
+        - if this is not the case then use the find static method on the helper to get the entity
+- should include a getId method that return the created item id
+- should include a getItem method that returns the created item,
+
+The builder shouls always have integration tests that test that the builder works and integrates correctly
+
