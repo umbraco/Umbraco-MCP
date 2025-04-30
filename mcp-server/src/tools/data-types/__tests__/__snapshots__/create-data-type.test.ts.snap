@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create-data-type should create a data type 1`] = `
+{
+  "content": [
+    {
+      "text": """",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`create-data-type should create a data type 2`] = `
+{
+  "editorUiAlias": "Umb.PropertyEditorUi.Textbox",
+  "hasChildren": false,
+  "id": "00000000-0000-0000-0000-000000000000",
+  "isDeletable": true,
+  "isFolder": false,
+  "name": "_Test DataType Created",
+  "parent": null,
+}
+`;

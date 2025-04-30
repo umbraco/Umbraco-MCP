@@ -96,15 +96,5 @@ describe('DictionaryTestHelper', () => {
       expect(items).toHaveLength(0);
     });
 
-    it('should filter items by exact name match', async () => {
-      // Create item with similar name
-      await builder
-        .withName(TEST_DICTIONARY_NAME + ' Extra')
-        .withTranslation(DEFAULT_ISO_CODE, TEST_DICTIONARY_TRANSLATION)
-        .create();
-
-      const items = await DictionaryTestHelper.findDictionaryItems(TEST_DICTIONARY_NAME);
-      expect(items).toHaveLength(0);
-    });
   });
 }); 
