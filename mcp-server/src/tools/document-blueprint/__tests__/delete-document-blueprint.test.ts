@@ -1,5 +1,5 @@
 import DeleteDocumentBlueprintTool from "../delete/delete-blueprint.js";
-import { DocumentBlueprintVerificationHelper } from "./helpers/document-blueprint-verification-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
 describe("delete-document-blueprint", () => {
@@ -14,12 +14,12 @@ describe("delete-document-blueprint", () => {
   afterEach(async () => {
     console.error = originalConsoleError;
     // Clean up any remaining test blueprints
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_BLUEPRINT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_NAME);
   });
 
   it("should delete a document blueprint", async () => {
     // Create a blueprint to delete
-    const blueprint = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(blueprint).toBeDefined();
 
     // Delete the blueprint
@@ -31,7 +31,7 @@ describe("delete-document-blueprint", () => {
     expect(result).toMatchSnapshot();
 
     // Verify the blueprint no longer exists
-    const found = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(found).toBeUndefined();
   });
 

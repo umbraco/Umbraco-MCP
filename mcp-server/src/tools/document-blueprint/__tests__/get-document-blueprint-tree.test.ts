@@ -1,4 +1,4 @@
-import { DocumentBlueprintVerificationHelper } from "./helpers/document-blueprint-verification-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import GetDocumentBlueprintAncestorsTreeTool from "../get/get-ancestors.js";
 import GetDocumentBlueprintChildrenTreeTool from "../get/get-children.js";
 import GetDocumentBlueprintRootTreeTool from "../get/get-root.js";
@@ -18,37 +18,21 @@ describe("document-blueprint-tree", () => {
 
   afterEach(async () => {
     console.error = originalConsoleError;
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_ROOT_NAME);
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_FOLDER_NAME);
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_CHILD_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_ROOT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_CHILD_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_FOLDER_NAME);
   });
 
-  describe("root", () => {
-    it("should get root items", async () => {
-      // Create a root blueprint
-      const root = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_ROOT_NAME);
-      expect(root).toBeDefined();
-
-      const result = await GetDocumentBlueprintRootTreeTool().handler({
-        take: 100
-      }, { 
-        signal: new AbortController().signal 
-      });
-
-      // Normalize and verify response
-      const normalizedItems = createSnapshotResult(result);
-      expect(normalizedItems).toMatchSnapshot();
-    });
-  });
+  //can't test root as it will change throughout testing
 
   describe("children", () => {
     it("should get child items", async () => {
       // Create parent folder
-      const folder = await DocumentBlueprintVerificationHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
+      const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
       expect(folder).toBeDefined();
 
       // Create child blueprint
-      const child = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_CHILD_NAME, folder!.id);
+      const child = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_CHILD_NAME, folder!.id);
       expect(child).toBeDefined();
 
       const result = await GetDocumentBlueprintChildrenTreeTool().handler({
@@ -74,10 +58,10 @@ describe("document-blueprint-tree", () => {
   describe("ancestors", () => {
     it("should get ancestor items", async () => {
       // Create folder structure
-      const folder = await DocumentBlueprintVerificationHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
+      const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
       expect(folder).toBeDefined();
 
-      const child = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_CHILD_NAME, folder!.id);
+      const child = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_CHILD_NAME, folder!.id);
       expect(child).toBeDefined();
 
       const result = await GetDocumentBlueprintAncestorsTreeTool().handler({

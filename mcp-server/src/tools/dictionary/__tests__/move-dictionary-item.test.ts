@@ -1,6 +1,6 @@
 import MoveDictionaryItemTool from "../put/move-dictionary-item.js";
-import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
-import { BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-verification-helper.js";
+import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
+import { BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
 import { jest } from "@jest/globals";
 
 const CHILD_DICTIONARY_NAME = "_Child Dictionary";
@@ -10,14 +10,14 @@ const PARENT_DICTIONARY_TRANSLATION = "_Parent Translation";
 
 describe("move-dictionary-item", () => {
   let originalConsoleError: typeof console.error;
-  let childHelper: DictionaryTestHelper;
-  let parentHelper: DictionaryTestHelper;
+  let childHelper: DictionaryBuilder;
+  let parentHelper: DictionaryBuilder;
 
   beforeEach(() => {
     originalConsoleError = console.error;
     console.error = jest.fn();
-    childHelper = new DictionaryTestHelper();
-    parentHelper = new DictionaryTestHelper();
+    childHelper = new DictionaryBuilder();
+    parentHelper = new DictionaryBuilder();
   });
 
   afterEach(async () => {

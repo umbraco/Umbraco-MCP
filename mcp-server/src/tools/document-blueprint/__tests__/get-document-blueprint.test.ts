@@ -1,5 +1,5 @@
 import GetDocumentBlueprintTool from "../get/get-blueprint.js";
-import { DocumentBlueprintVerificationHelper, BLANK_UUID } from "./helpers/document-blueprint-verification-helper.js";
+import { DocumentBlueprintTestHelper, BLANK_UUID } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
 describe("get-document-blueprint", () => {
@@ -13,12 +13,12 @@ describe("get-document-blueprint", () => {
 
   afterEach(async () => {
     console.error = originalConsoleError;
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_BLUEPRINT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_NAME);
   });
 
   it("should get a document blueprint by id", async () => {
     // Create a blueprint to get
-    const blueprint = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(blueprint).toBeDefined();
 
     // Get the blueprint

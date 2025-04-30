@@ -1,6 +1,6 @@
 import CreateDocumentBlueprintTool from "../post/create-blueprint.js";
 import { DEFAULT_DOCUMENT_TYPE_ID, DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
-import { DocumentBlueprintVerificationHelper } from "./helpers/document-blueprint-verification-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
 const TEST_BLUEPRINT_NAME = "_Test Blueprint Created";
@@ -17,8 +17,8 @@ describe("create-document-blueprint", () => {
   afterEach(async () => {
     console.error = originalConsoleError;
     // Clean up any test blueprints
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_BLUEPRINT_NAME);
-    await DocumentBlueprintVerificationHelper.cleanup(EXISTING_BLUEPRINT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(EXISTING_BLUEPRINT_NAME);
   });
 
   it("should create a document blueprint", async () => {
@@ -36,9 +36,9 @@ describe("create-document-blueprint", () => {
     expect(result).toMatchSnapshot();
 
     // Verify the created item exists and matches expected values
-    const item = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const item = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(item).toBeDefined();
-    expect(DocumentBlueprintVerificationHelper.normaliseIds(item!)).toMatchSnapshot();
+    expect(DocumentBlueprintTestHelper.normaliseIds(item!)).toMatchSnapshot();
   });
 
   it("should handle existing document blueprint", async () => {

@@ -1,4 +1,4 @@
-import { DocumentBlueprintVerificationHelper } from "./helpers/document-blueprint-verification-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import CreateDocumentBlueprintFolderTool from "../folders/post/create-folder.js";
 import DeleteDocumentBlueprintFolderTool from "../folders/delete/delete-folder.js";
 import UpdateDocumentBlueprintFolderTool from "../folders/put/update-folder.js";
@@ -8,6 +8,7 @@ import { jest } from "@jest/globals";
 describe("document-blueprint-folder", () => {
   const TEST_FOLDER_NAME = "_Test Blueprint Folder";
   const TEST_PARENT_FOLDER_NAME = "_Test Parent Folder";
+  const UPDATE_FOLDER_NAME = "_Update Folder Name";
   const UPDATED_FOLDER_NAME = "_Updated Folder Name";
   let originalConsoleError: typeof console.error;
 
@@ -18,9 +19,8 @@ describe("document-blueprint-folder", () => {
 
   afterEach(async () => {
     console.error = originalConsoleError;
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_FOLDER_NAME);
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_PARENT_FOLDER_NAME);
-    await DocumentBlueprintVerificationHelper.cleanup(UPDATED_FOLDER_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_FOLDER_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_PARENT_FOLDER_NAME);
   });
 
   describe("create", () => {
@@ -32,14 +32,14 @@ describe("document-blueprint-folder", () => {
       expect(createSnapshotResult(result)).toMatchSnapshot();
 
       // Verify folder exists
-      const found = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(TEST_FOLDER_NAME);
+      const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_FOLDER_NAME);
       expect(found).toBeDefined();
       expect(found!.isFolder).toBe(true);
     });
 
     it("should create a folder with parent", async () => {
       // Create parent folder
-      const parent = await DocumentBlueprintVerificationHelper.createDocumentBlueprintFolder(TEST_PARENT_FOLDER_NAME);
+      const parent = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_PARENT_FOLDER_NAME);
       expect(parent).toBeDefined();
 
       const result = await CreateDocumentBlueprintFolderTool().handler({
@@ -50,7 +50,7 @@ describe("document-blueprint-folder", () => {
       expect(createSnapshotResult(result)).toMatchSnapshot();
 
       // Verify folder exists under parent
-      const found = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(TEST_FOLDER_NAME);
+      const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_FOLDER_NAME);
       expect(found).toBeDefined();
       expect(found!.isFolder).toBe(true);
     });
@@ -59,7 +59,7 @@ describe("document-blueprint-folder", () => {
   describe("update", () => {
     it("should update a folder name", async () => {
       // Create folder to update
-      const folder = await DocumentBlueprintVerificationHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
+      const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(UPDATE_FOLDER_NAME);
       expect(folder).toBeDefined();
 
       const result = await UpdateDocumentBlueprintFolderTool().handler({
@@ -72,9 +72,10 @@ describe("document-blueprint-folder", () => {
       expect(result).toMatchSnapshot();
 
       // Verify folder was updated
-      const found = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(UPDATED_FOLDER_NAME);
+      const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(UPDATED_FOLDER_NAME);
       expect(found).toBeDefined();
       expect(found!.name).toBe(UPDATED_FOLDER_NAME);
+      await DocumentBlueprintTestHelper.cleanup(UPDATED_FOLDER_NAME);
     });
 
     it("should handle non-existent folder", async () => {
@@ -92,7 +93,7 @@ describe("document-blueprint-folder", () => {
   describe("delete", () => {
     it("should delete a folder", async () => {
       // Create folder to delete
-      const folder = await DocumentBlueprintVerificationHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
+      const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
       expect(folder).toBeDefined();
 
       const result = await DeleteDocumentBlueprintFolderTool().handler({
@@ -102,7 +103,7 @@ describe("document-blueprint-folder", () => {
       expect(createSnapshotResult(result)).toMatchSnapshot();
 
       // Verify folder was deleted
-      const found = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(TEST_FOLDER_NAME);
+      const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_FOLDER_NAME);
       expect(found).toBeUndefined();
     });
 

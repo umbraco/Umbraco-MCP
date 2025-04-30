@@ -1,6 +1,6 @@
 import DeleteDictionaryItemTool from "../delete/delete-dictionary-item.js";
-import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
-import { BLANK_UUID, DEFAULT_ISO_CODE, DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
+import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
+import { BLANK_UUID, DEFAULT_ISO_CODE, DictionaryTestHelper } from "./helpers/dictionary-helper.js";
 import { jest } from "@jest/globals";
 
 const TEST_DICTIONARY_NAME = "_Test Dictionary Delete";
@@ -8,12 +8,12 @@ const TEST_DICTIONARY_TRANSLATION = "_Test Translation Delete";
 
 describe("delete-dictionary-item", () => {
   let originalConsoleError: typeof console.error;
-  let helper: DictionaryTestHelper;
+  let helper: DictionaryBuilder;
 
   beforeEach(() => {
     originalConsoleError = console.error;
     console.error = jest.fn();
-    helper = new DictionaryTestHelper();
+    helper = new DictionaryBuilder();
   });
 
   afterEach(async () => {
@@ -35,7 +35,7 @@ describe("delete-dictionary-item", () => {
     expect(result).toMatchSnapshot();
 
     // Verify the item no longer exists
-    const items = await DictionaryVerificationHelper.findDictionaryItems(TEST_DICTIONARY_NAME);
+    const items = await DictionaryTestHelper.findDictionaryItems(TEST_DICTIONARY_NAME);
     expect(items).toHaveLength(0);
   });
 

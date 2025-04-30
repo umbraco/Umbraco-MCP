@@ -6,7 +6,7 @@ import { DocumentBlueprintTreeItemResponseModel } from "@/umb-management-api/sch
 export const BLANK_UUID = "00000000-0000-0000-0000-000000000000";
 export const DEFAULT_DOCUMENT_TYPE_ID = "e68abe48-7646-4ef4-abb8-f1a5b24b27cc"; // This should be replaced with a real document type ID in your environment
 
-export class DocumentBlueprintVerificationHelper {
+export class DocumentBlueprintTestHelper {
   private static findByName(items: DocumentBlueprintTreeItemResponseModel[], name: string): DocumentBlueprintTreeItemResponseModel | undefined {
     return items.find((item: any) => item.name === name);
   }
@@ -30,7 +30,6 @@ export class DocumentBlueprintVerificationHelper {
           } else {
             await client.deleteDocumentBlueprintById(item.id);
           }
-          console.log(`Successfully deleted blueprint: ${item.name} (${item.id})`);
         } catch (deleteError) {
           console.log(`Error deleting blueprint ${item.id}:`, deleteError);
         }

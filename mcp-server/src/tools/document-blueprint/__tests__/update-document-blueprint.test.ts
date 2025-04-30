@@ -1,6 +1,6 @@
 import UpdateDocumentBlueprintTool from "../put/update-blueprint.js";
 import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
-import { DocumentBlueprintVerificationHelper } from "./helpers/document-blueprint-verification-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
 describe("update-document-blueprint", () => {
@@ -16,13 +16,13 @@ describe("update-document-blueprint", () => {
   afterEach(async () => {
     console.error = originalConsoleError;
     // Clean up any test blueprints
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_BLUEPRINT_NAME);
-    await DocumentBlueprintVerificationHelper.cleanup(UPDATED_BLUEPRINT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(UPDATED_BLUEPRINT_NAME);
   });
 
   it("should update a document blueprint", async () => {
     // Create a blueprint to update
-    const blueprint = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(blueprint).toBeDefined();
 
     // Create update model using builder
@@ -42,7 +42,7 @@ describe("update-document-blueprint", () => {
     expect(result).toMatchSnapshot();
 
     // Verify the blueprint was updated
-    const found = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(UPDATED_BLUEPRINT_NAME);
+    const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(UPDATED_BLUEPRINT_NAME);
     expect(found).toBeDefined();
     expect(found!.id).toBe(blueprint!.id);
   });

@@ -4,7 +4,7 @@ import { getDictionaryByIdResponse, getDictionaryResponse } from "@/umb-manageme
 export const BLANK_UUID = "00000000-0000-0000-0000-000000000000";
 export const DEFAULT_ISO_CODE = "en-US";
 
-export class DictionaryVerificationHelper {
+export class DictionaryTestHelper {
   static async verifyDictionaryItem(id: string): Promise<boolean> {
     try {
       const client = UmbracoManagementClient.getClient();

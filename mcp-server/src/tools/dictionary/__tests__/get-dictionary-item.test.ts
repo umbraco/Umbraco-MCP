@@ -1,7 +1,7 @@
 import { getDictionaryByIdParams } from "../../../api/umbraco/management/umbracoManagementAPI.zod.js";
 import GetDictionaryItemTool from "../get/get-dictionary-item.js";
-import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
-import { BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-verification-helper.js";
+import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
+import { BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
 import { createSnapshotResult } from "../../../helpers/test-utils.js";
 import { jest } from "@jest/globals";
 
@@ -10,12 +10,12 @@ const TEST_DICTIONARY_TRANSLATION = "_Test Translation Get";
 
 describe("get-dictionary-item", () => {
   let originalConsoleError: typeof console.error;
-  let helper: DictionaryTestHelper;
+  let helper: DictionaryBuilder;
 
   beforeEach(() => {
     originalConsoleError = console.error;
     console.error = jest.fn();
-    helper = new DictionaryTestHelper();
+    helper = new DictionaryBuilder();
   });
 
   afterEach(async () => {

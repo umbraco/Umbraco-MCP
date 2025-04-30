@@ -1,5 +1,5 @@
 import CreateDictionaryItemTool from "../post/create-dictionary-item.js";
-import { DEFAULT_ISO_CODE, DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
+import { DEFAULT_ISO_CODE, DictionaryTestHelper } from "./helpers/dictionary-helper.js";
 import { jest } from "@jest/globals";
 
 const TEST_DICTIONARY_NAME = "_Test Dictionary Created";
@@ -18,8 +18,8 @@ describe("create-dictionary-item", () => {
   afterEach(async () => {
     console.error = originalConsoleError;
     // Clean up any test dictionary items
-    await DictionaryVerificationHelper.cleanup(TEST_DICTIONARY_NAME);
-    await DictionaryVerificationHelper.cleanup(EXISTING_DICTIONARY_NAME);
+    await DictionaryTestHelper.cleanup(TEST_DICTIONARY_NAME);
+    await DictionaryTestHelper.cleanup(EXISTING_DICTIONARY_NAME);
   });
 
   it("should create a dictionary item", async () => {
@@ -32,7 +32,7 @@ describe("create-dictionary-item", () => {
     expect(result).toMatchSnapshot();
 
     // Verify the created item exists and matches expected values
-    const items = await DictionaryVerificationHelper.findDictionaryItems(TEST_DICTIONARY_NAME, true);
+    const items = await DictionaryTestHelper.findDictionaryItems(TEST_DICTIONARY_NAME, true);
     expect(items).toMatchSnapshot();
   });
 

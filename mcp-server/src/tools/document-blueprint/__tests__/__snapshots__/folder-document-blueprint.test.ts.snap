@@ -59,7 +59,7 @@ exports[`document-blueprint-folder update should update a folder name 1`] = `
 {
   "content": [
     {
-      "text": "Error: AxiosError: Request failed with status code 500",
+      "text": """",
       "type": "text",
     },
   ],

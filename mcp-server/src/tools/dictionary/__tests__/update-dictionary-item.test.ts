@@ -1,6 +1,6 @@
 import UpdateDictionaryItemTool from "../put/update-dictionary-item.js";
-import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
-import { BLANK_UUID, DEFAULT_ISO_CODE, DictionaryVerificationHelper } from "./helpers/dictionary-verification-helper.js";
+import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
+import { BLANK_UUID, DEFAULT_ISO_CODE, DictionaryTestHelper } from "./helpers/dictionary-helper.js";
 import { jest } from "@jest/globals";
 
 const TEST_DICTIONARY_NAME = "_Test Dictionary Update";
@@ -12,12 +12,12 @@ const NON_EXISTENT_DICTIONARY_TRANSLATION = "_Non Existent Translation";
 
 describe("update-dictionary-item", () => {
   let originalConsoleError: typeof console.error;
-  let helper: DictionaryTestHelper;
+  let helper: DictionaryBuilder;
 
   beforeEach(() => {
     originalConsoleError = console.error;
     console.error = jest.fn();
-    helper = new DictionaryTestHelper();
+    helper = new DictionaryBuilder();
   });
 
   afterEach(async () => {
@@ -44,7 +44,7 @@ describe("update-dictionary-item", () => {
     expect(result).toMatchSnapshot();
 
     // Verify the updated item exists and matches expected values
-    const items = await DictionaryVerificationHelper.findDictionaryItems(UPDATED_DICTIONARY_NAME, true);
+    const items = await DictionaryTestHelper.findDictionaryItems(UPDATED_DICTIONARY_NAME, true);
     expect(items).toMatchSnapshot();
   });
 

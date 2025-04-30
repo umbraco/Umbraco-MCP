@@ -1,8 +1,8 @@
 import GetDictionaryRootTool from "../items/get/get-root.js";
 import GetDictionaryChildrenTool from "../items/get/get-children.js";
 import GetDictionaryAncestorsTool from "../items/get/get-ancestors.js";
-import { DictionaryTestHelper } from "./helpers/dictionary-test-helper.js";
-import { DEFAULT_ISO_CODE } from "./helpers/dictionary-verification-helper.js";
+import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
+import { DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
 import { createSnapshotResult } from "../../../helpers/test-utils.js";
 import { jest } from "@jest/globals";
 
@@ -15,15 +15,15 @@ const GRANDCHILD_DICTIONARY_TRANSLATION = "_Grandchild Translation";
 
 describe("dictionary-tree", () => {
   let originalConsoleError: typeof console.error;
-  let rootHelper: DictionaryTestHelper;
-  let childHelper: DictionaryTestHelper;
-  let grandchildHelper: DictionaryTestHelper;
+  let rootHelper: DictionaryBuilder;
+  let childHelper: DictionaryBuilder;
+  let grandchildHelper: DictionaryBuilder;
 
   beforeAll(async () => {
     // Create the dictionary tree structure
-    rootHelper = new DictionaryTestHelper();
-    childHelper = new DictionaryTestHelper();
-    grandchildHelper = new DictionaryTestHelper();
+    rootHelper = new DictionaryBuilder();
+    childHelper = new DictionaryBuilder();
+    grandchildHelper = new DictionaryBuilder();
 
     // Create root dictionary
     await rootHelper

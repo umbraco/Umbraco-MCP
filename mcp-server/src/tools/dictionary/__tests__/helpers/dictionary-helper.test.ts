@@ -1,13 +1,13 @@
-import { DictionaryTestHelper } from "./dictionary-test-helper.js";
+import { DictionaryBuilder } from "./dictionary-builder.js";
 import { jest } from "@jest/globals";
 
-describe("DictionaryTestHelper", () => {
-  let helper: DictionaryTestHelper;
-  let parentHelper: DictionaryTestHelper;
+describe("DictionaryBuilder", () => {
+  let helper: DictionaryBuilder;
+  let parentHelper: DictionaryBuilder;
 
   beforeEach(() => {
-    helper = new DictionaryTestHelper();
-    parentHelper = new DictionaryTestHelper();
+    helper = new DictionaryBuilder();
+    parentHelper = new DictionaryBuilder();
   });
 
   afterEach(async () => {

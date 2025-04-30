@@ -43,14 +43,3 @@ exports[`document-blueprint-tree children should handle non-existent parent 1`] 
   ],
 }
 `;
-
-exports[`document-blueprint-tree root should get root items 1`] = `
-{
-  "content": [
-    {
-      "text": "{"total":1,"items":[{"documentType":{"id":"e68abe48-7646-4ef4-abb8-f1a5b24b27cc","icon":"icon-settings color-pink","collection":null},"isFolder":false,"name":"_Test Root Blueprint","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false}]}",
-      "type": "text",
-    },
-  ],
-}
-`;

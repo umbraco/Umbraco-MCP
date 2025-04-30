@@ -1,19 +1,19 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateDictionaryItemRequestModel } from "@/umb-management-api/schemas/index.js";
-import { postDictionaryBody, getDictionaryByIdResponse, getDictionaryResponse } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { postDictionaryBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-export class DictionaryTestHelper {
+export class DictionaryBuilder {
   private model: Partial<CreateDictionaryItemRequestModel> = {
     translations: []
   };
   private id: string | null = null;
 
-  withName(name: string): DictionaryTestHelper {
+  withName(name: string): DictionaryBuilder {
     this.model.name = name;
     return this;
   }
 
-  withTranslation(isoCode: string, translation: string): DictionaryTestHelper {
+  withTranslation(isoCode: string, translation: string): DictionaryBuilder {
     this.model.translations = [
       ...(this.model.translations || []),
       { isoCode, translation }
@@ -21,12 +21,12 @@ export class DictionaryTestHelper {
     return this;
   }
 
-  withParent(parentId: string): DictionaryTestHelper {
+  withParent(parentId: string): DictionaryBuilder {
     this.model.parent = { id: parentId };
     return this;
   }
 
-  async create(): Promise<DictionaryTestHelper> {
+  async create(): Promise<DictionaryBuilder> {
     const client = UmbracoManagementClient.getClient();
     const validatedModel = postDictionaryBody.parse(this.model);
     await client.postDictionary(validatedModel);
@@ -70,11 +70,5 @@ export class DictionaryTestHelper {
         console.error("Error cleaning up dictionary item:", error);
       }
     }
-  }
-
-  async reset(): Promise<void> {
-    await this.cleanup();
-    this.model = { translations: [] };
-    this.id = null;
   }
 } 

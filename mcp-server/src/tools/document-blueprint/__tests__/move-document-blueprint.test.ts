@@ -1,5 +1,5 @@
 import MoveDocumentBlueprintTool from "../put/move-blueprint.js";
-import { DocumentBlueprintVerificationHelper } from "./helpers/document-blueprint-verification-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
 
 describe("move-document-blueprint", () => {
@@ -15,17 +15,17 @@ describe("move-document-blueprint", () => {
   afterEach(async () => {
     console.error = originalConsoleError;
     // Clean up any test blueprints
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_BLUEPRINT_NAME);
-    await DocumentBlueprintVerificationHelper.cleanup(TEST_FOLDER_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_BLUEPRINT_NAME);
+    await DocumentBlueprintTestHelper.cleanup(TEST_FOLDER_NAME);
   });
 
   it("should move a document blueprint", async () => {
     // Create a folder
-    const folder = await DocumentBlueprintVerificationHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
+    const folder = await DocumentBlueprintTestHelper.createDocumentBlueprintFolder(TEST_FOLDER_NAME);
     expect(folder).toBeDefined();
 
     // Create a blueprint to move
-    const blueprint = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(blueprint).toBeDefined();
 
     // Move the blueprint
@@ -42,14 +42,14 @@ describe("move-document-blueprint", () => {
     expect(result).toMatchSnapshot();
 
     // Verify the blueprint was moved
-    const found = await DocumentBlueprintVerificationHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const found = await DocumentBlueprintTestHelper.findDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(found).toBeDefined();
     expect(found!.id).toBe(blueprint!.id);
   });
 
   it("should handle moving to non-existent folder", async () => {
     // Create a blueprint to move
-    const blueprint = await DocumentBlueprintVerificationHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
+    const blueprint = await DocumentBlueprintTestHelper.createDocumentBlueprint(TEST_BLUEPRINT_NAME);
     expect(blueprint).toBeDefined();
 
     const result = await MoveDocumentBlueprintTool().handler({
