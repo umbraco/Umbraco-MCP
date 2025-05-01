@@ -12724,7 +12724,7 @@ var get_cultures_default = GetCulturesTool;
 // src/tools/culture/index.ts
 var CultureTools = [get_cultures_default];
 
-// src/tools/data-types/post/create-data-type.ts
+// src/tools/data-type/post/create-data-type.ts
 var CreateDataTypeTool = CreateUmbracoTool(
   "create-data-type",
   "Creates a new data type",
@@ -12756,7 +12756,7 @@ var CreateDataTypeTool = CreateUmbracoTool(
 );
 var create_data_type_default = CreateDataTypeTool;
 
-// src/tools/data-types/delete/delete-data-type.ts
+// src/tools/data-type/delete/delete-data-type.ts
 var DeleteDataTypeTool = CreateUmbracoTool(
   "delete-data-type",
   "Deletes a data type by Id",
@@ -12788,7 +12788,7 @@ var DeleteDataTypeTool = CreateUmbracoTool(
 );
 var delete_data_type_default = DeleteDataTypeTool;
 
-// src/tools/data-types/get/find-data-type.ts
+// src/tools/data-type/get/find-data-type.ts
 var FindDataTypeTool = CreateUmbracoTool(
   "find-data-type",
   "Finds a data type by Id or Name",
@@ -12820,7 +12820,7 @@ var FindDataTypeTool = CreateUmbracoTool(
 );
 var find_data_type_default = FindDataTypeTool;
 
-// src/tools/data-types/get/get-data-type.ts
+// src/tools/data-type/get/get-data-type.ts
 var GetDataTypeTool = CreateUmbracoTool(
   "get-data-type",
   "Gets a data type by Id",
@@ -12852,7 +12852,7 @@ var GetDataTypeTool = CreateUmbracoTool(
 );
 var get_data_type_default = GetDataTypeTool;
 
-// src/tools/data-types/put/update-data-type.ts
+// src/tools/data-type/put/update-data-type.ts
 
 var UpdateDataTypeTool = CreateUmbracoTool(
   "update-data-type",
@@ -12888,7 +12888,7 @@ var UpdateDataTypeTool = CreateUmbracoTool(
 );
 var update_data_type_default = UpdateDataTypeTool;
 
-// src/tools/data-types/post/copy-data-type.ts
+// src/tools/data-type/post/copy-data-type.ts
 
 var CopyDataTypeTool = CreateUmbracoTool(
   "copy-data-type",
@@ -12924,7 +12924,7 @@ var CopyDataTypeTool = CreateUmbracoTool(
 );
 var copy_data_type_default = CopyDataTypeTool;
 
-// src/tools/data-types/get/is-used-data-type.ts
+// src/tools/data-type/get/is-used-data-type.ts
 var IsUsedDataTypeTool = CreateUmbracoTool(
   "is-used-data-type",
   "Checks if a data type is used within Umbraco",
@@ -12956,7 +12956,7 @@ var IsUsedDataTypeTool = CreateUmbracoTool(
 );
 var is_used_data_type_default = IsUsedDataTypeTool;
 
-// src/tools/data-types/put/move-data-type.ts
+// src/tools/data-type/put/move-data-type.ts
 
 var MoveDataTypeTool = CreateUmbracoTool(
   "move-data-type",
@@ -12992,7 +12992,7 @@ var MoveDataTypeTool = CreateUmbracoTool(
 );
 var move_data_type_default = MoveDataTypeTool;
 
-// src/tools/data-types/get/get-references-data-type.ts
+// src/tools/data-type/get/get-references-data-type.ts
 var GetReferencesDataTypeTool = CreateUmbracoTool(
   "get-references-data-type",
   "Gets a data type by Id",
@@ -13024,7 +13024,7 @@ var GetReferencesDataTypeTool = CreateUmbracoTool(
 );
 var get_references_data_type_default = GetReferencesDataTypeTool;
 
-// src/tools/data-types/folders/post/create-folder.ts
+// src/tools/data-type/folders/post/create-folder.ts
 var CreateDataTypeFolderTool = CreateUmbracoTool(
   "create-data-type-folder",
   "Creates a new data type folder",
@@ -13056,7 +13056,7 @@ var CreateDataTypeFolderTool = CreateUmbracoTool(
 );
 var create_folder_default = CreateDataTypeFolderTool;
 
-// src/tools/data-types/folders/delete/delete-folder.ts
+// src/tools/data-type/folders/delete/delete-folder.ts
 var DeleteDataTypeFolderTool = CreateUmbracoTool(
   "delete-data-type-folder",
   "Deletes a data type folder by Id",
@@ -13088,7 +13088,7 @@ var DeleteDataTypeFolderTool = CreateUmbracoTool(
 );
 var delete_folder_default = DeleteDataTypeFolderTool;
 
-// src/tools/data-types/folders/get/get-folder.ts
+// src/tools/data-type/folders/get/get-folder.ts
 var GetDataTypeFolderTool = CreateUmbracoTool(
   "get-data-type-folder",
   "Gets a data type folder by Id",
@@ -13120,7 +13120,7 @@ var GetDataTypeFolderTool = CreateUmbracoTool(
 );
 var get_folder_default = GetDataTypeFolderTool;
 
-// src/tools/data-types/items/get/get-search.ts
+// src/tools/data-type/items/get/get-search.ts
 var GetDataTypeSearchTool = CreateUmbracoTool(
   "get-data-type-search",
   "Searches the data type tree for a data type by name. It does NOT allow for searching for data type folders.",
@@ -13152,7 +13152,7 @@ var GetDataTypeSearchTool = CreateUmbracoTool(
 );
 var get_search_default = GetDataTypeSearchTool;
 
-// src/tools/data-types/folders/put/update-folder.ts
+// src/tools/data-type/folders/put/update-folder.ts
 
 var UpdateDataTypeFolderTool = CreateUmbracoTool(
   "update-data-type-folder",
@@ -13188,7 +13188,7 @@ var UpdateDataTypeFolderTool = CreateUmbracoTool(
 );
 var update_folder_default = UpdateDataTypeFolderTool;
 
-// src/tools/data-types/items/get/get-root.ts
+// src/tools/data-type/items/get/get-root.ts
 var GetDataTypeRootTool = CreateUmbracoTool(
   "get-data-type-root",
   "Gets the root level of the data type and data type folders in the tree.",
@@ -13220,7 +13220,7 @@ var GetDataTypeRootTool = CreateUmbracoTool(
 );
 var get_root_default = GetDataTypeRootTool;
 
-// src/tools/data-types/items/get/get-children.ts
+// src/tools/data-type/items/get/get-children.ts
 var GetDataTypeChildrenTool = CreateUmbracoTool(
   "get-data-type-children",
   "Gets the children data types or data type folders by the parent id",
@@ -13252,7 +13252,7 @@ var GetDataTypeChildrenTool = CreateUmbracoTool(
 );
 var get_children_default = GetDataTypeChildrenTool;
 
-// src/tools/data-types/items/get/get-ancestors.ts
+// src/tools/data-type/items/get/get-ancestors.ts
 var GetDataTypeAncestorsTool = CreateUmbracoTool(
   "get-data-type-ancestors",
   "Gets the ancestors of a data type by Id",
@@ -13284,7 +13284,7 @@ var GetDataTypeAncestorsTool = CreateUmbracoTool(
 );
 var get_ancestors_default = GetDataTypeAncestorsTool;
 
-// src/tools/data-types/index.ts
+// src/tools/data-type/index.ts
 var DataTypeTools = [
   get_root_default,
   get_search_default,
@@ -13323,7 +13323,7 @@ var DeleteDictionaryItemTool = CreateUmbracoTool(
         ]
       };
     } catch (error) {
-      console.error("Error creating data type:", error);
+      console.error("Error creating dictionary item:", error);
       return {
         content: [
           {
@@ -13355,7 +13355,7 @@ var FindDictionaryItemTool = CreateUmbracoTool(
         ]
       };
     } catch (error) {
-      console.error("Error creating data type:", error);
+      console.error("Error getting dictionary item:", error);
       return {
         content: [
           {

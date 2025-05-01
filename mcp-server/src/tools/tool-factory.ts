@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 import { CultureTools } from "./culture/index.js";
-import { DataTypeTools } from "./data-types/index.js";
+import { DataTypeTools } from "./data-type/index.js";
 import { DictionaryTools } from "./dictionary/index.js";
 
 export function ToolFactory(server: McpServer) {
