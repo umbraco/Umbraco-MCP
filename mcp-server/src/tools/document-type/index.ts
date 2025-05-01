@@ -11,6 +11,9 @@ import CreateDocumentTypeFolderTool from "./folders/post/create-folder.js";
 import DeleteDocumentTypeFolderTool from "./folders/delete/delete-folder.js";
 import GetDocumentTypeFolderTool from "./folders/get/get-folder.js";
 import UpdateDocumentTypeFolderTool from "./folders/put/update-folder.js";
+import GetDocumentTypeBlueprintTool from "./get/get-document-type-blueprint.js";
+import GetDocumentTypeCompositionReferencesTool from "./get/get-document-type-composition-references.js";
+import GetDocumentTypeAvailableCompositionsTool from "./post/get-document-type-available-compositions.js";
 
 export const DocumentTypeTools = [
   CreateDocumentTypeTool,
@@ -25,5 +28,8 @@ export const DocumentTypeTools = [
   CreateDocumentTypeFolderTool,
   DeleteDocumentTypeFolderTool,
   GetDocumentTypeFolderTool,
-  UpdateDocumentTypeFolderTool
+  UpdateDocumentTypeFolderTool,
+  GetDocumentTypeBlueprintTool,
+  GetDocumentTypeCompositionReferencesTool,
+  GetDocumentTypeAvailableCompositionsTool
 ]; 

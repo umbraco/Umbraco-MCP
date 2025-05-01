@@ -1,5 +1,6 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { UpdateDocumentBlueprintRequestModel } from "@/umb-management-api/schemas/updateDocumentBlueprintRequestModel.js";
 import { putDocumentBlueprintByIdParams, putDocumentBlueprintByIdBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
 
@@ -10,7 +11,7 @@ const UpdateDocumentBlueprintTool = CreateUmbracoTool(
     id: putDocumentBlueprintByIdParams.shape.id,
     data: z.object(putDocumentBlueprintByIdBody.shape)
   },
-  async (model: { id: string; data: { values: any[]; variants: any[] } }) => {
+  async (model: { id: string; data: UpdateDocumentBlueprintRequestModel }) => {
     try {
       const client = UmbracoManagementClient.getClient();
       var response = await client.putDocumentBlueprintById(model.id, model.data);

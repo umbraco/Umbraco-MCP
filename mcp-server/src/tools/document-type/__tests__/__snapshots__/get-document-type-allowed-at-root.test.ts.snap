@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-document-type-allowed-at-root should get document types allowed at root 1`] = `
+{
+  "description": null,
+  "icon": "icon-document",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "name": "_Test DocumentType Root",
+}
+`;
+
+exports[`get-document-type-allowed-at-root should handle no document types allowed at root 1`] = `
+{
+  "content": [
+    {
+      "text": "{"total":1,"items":[{"id":"a95360e8-ff04-40b1-8f46-7aa4b5983096","name":"Home","description":null,"icon":"icon-home color-blue"}]}",
+      "type": "text",
+    },
+  ],
+}
+`;

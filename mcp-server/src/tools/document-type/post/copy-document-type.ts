@@ -1,18 +1,15 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
+import { postDocumentTypeByIdCopyBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { CopyDocumentTypeRequestModel } from "@/umb-management-api/schemas/index.js";
-import {
-  postDocumentTypeByIdCopyParams,
-  postDocumentTypeByIdCopyBody,
-} from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
+import { CopyDocumentTypeRequestModel } from "@/umb-management-api/schemas/copyDocumentTypeRequestModel.js";
 
 const CopyDocumentTypeTool = CreateUmbracoTool(
-  "copy-document-type",
-  "Copies a document type",
+  "copy-document-type", 
+  "Copy a document type to a new location",
   {
-    id: postDocumentTypeByIdCopyParams.shape.id,
-    data: z.object(postDocumentTypeByIdCopyBody.shape),
+    id: z.string().uuid(),
+    data: z.object(postDocumentTypeByIdCopyBody.shape)
   },
   async (model: { id: string; data: CopyDocumentTypeRequestModel }) => {
     try {
@@ -23,9 +20,9 @@ const CopyDocumentTypeTool = CreateUmbracoTool(
         content: [
           {
             type: "text" as const,
-            text: JSON.stringify(response),
-          },
-        ],
+            text: JSON.stringify(response)
+          }
+        ]
       };
     } catch (error) {
       console.error("Error copying document type:", error);
@@ -33,9 +30,9 @@ const CopyDocumentTypeTool = CreateUmbracoTool(
         content: [
           {
             type: "text" as const,
-            text: `Error: ${error}`,
-          },
-        ],
+            text: `Error: ${error}`
+          }
+        ]
       };
     }
   }
