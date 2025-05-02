@@ -1,4 +1,4 @@
-import GetDocumentTypeTool from "../get/get-document-type.js";
+import GetDocumentTypeTool from "../get/get-document-type-by-ids.js";
 import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
 import { DocumentTypeTestHelper, BLANK_UUID } from "./helpers/document-type-test-helper.js";
 import { jest } from "@jest/globals";

@@ -3,6 +3,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CultureTools } from "./culture/index.js";
 import { DataTypeTools } from "./data-type/index.js";
 import { DictionaryTools } from "./dictionary/index.js";
+import { DocumentTypeTools } from "./document-type/index.js";
+import { DocumentBlueprintTools } from "./document-blueprint/index.js";
 
 export function ToolFactory(server: McpServer) {
   CultureTools.map((tool) => tool()).forEach((tool) =>
@@ -14,4 +16,11 @@ export function ToolFactory(server: McpServer) {
   DictionaryTools.map((tool) => tool()).forEach((tool) =>
     server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
+  DocumentBlueprintTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  DocumentTypeTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+
 }

@@ -13614,6 +13614,863 @@ var DictionaryTools = [
   get_ancestors_default2
 ];
 
+// src/tools/document-type/post/create-document-type.ts
+var CreateDocumentTypeTool = CreateUmbracoTool(
+  "create-document-type",
+  "Creates a new document type",
+  postDocumentTypeBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.postDocumentType(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating document type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var create_document_type_default = CreateDocumentTypeTool;
+
+// src/tools/document-type/delete/delete-document-type.ts
+var DeleteDocumentTypeTool = CreateUmbracoTool(
+  "delete-document-type",
+  "Deletes a document type by Id",
+  deleteDocumentTypeByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.deleteDocumentTypeById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error deleting document type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_document_type_default = DeleteDocumentTypeTool;
+
+// src/tools/document-type/get/get-document-type.ts
+var GetDocumentTypeTool = CreateUmbracoTool(
+  "get-document-type",
+  "Gets a document type by Id",
+  getDocumentTypeByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentTypeById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_type_default = GetDocumentTypeTool;
+
+// src/tools/document-type/put/update-document-type.ts
+
+var UpdateDocumentTypeTool = CreateUmbracoTool(
+  "update-document-type",
+  "Updates a document type by Id",
+  {
+    id: putDocumentTypeByIdParams.shape.id,
+    data: _zod.z.object(putDocumentTypeByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentTypeById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating document type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_document_type_default = UpdateDocumentTypeTool;
+
+// src/tools/document-type/post/copy-document-type.ts
+
+var CopyDocumentTypeTool = CreateUmbracoTool(
+  "copy-document-type",
+  "Copy a document type to a new location",
+  {
+    id: _zod.z.string().uuid(),
+    data: _zod.z.object(postDocumentTypeByIdCopyBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.postDocumentTypeByIdCopy(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error copying document type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var copy_document_type_default = CopyDocumentTypeTool;
+
+// src/tools/document-type/put/move-document-type.ts
+
+var MoveDocumentTypeTool = CreateUmbracoTool(
+  "move-document-type",
+  "Move a document type to a new location",
+  {
+    id: _zod.z.string().uuid(),
+    data: _zod.z.object(putDocumentTypeByIdMoveBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentTypeByIdMove(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error moving document type:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var move_document_type_default = MoveDocumentTypeTool;
+
+// src/tools/document-type/items/get/get-root.ts
+var GetDocumentTypeRootTool = CreateUmbracoTool(
+  "get-document-type-root",
+  "Gets the root level of the document type tree",
+  getTreeDocumentTypeRootQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getTreeDocumentTypeRoot(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type root:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_root_default3 = GetDocumentTypeRootTool;
+
+// src/tools/document-type/items/get/get-children.ts
+var GetDocumentTypeChildrenTool = CreateUmbracoTool(
+  "get-document-type-children",
+  "Gets the children of a document type",
+  getTreeDocumentTypeChildrenQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getTreeDocumentTypeChildren(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type children:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_children_default3 = GetDocumentTypeChildrenTool;
+
+// src/tools/document-type/items/get/get-ancestors.ts
+var GetDocumentTypeAncestorsTool = CreateUmbracoTool(
+  "get-document-type-ancestors",
+  "Gets the ancestors of a document type",
+  getTreeDocumentTypeAncestorsQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getTreeDocumentTypeAncestors(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type ancestors:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_ancestors_default3 = GetDocumentTypeAncestorsTool;
+
+// src/tools/document-type/folders/post/create-folder.ts
+var CreateDocumentTypeFolderTool = CreateUmbracoTool(
+  "create-document-type-folder",
+  "Creates a new document type folder",
+  postDocumentTypeFolderBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.postDocumentTypeFolder(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating document type folder:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var create_folder_default2 = CreateDocumentTypeFolderTool;
+
+// src/tools/document-type/folders/delete/delete-folder.ts
+var DeleteDocumentTypeFolderTool = CreateUmbracoTool(
+  "delete-document-type-folder",
+  "Deletes a document type folder by Id",
+  deleteDocumentTypeFolderByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.deleteDocumentTypeFolderById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error deleting document type folder:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_folder_default2 = DeleteDocumentTypeFolderTool;
+
+// src/tools/document-type/folders/get/get-folder.ts
+var GetDocumentTypeFolderTool = CreateUmbracoTool(
+  "get-document-type-folder",
+  "Gets a document type folder by Id",
+  getDocumentTypeFolderByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentTypeFolderById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type folder:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_folder_default2 = GetDocumentTypeFolderTool;
+
+// src/tools/document-type/folders/put/update-folder.ts
+
+var UpdateDocumentTypeFolderTool = CreateUmbracoTool(
+  "update-document-type-folder",
+  "Updates a document type folder by Id",
+  {
+    id: putDocumentTypeFolderByIdParams.shape.id,
+    data: _zod.z.object(putDocumentTypeFolderByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentTypeFolderById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating document type folder:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_folder_default2 = UpdateDocumentTypeFolderTool;
+
+// src/tools/document-type/get/get-document-type-blueprint.ts
+var GetDocumentTypeBlueprintTool = CreateUmbracoTool(
+  "get-document-type-blueprint",
+  "Gets the blueprints for a document type",
+  getDocumentTypeByIdBlueprintParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentTypeByIdBlueprint(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type blueprints:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_type_blueprint_default = GetDocumentTypeBlueprintTool;
+
+// src/tools/document-type/get/get-document-type-composition-references.ts
+var GetDocumentTypeCompositionReferencesTool = CreateUmbracoTool(
+  "get-document-type-composition-references",
+  "Gets the composition references for a document type",
+  getDocumentTypeByIdCompositionReferencesParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentTypeByIdCompositionReferences(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type composition references:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_type_composition_references_default = GetDocumentTypeCompositionReferencesTool;
+
+// src/tools/document-type/post/get-document-type-available-compositions.ts
+var GetDocumentTypeAvailableCompositionsTool = CreateUmbracoTool(
+  "get-document-type-available-compositions",
+  "Gets the available compositions for a document type",
+  postDocumentTypeAvailableCompositionsBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.postDocumentTypeAvailableCompositions(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting available document type compositions:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_type_available_compositions_default = GetDocumentTypeAvailableCompositionsTool;
+
+// src/tools/document-type/get/get-document-type-allowed-children.ts
+var paramSchema = getDocumentTypeByIdAllowedChildrenParams.merge(getDocumentTypeByIdAllowedChildrenQueryParams);
+var GetDocumentTypeAllowedChildrenTool = CreateUmbracoTool(
+  "get-document-type-allowed-children",
+  "Gets the document types that are allowed as children of a document type",
+  paramSchema.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentTypeByIdAllowedChildren(model.id, {
+        skip: model.skip,
+        take: model.take
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting allowed document type children:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_type_allowed_children_default = GetDocumentTypeAllowedChildrenTool;
+
+// src/tools/document-type/get/get-document-type-configuration.ts
+var GetDocumentTypeConfigurationTool = CreateUmbracoTool(
+  "get-document-type-configuration",
+  "Gets the global configuration for document types",
+  {},
+  async () => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentTypeConfiguration();
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document type configuration:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_type_configuration_default = GetDocumentTypeConfigurationTool;
+
+// src/tools/document-type/index.ts
+var DocumentTypeTools = [
+  create_document_type_default,
+  delete_document_type_default,
+  get_document_type_default,
+  update_document_type_default,
+  copy_document_type_default,
+  move_document_type_default,
+  get_root_default3,
+  get_children_default3,
+  get_ancestors_default3,
+  create_folder_default2,
+  delete_folder_default2,
+  get_folder_default2,
+  update_folder_default2,
+  get_document_type_blueprint_default,
+  get_document_type_composition_references_default,
+  get_document_type_available_compositions_default,
+  get_document_type_allowed_children_default,
+  get_document_type_configuration_default
+];
+
+// src/tools/document-blueprint/get/get-blueprint.ts
+var GetDocumentBlueprintTool = CreateUmbracoTool(
+  "get-document-blueprint",
+  "Gets a document blueprint by Id",
+  getDocumentBlueprintByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentBlueprintById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document blueprint:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_blueprint_default = GetDocumentBlueprintTool;
+
+// src/tools/document-blueprint/delete/delete-blueprint.ts
+var DeleteDocumentBlueprintTool = CreateUmbracoTool(
+  "delete-document-blueprint",
+  "Deletes a document blueprint by Id",
+  deleteDocumentBlueprintByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.deleteDocumentBlueprintById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error deleting document blueprint:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_blueprint_default = DeleteDocumentBlueprintTool;
+
+// src/tools/document-blueprint/put/update-blueprint.ts
+
+var UpdateDocumentBlueprintTool = CreateUmbracoTool(
+  "update-document-blueprint",
+  "Updates a document blueprint by Id",
+  {
+    id: putDocumentBlueprintByIdParams.shape.id,
+    data: _zod.z.object(putDocumentBlueprintByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.putDocumentBlueprintById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating document blueprint:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_blueprint_default = UpdateDocumentBlueprintTool;
+
+// src/tools/document-blueprint/post/create-blueprint.ts
+var CreateDocumentBlueprintTool = CreateUmbracoTool(
+  "create-document-blueprint",
+  "Creates a new document blueprint",
+  postDocumentBlueprintBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.postDocumentBlueprint(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating document blueprint:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var create_blueprint_default = CreateDocumentBlueprintTool;
+
+// src/tools/document-blueprint/get/get-ancestors.ts
+var GetDocumentBlueprintAncestorsTool = CreateUmbracoTool(
+  "get-document-blueprint-ancestors",
+  "Gets the ancestors of a document blueprint by Id",
+  getTreeDocumentBlueprintAncestorsQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDocumentBlueprintAncestors(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document blueprint ancestors:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_ancestors_default4 = GetDocumentBlueprintAncestorsTool;
+
+// src/tools/document-blueprint/get/get-children.ts
+var GetDocumentBlueprintChildrenTool = CreateUmbracoTool(
+  "get-document-blueprint-children",
+  "Gets the children of a document blueprint by Id",
+  getTreeDocumentBlueprintChildrenQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDocumentBlueprintChildren(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document blueprint children:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_children_default4 = GetDocumentBlueprintChildrenTool;
+
+// src/tools/document-blueprint/get/get-root.ts
+var GetDocumentBlueprintRootTool = CreateUmbracoTool(
+  "get-document-blueprint-root",
+  "Gets the root level of the document blueprint tree",
+  getTreeDocumentBlueprintRootQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeDocumentBlueprintRoot(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document blueprint root:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_root_default4 = GetDocumentBlueprintRootTool;
+
+// src/tools/document-blueprint/index.ts
+var DocumentBlueprintTools = [
+  get_blueprint_default,
+  delete_blueprint_default,
+  update_blueprint_default,
+  create_blueprint_default,
+  get_ancestors_default4,
+  get_children_default4,
+  get_root_default4
+];
+
 // src/tools/tool-factory.ts
 function ToolFactory(server) {
   CultureTools.map((tool) => tool()).forEach(
@@ -13623,6 +14480,12 @@ function ToolFactory(server) {
     (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
   DictionaryTools.map((tool) => tool()).forEach(
+    (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  DocumentBlueprintTools.map((tool) => tool()).forEach(
+    (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  DocumentTypeTools.map((tool) => tool()).forEach(
     (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
 }
@@ -13664,7 +14527,7 @@ var GetDataTypeAncestorsResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_ancestors_default3 = GetDataTypeAncestorsResource;
+var get_ancestors_default5 = GetDataTypeAncestorsResource;
 
 // src/resources/data-types/get/get-children.ts
 var GetDataTypeChildrenResource = CreateUmbracoTemplateResource(
@@ -13698,7 +14561,7 @@ var GetDataTypeChildrenResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_children_default3 = GetDataTypeChildrenResource;
+var get_children_default5 = GetDataTypeChildrenResource;
 
 // src/resources/data-types/get/get-folder.ts
 var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
@@ -13729,7 +14592,7 @@ var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_folder_default2 = GetDataTypeFolderResource;
+var get_folder_default3 = GetDataTypeFolderResource;
 
 // src/resources/data-types/get/get-is-used.ts
 var GetDataTypeIsUsedResource = CreateUmbracoTemplateResource(
@@ -13860,7 +14723,7 @@ var GetDataTypeRootResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_root_default3 = GetDataTypeRootResource;
+var get_root_default5 = GetDataTypeRootResource;
 
 // src/resources/data-types/get/get-search.ts
 var GetDataTypeSearchResource = CreateUmbracoTemplateResource(
@@ -13897,13 +14760,13 @@ var get_search_default2 = GetDataTypeSearchResource;
 
 // src/resources/data-types/index.ts
 var DataTypeTemplateResources = [
-  get_ancestors_default3,
-  get_children_default3,
-  get_folder_default2,
+  get_ancestors_default5,
+  get_children_default5,
+  get_folder_default3,
   get_is_used_default,
   get_query_default,
   get_references_default,
-  get_root_default3,
+  get_root_default5,
   get_search_default2
 ];
 

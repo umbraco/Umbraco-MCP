@@ -1,6 +1,6 @@
 import CreateDocumentTypeTool from "./post/create-document-type.js";
 import DeleteDocumentTypeTool from "./delete/delete-document-type.js";
-import GetDocumentTypeTool from "./get/get-document-type.js";
+import GetDocumentTypeTool from "./get/get-document-type-by-ids.js";
 import UpdateDocumentTypeTool from "./put/update-document-type.js";
 import CopyDocumentTypeTool from "./post/copy-document-type.js";
 import MoveDocumentTypeTool from "./put/move-document-type.js";
@@ -16,6 +16,7 @@ import GetDocumentTypeCompositionReferencesTool from "./get/get-document-type-co
 import GetDocumentTypeAvailableCompositionsTool from "./post/get-document-type-available-compositions.js";
 import GetDocumentTypeAllowedChildrenTool from "./get/get-document-type-allowed-children.js";
 import GetDocumentTypeConfigurationTool from "./get/get-document-type-configuration.js";
+import GetDocumentTypesByIdArrayTool from "./get/get-document-type-by-id-array.js";
 
 export const DocumentTypeTools = [
   CreateDocumentTypeTool,
@@ -35,5 +36,6 @@ export const DocumentTypeTools = [
   GetDocumentTypeCompositionReferencesTool,
   GetDocumentTypeAvailableCompositionsTool,
   GetDocumentTypeAllowedChildrenTool,
-  GetDocumentTypeConfigurationTool
+  GetDocumentTypeConfigurationTool,
+  GetDocumentTypesByIdArrayTool
 ]; 
