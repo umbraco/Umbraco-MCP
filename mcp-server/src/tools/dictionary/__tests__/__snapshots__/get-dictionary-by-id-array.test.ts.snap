@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-dictionary-by-id-array should return an empty array for no IDs 1`] = `[]`;
+
+exports[`get-item-dictionary should get multiple dictionary items by ID 1`] = `
+[
+  {
+    "id": "00000000-0000-0000-0000-000000000000",
+    "name": "_Test Item Dictionary",
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000000",
+    "name": "_Test Item Dictionary2",
+  },
+]
+`;
+
+exports[`get-item-dictionary should get no dictionary items for empty request 1`] = `[]`;
+
+exports[`get-item-dictionary should get single dictionary item by ID 1`] = `
+[
+  {
+    "id": "00000000-0000-0000-0000-000000000000",
+    "name": "_Test Item Dictionary",
+  },
+]
+`;

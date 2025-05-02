@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-document-blueprint-by-id-array should return an empty array for no IDs 1`] = `[]`;
+
+exports[`get-item-document-blueprint should get multiple document blueprints by ID 1`] = `
+[
+  {
+    "documentType": {
+      "collection": null,
+      "icon": "icon-settings color-pink",
+      "id": "e68abe48-7646-4ef4-abb8-f1a5b24b27cc",
+    },
+    "id": "00000000-0000-0000-0000-000000000000",
+    "name": "_Test Item Blueprint",
+  },
+  {
+    "documentType": {
+      "collection": null,
+      "icon": "icon-settings color-pink",
+      "id": "e68abe48-7646-4ef4-abb8-f1a5b24b27cc",
+    },
+    "id": "00000000-0000-0000-0000-000000000000",
+    "name": "_Test Item Blueprint2",
+  },
+]
+`;
+
+exports[`get-item-document-blueprint should get no document blueprints for empty request 1`] = `[]`;
+
+exports[`get-item-document-blueprint should get single document blueprint by ID 1`] = `
+[
+  {
+    "documentType": {
+      "collection": null,
+      "icon": "icon-settings color-pink",
+      "id": "e68abe48-7646-4ef4-abb8-f1a5b24b27cc",
+    },
+    "id": "00000000-0000-0000-0000-000000000000",
+    "name": "_Test Item Blueprint",
+  },
+]
+`;
