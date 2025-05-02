@@ -5,7 +5,7 @@ import { DocumentTypeFolderBuilder } from "./helpers/document-type-folder-builde
 import { jest } from "@jest/globals";
 
 const TEST_DOCTYPE_NAME = "_Test DocumentType Copy";
-const TEST_DOCTYPE_COPY_NAME = "_Test DocumentType Copy Result";
+const TEST_DOCTYPE_COPY_NAME = "_Test DocumentType Copy (copy)";
 const TEST_FOLDER_NAME = "_Test Folder For Copy";
 
 describe("copy-document-type", () => {
@@ -59,6 +59,11 @@ describe("copy-document-type", () => {
 
     // Verify the handler response using snapshot
     expect(normalizedResult).toMatchSnapshot();
+
+    // Verify the document type was actually copied to the folder
+    const copiedDocType = await DocumentTypeTestHelper.findDocumentType(TEST_DOCTYPE_COPY_NAME);
+    expect(copiedDocType).toBeTruthy();
+    expect(copiedDocType?.parent?.id).toBe(folderBuilder.getId());
   });
 
   it("should copy a document type to root", async () => {
@@ -90,6 +95,11 @@ describe("copy-document-type", () => {
 
     // Verify the handler response using snapshot
     expect(normalizedResult).toMatchSnapshot();
+
+    // Verify the document type was actually copied to root
+    const copiedDocType = await DocumentTypeTestHelper.findDocumentType(TEST_DOCTYPE_COPY_NAME);
+    expect(copiedDocType).toBeTruthy();
+    expect(copiedDocType?.parent).toBeNull();
   });
 
   it("should handle non-existent document type", async () => {

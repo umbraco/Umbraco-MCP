@@ -222,4 +222,36 @@ describe('DocumentTypeBuilder', () => {
       expect(() => builder.getId()).toThrow('No document type has been created yet');
     });
   });
+
+  describe('update', () => {
+    it('should update an existing document type', async () => {
+      const initialName = '_Test Update DocumentType';
+      const initialIcon = 'icon-document';
+      const updatedDescription = 'Updated description';
+      const updatedIcon = 'icon-updated';
+
+      // Clean up before test
+      await DocumentTypeTestHelper.cleanup(initialName);
+
+      // Create the document type
+      const builder = await new DocumentTypeBuilder()
+        .withName(initialName)
+        .withIcon(initialIcon)
+        .create();
+
+      // Update description and icon
+      builder.withDescription(updatedDescription).withIcon(updatedIcon);
+      await builder.update();
+
+      // Fetch the updated document type
+      const updated = await DocumentTypeTestHelper.findDocumentType(initialName);
+      expect(updated).toBeDefined();
+      expect(updated?.icon).toBe(updatedIcon);
+      // Description is not always present in the tree item, but we can check the builder's model
+      expect(builder.build().description).toBe(updatedDescription);
+
+      // Clean up after test
+      await DocumentTypeTestHelper.cleanup(initialName);
+    });
+  });
 }); 

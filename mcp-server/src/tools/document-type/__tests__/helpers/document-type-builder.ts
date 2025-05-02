@@ -135,4 +135,20 @@ export class DocumentTypeBuilder {
     }
     return this.createdItem;
   }
+
+  async update(): Promise<DocumentTypeBuilder> {
+    if (!this.createdItem || !this.createdItem.id) {
+      throw new Error("No document type has been created yet to update");
+    }
+    const client = UmbracoManagementClient.getClient();
+    // The update endpoint expects the model and the id
+    await client.putDocumentTypeById(this.createdItem.id, this.model);
+    // Refresh the createdItem
+    const updatedItem = await DocumentTypeTestHelper.findDocumentType(this.model.name);
+    if (!updatedItem) {
+      throw new Error(`Failed to find updated document type with name: ${this.model.name}`);
+    }
+    this.createdItem = updatedItem;
+    return this;
+  }
 } 

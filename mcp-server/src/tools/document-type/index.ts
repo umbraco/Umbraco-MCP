@@ -14,6 +14,8 @@ import UpdateDocumentTypeFolderTool from "./folders/put/update-folder.js";
 import GetDocumentTypeBlueprintTool from "./get/get-document-type-blueprint.js";
 import GetDocumentTypeCompositionReferencesTool from "./get/get-document-type-composition-references.js";
 import GetDocumentTypeAvailableCompositionsTool from "./post/get-document-type-available-compositions.js";
+import GetDocumentTypeAllowedChildrenTool from "./get/get-document-type-allowed-children.js";
+import GetDocumentTypeConfigurationTool from "./get/get-document-type-configuration.js";
 
 export const DocumentTypeTools = [
   CreateDocumentTypeTool,
@@ -31,5 +33,7 @@ export const DocumentTypeTools = [
   UpdateDocumentTypeFolderTool,
   GetDocumentTypeBlueprintTool,
   GetDocumentTypeCompositionReferencesTool,
-  GetDocumentTypeAvailableCompositionsTool
+  GetDocumentTypeAvailableCompositionsTool,
+  GetDocumentTypeAllowedChildrenTool,
+  GetDocumentTypeConfigurationTool
 ]; 
