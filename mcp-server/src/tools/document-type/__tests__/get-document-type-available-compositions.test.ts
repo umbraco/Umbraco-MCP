@@ -3,6 +3,7 @@ import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
 import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { DocumentTypeCompositionResponseModel } from "@/umb-management-api/schemas/index.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 const TEST_DOCTYPE_NAME = "_Test DocumentType Available";
 const TEST_COMPOSITION_NAME = "_Test Available Composition";
@@ -54,7 +55,7 @@ describe("get-document-type-available-compositions", () => {
       throw new Error("Test composition not found in results");
     }
 
-    testComposition.id = "00000000-0000-0000-0000-000000000000";
+    testComposition.id = BLANK_UUID;  
 
     // Verify just the test composition
     expect(testComposition).toMatchSnapshot();

@@ -5,7 +5,7 @@ import { createSnapshotResult } from "@/helpers/test-utils.js";
 import { jest } from "@jest/globals";
 import { DocumentBlueprintFolderBuilder } from "./helpers/document-blueprint-folder-builder.js";
 import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
-
+import { BLANK_UUID } from "../../constants.js";
 describe("document-blueprint-tree", () => {
   const TEST_ROOT_NAME = "_Test Root Blueprint";
   const TEST_FOLDER_NAME = "_Test Folder Blueprint";
@@ -50,7 +50,7 @@ describe("document-blueprint-tree", () => {
     it("should handle non-existent parent", async () => {
       const result = await GetDocumentBlueprintChildrenTreeTool().handler({
         take: 100,
-        parentId: "00000000-0000-0000-0000-000000000000"
+        parentId: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();
@@ -78,7 +78,7 @@ describe("document-blueprint-tree", () => {
 
     it("should handle non-existent item", async () => {
       const result = await GetDocumentBlueprintAncestorsTreeTool().handler({
-        descendantId: "00000000-0000-0000-0000-000000000000"
+        descendantId: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();

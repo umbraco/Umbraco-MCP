@@ -5,6 +5,7 @@ import UpdateDocumentTypeFolderTool from "../folders/put/update-folder.js";
 import { createSnapshotResult } from "@/helpers/test-utils.js";
 import { jest } from "@jest/globals";
 import { DocumentTypeFolderBuilder } from "./helpers/document-type-folder-builder.js";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("document-type-folder", () => {
   const TEST_FOLDER_NAME = "_Test DocumentType Folder";
@@ -83,7 +84,7 @@ describe("document-type-folder", () => {
 
     it("should handle non-existent folder", async () => {
       const result = await UpdateDocumentTypeFolderTool().handler({
-        id: "00000000-0000-0000-0000-000000000000",
+        id: BLANK_UUID, 
         data: {
           name: UPDATED_FOLDER_NAME
         }
@@ -113,7 +114,7 @@ describe("document-type-folder", () => {
 
     it("should handle non-existent folder", async () => {
       const result = await DeleteDocumentTypeFolderTool().handler({
-        id: "00000000-0000-0000-0000-000000000000"
+        id: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();

@@ -1,4 +1,5 @@
-import { DocumentBlueprintBuilder, DEFAULT_DOCUMENT_TYPE_ID } from "./document-blueprint-builder.js";
+import { ROOT_DOCUMENT_TYPE_ID } from "../../../constants.js";
+import { DocumentBlueprintBuilder } from "./document-blueprint-builder.js";
 import { DocumentBlueprintFolderBuilder } from "./document-blueprint-folder-builder.js";
 import { DocumentBlueprintTestHelper } from "./document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
@@ -35,7 +36,7 @@ describe('DocumentBlueprintBuilder', () => {
           name: TEST_BLUEPRINT_NAME
         }],
         documentType: {
-          id: DEFAULT_DOCUMENT_TYPE_ID
+          id: ROOT_DOCUMENT_TYPE_ID
         }
       });
     });

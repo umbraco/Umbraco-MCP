@@ -1,4 +1,4 @@
-import { BLANK_UUID } from "../tools/dictionary/__tests__/helpers/dictionary-helper.js";
+import { BLANK_UUID } from "../tools/constants.js";
 
 export function createSnapshotResult(result: any, idToReplace?: string) {
   if (!result?.content) {

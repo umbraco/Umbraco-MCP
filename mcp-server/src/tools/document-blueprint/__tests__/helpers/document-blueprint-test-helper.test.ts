@@ -1,6 +1,7 @@
 import { DocumentBlueprintBuilder } from "./document-blueprint-builder.js";
-import { DocumentBlueprintTestHelper, BLANK_UUID } from "./document-blueprint-test-helper.js";
+import { DocumentBlueprintTestHelper } from "./document-blueprint-test-helper.js";
 import { DocumentBlueprintTreeItemResponseModel } from "@/umb-management-api/schemas/index.js";
+import { BLANK_UUID } from "../../../constants.js";
 
 describe('DocumentBlueprintVerificationHelper', () => {
   const TEST_BLUEPRINT_CLEANUP_NAME = 'Test Integration Blueprint Cleanup';

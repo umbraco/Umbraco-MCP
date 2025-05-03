@@ -1,7 +1,7 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { getDictionaryByIdResponse, getDictionaryResponse } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { BLANK_UUID } from "../../../constants.js";
 
-export const BLANK_UUID = "00000000-0000-0000-0000-000000000000";
 export const DEFAULT_ISO_CODE = "en-US";
 
 export class DictionaryTestHelper {

@@ -3,6 +3,7 @@ import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.j
 import { DocumentBlueprintFolderBuilder } from "./helpers/document-blueprint-folder-builder.js";
 import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("move-document-blueprint", () => {
   const TEST_BLUEPRINT_NAME = "_Test Blueprint Move";
@@ -58,7 +59,7 @@ describe("move-document-blueprint", () => {
       id: builder.getId(),
       data: {
         target: {
-          id: "00000000-0000-0000-0000-000000000000"
+          id: BLANK_UUID
         }
       }
     }, { signal: new AbortController().signal });
@@ -69,10 +70,10 @@ describe("move-document-blueprint", () => {
 
   it("should handle moving non-existent blueprint", async () => {
     const result = await MoveDocumentBlueprintTool().handler({
-      id: "00000000-0000-0000-0000-000000000000",
+      id: BLANK_UUID,
       data: {
         target: {
-          id: "00000000-0000-0000-0000-000000000000"
+          id: BLANK_UUID
         }
       }
     }, { signal: new AbortController().signal });

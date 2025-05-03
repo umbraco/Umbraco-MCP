@@ -1,8 +1,8 @@
 import GetDataTypesByIdArrayTool from "../get/get-data-type-by-id-array.js";
 import { DataTypeBuilder } from "./helpers/data-type-builder.js";
-import { DataTypeTestHelper, BLANK_UUID } from "./helpers/data-type-test-helper.js";
+import { DataTypeTestHelper } from "./helpers/data-type-test-helper.js";
 import { jest } from "@jest/globals";
-
+import { BLANK_UUID } from "../../constants.js";
 describe("get-item-data-type", () => {
   const TEST_DATATYPE_NAME = "_Test Item DataType";
   const TEST_DATATYPE_NAME_2 = "_Test Item DataType2";

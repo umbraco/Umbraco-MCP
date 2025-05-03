@@ -1,8 +1,8 @@
 import GetDictionaryByIdArrayTool from "../get/get-dictionary-by-id-array.js";
 import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
-import { DictionaryTestHelper, BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
+import { DictionaryTestHelper, DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
 import { jest } from "@jest/globals";
-
+import { BLANK_UUID } from "../../constants.js";
 describe("get-item-dictionary", () => {
   const TEST_DICTIONARY_NAME = "_Test Item Dictionary";
   const TEST_DICTIONARY_NAME_2 = "_Test Item Dictionary2";

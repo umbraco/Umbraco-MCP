@@ -1,6 +1,7 @@
 import GetDocumentBlueprintByIdArrayTool from "../get/get-document-blueprint-by-id-array.js";
 import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
-import { DocumentBlueprintTestHelper, BLANK_UUID } from "./helpers/document-blueprint-test-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
+import { BLANK_UUID } from "../../constants.js";
 import { jest } from "@jest/globals";
 
 describe("get-item-document-blueprint", () => {

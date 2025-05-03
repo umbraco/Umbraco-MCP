@@ -1,7 +1,8 @@
 import GetDocumentBlueprintTool from "../get/get-blueprint.js";
 import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
-import { DocumentBlueprintTestHelper, BLANK_UUID } from "./helpers/document-blueprint-test-helper.js";
+import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("get-document-blueprint", () => {
   const TEST_BLUEPRINT_NAME = "_Test Blueprint Get";
@@ -57,7 +58,7 @@ describe("get-document-blueprint", () => {
 
   it("should handle non-existent document blueprint", async () => {
     const result = await GetDocumentBlueprintTool().handler({
-      id: "00000000-0000-0000-0000-000000000000"
+      id: BLANK_UUID
     }, { signal: new AbortController().signal });
 
     // Verify the error response using snapshot

@@ -2,7 +2,7 @@ import DeleteDataTypeTool from "../delete/delete-data-type.js";
 import { DataTypeBuilder } from "./helpers/data-type-builder.js";
 import { DataTypeTestHelper } from "./helpers/data-type-test-helper.js";
 import { jest } from "@jest/globals";
-
+import { BLANK_UUID } from "../../constants.js";
 describe("delete-data-type", () => {
   const TEST_DATATYPE_NAME = "_Test DataType Delete";
   let originalConsoleError: typeof console.error;
@@ -40,7 +40,7 @@ describe("delete-data-type", () => {
 
   it("should handle non-existent data type", async () => {
     const result = await DeleteDataTypeTool().handler({
-      id: "00000000-0000-0000-0000-000000000000"
+      id: BLANK_UUID
     }, { signal: new AbortController().signal });
 
     // Verify the error response using snapshot

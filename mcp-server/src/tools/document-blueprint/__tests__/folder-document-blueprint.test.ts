@@ -5,6 +5,7 @@ import UpdateDocumentBlueprintFolderTool from "../folders/put/update-folder.js";
 import { createSnapshotResult } from "@/helpers/test-utils.js";
 import { jest } from "@jest/globals";
 import { DocumentBlueprintFolderBuilder } from "./helpers/document-blueprint-folder-builder.js";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("document-blueprint-folder", () => {
   const TEST_FOLDER_NAME = "_Test Blueprint Folder";
@@ -83,7 +84,7 @@ describe("document-blueprint-folder", () => {
 
     it("should handle non-existent folder", async () => {
       const result = await UpdateDocumentBlueprintFolderTool().handler({
-        id: "00000000-0000-0000-0000-000000000000",
+        id: BLANK_UUID,
         data: {
           name: UPDATED_FOLDER_NAME
         }
@@ -113,7 +114,7 @@ describe("document-blueprint-folder", () => {
 
     it("should handle non-existent folder", async () => {
       const result = await DeleteDocumentBlueprintFolderTool().handler({
-        id: "00000000-0000-0000-0000-000000000000"
+        id: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();

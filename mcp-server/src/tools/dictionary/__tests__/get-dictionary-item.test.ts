@@ -1,9 +1,10 @@
 import { getDictionaryByIdParams } from "../../../api/umbraco/management/umbracoManagementAPI.zod.js";
 import GetDictionaryItemTool from "../get/get-dictionary-item.js";
 import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
-import { BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
+import {  DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
 import { createSnapshotResult } from "../../../helpers/test-utils.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 const TEST_DICTIONARY_NAME = "_Test Dictionary Get";
 const TEST_DICTIONARY_TRANSLATION = "_Test Translation Get";

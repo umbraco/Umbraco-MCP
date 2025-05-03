@@ -5,6 +5,7 @@ import { createSnapshotResult } from "@/helpers/test-utils.js";
 import { jest } from "@jest/globals";
 import { DocumentTypeFolderBuilder } from "./helpers/document-type-folder-builder.js";
 import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
+import { BLANK_UUID } from "../../constants.js";    
 
 describe("document-type-tree", () => {
   const TEST_ROOT_NAME = "_Test Root DocumentType";
@@ -51,7 +52,7 @@ describe("document-type-tree", () => {
     it("should handle non-existent parent", async () => {
       const result = await GetDocumentTypeChildrenTool().handler({
         take: 100,
-        parentId: "00000000-0000-0000-0000-000000000000"
+        parentId: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();
@@ -80,7 +81,7 @@ describe("document-type-tree", () => {
 
     it("should handle non-existent item", async () => {
       const result = await GetDocumentTypeAncestorsTool().handler({
-        descendantId: "00000000-0000-0000-0000-000000000000"
+        descendantId: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();

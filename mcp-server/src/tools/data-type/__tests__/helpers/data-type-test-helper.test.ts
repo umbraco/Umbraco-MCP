@@ -1,6 +1,7 @@
 import { DataTypeBuilder } from "./data-type-builder.js";
-import { DataTypeTestHelper, BLANK_UUID } from "./data-type-test-helper.js";
+import { DataTypeTestHelper } from "./data-type-test-helper.js";
 import { DataTypeTreeItemResponseModel } from "@/umb-management-api/schemas/dataTypeTreeItemResponseModel.js";
+import { BLANK_UUID } from "../../../constants.js";
 import { jest } from "@jest/globals";
 
 describe('DataTypeTestHelper', () => {

@@ -1,6 +1,7 @@
-import { DocumentTypeTestHelper, BLANK_UUID } from "./document-type-test-helper.js";
+import { DocumentTypeTestHelper } from "./document-type-test-helper.js";
 import { DocumentTypeBuilder } from "./document-type-builder.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../../constants.js";
 
 describe('DocumentTypeTestHelper', () => {
   const TEST_DOCTYPE_NAME = '_Test Helper DocumentType';

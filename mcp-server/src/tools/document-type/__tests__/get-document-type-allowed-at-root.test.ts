@@ -3,6 +3,7 @@ import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
 import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { DocumentTypeResponseModel } from "@/umb-management-api/schemas/index.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 const TEST_DOCTYPE_NAME = "_Test DocumentType Root";
 
@@ -43,7 +44,7 @@ describe("get-document-type-allowed-at-root", () => {
     }
 
     // Normalize the ID
-    testDocType.id = "00000000-0000-0000-0000-000000000000";
+    testDocType.id = BLANK_UUID;
 
     // Verify just the test document type
     expect(testDocType).toMatchSnapshot();

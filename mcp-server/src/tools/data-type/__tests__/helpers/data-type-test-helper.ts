@@ -1,7 +1,6 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { DataTypeTreeItemResponseModel } from "@/umb-management-api/schemas/dataTypeTreeItemResponseModel.js";
-
-export const BLANK_UUID = "00000000-0000-0000-0000-000000000000";
+import { BLANK_UUID } from "../../../constants.js";
 
 export class DataTypeTestHelper {
   private static findByName(items: DataTypeTreeItemResponseModel[], name: string): DataTypeTreeItemResponseModel | undefined {

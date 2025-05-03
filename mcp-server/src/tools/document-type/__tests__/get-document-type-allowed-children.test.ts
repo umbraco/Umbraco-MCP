@@ -3,6 +3,7 @@ import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
 import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { createSnapshotResult } from "@/helpers/test-utils.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("get-document-type-allowed-children", () => {
   const TEST_PARENT_NAME = "_Test Parent DocumentType";
@@ -63,7 +64,7 @@ describe("get-document-type-allowed-children", () => {
 
   it("should handle non-existent document type", async () => {
     const result = await GetDocumentTypeAllowedChildrenTool().handler({
-      id: "00000000-0000-0000-0000-000000000000",
+      id: BLANK_UUID,
       skip: 0,
       take: 100
     }, { signal: new AbortController().signal });

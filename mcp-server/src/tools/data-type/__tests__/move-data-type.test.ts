@@ -3,7 +3,7 @@ import { DataTypeBuilder } from "./helpers/data-type-builder.js";
 import { DataTypeFolderBuilder } from "./helpers/data-type-folder-builder.js";
 import { DataTypeTestHelper } from "./helpers/data-type-test-helper.js";
 import { jest } from "@jest/globals";
-
+import { BLANK_UUID } from "../../constants.js";
 describe("move-data-type", () => {
   const TEST_DATATYPE_NAME = "_Test DataType Move";
   const TEST_FOLDER_NAME = "_Test Folder";
@@ -62,7 +62,7 @@ describe("move-data-type", () => {
       id: builder.getId(),
       data: {
         target: {
-          id: "00000000-0000-0000-0000-000000000000"
+          id: BLANK_UUID
         }
       }
     }, { signal: new AbortController().signal });
@@ -73,10 +73,10 @@ describe("move-data-type", () => {
 
   it("should handle moving non-existent data type", async () => {
     const result = await MoveDataTypeTool().handler({
-      id: "00000000-0000-0000-0000-000000000000",
+      id: BLANK_UUID,
       data: {
         target: {
-          id: "00000000-0000-0000-0000-000000000000"
+          id: BLANK_UUID
         }
       }
     }, { signal: new AbortController().signal });

@@ -2,7 +2,7 @@ import UpdateDocumentTypeTool from "../put/update-document-type.js";
 import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
 import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { jest } from "@jest/globals";
-
+import { BLANK_UUID } from "../../constants.js";
 describe("update-document-type", () => {
   const TEST_DOCTYPE_NAME = "_Test DocumentType Update";
   const UPDATED_DOCTYPE_NAME = "_Test DocumentType Updated";
@@ -58,7 +58,7 @@ describe("update-document-type", () => {
       .build();
 
     const result = await UpdateDocumentTypeTool().handler({
-      id: "00000000-0000-0000-0000-000000000000",
+      id: BLANK_UUID, 
       data: updateModel
     }, { signal: new AbortController().signal });
 

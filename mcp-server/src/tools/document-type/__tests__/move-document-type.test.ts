@@ -3,6 +3,7 @@ import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
 import { DocumentTypeFolderBuilder } from "./helpers/document-type-folder-builder.js";
 import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("move-document-type", () => {
   const TEST_DOCTYPE_NAME = "_Test DocumentType Move";
@@ -60,7 +61,7 @@ describe("move-document-type", () => {
       id: builder.getId(),
       data: {
         target: {
-          id: "00000000-0000-0000-0000-000000000000"
+          id: BLANK_UUID
         }
       }
     }, { signal: new AbortController().signal });
@@ -71,10 +72,10 @@ describe("move-document-type", () => {
 
   it("should handle moving non-existent document type", async () => {
     const result = await MoveDocumentTypeTool().handler({
-      id: "00000000-0000-0000-0000-000000000000",
+      id: BLANK_UUID,
       data: {
         target: {
-          id: "00000000-0000-0000-0000-000000000000"
+          id: BLANK_UUID
         }
       }
     }, { signal: new AbortController().signal });

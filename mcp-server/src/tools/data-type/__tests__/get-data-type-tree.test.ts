@@ -5,6 +5,7 @@ import { createSnapshotResult } from "@/helpers/test-utils.js";
 import { jest } from "@jest/globals";
 import { DataTypeFolderBuilder } from "./helpers/data-type-folder-builder.js";
 import { DataTypeBuilder } from "./helpers/data-type-builder.js";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("data-type-tree", () => {
   const TEST_ROOT_NAME = "_Test Root DataType";
@@ -53,7 +54,7 @@ describe("data-type-tree", () => {
     it("should handle non-existent parent", async () => {
       const result = await GetDataTypeChildrenTool().handler({
         take: 100,
-        parentId: "00000000-0000-0000-0000-000000000000"
+        parentId: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();
@@ -84,7 +85,7 @@ describe("data-type-tree", () => {
 
     it("should handle non-existent item", async () => {
       const result = await GetDataTypeAncestorsTool().handler({
-        descendantId: "00000000-0000-0000-0000-000000000000"
+        descendantId: BLANK_UUID
       }, { signal: new AbortController().signal });
 
       expect(result).toMatchSnapshot();

@@ -1,7 +1,8 @@
 import GetDocumentTypesByIdArrayTool from "../get/get-document-type-by-id-array.js";
 import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
-import { DocumentTypeTestHelper, BLANK_UUID } from "./helpers/document-type-test-helper.js";
+import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("get-item-document-type", () => {
   const TEST_DOCTYPE_NAME = "_Test Item DocumentType";

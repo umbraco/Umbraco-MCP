@@ -4,6 +4,7 @@ import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { DocumentBlueprintBuilder } from "../../document-blueprint/__tests__/helpers/document-blueprint-builder.js";
 import { DocumentBlueprintTestHelper } from "../../document-blueprint/__tests__/helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 const TEST_DOCTYPE_NAME = "_Test DocumentType Blueprint";
 const TEST_BLUEPRINT_NAME = "_Test Blueprint For DocumentType";
@@ -61,7 +62,7 @@ describe("get-document-type-blueprint", () => {
 
   it("should handle non-existent document type", async () => {
     const result = await GetDocumentTypeBlueprintTool().handler({
-      id: "00000000-0000-0000-0000-000000000000"
+      id: BLANK_UUID
     }, { signal: new AbortController().signal });
 
     // Verify the error response using snapshot

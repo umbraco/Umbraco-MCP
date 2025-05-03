@@ -1,7 +1,8 @@
 import UpdateDictionaryItemTool from "../put/update-dictionary-item.js";
 import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
-import { BLANK_UUID, DEFAULT_ISO_CODE, DictionaryTestHelper } from "./helpers/dictionary-helper.js";
+import { DEFAULT_ISO_CODE, DictionaryTestHelper } from "./helpers/dictionary-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 const TEST_DICTIONARY_NAME = "_Test Dictionary Update";
 const TEST_DICTIONARY_TRANSLATION = "_Test Translation Update";

@@ -1,7 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`get-dictionary-by-id-array should return an empty array for no IDs 1`] = `[]`;
-
 exports[`get-item-dictionary should get multiple dictionary items by ID 1`] = `
 [
   {

@@ -2,6 +2,7 @@ import UpdateDataTypeTool from "../put/update-data-type.js";
 import { DataTypeBuilder } from "./helpers/data-type-builder.js";
 import { DataTypeTestHelper } from "./helpers/data-type-test-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js";
 
 describe("update-data-type", () => {
   const TEST_DATATYPE_NAME = "_Test DataType Update";
@@ -62,7 +63,7 @@ describe("update-data-type", () => {
       .build();
 
     const result = await UpdateDataTypeTool().handler({
-      id: "00000000-0000-0000-0000-000000000000",
+      id: BLANK_UUID,
       data: {
         name: updateModel.name,
         editorAlias: updateModel.editorAlias,

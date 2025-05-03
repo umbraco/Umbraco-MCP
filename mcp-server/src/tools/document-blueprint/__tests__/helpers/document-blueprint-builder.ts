@@ -3,8 +3,7 @@ import { DocumentBlueprintTreeItemResponseModel } from "@/umb-management-api/sch
 import { postDocumentBlueprintBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { DocumentBlueprintTestHelper } from "./document-blueprint-test-helper.js";
 import { CreateDocumentBlueprintRequestModel } from "@/umb-management-api/schemas/index.js";
-
-export const DEFAULT_DOCUMENT_TYPE_ID = "e68abe48-7646-4ef4-abb8-f1a5b24b27cc";
+import { ROOT_DOCUMENT_TYPE_ID } from "../../../constants.js";
 
 export class DocumentBlueprintBuilder {
   private model: CreateDocumentBlueprintRequestModel = {
@@ -26,7 +25,7 @@ export class DocumentBlueprintBuilder {
         }
       ],
       documentType: {
-        id: DEFAULT_DOCUMENT_TYPE_ID
+        id: ROOT_DOCUMENT_TYPE_ID
       }
     };
   }

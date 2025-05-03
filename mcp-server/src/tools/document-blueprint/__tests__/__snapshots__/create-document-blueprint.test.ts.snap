@@ -15,8 +15,8 @@ exports[`create-document-blueprint should create a document blueprint 2`] = `
 {
   "documentType": {
     "collection": null,
-    "icon": "icon-settings color-pink",
-    "id": "e68abe48-7646-4ef4-abb8-f1a5b24b27cc",
+    "icon": "icon-home color-blue",
+    "id": "a95360e8-ff04-40b1-8f46-7aa4b5983096",
   },
   "hasChildren": false,
   "id": "00000000-0000-0000-0000-000000000000",

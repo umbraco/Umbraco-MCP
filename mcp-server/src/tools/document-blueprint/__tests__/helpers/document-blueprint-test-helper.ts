@@ -1,8 +1,6 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { DocumentBlueprintTreeItemResponseModel } from "@/umb-management-api/schemas/index.js";
-
-export const BLANK_UUID = "00000000-0000-0000-0000-000000000000";
-export const DEFAULT_DOCUMENT_TYPE_ID = "e68abe48-7646-4ef4-abb8-f1a5b24b27cc"; // This should be replaced with a real document type ID in your environment
+import { BLANK_UUID } from "../../../constants.js";
 
 export class DocumentBlueprintTestHelper {
 

@@ -2,7 +2,7 @@ import { DataTypeBuilder } from "./helpers/data-type-builder.js";
 import { DataTypeTestHelper } from "./helpers/data-type-test-helper.js";
 import GetDataTypeTool from "../get/get-data-type.js";
 import { jest } from "@jest/globals";
-
+import { BLANK_UUID } from "../../constants.js";
 describe("get-data-type", () => {
   const TEST_DATATYPE_NAME = "_Test Get DataType";
   let dataTypeId: string;
@@ -46,7 +46,7 @@ describe("get-data-type", () => {
 
   it("should handle non-existent data type", async () => {
     const result = await GetDataTypeTool().handler({
-      id: "00000000-0000-0000-0000-000000000000"
+      id: BLANK_UUID
     }, { signal: new AbortController().signal });
 
     expect(result.content[0].text as string).toContain("Error");

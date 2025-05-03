@@ -1,5 +1,5 @@
 import { createSnapshotResult } from "../test-utils.js";
-import { BLANK_UUID } from "../../tools/dictionary/__tests__/helpers/dictionary-helper.js";
+import { BLANK_UUID } from "../../tools/constants.js";
 
 describe("createSnapshotResult", () => {
   const TEST_UUID = "12345678-1234-1234-1234-123456789012";

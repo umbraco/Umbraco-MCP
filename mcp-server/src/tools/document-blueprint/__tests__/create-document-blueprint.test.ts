@@ -1,8 +1,8 @@
 import CreateDocumentBlueprintTool from "../post/create-blueprint.js";
-import { DEFAULT_DOCUMENT_TYPE_ID, DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
+import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";
 import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import { jest } from "@jest/globals";
-
+import { ROOT_DOCUMENT_TYPE_ID } from "../../constants.js";
 const TEST_BLUEPRINT_NAME = "_Test Blueprint Created";
 const EXISTING_BLUEPRINT_NAME = "_Existing Blueprint";
 
@@ -24,7 +24,7 @@ describe("create-document-blueprint", () => {
   it("should create a document blueprint", async () => {
     // Create blueprint model using builder
     const blueprintModel = new DocumentBlueprintBuilder(TEST_BLUEPRINT_NAME)
-      .withDocumentType(DEFAULT_DOCUMENT_TYPE_ID)
+      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
       .build();
 
     // Create the blueprint
@@ -44,7 +44,7 @@ describe("create-document-blueprint", () => {
   it("should handle existing document blueprint", async () => {
     // Create blueprint model
     const blueprintModel = new DocumentBlueprintBuilder(EXISTING_BLUEPRINT_NAME)
-      .withDocumentType(DEFAULT_DOCUMENT_TYPE_ID)
+      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
       .build();
 
     // First create the blueprint

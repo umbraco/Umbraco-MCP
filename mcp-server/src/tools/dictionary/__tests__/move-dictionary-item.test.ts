@@ -1,7 +1,8 @@
 import MoveDictionaryItemTool from "../put/move-dictionary-item.js";
 import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
-import { BLANK_UUID, DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
+import { DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
 import { jest } from "@jest/globals";
+import { BLANK_UUID } from "../../constants.js"; 
 
 const CHILD_DICTIONARY_NAME = "_Child Dictionary";
 const CHILD_DICTIONARY_TRANSLATION = "_Child Translation";

@@ -1,6 +1,7 @@
 import GetDocumentTypeTool from "../get/get-document-type-by-ids.js";
 import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
-import { DocumentTypeTestHelper, BLANK_UUID } from "./helpers/document-type-test-helper.js";
+import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
+import { BLANK_UUID } from "../../constants.js";
 import { jest } from "@jest/globals";
 
 describe("get-document-type", () => {
@@ -87,7 +88,7 @@ describe("get-document-type", () => {
 
   it("should handle non-existent document type", async () => {
     const result = await GetDocumentTypeTool().handler({
-      id: "00000000-0000-0000-0000-000000000000"
+      id: BLANK_UUID
     }, { signal: new AbortController().signal });
 
     // Verify the error response using snapshot
