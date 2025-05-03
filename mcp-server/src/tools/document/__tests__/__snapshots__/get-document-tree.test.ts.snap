@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`document-tree ancestors should get ancestor items 1`] = `
+{
+  "content": [
+    {
+      "text": "[{"isProtected":false,"documentType":{"id":"a95360e8-ff04-40b1-8f46-7aa4b5983096","icon":"icon-home color-blue","collection":null},"variants":[{"state":"Draft","name":"_Test Root Document","culture":null}],"noAccess":false,"isTrashed":false,"id":"00000000-0000-0000-0000-000000000000","createDate":"NORMALIZED_DATE","parent":null,"hasChildren":true},{"isProtected":false,"documentType":{"id":"b871f83c-2395-4894-be0f-5422c1a71e48","icon":"icon-document color-blue","collection":null},"variants":[{"state":"Draft","name":"_Test Child Document","culture":null}],"noAccess":false,"isTrashed":false,"id":"00000000-0000-0000-0000-000000000000","createDate":"NORMALIZED_DATE","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`document-tree ancestors should handle non-existent item 1`] = `
+{
+  "content": [
+    {
+      "text": "[]",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`document-tree children should get child items 1`] = `
+{
+  "content": [
+    {
+      "text": "{"total":1,"items":[{"isProtected":false,"documentType":{"id":"b871f83c-2395-4894-be0f-5422c1a71e48","icon":"icon-document color-blue","collection":null},"variants":[{"state":"Draft","name":"_Test Child Document","culture":null}],"noAccess":false,"isTrashed":false,"id":"00000000-0000-0000-0000-000000000000","createDate":"NORMALIZED_DATE","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]}",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`document-tree children should handle non-existent parent 1`] = `
+{
+  "content": [
+    {
+      "text": "{"total":0,"items":[]}",
+      "type": "text",
+    },
+  ],
+}
+`;

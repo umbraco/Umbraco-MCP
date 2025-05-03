@@ -1,9 +1,9 @@
 import { DocumentBuilder } from "./document-builder.js";
 import { DocumentTestHelper } from "./document-test-helper.js";
 import { jest } from "@jest/globals";
-import { ROOT_DOCUMENT_TYPE_ID } from "../../../constants.js";
 
 const TEST_DOCUMENT_NAME = "_Test DocumentBuilder";
+const TEST_RECYCLE_BIN_DOCUMENT_NAME = "_Test DocumentBuilder RecycleBin";
 
 describe("DocumentBuilder", () => {
   let originalConsoleError: typeof console.error;
@@ -16,12 +16,13 @@ describe("DocumentBuilder", () => {
   afterEach(async () => {
     console.error = originalConsoleError;
     await DocumentTestHelper.cleanup(TEST_DOCUMENT_NAME);
+    await DocumentTestHelper.cleanup(TEST_RECYCLE_BIN_DOCUMENT_NAME);
   });
 
   it("should create a document and find it by name", async () => {
     const builder = await new DocumentBuilder()
       .withName(TEST_DOCUMENT_NAME)
-      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
+      .withRootDocumentType()
       .create();
 
     const found = await DocumentTestHelper.findDocument(TEST_DOCUMENT_NAME);
@@ -32,7 +33,7 @@ describe("DocumentBuilder", () => {
   it("should return the created document's id and item", async () => {
     const builder = await new DocumentBuilder()
       .withName(TEST_DOCUMENT_NAME)
-      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
+      .withRootDocumentType()
       .create();
 
     const id = builder.getId();
@@ -40,5 +41,23 @@ describe("DocumentBuilder", () => {
     expect(id).toBeDefined();
     expect(item).toBeDefined();
     expect(DocumentTestHelper.getNameFromItem(item)).toBe(TEST_DOCUMENT_NAME);
+  });
+
+  it("moveToRecycleBin should move a created document to the recycle bin", async () => {
+    const builder = await new DocumentBuilder()
+      .withName(TEST_RECYCLE_BIN_DOCUMENT_NAME)
+      .withRootDocumentType()
+      .create();
+    await builder.moveToRecycleBin();
+    const foundNormal = await DocumentTestHelper.findDocument(TEST_RECYCLE_BIN_DOCUMENT_NAME);
+    expect(foundNormal).toBeUndefined();
+    const foundRecycleBin = await DocumentTestHelper.findDocumentInRecycleBin(TEST_RECYCLE_BIN_DOCUMENT_NAME);
+    expect(foundRecycleBin).toBeDefined();
+    expect(foundRecycleBin!.variants[0].name).toBe(TEST_RECYCLE_BIN_DOCUMENT_NAME);
+  });
+
+  it("moveToRecycleBin should throw if called before create", async () => {
+    const builder = new DocumentBuilder().withName("_Test MoveToRecycleBin Error").withRootDocumentType();
+    await expect(builder.moveToRecycleBin()).rejects.toThrow(/No document has been created yet/);
   });
 }); 

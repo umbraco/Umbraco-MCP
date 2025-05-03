@@ -3234,6 +3234,7 @@ var UmbracoMcpServer = class _UmbracoMcpServer {
 
 // src/api/umbraco/clients/umbraco-management-client.ts
 import Axios from "axios";
+import qs from "qs";
 var client_id = process.env.UMBRACO_CLIENT_ID;
 var client_secret = process.env.UMBRACO_CLIENT_SECRET;
 var grant_type = "client_credentials";
@@ -3278,6 +3279,7 @@ UmbracoAxios.interceptors.request.use(async (config) => {
   }
   return config;
 });
+UmbracoAxios.defaults.paramsSerializer = (params) => qs.stringify(params, { arrayFormat: "repeat" });
 UmbracoAxios.interceptors.response.use(
   (response) => response,
   // Pass through successful responses
@@ -13678,10 +13680,10 @@ var DeleteDocumentTypeTool = CreateUmbracoTool(
 );
 var delete_document_type_default = DeleteDocumentTypeTool;
 
-// src/tools/document-type/get/get-document-type.ts
-var GetDocumentTypeTool = CreateUmbracoTool(
-  "get-document-type",
-  "Gets a document type by Id",
+// src/tools/document-type/get/get-document-type-by-ids.ts
+var GetDocumentTypeByIdTool = CreateUmbracoTool(
+  "get-document-type-by-id",
+  "Gets a document type by id",
   getDocumentTypeByIdParams.shape,
   async ({ id }) => {
     try {
@@ -13708,7 +13710,7 @@ var GetDocumentTypeTool = CreateUmbracoTool(
     }
   }
 );
-var get_document_type_default = GetDocumentTypeTool;
+var get_document_type_by_ids_default = GetDocumentTypeByIdTool;
 
 // src/tools/document-type/put/update-document-type.ts
 import { z as z9 } from "zod";
@@ -14210,11 +14212,43 @@ var GetDocumentTypeConfigurationTool = CreateUmbracoTool(
 );
 var get_document_type_configuration_default = GetDocumentTypeConfigurationTool;
 
+// src/tools/document-type/get/get-document-type-by-id-array.ts
+var GetDocumentTypesByIdArrayTool = CreateUmbracoTool(
+  "get-document-types-by-id-array",
+  "Gets document types by IDs (or empty array if no IDs are provided)",
+  getItemDocumentTypeQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getItemDocumentType(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting item document types:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_type_by_id_array_default = GetDocumentTypesByIdArrayTool;
+
 // src/tools/document-type/index.ts
 var DocumentTypeTools = [
   create_document_type_default,
   delete_document_type_default,
-  get_document_type_default,
+  get_document_type_by_ids_default,
   update_document_type_default,
   copy_document_type_default,
   move_document_type_default,
@@ -14229,7 +14263,8 @@ var DocumentTypeTools = [
   get_document_type_composition_references_default,
   get_document_type_available_compositions_default,
   get_document_type_allowed_children_default,
-  get_document_type_configuration_default
+  get_document_type_configuration_default,
+  get_document_type_by_id_array_default
 ];
 
 // src/tools/document-blueprint/get/get-blueprint.ts

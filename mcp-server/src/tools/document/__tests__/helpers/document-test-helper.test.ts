@@ -2,10 +2,11 @@ import { DocumentTestHelper } from "./document-test-helper.js";
 import { DocumentBuilder } from "./document-builder.js";
 import { jest } from "@jest/globals";
 import type { DocumentTreeItemResponseModel } from "../../../../api/umbraco/management/schemas/documentTreeItemResponseModel.js";
-import { ROOT_DOCUMENT_TYPE_ID } from "../../../constants.js";
 import { BLANK_UUID } from "../../../constants.js";
+import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 
 const TEST_DOCUMENT_NAME = "_Test DocumentHelper";
+const TEST_RECYCLE_BIN_DOCUMENT_NAME = "_Test DocumentHelper RecycleBin";
 
 describe("DocumentTestHelper", () => {
   let originalConsoleError: typeof console.error;
@@ -18,12 +19,13 @@ describe("DocumentTestHelper", () => {
   afterEach(async () => {
     console.error = originalConsoleError;
     await DocumentTestHelper.cleanup(TEST_DOCUMENT_NAME);
+    await DocumentTestHelper.cleanup(TEST_RECYCLE_BIN_DOCUMENT_NAME);
   });
 
   it("normaliseIds should blank out id for single and array", async () => {
     const builder = await new DocumentBuilder()
       .withName(TEST_DOCUMENT_NAME)
-      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
+      .withRootDocumentType()   
       .create();
     const item = builder.getCreatedItem();
     const normSingle = DocumentTestHelper.normaliseIds(item) as DocumentTreeItemResponseModel;
@@ -35,7 +37,7 @@ describe("DocumentTestHelper", () => {
   it("getNameFromItem should return the name from the first variant", async () => {
     const builder = await new DocumentBuilder()
       .withName(TEST_DOCUMENT_NAME)
-      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
+      .withRootDocumentType()
       .create();
     const item = builder.getCreatedItem();
     expect(DocumentTestHelper.getNameFromItem(item)).toBe(TEST_DOCUMENT_NAME);
@@ -44,7 +46,7 @@ describe("DocumentTestHelper", () => {
   it("findDocument should find a document by variant name", async () => {
     const builder = await new DocumentBuilder()
       .withName(TEST_DOCUMENT_NAME)
-      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
+      .withRootDocumentType()
       .create();
     const found = await DocumentTestHelper.findDocument(TEST_DOCUMENT_NAME);
     expect(found).toBeDefined();
@@ -54,7 +56,7 @@ describe("DocumentTestHelper", () => {
   it("cleanup should remove a document", async () => {
     const builder = await new DocumentBuilder()
       .withName(TEST_DOCUMENT_NAME)
-      .withDocumentType(ROOT_DOCUMENT_TYPE_ID)
+      .withRootDocumentType()
       .create();
     // Ensure it exists
     let found = await DocumentTestHelper.findDocument(TEST_DOCUMENT_NAME);
@@ -65,4 +67,47 @@ describe("DocumentTestHelper", () => {
     found = await DocumentTestHelper.findDocument(TEST_DOCUMENT_NAME);
     expect(found).toBeUndefined();
   });
+
+  it("findDocumentInRecycleBin should find a document moved to the recycle bin", async () => {
+    // Create and move a document to the recycle bin
+    const builder = await new DocumentBuilder()
+      .withName(TEST_RECYCLE_BIN_DOCUMENT_NAME)
+      .withRootDocumentType()
+      .create();
+    await builder.moveToRecycleBin();
+
+    // Should not be found in normal tree
+    const foundNormal = await DocumentTestHelper.findDocument(TEST_RECYCLE_BIN_DOCUMENT_NAME);
+    expect(foundNormal).toBeUndefined();
+    // Should be found in recycle bin
+    const foundRecycleBin = await DocumentTestHelper.findDocumentInRecycleBin(TEST_RECYCLE_BIN_DOCUMENT_NAME);
+    expect(foundRecycleBin).toBeDefined();
+    expect(foundRecycleBin!.variants[0].name).toBe(TEST_RECYCLE_BIN_DOCUMENT_NAME);
+  });
+
+  it("findDocumentInRecycleBin should return undefined for non-existent document", async () => {
+    const found = await DocumentTestHelper.findDocumentInRecycleBin("NonExistentRecycleBinDoc");
+    expect(found).toBeUndefined();
+  });
+
+  it("emptyRecycleBin should remove all documents from the recycle bin", async () => {
+    // Create and move a document to the recycle bin
+    const builder = await new DocumentBuilder()
+      .withName("_Test EmptyRecycleBin")
+      .withRootDocumentType()
+      .create();
+    await builder.moveToRecycleBin();
+
+    // Should be found in recycle bin
+    let found = await DocumentTestHelper.findDocumentInRecycleBin("_Test EmptyRecycleBin");
+    expect(found).toBeDefined();
+
+    // Empty the recycle bin
+    await DocumentTestHelper.emptyRecycleBin();
+
+    // Should not be found after emptying
+    found = await DocumentTestHelper.findDocumentInRecycleBin("_Test EmptyRecycleBin");
+    expect(found).toBeUndefined();
+  });
+
 }); 

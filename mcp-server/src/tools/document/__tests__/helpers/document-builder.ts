@@ -2,14 +2,15 @@ import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js"
 import { CreateDocumentRequestModel } from "@/umb-management-api/schemas/index.js";
 import { postDocumentBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { DocumentTestHelper } from "./document-test-helper.js";
+import { CONTENT_DOCUMENT_TYPE_ID, ROOT_DOCUMENT_TYPE_ID } from "../../../constants.js";
 
 export class DocumentBuilder {
   private model: Partial<CreateDocumentRequestModel> = {
     values: [],
     variants: [],
     parent: null,
-    template: null,
-    documentType: { id: '' }
+    template: null
+    // documentType is not set by default
   };
   private createdItem: any = null;
 
@@ -31,6 +32,16 @@ export class DocumentBuilder {
 
   withDocumentType(documentTypeId: string): DocumentBuilder {
     this.model.documentType = { id: documentTypeId };
+    return this;
+  }
+
+  withRootDocumentType(): DocumentBuilder {
+    this.model.documentType = { id: ROOT_DOCUMENT_TYPE_ID };
+    return this;
+  }
+
+  withContentDocumentType(): DocumentBuilder {
+    this.model.documentType = { id: CONTENT_DOCUMENT_TYPE_ID };
     return this;
   }
 
@@ -68,6 +79,15 @@ export class DocumentBuilder {
     return this;
   }
 
+  async moveToRecycleBin(): Promise<DocumentBuilder> {
+    if (!this.createdItem) {
+      throw new Error("No document has been created yet. Cannot move to recycle bin.");
+    }
+    const client = UmbracoManagementClient.getClient();
+    await client.putDocumentByIdMoveToRecycleBin(this.createdItem.id);
+    return this;
+  }
+
   getId(): string {
     if (!this.createdItem) {
       throw new Error("No document has been created yet");
@@ -81,4 +101,5 @@ export class DocumentBuilder {
     }
     return this.createdItem;
   }
+
 } 

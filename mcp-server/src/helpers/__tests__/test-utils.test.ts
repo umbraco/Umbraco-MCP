@@ -51,6 +51,26 @@ describe("createSnapshotResult", () => {
       expect(result.content[0].text).toContain(BLANK_UUID);
       expect(result.content[0].text).not.toContain(TEST_UUID);
     });
+
+    it("should normalize createDate in single item response", () => {
+      const input = {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              id: "some-uuid",
+              createDate: "2025-05-03T20:51:08.36+00:00",
+              parent: { id: "parent-uuid" }
+            })
+          }
+        ]
+      };
+      const result = createSnapshotResult(input, "some-uuid");
+      const parsed = JSON.parse(result.content[0].text);
+      expect(parsed.id).toBe(BLANK_UUID);
+      expect(parsed.parent.id).toBe("parent-uuid");
+      expect(parsed.createDate).toBe("NORMALIZED_DATE");
+    });
   });
 
   describe("list responses", () => {
@@ -124,6 +144,68 @@ describe("createSnapshotResult", () => {
       expect(parsed.items[1].id).toBe(BLANK_UUID);
       expect(parsed.items[1].parent).toBeNull();
       expect(parsed.totalItems).toBe(2);
+    });
+
+    it("should normalize createDate in list response (items array)", () => {
+      const input = {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              items: [
+                {
+                  id: "item-uuid-1",
+                  createDate: "2025-05-03T20:51:08.36+00:00",
+                  parent: { id: "parent-uuid-1" }
+                },
+                {
+                  id: "item-uuid-2",
+                  createDate: "2025-05-03T20:51:09.36+00:00",
+                  parent: { id: "parent-uuid-2" }
+                }
+              ]
+            })
+          }
+        ]
+      };
+      const result = createSnapshotResult(input);
+      const parsed = JSON.parse(result.content[0].text);
+      expect(parsed.items[0].id).toBe(BLANK_UUID);
+      expect(parsed.items[0].parent.id).toBe(BLANK_UUID);
+      expect(parsed.items[0].createDate).toBe("NORMALIZED_DATE");
+      expect(parsed.items[1].id).toBe(BLANK_UUID);
+      expect(parsed.items[1].parent.id).toBe(BLANK_UUID);
+      expect(parsed.items[1].createDate).toBe("NORMALIZED_DATE");
+    });
+
+    it("should normalize createDate in array response (ancestors)", () => {
+      const input = {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify([
+              {
+                id: "ancestor-uuid-1",
+                createDate: "2025-05-03T20:51:08.36+00:00",
+                parent: null
+              },
+              {
+                id: "ancestor-uuid-2",
+                createDate: "2025-05-03T20:51:09.36+00:00",
+                parent: { id: "ancestor-parent-uuid-2" }
+              }
+            ])
+          }
+        ]
+      };
+      const result = createSnapshotResult(input);
+      const parsed = JSON.parse(result.content[0].text);
+      expect(parsed[0].id).toBe(BLANK_UUID);
+      expect(parsed[0].createDate).toBe("NORMALIZED_DATE");
+      expect(parsed[0].parent).toBeNull();
+      expect(parsed[1].id).toBe(BLANK_UUID);
+      expect(parsed[1].parent.id).toBe(BLANK_UUID);
+      expect(parsed[1].createDate).toBe("NORMALIZED_DATE");
     });
   });
 
