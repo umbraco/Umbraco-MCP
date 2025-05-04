@@ -1,5 +1,6 @@
 import Axios, { AxiosRequestConfig } from "axios";
-import qs from 'qs';
+import qs from "qs";
+
 const client_id = process.env.UMBRACO_CLIENT_ID;
 const client_secret = process.env.UMBRACO_CLIENT_SECRET;
 const grant_type = "client_credentials";

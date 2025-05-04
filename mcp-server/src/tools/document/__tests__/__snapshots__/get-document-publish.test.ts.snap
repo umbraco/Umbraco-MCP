@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-document-publish should get the published state of a published document 1`] = `
+{
+  "content": [
+    {
+      "text": "{"urls":[{"culture":"en-US","url":"/_test-getdocumentpublish/"}],"template":null,"isTrashed":false,"documentType":{"id":"a95360e8-ff04-40b1-8f46-7aa4b5983096","icon":"icon-home color-blue","collection":null},"id":"00000000-0000-0000-0000-000000000000","values":[],"variants":[{"state":"Published","publishDate":"NORMALIZED_DATE","scheduledPublishDate":null,"scheduledUnpublishDate":null,"createDate":"NORMALIZED_DATE","updateDate":"NORMALIZED_DATE","culture":null,"segment":null,"name":"_Test GetDocumentPublish"}]}",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`get-document-publish should handle getting published state for a non-existent document 1`] = `
+{
+  "content": [
+    {
+      "text": "Error: AxiosError: Request failed with status code 404",
+      "type": "text",
+    },
+  ],
+}
+`;

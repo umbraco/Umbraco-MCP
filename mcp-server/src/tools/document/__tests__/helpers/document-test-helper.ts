@@ -110,4 +110,10 @@ export class DocumentTestHelper {
       console.log("Error emptying recycle bin:", error);
     }
   }
+
+  static async getChildren(parentId: string, take: number = 10): Promise<DocumentTreeItemResponseModel[]> {
+    const client = UmbracoManagementClient.getClient();
+    const response = await client.getTreeDocumentChildren({ parentId, take });
+    return response.items;
+  }
 } 

@@ -102,4 +102,13 @@ export class DocumentBuilder {
     return this.createdItem;
   }
 
+  async publish(): Promise<DocumentBuilder> {
+    if (!this.createdItem) {
+      throw new Error("No document has been created yet. Cannot publish.");
+    }
+    const client = UmbracoManagementClient.getClient();
+    await client.putDocumentByIdPublish(this.createdItem.id, { publishSchedules: [{culture: null}] });
+    return this;
+  }
+
 } 

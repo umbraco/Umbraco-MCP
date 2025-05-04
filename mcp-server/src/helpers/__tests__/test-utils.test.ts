@@ -209,6 +209,64 @@ describe("createSnapshotResult", () => {
     });
   });
 
+  describe("date normalization (publishDate, updateDate, variants)", () => {
+    it("should normalize publishDate and updateDate at the top level", () => {
+      const input = {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              id: "some-uuid",
+              createDate: "2025-05-03T20:51:08.36+00:00",
+              publishDate: "2025-05-04T10:00:00.00+00:00",
+              updateDate: "2025-05-05T12:00:00.00+00:00",
+              parent: { id: "parent-uuid" }
+            })
+          }
+        ]
+      };
+      const result = createSnapshotResult(input, "some-uuid");
+      const parsed = JSON.parse(result.content[0].text);
+      expect(parsed.id).toBe(BLANK_UUID);
+      expect(parsed.createDate).toBe("NORMALIZED_DATE");
+      expect(parsed.publishDate).toBe("NORMALIZED_DATE");
+      expect(parsed.updateDate).toBe("NORMALIZED_DATE");
+    });
+
+    it("should normalize date fields inside variants array", () => {
+      const input = {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              id: "some-uuid",
+              variants: [
+                {
+                  createDate: "2025-05-03T20:51:08.36+00:00",
+                  publishDate: "2025-05-04T10:00:00.00+00:00",
+                  updateDate: "2025-05-05T12:00:00.00+00:00"
+                },
+                {
+                  createDate: "2025-06-03T20:51:08.36+00:00",
+                  publishDate: "2025-06-04T10:00:00.00+00:00",
+                  updateDate: "2025-06-05T12:00:00.00+00:00"
+                }
+              ]
+            })
+          }
+        ]
+      };
+      const result = createSnapshotResult(input, "some-uuid");
+      const parsed = JSON.parse(result.content[0].text);
+      expect(parsed.variants).toHaveLength(2);
+      for (const variant of parsed.variants) {
+        expect(variant.createDate).toBe("NORMALIZED_DATE");
+        expect(variant.publishDate).toBe("NORMALIZED_DATE");
+        expect(variant.updateDate).toBe("NORMALIZED_DATE");
+      }
+    });
+  });
+
   describe("error handling", () => {
     it("should handle invalid JSON in text content", () => {
       // Arrange

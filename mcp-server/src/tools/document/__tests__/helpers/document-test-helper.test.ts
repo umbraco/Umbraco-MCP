@@ -110,4 +110,35 @@ describe("DocumentTestHelper", () => {
     expect(found).toBeUndefined();
   });
 
+  it("getChildren should return the correct documents in order", async () => {
+    const rootName = "_Test getChildren Root";
+    const childNames = ["_Test getChildren Child 1", "_Test getChildren Child 2"];
+    // Create root
+    const rootBuilder = await new DocumentBuilder()
+      .withName(rootName)
+      .withRootDocumentType()
+      .create();
+    await rootBuilder.publish();
+    const rootId = rootBuilder.getId();
+    // Create children
+    const childIds: string[] = [];
+    for (const name of childNames) {
+      const childBuilder = await new DocumentBuilder()
+        .withName(name)
+        .withContentDocumentType()
+        .withParent(rootId)
+        .create();
+      await childBuilder.publish();
+      childIds.push(childBuilder.getId());
+    }
+    // Assert getChildren returns the correct documents in order
+    const fetchedDocs = await DocumentTestHelper.getChildren(rootId, 10);
+    expect(fetchedDocs.map(doc => doc.id)).toEqual(childIds);
+    // Cleanup
+    await DocumentTestHelper.cleanup(rootName);
+    for (const name of childNames) {
+      await DocumentTestHelper.cleanup(name);
+    }
+  });
+
 }); 

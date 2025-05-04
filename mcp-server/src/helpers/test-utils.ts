@@ -13,6 +13,12 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
     if (item.createDate) {
       item.createDate = "NORMALIZED_DATE";
     }
+    if (item.publishDate) {
+      item.publishDate = "NORMALIZED_DATE";
+    }
+    if (item.updateDate) {
+      item.updateDate = "NORMALIZED_DATE";
+    }
     return item;
   }
 
@@ -27,6 +33,20 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
             const parsed = JSON.parse(text);
             if (parsed.createDate) {
               parsed.createDate = "NORMALIZED_DATE";
+            }
+            if (parsed.publishDate) {
+              parsed.publishDate = "NORMALIZED_DATE";
+            }
+            if (parsed.updateDate) {
+              parsed.updateDate = "NORMALIZED_DATE";
+            }
+            if (parsed.variants && Array.isArray(parsed.variants)) {
+              parsed.variants = parsed.variants.map((variant: any) => {
+                if (variant.createDate) variant.createDate = "NORMALIZED_DATE";
+                if (variant.publishDate) variant.publishDate = "NORMALIZED_DATE";
+                if (variant.updateDate) variant.updateDate = "NORMALIZED_DATE";
+                return variant;
+              });
             }
             text = JSON.stringify(parsed);
           } catch {}
@@ -47,6 +67,14 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
           // Handle other list responses
           if (parsed.items) {
             parsed.items = parsed.items.map(normalizeItem);
+          }
+          if (parsed.variants && Array.isArray(parsed.variants)) {
+            parsed.variants = parsed.variants.map((variant: any) => {
+              if (variant.createDate) variant.createDate = "NORMALIZED_DATE";
+              if (variant.publishDate) variant.publishDate = "NORMALIZED_DATE";
+              if (variant.updateDate) variant.updateDate = "NORMALIZED_DATE";
+              return variant;
+            });
           }
           return {
             ...item,
