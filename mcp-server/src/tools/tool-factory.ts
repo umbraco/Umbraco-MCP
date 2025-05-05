@@ -5,6 +5,8 @@ import { DataTypeTools } from "./data-type/index.js";
 import { DictionaryTools } from "./dictionary/index.js";
 import { DocumentTypeTools } from "./document-type/index.js";
 import { DocumentBlueprintTools } from "./document-blueprint/index.js";
+import { DocumentTools } from "./document/index.js";
+import { MemberGroupTools } from "./member-group/index.js";
 
 export function ToolFactory(server: McpServer) {
   CultureTools.map((tool) => tool()).forEach((tool) =>
@@ -22,5 +24,10 @@ export function ToolFactory(server: McpServer) {
   DocumentTypeTools.map((tool) => tool()).forEach((tool) =>
     server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
-
+  DocumentTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  MemberGroupTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
 }

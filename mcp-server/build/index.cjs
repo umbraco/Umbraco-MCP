@@ -14506,6 +14506,1289 @@ var DocumentBlueprintTools = [
   get_root_default4
 ];
 
+// src/tools/document/delete/delete-document.ts
+var DeleteDocumentTool = CreateUmbracoTool(
+  "delete-document",
+  "Deletes a document by Id",
+  deleteDocumentByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.deleteDocumentById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_document_default = DeleteDocumentTool;
+
+// src/tools/document/delete/delete-from-recycle-bin.ts
+var DeleteFromRecycleBinTool = CreateUmbracoTool(
+  "delete-from-recycle-bin",
+  "Deletes a document from the recycle bin by Id.",
+  deleteDocumentByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.deleteDocumentById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error deleting document from recycle bin:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_from_recycle_bin_default = DeleteFromRecycleBinTool;
+
+// src/tools/document/delete/delete-document-public-access.ts
+var DeleteDocumentPublicAccessTool = CreateUmbracoTool(
+  "delete-document-public-access",
+  "Removes public access settings from a document by Id.",
+  deleteDocumentByIdPublicAccessParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.deleteDocumentByIdPublicAccess(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error deleting document public access:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_document_public_access_default = DeleteDocumentPublicAccessTool;
+
+// src/tools/document/get/get-document-by-id.ts
+var GetDocumentByIdTool = CreateUmbracoTool(
+  "get-document-by-id",
+  "Gets a document by id",
+  getDocumentByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_by_id_default = GetDocumentByIdTool;
+
+// src/tools/document/get/get-document-domains.ts
+var GetDocumentDomainsTool = CreateUmbracoTool(
+  "get-document-domains",
+  "Gets the domains assigned to a document by Id.",
+  getDocumentByIdDomainsParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentByIdDomains(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document domains:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_domains_default = GetDocumentDomainsTool;
+
+// src/tools/document/get/get-document-notifications.ts
+var GetDocumentNotificationsTool = CreateUmbracoTool(
+  "get-document-notifications",
+  "Gets the notifications for a document by Id.",
+  getDocumentByIdNotificationsParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentByIdNotifications(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document notifications:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_notifications_default = GetDocumentNotificationsTool;
+
+// src/tools/document/get/get-document-public-access.ts
+var GetDocumentPublicAccessTool = CreateUmbracoTool(
+  "get-document-public-access",
+  "Gets the public access settings for a document by Id.",
+  getDocumentByIdPublicAccessParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentByIdPublicAccess(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document public access:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_public_access_default = GetDocumentPublicAccessTool;
+
+// src/tools/document/get/get-document-publish.ts
+var GetDocumentPublishTool = CreateUmbracoTool(
+  "get-document-publish",
+  "Gets the published state of a document by Id.",
+  getDocumentByIdPublishedParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentByIdPublished(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting published state:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_publish_default = GetDocumentPublishTool;
+
+// src/tools/document/get/get-document-configuration.ts
+var GetDocumentConfigurationTool = CreateUmbracoTool(
+  "get-document-configuration",
+  "Gets the document configuration for the Umbraco instance.",
+  {},
+  async () => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentConfiguration();
+      getDocumentConfigurationResponse.parse(response);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document configuration:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_configuration_default = GetDocumentConfigurationTool;
+
+// src/tools/document/get/get-document-urls.ts
+var GetDocumentUrlsTool = CreateUmbracoTool(
+  "get-document-urls",
+  "Gets the URLs for a document.",
+  getDocumentUrlsQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getDocumentUrls(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document URLs:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_document_urls_default = GetDocumentUrlsTool;
+
+// src/tools/document/get/search-document.ts
+var SearchDocumentTool = CreateUmbracoTool(
+  "search-document",
+  "Searches for documents by query, skip, and take.",
+  getItemDocumentSearchQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getItemDocumentSearch(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error searching documents:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var search_document_default = SearchDocumentTool;
+
+// src/tools/document/post/post-document-public-access.ts
+
+var PostDocumentPublicAccessTool = CreateUmbracoTool(
+  "post-document-public-access",
+  "Adds public access settings to a document by Id.",
+  {
+    id: postDocumentByIdPublicAccessParams.shape.id,
+    data: _zod.z.object(postDocumentByIdPublicAccessBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.postDocumentByIdPublicAccess(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error adding document public access:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var post_document_public_access_default = PostDocumentPublicAccessTool;
+
+// src/tools/document/post/validate-document.ts
+var ValidateDocumentTool = CreateUmbracoTool(
+  "validate-document",
+  "Validates a document using the Umbraco API.",
+  postDocumentValidateBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.postDocumentValidate(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error validating document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var validate_document_default = ValidateDocumentTool;
+
+// src/tools/document/post/copy-document.ts
+
+var CopyDocumentTool = CreateUmbracoTool(
+  "copy-document",
+  "Copy a document to a new location",
+  {
+    id: _zod.z.string().uuid(),
+    data: _zod.z.object(postDocumentByIdCopyBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.postDocumentByIdCopy(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error copying document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var copy_document_default = CopyDocumentTool;
+
+// src/tools/document/post/create-document.ts
+var CreateDocumentTool = CreateUmbracoTool(
+  "create-document",
+  `Creates a document,
+  Before creating always search for another document of the same document type and copy that, updating the new document as needed.`,
+  postDocumentBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.postDocument(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var create_document_default = CreateDocumentTool;
+
+// src/tools/document/put/put-document-public-access.ts
+
+var PutDocumentPublicAccessTool = CreateUmbracoTool(
+  "put-document-public-access",
+  "Updates public access settings for a document by Id.",
+  {
+    id: putDocumentByIdPublicAccessParams.shape.id,
+    data: _zod.z.object(putDocumentByIdPublicAccessBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentByIdPublicAccess(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating document public access:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var put_document_public_access_default = PutDocumentPublicAccessTool;
+
+// src/tools/document/put/put-document-domains.ts
+
+var PutDocumentDomainsTool = CreateUmbracoTool(
+  "put-document-domains",
+  `Updates the domains assigned to a document by Id. Default value of the defaultIsoCode is null. 
+  Domain isoCode in the domains array should be in the format of 'en-US' amd be a valid domain name from the Umbraco instance.`,
+  {
+    id: putDocumentByIdDomainsParams.shape.id,
+    data: _zod.z.object(putDocumentByIdDomainsBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentByIdDomains(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating document domains:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var put_document_domains_default = PutDocumentDomainsTool;
+
+// src/tools/document/put/put-document-notifications.ts
+
+var PutDocumentNotificationsTool = CreateUmbracoTool(
+  "put-document-notifications",
+  "Updates the notifications for a document by Id.",
+  {
+    id: putDocumentByIdNotificationsParams.shape.id,
+    data: _zod.z.object(putDocumentByIdNotificationsBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentByIdNotifications(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating document notifications:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var put_document_notifications_default = PutDocumentNotificationsTool;
+
+// src/tools/document/put/publish-document-with-descendants.ts
+
+var PublishDocumentWithDescendantsTool = CreateUmbracoTool(
+  "publish-document-with-descendants",
+  "Publishes a document and its descendants by Id.",
+  {
+    id: _zod.z.string().uuid(),
+    data: _zod.z.object(putDocumentByIdPublishWithDescendantsBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentByIdPublishWithDescendants(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error publishing document with descendants:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var publish_document_with_descendants_default = PublishDocumentWithDescendantsTool;
+
+// src/tools/document/put/unpublish-document.ts
+
+var UnpublishDocumentTool = CreateUmbracoTool(
+  "unpublish-document",
+  "Unpublishes a document by Id.",
+  {
+    id: _zod.z.string().uuid(),
+    data: _zod.z.object(putDocumentByIdUnpublishBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      if (!model.data.cultures) model.data.cultures = null;
+      const response = await client.putDocumentByIdUnpublish(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error unpublishing document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var unpublish_document_default = UnpublishDocumentTool;
+
+// src/tools/document/put/sort-document.ts
+var SortDocumentTool = CreateUmbracoTool(
+  "sort-document",
+  "Sorts the order of documents under a parent.",
+  putDocumentSortBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentSort(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error sorting documents:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var sort_document_default = SortDocumentTool;
+
+// src/tools/document/put/move-document.ts
+
+var MoveDocumentTool = CreateUmbracoTool(
+  "move-document",
+  "Move a document to a new location",
+  {
+    id: _zod.z.string().uuid(),
+    data: _zod.z.object(putDocumentByIdMoveBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentByIdMove(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error moving document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var move_document_default = MoveDocumentTool;
+
+// src/tools/document/put/publish-document.ts
+
+var PublishDocumentTool = CreateUmbracoTool(
+  "publish-document",
+  "Publishes a document by Id.",
+  {
+    id: _zod.z.string().uuid(),
+    data: _zod.z.object(putDocumentByIdPublishBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      if (!model.data.publishSchedules) {
+        model.data.publishSchedules = [{ culture: null }];
+      }
+      const response = await client.putDocumentByIdPublish(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error publishing document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var publish_document_default = PublishDocumentTool;
+
+// src/tools/document/put/empty-recycle-bin.ts
+var EmptyRecycleBinTool = CreateUmbracoTool(
+  "empty-recycle-bin",
+  "Empties the document recycle bin.",
+  {},
+  async () => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.deleteRecycleBinDocument();
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error emptying recycle bin:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var empty_recycle_bin_default = EmptyRecycleBinTool;
+
+// src/tools/document/put/move-to-recycle-bin.ts
+var MoveDocumentToRecycleBinTool = CreateUmbracoTool(
+  "move-document-to-recycle-bin",
+  "Move a document to the recycle bin",
+  putDocumentByIdMoveToRecycleBinParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentByIdMoveToRecycleBin(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error moving document to recycle bin:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var move_to_recycle_bin_default = MoveDocumentToRecycleBinTool;
+
+// src/tools/document/put/update-document.ts
+
+var UpdateDocumentTool = CreateUmbracoTool(
+  "update-document",
+  `Updates a document by Id
+  Always read the current document value first and only update the required values.
+  Don't miss any properties from the original document that you are updating`,
+  {
+    id: putDocumentByIdParams.shape.id,
+    data: _zod.z.object(putDocumentByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.putDocumentById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating document:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_document_default = UpdateDocumentTool;
+
+// src/tools/document/items/get/get-root.ts
+var GetDocumentRootTool = CreateUmbracoTool(
+  "get-document-root",
+  "Gets root items for documents.",
+  getTreeDocumentRootQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getTreeDocumentRoot(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document root:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_root_default5 = GetDocumentRootTool;
+
+// src/tools/document/items/get/get-children.ts
+var GetDocumentChildrenTool = CreateUmbracoTool(
+  "get-document-children",
+  "Gets child items for a document.",
+  getTreeDocumentChildrenQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getTreeDocumentChildren(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document children:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_children_default5 = GetDocumentChildrenTool;
+
+// src/tools/document/items/get/get-ancestors.ts
+var GetDocumentAncestorsTool = CreateUmbracoTool(
+  "get-document-ancestors",
+  "Gets ancestor items for a document.",
+  getTreeDocumentAncestorsQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getTreeDocumentAncestors(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting document ancestors:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_ancestors_default5 = GetDocumentAncestorsTool;
+
+// src/tools/document/items/get/get-recycle-bin-root.ts
+var GetRecycleBinDocumentRootTool = CreateUmbracoTool(
+  "get-recycle-bin-document-root",
+  "Gets root items for the document recycle bin.",
+  getRecycleBinDocumentRootQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getRecycleBinDocumentRoot(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting recycle bin document root:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_recycle_bin_root_default = GetRecycleBinDocumentRootTool;
+
+// src/tools/document/items/get/get-recycle-bin-children.ts
+var GetRecycleBinDocumentChildrenTool = CreateUmbracoTool(
+  "get-recycle-bin-document-children",
+  "Gets child items for a document in the recycle bin.",
+  getRecycleBinDocumentChildrenQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getRecycleBinDocumentChildren(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting recycle bin document children:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_recycle_bin_children_default = GetRecycleBinDocumentChildrenTool;
+
+// src/tools/document/index.ts
+var DocumentTools = [
+  delete_document_default,
+  delete_from_recycle_bin_default,
+  delete_document_public_access_default,
+  get_document_by_id_default,
+  get_document_domains_default,
+  get_document_notifications_default,
+  get_document_public_access_default,
+  get_document_publish_default,
+  get_document_configuration_default,
+  get_document_urls_default,
+  search_document_default,
+  post_document_public_access_default,
+  validate_document_default,
+  copy_document_default,
+  create_document_default,
+  put_document_public_access_default,
+  put_document_domains_default,
+  put_document_notifications_default,
+  publish_document_with_descendants_default,
+  unpublish_document_default,
+  sort_document_default,
+  move_document_default,
+  publish_document_default,
+  empty_recycle_bin_default,
+  move_to_recycle_bin_default,
+  update_document_default,
+  get_root_default5,
+  get_children_default5,
+  get_ancestors_default5,
+  get_recycle_bin_root_default,
+  get_recycle_bin_children_default
+];
+
+// src/tools/member-group/get/get-member-group.ts
+var GetMemberGroupTool = CreateUmbracoTool(
+  "get-member-group",
+  "Gets a member group by Id",
+  getMemberGroupByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getMemberGroupById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting member group:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_member_group_default = GetMemberGroupTool;
+
+// src/tools/member-group/get/get-member-group-by-id-array.ts
+var GetMemberGroupByIdArrayTool = CreateUmbracoTool(
+  "get-member-group-by-id-array",
+  "Gets member groups by an array of IDs",
+  getItemMemberGroupQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      const response = await client.getItemMemberGroup(params);
+      getItemMemberGroupResponse.parse(response);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting member groups by id array:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_member_group_by_id_array_default = GetMemberGroupByIdArrayTool;
+
+// src/tools/member-group/get/get-root.ts
+var GetMemberGroupRootTool = CreateUmbracoTool(
+  "get-member-group-root",
+  "Gets the root level of the member group tree",
+  getTreeMemberGroupRootQueryParams.shape,
+  async (params) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.getTreeMemberGroupRoot(params);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error getting member group root:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var get_root_default6 = GetMemberGroupRootTool;
+
+// src/tools/member-group/post/create-member-group.ts
+var CreateMemberGroupTool = CreateUmbracoTool(
+  "create-member-group",
+  "Creates a new member group",
+  postMemberGroupBody.shape,
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.postMemberGroup(model);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error creating member group:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var create_member_group_default = CreateMemberGroupTool;
+
+// src/tools/member-group/put/update-member-group.ts
+
+var UpdateMemberGroupTool = CreateUmbracoTool(
+  "update-member-group",
+  "Updates a member group by Id",
+  {
+    id: putMemberGroupByIdParams.shape.id,
+    data: _zod.z.object(putMemberGroupByIdBody.shape)
+  },
+  async (model) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.putMemberGroupById(model.id, model.data);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error updating member group:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var update_member_group_default = UpdateMemberGroupTool;
+
+// src/tools/member-group/delete/delete-member-group.ts
+var DeleteMemberGroupTool = CreateUmbracoTool(
+  "delete-member-group",
+  "Deletes a member group by Id",
+  deleteMemberGroupByIdParams.shape,
+  async ({ id }) => {
+    try {
+      const client = UmbracoManagementClient2.getClient();
+      var response = await client.deleteMemberGroupById(id);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response)
+          }
+        ]
+      };
+    } catch (error) {
+      console.error("Error deleting member group:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+var delete_member_group_default = DeleteMemberGroupTool;
+
+// src/tools/member-group/index.ts
+var MemberGroupTools = [
+  get_member_group_default,
+  get_member_group_by_id_array_default,
+  get_root_default6,
+  create_member_group_default,
+  update_member_group_default,
+  delete_member_group_default
+];
+
 // src/tools/tool-factory.ts
 function ToolFactory(server) {
   CultureTools.map((tool) => tool()).forEach(
@@ -14521,6 +15804,12 @@ function ToolFactory(server) {
     (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
   DocumentTypeTools.map((tool) => tool()).forEach(
+    (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  DocumentTools.map((tool) => tool()).forEach(
+    (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  MemberGroupTools.map((tool) => tool()).forEach(
     (tool) => server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
 }
@@ -14562,7 +15851,7 @@ var GetDataTypeAncestorsResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_ancestors_default5 = GetDataTypeAncestorsResource;
+var get_ancestors_default6 = GetDataTypeAncestorsResource;
 
 // src/resources/data-types/get/get-children.ts
 var GetDataTypeChildrenResource = CreateUmbracoTemplateResource(
@@ -14596,7 +15885,7 @@ var GetDataTypeChildrenResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_children_default5 = GetDataTypeChildrenResource;
+var get_children_default6 = GetDataTypeChildrenResource;
 
 // src/resources/data-types/get/get-folder.ts
 var GetDataTypeFolderResource = CreateUmbracoTemplateResource(
@@ -14758,7 +16047,7 @@ var GetDataTypeRootResource = CreateUmbracoTemplateResource(
     }
   }
 );
-var get_root_default5 = GetDataTypeRootResource;
+var get_root_default7 = GetDataTypeRootResource;
 
 // src/resources/data-types/get/get-search.ts
 var GetDataTypeSearchResource = CreateUmbracoTemplateResource(
@@ -14795,13 +16084,13 @@ var get_search_default2 = GetDataTypeSearchResource;
 
 // src/resources/data-types/index.ts
 var DataTypeTemplateResources = [
-  get_ancestors_default5,
-  get_children_default5,
+  get_ancestors_default6,
+  get_children_default6,
   get_folder_default3,
   get_is_used_default,
   get_query_default,
   get_references_default,
-  get_root_default5,
+  get_root_default7,
   get_search_default2
 ];
 

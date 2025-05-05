@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`update-language should handle non-existent language 1`] = `
+{
+  "content": [
+    {
+      "text": "Error: AxiosError: Request failed with status code 404",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`update-language should update an existing language 1`] = `
+{
+  "isoCode": "en-GB",
+  "success": true,
+}
+`;

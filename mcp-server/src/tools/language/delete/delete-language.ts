@@ -1,17 +1,15 @@
 import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { postDocumentBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { deleteLanguageByIsoCodeParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
-const CreateDocumentTool = CreateUmbracoTool(
-  "create-document",
-  `Creates a document,
-  Before creating always search for another document of the same document type and copy that, 
-  updating the new document as needed.`,
-  postDocumentBody.shape,
-  async (model) => {
+const DeleteLanguageTool = CreateUmbracoTool(
+  "delete-language",
+  "Deletes a language by ISO code",
+  deleteLanguageByIsoCodeParams.shape,
+  async ({ isoCode }: { isoCode: string }) => {
     try {
       const client = UmbracoManagementClient.getClient();
-      const response = await client.postDocument(model);
+      const response = await client.deleteLanguageByIsoCode(isoCode);
       return {
         content: [
           {
@@ -21,7 +19,7 @@ const CreateDocumentTool = CreateUmbracoTool(
         ],
       };
     } catch (error) {
-      console.error("Error creating document:", error);
+      console.error("Error deleting language:", error);
       return {
         content: [
           {
@@ -34,4 +32,4 @@ const CreateDocumentTool = CreateUmbracoTool(
   }
 );
 
-export default CreateDocumentTool; 
+export default DeleteLanguageTool; 

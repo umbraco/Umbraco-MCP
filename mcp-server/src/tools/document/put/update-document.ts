@@ -5,7 +5,9 @@ import { z } from "zod";
 
 const UpdateDocumentTool = CreateUmbracoTool(
   "update-document",
-  "Updates a document by Id",
+  `Updates a document by Id
+  Always read the current document value first and only update the required values.
+  Don't miss any properties from the original document that you are updating`,
   {
     id: putDocumentByIdParams.shape.id,
     data: z.object(putDocumentByIdBody.shape),

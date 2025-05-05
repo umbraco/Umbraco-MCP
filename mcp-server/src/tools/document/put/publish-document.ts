@@ -5,7 +5,9 @@ import { z } from "zod";
 
 const PublishDocumentTool = CreateUmbracoTool(
   "publish-document",
-  "Publishes a document by Id.",
+  `Publishes a document by Id. 
+  When the culture is not provided, the default culture is null.
+  When the schedule is not provided, the default schedule is null.`,
   {
     id: z.string().uuid(),
     data: z.object(putDocumentByIdPublishBody.shape)
