@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-member-group should get a member group by id 1`] = `
+{
+  "content": [
+    {
+      "text": "{"id":"00000000-0000-0000-0000-000000000000","name":"_Test Member Group Get"}",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`get-member-group should handle non-existent member group 1`] = `
+{
+  "content": [
+    {
+      "text": "Error: AxiosError: Request failed with status code 404",
+      "type": "text",
+    },
+  ],
+}
+`;

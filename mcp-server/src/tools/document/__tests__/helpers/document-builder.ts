@@ -3,6 +3,9 @@ import { CreateDocumentRequestModel } from "@/umb-management-api/schemas/index.j
 import { postDocumentBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { DocumentTestHelper } from "./document-test-helper.js";
 import { CONTENT_DOCUMENT_TYPE_ID, ROOT_DOCUMENT_TYPE_ID } from "../../../constants.js";
+import PostDocumentPublicAccessTool from "../../post/post-document-public-access.js";
+
+export const TEST_DOMAIN = { domainName: "example.com", isoCode: "en-US" };
 
 export class DocumentBuilder {
   private model: Partial<CreateDocumentRequestModel> = {
@@ -108,6 +111,29 @@ export class DocumentBuilder {
     }
     const client = UmbracoManagementClient.getClient();
     await client.putDocumentByIdPublish(this.createdItem.id, { publishSchedules: [{culture: null}] });
+    return this;
+  }
+
+  async setDomains(domains: Array<{ domainName: string; isoCode: string }>, defaultIsoCode: string | null = null): Promise<DocumentBuilder> {
+    if (!this.createdItem) {
+      throw new Error("No document has been created yet. Cannot set domains.");
+    }
+    const client = UmbracoManagementClient.getClient();
+    await client.putDocumentByIdDomains(this.getId(), { defaultIsoCode, domains });
+    return this;
+  }
+
+  async setPublicAccess(memberGroupName: string): Promise<this> {
+    if (!this.createdItem) {
+      throw new Error("No document has been created yet");
+    }
+    const client = UmbracoManagementClient.getClient();
+    await client.postDocumentByIdPublicAccess(this.getId(), {
+      loginDocument: { id: this.getId() },
+      errorDocument: { id: this.getId() },
+      memberUserNames: [],
+      memberGroupNames: [memberGroupName]
+    }, { signal: new AbortController().signal }); 
     return this;
   }
 

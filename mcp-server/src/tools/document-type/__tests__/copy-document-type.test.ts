@@ -4,6 +4,7 @@ import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { DocumentTypeFolderBuilder } from "./helpers/document-type-folder-builder.js";
 import { jest } from "@jest/globals";
 import { BLANK_UUID } from "../../constants.js";
+
 const TEST_DOCTYPE_NAME = "_Test DocumentType Copy";
 const TEST_DOCTYPE_COPY_NAME = "_Test DocumentType Copy (copy)";
 const TEST_FOLDER_NAME = "_Test Folder For Copy";

@@ -1,10 +1,19 @@
 import { DocumentBuilder } from "./document-builder.js";
 import { DocumentTestHelper } from "./document-test-helper.js";
 import { jest } from "@jest/globals";
+import { TEST_DOMAIN } from "./document-builder.js";
+import { UmbracoManagementClient } from "@/clients/umbraco-management-client.js";
+import { MemberGroupBuilder } from "../../../member-group/__tests__/helpers/member-group-builder.js";
+import { MemberGroupTestHelper } from "../../../member-group/__tests__/helpers/member-group-helper.js";
+import { BLANK_UUID } from "../../../constants.js";
 
 const TEST_DOCUMENT_NAME = "_Test DocumentBuilder";
 const TEST_RECYCLE_BIN_DOCUMENT_NAME = "_Test DocumentBuilder RecycleBin";
 const TEST_PUBLISHED_DOCUMENT_NAME = "_Test DocumentBuilder Published";
+const TEST_DOMAINS_DOCUMENT_NAME = "_Test DocumentBuilder Domains";
+const TEST_PUBLIC_ACCESS_DOCUMENT_NAME = "_Test DocumentBuilder PublicAccess";
+const TEST_MEMBER_GROUP_NAME = "_Test Builder PublicAccess MemberGroup";
+
 describe("DocumentBuilder", () => {
   let originalConsoleError: typeof console.error;
 
@@ -18,6 +27,9 @@ describe("DocumentBuilder", () => {
     await DocumentTestHelper.cleanup(TEST_DOCUMENT_NAME);
     await DocumentTestHelper.cleanup(TEST_RECYCLE_BIN_DOCUMENT_NAME);
     await DocumentTestHelper.cleanup(TEST_PUBLISHED_DOCUMENT_NAME);
+    await DocumentTestHelper.cleanup(TEST_DOMAINS_DOCUMENT_NAME);
+    await DocumentTestHelper.cleanup(TEST_PUBLIC_ACCESS_DOCUMENT_NAME);
+    await MemberGroupTestHelper.cleanup(TEST_MEMBER_GROUP_NAME);
   });
 
   it("should create a document and find it by name", async () => {
@@ -78,5 +90,42 @@ describe("DocumentBuilder", () => {
   it("publish should throw if called before create", async () => {
     const builder = new DocumentBuilder().withName("_Test PublishBuilder Error").withRootDocumentType();
     await expect(builder.publish()).rejects.toThrow(/No document has been created yet/);
+  });
+
+  it("should set domains for a document using setDomains", async () => {
+    const builder = await new DocumentBuilder()
+      .withName(TEST_DOMAINS_DOCUMENT_NAME)
+      .withRootDocumentType()
+      .create();
+    await builder.setDomains([TEST_DOMAIN], null);
+    const client = UmbracoManagementClient.getClient();
+    const domains = await client.getDocumentByIdDomains(builder.getId());
+    expect(domains).toMatchSnapshot();
+    expect(domains.domains).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining(TEST_DOMAIN)
+      ])
+    );
+  });
+
+  it("should set public access for a document using setPublicAccess", async () => {
+    await new MemberGroupBuilder().withName(TEST_MEMBER_GROUP_NAME).create();
+    // Create document
+    const builder = await new DocumentBuilder()
+      .withName(TEST_PUBLIC_ACCESS_DOCUMENT_NAME)
+      .withRootDocumentType()
+      .create();
+    // Set public access
+    await builder.setPublicAccess(TEST_MEMBER_GROUP_NAME);
+    // Fetch public access using the client
+    const client = UmbracoManagementClient.getClient();
+    const response = await client.getDocumentByIdPublicAccess(builder.getId());
+    // Normalize IDs for snapshot
+    response.loginDocument.id = BLANK_UUID;
+    response.errorDocument.id = BLANK_UUID;
+    if (Array.isArray(response.groups)) {
+      response.groups.forEach((g: any) => { g.id = BLANK_UUID; });
+    }
+    expect(response).toMatchSnapshot();
   });
 }); 
