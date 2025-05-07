@@ -480,3 +480,6 @@ umbraco-package-schema.json
 
 # Media files
 /wwwroot/media/
+
+#CLean assets folder
+wwwroot/clean-assets/
