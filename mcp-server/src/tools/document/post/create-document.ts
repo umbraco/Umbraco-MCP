@@ -5,8 +5,8 @@ import { postDocumentBody } from "@/umb-management-api/umbracoManagementAPI.zod.
 const CreateDocumentTool = CreateUmbracoTool(
   "create-document",
   `Creates a document,
-  Before creating always search for another document of the same document type and copy that, 
-  updating the new document as needed.`,
+  Use this endpoint only when creating documents with completely unique structures. 
+  For most cases, the Copy document endpoint is recommended due to the complexity of the document schema.`,
   postDocumentBody.shape,
   async (model) => {
     try {

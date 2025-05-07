@@ -1,3 +1,4 @@
 node_modules
 build/**
 mcp-server/coverage
+mcp-server/build

@@ -4,7 +4,9 @@ import { getDocumentByIdParams } from "@/umb-management-api/umbracoManagementAPI
 
 const GetDocumentByIdTool = CreateUmbracoTool(
   "get-document-by-id",
-  "Gets a document by id",
+  `Gets a document by id
+  Use this to retrieve existing documents. When creating new documents, 
+  first get an existing document of similar type, then use the Copy document endpoint.`,
   getDocumentByIdParams.shape,
   async ({ id }) => {
     try {
