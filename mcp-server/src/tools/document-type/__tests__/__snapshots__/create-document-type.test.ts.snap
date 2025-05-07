@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create-document-type should create a document type 1`] = `
+{
+  "content": [
+    {
+      "text": """",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`create-document-type should create a document type 2`] = `
+{
+  "hasChildren": false,
+  "icon": "icon-document",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "isElement": false,
+  "isFolder": false,
+  "name": "_Test DocumentType Created",
+  "parent": null,
+}
+`;
+
+exports[`create-document-type should create a document type with properties 1`] = `
+{
+  "content": [
+    {
+      "text": """",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`create-document-type should create a document type with properties 2`] = `
+{
+  "hasChildren": false,
+  "icon": "icon-document",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "isElement": false,
+  "isFolder": false,
+  "name": "_Test DocumentType Created",
+  "parent": null,
+}
+`;
+
+exports[`create-document-type should handle existing document type 1`] = `
+{
+  "content": [
+    {
+      "text": "Error: AxiosError: Request failed with status code 400",
+      "type": "text",
+    },
+  ],
+}
+`;

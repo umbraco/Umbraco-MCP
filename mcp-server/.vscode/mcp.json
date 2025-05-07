@@ -3,7 +3,12 @@
     "umbraco-mcp": {
       "type": "stdio",
       "command": "node",
-      "args": ["D:\\Code\\umbraco-mcp\\mcp-server\\build\\index.js"]
+      "args": ["/Users/philw/Projects/Umbraco/umbraco-mcp/umbraco-mcp/mcp-server/build/index.js"],
+      "env": {
+        "UMBRACO_CLIENT_ID": "umbraco-back-office-mcp",
+        "UMBRACO_CLIENT_SECRET": "1234567890",
+        "UMBRACO_BASE_URL": "http://localhost:56472"
+      }
     }
   }
 }

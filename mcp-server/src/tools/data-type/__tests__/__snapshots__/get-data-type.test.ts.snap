@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-data-type should get a data type by ID 1`] = `
+{
+  "canIgnoreStartNodes": true,
+  "editorAlias": "Umbraco.TextBox",
+  "editorUiAlias": "textbox",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "isDeletable": true,
+  "name": "_Test Get DataType",
+  "values": [],
+}
+`;

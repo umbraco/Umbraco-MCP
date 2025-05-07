@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`put-document-public-access should handle non-existent document 1`] = `
+{
+  "content": [
+    {
+      "text": "Error: AxiosError: Request failed with status code 404",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`put-document-public-access should update public access for a valid document 1`] = `
+{
+  "content": [
+    {
+      "text": """",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`put-document-public-access should update public access for a valid document 2`] = `
+{
+  "errorDocument": {
+    "id": "00000000-0000-0000-0000-000000000000",
+  },
+  "groups": [
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "name": "_Test PutPublicAccess MemberGroup2",
+    },
+  ],
+  "loginDocument": {
+    "id": "00000000-0000-0000-0000-000000000000",
+  },
+  "members": [],
+}
+`;

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-language-items should get language item by isoCode 1`] = `
+{
+  "content": [
+    {
+      "text": "[{"name":"_Test Language Items","isoCode":"en-GB"}]",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`get-language-items should handle non-existent isoCode 1`] = `
+{
+  "content": [
+    {
+      "text": "[]",
+      "type": "text",
+    },
+  ],
+}
+`;
