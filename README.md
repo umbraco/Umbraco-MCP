@@ -1,4 +1,5 @@
-# Umbraco MCP ![MIT licensed](https://img.shields.io/npm/l/%40modelcontextprotocol%2Fsdk)
+# Umbraco MCP ![GitHub License](https://img.shields.io/github/license/matthew-wise/umbraco-mcp)
+
 
 ## Overview
 
