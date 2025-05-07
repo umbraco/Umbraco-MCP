@@ -1,4 +1,4 @@
-# Umbraco MCP ![GitHub License](https://img.shields.io/github/license/matthew-wise/umbraco-mcp)
+# Umbraco MCP ![GitHub License](https://img.shields.io/github/license/matthew-wise/umbraco-mcp?style=plastic&link=https%3A%2F%2Fgithub.com%2FMatthew-Wise%2Fumbraco-mcp%3Ftab%3DMIT-1-ov-file%23readme)
 
 
 ## Overview
