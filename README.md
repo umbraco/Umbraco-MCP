@@ -1,8 +1,6 @@
 # Umbraco MCP ![GitHub License](https://img.shields.io/github/license/matthew-wise/umbraco-mcp?style=plastic&link=https%3A%2F%2Fgithub.com%2FMatthew-Wise%2Fumbraco-mcp%3Ftab%3DMIT-1-ov-file%23readme)
 
 
-## Overview
-
 An MCP (Model Context Protocol) server for [Umbraco CMS](https://umbraco.com/)
 it provides access to key parts of the Management API enabling you to do back office tasks with your agent.
 
