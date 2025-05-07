@@ -6,7 +6,7 @@ it provides access to key parts of the Management API enabling you to do back of
 
 ## Supported Features
 
-The list below shows which endpoints are covered by grou,
+The list below shows which endpoints are covered by group,
 if you want to see individual endpoints please refer to your sites swagger definition `<domain>/umbraco/swagger/index.html?urls.primaryName=Umbraco+Management+API`
 
 |                       |                  |                 |
