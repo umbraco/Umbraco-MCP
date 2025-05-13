@@ -1,8 +1,8 @@
 import { jest } from "@jest/globals";
-import { MemberBuilder } from "../../__tests__/helpers/member-builder.js";
-import { MemberTestHelper } from "../../__tests__/helpers/member-test-helper.js";
-import { Default_Memeber_TYPE_ID, BLANK_UUID } from "../../../constants.js";
-import GetMembersByIdArrayTool from "../get-member-by-id-array.js";
+import { MemberBuilder } from "./helpers/member-builder.js";
+import { MemberTestHelper } from "./helpers/member-test-helper.js";
+import { Default_Memeber_TYPE_ID, BLANK_UUID } from "../../constants.js";
+import GetMembersByIdArrayTool from "../get/get-member-by-id-array.js";
 
 const TEST_MEMBER_NAME = "_Test GetMemberByIdArray";
 const TEST_MEMBER_EMAIL = "test-get-by-id-array@example.com";
