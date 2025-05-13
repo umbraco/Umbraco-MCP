@@ -75,7 +75,6 @@ export class MemberBuilder {
   async create(): Promise<MemberBuilder> {
     const client = UmbracoManagementClient.getClient();
     const validatedModel = postMemberBody.parse(this.model);
-    console.log(validatedModel);
     await client.postMember(validatedModel);
 
     // Find the created member by username
