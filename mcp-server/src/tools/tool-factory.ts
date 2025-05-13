@@ -13,6 +13,12 @@ import { MemberTools } from "./member/index.js";
 import { LogViewerTools } from "./log-viewer/index.js";
 import { LanguageTools } from "./language/index.js";
 import { PropertyTypeTools } from "./property-type/index.js";
+import { WebhookTools } from "./webhook/index.js";
+import { ServerTools } from "./server/index.js";
+import { RedirectTools } from "./redirect/index.js";
+import { UserGroupTools } from "./user-group/index.js";
+import { TemporaryFileTools } from "./temporary-file/index.js";
+import { MediaTools } from "./media/index.js";
 
 export function ToolFactory(server: McpServer) {
   CultureTools.map((tool) => tool()).forEach((tool) =>
@@ -52,6 +58,24 @@ export function ToolFactory(server: McpServer) {
     server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
   MemberTypeTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  WebhookTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  ServerTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  RedirectTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  UserGroupTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  TemporaryFileTools.map((tool) => tool()).forEach((tool) =>
+    server.tool(tool.name, tool.description, tool.schema, tool.handler)
+  );
+  MediaTools.map((tool) => tool()).forEach((tool) =>
     server.tool(tool.name, tool.description, tool.schema, tool.handler)
   );
 }
