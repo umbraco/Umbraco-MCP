@@ -17,9 +17,13 @@ import GetDocumentTypeAvailableCompositionsTool from "./post/get-document-type-a
 import GetDocumentTypeAllowedChildrenTool from "./get/get-document-type-allowed-children.js";
 import GetDocumentTypeConfigurationTool from "./get/get-document-type-configuration.js";
 import GetDocumentTypesByIdArrayTool from "./get/get-document-type-by-id-array.js";
+import GetIconsTool from "./templates/get-icons.js";
+import CreateElementTypeTool from "./post/create-element-type.js";
 
 export const DocumentTypeTools = [
   CreateDocumentTypeTool,
+  CreateElementTypeTool,
+  GetIconsTool,
   DeleteDocumentTypeTool,
   GetDocumentTypeTool,
   UpdateDocumentTypeTool,

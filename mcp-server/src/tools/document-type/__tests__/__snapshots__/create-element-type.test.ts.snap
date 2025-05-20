@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create-element-type should create an element type 1`] = `
+{
+  "content": [
+    {
+      "text": """",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`create-element-type should create an element type 2`] = `
+{
+  "hasChildren": false,
+  "icon": "icon-document",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "isElement": true,
+  "isFolder": false,
+  "name": "_Test ElementType Created",
+  "parent": null,
+}
+`;
+
+exports[`create-element-type should create an element type with properties 1`] = `
+{
+  "content": [
+    {
+      "text": """",
+      "type": "text",
+    },
+  ],
+}
+`;
+
+exports[`create-element-type should create an element type with properties 2`] = `
+{
+  "hasChildren": false,
+  "icon": "icon-document",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "isElement": true,
+  "isFolder": false,
+  "name": "_Test ElementType Created",
+  "parent": null,
+}
+`;
+
+exports[`create-element-type should handle existing element type 1`] = `
+{
+  "content": [
+    {
+      "text": "Error using create-element-type:
+{
+  "message": "Request failed with status code 400",
+  "response": {
+    "type": "Error",
+    "title": "Duplicate alias",
+    "status": 400,
+    "detail": "The specified document type alias is already in use",
+    "operationStatus": "DuplicateAlias"
+  }
+}",
+      "type": "text",
+    },
+  ],
+}
+`;

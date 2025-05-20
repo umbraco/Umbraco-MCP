@@ -10,8 +10,12 @@ export default defineConfig({
   clean: true,
   dts: true,
   esbuildOptions(options) {
-    options.resolveExtensions = ['.ts', '.tsx', '.js', '.jsx'];
+    options.resolveExtensions = ['.ts', '.tsx', '.js', '.jsx', '.md'];
     options.mainFields = ['module', 'main'];
+    options.loader = {
+      ...options.loader,
+      '.md': 'text'
+    };
   },
   noExternal: ['@modelcontextprotocol/sdk'],
 });
