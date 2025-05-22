@@ -29,7 +29,7 @@ exports[`create-temporary-file should handle file not found 1`] = `
 {
   "message": "ENOENT: no such file or directory, open <image path>",
   "cause": {
-    "errno": -4058,
+    "errno": -2,
     "code": "ENOENT",
     "syscall": "open",
     "path": "<image path>"

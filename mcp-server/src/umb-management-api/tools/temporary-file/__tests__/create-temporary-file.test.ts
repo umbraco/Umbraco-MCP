@@ -52,6 +52,9 @@ describe("create-temporary-file", () => {
       { signal: new AbortController().signal }
     );
 
+    // Normalize the error code in the text, different OS's have different error codes
+    result.content[0].text = (result.content[0].text as string).replace('"errno": -4058', '"errno": -2');
+
     expect(TemporaryFileTestHelper.cleanFilePaths(result)).toMatchSnapshot();
   });
 });
