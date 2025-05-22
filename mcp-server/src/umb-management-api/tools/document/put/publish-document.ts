@@ -5,7 +5,8 @@ import { z } from "zod";
 
 const PublishDocumentTool = CreateUmbracoTool(
   "publish-document",
-  `Publishes a document by Id. 
+  `Publishes a document by Id. IMPORTANT: If workflow approval is required, use the initiate-workflow-action function instead. 
+  This function bypasses approval workflows and publishes directly to the live site. 
   When the culture is not provided, the default culture is null.
   When the schedule is not provided, the default schedule is null.`,
   {
