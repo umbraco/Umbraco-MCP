@@ -27,11 +27,8 @@ const fixApiFile = (file: any) => {
 
   // Fix TypeScript errors by ensuring proper type annotations and imports
   const fixedContent = content
-    .replace(/from\s+['"](\.\.\/\.\/schemas)['"]/g, "from '$1/index.js'")
-    .replace(
-      "../clients/umbraco-management-client",
-      "../clients/umbraco-management-client.js"
-    );
+    .replace(/from\s+['"](\.\.\/schemas)['"]/g, "from '$1/index.js'")
+    .replace(/(\.\.\/\.\.\/\.\.\/orval\/client\/mutators\/)(.*)'/g, "$1$2.js'");
 
   fs.writeFileSync(file, fixedContent, "utf8");
 };

@@ -2,7 +2,7 @@ import { defineConfig } from "orval";
 import { importFixer } from "./helpers.js";
 
 export const UmbWorkflowApiOrvalConfig = defineConfig({
-  "umbraco-management-api": {
+  "umbraco-workflow-api": {
     input: {
       target:
         "http://localhost:56472/umbraco/swagger/workflow-management/swagger.json",
@@ -27,7 +27,7 @@ export const UmbWorkflowApiOrvalConfig = defineConfig({
       },
     },
   },
-  "umbraco-management-api-zod": {
+  "umbraco-workflow-api-zod": {
     input: {
       target:
         "http://localhost:56472/umbraco/swagger/workflow-management/swagger.json",
