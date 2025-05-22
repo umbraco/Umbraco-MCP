@@ -1,5 +1,5 @@
 import GetAllowedMediaTypeTool from "../get/get-allowed.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 
 describe("allowed-media-type", () => {

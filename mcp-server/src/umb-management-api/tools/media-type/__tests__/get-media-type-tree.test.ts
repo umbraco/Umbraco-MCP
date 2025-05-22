@@ -1,7 +1,7 @@
 import { MediaTypeTestHelper } from "./helpers/media-type-helper.js";
 import GetMediaTypeAncestorsTool from "../items/get/get-ancestors.js";
 import GetMediaTypeChildrenTool from "../items/get/get-children.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MediaTypeFolderBuilder } from "./helpers/media-type-folder-builder.js";
 import { MediaTypeBuilder } from "./helpers/media-type-builder.js";

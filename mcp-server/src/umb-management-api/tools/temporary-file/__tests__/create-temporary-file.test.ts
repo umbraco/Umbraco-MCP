@@ -1,4 +1,4 @@
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import CreateTemporaryFileTool from "../post/create-temporary-file.js";
 import { TemporaryFileTestHelper } from "./helpers/temporary-file-helper.js";
 import { jest } from "@jest/globals";

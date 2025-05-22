@@ -3,7 +3,7 @@ import { DocumentBuilder } from "./helpers/document-builder.js";
 import { DocumentTestHelper } from "./helpers/document-test-helper.js";
 import { jest } from "@jest/globals";
 import { BLANK_UUID } from "@/constants/constants.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 
 const TEST_DOCUMENT_NAME = "_Test GetDocumentPublish";
 

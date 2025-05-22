@@ -14,6 +14,7 @@
     "paths": {
       "@/clients/*": ["./clients/*"],
       "@/helpers/*": ["./helpers/*"],
+      "@/test-helpers/*": ["./test-helpers/*"],
       "@/constants/*": ["./constants/*"],
       "@/umb-management-api/*": ["./umb-management-api/api/*"],
       "@umb-management-client": [

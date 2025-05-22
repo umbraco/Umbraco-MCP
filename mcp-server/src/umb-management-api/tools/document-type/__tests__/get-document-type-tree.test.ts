@@ -1,7 +1,7 @@
 import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import GetDocumentTypeAncestorsTool from "../items/get/get-ancestors.js";
 import GetDocumentTypeChildrenTool from "../items/get/get-children.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DocumentTypeFolderBuilder } from "./helpers/document-type-folder-builder.js";
 import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";

@@ -1,7 +1,7 @@
 import { getTemporaryFileByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import GetTemporaryFileTool from "../get/get-temporary-file.js";
 import { TemporaryFileBuilder } from "./helpers/temporary-file-builder.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { BLANK_UUID } from "@/constants/constants.js";
 import { createReadStream } from "fs";

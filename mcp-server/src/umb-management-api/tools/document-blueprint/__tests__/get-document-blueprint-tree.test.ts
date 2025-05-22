@@ -1,7 +1,7 @@
 import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-helper.js";
 import GetDocumentBlueprintAncestorsTreeTool from "../get/get-ancestors.js";
 import GetDocumentBlueprintChildrenTreeTool from "../get/get-children.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DocumentBlueprintFolderBuilder } from "./helpers/document-blueprint-folder-builder.js";
 import { DocumentBlueprintBuilder } from "./helpers/document-blueprint-builder.js";

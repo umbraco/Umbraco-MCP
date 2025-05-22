@@ -3,7 +3,7 @@ import GetDictionaryChildrenTool from "../items/get/get-children.js";
 import GetDictionaryAncestorsTool from "../items/get/get-ancestors.js";
 import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
 import { DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 
 const ROOT_DICTIONARY_NAME = "_Root Dictionary";

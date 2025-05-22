@@ -1,4 +1,4 @@
-import { normalizeErrorResponse } from "@/helpers/test-utils.js";
+import { normalizeErrorResponse } from "@/test-helpers/create-snapshot-result.js";
 import ValidateDocumentTool from "../post/validate-document.js";
 import { DocumentBuilder } from "./helpers/document-builder.js";
 import { DocumentTestHelper } from "./helpers/document-test-helper.js";

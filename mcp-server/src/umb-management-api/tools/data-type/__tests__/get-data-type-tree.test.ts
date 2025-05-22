@@ -1,7 +1,7 @@
 import { DataTypeTestHelper } from "./helpers/data-type-test-helper.js";
 import GetDataTypeAncestorsTool from "../items/get/get-ancestors.js";
 import GetDataTypeChildrenTool from "../items/get/get-children.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DataTypeFolderBuilder } from "./helpers/data-type-folder-builder.js";
 import { DataTypeBuilder } from "./helpers/data-type-builder.js";

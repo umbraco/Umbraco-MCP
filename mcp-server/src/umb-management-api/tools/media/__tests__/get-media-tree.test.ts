@@ -1,7 +1,7 @@
 import { MediaTestHelper } from "./helpers/media-test-helper.js";
 import GetMediaAncestorsTool from "../items/get/get-ancestors.js";
 import GetMediaChildrenTool from "../items/get/get-children.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MediaBuilder } from "./helpers/media-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

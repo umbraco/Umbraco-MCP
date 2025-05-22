@@ -2,7 +2,7 @@ import { DocumentTestHelper } from "./helpers/document-test-helper.js";
 import GetDocumentAncestorsTool from "../items/get/get-ancestors.js";
 import GetDocumentChildrenTool from "../items/get/get-children.js";
 import GetDocumentRootTool from "../items/get/get-root.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DocumentBuilder } from "./helpers/document-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

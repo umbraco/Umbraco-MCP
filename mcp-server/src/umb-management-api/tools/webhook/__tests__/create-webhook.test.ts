@@ -3,7 +3,7 @@ import CreateWebhookTool from "../post/create-webhook.js";
 import { jest } from "@jest/globals";
 import { WebhookBuilder } from "./helpers/webhook-builder.js";
 import { CONTENT_PUBLISHED_EVENT, TEST_WEBHOOOK_URL } from "./webhook-constants.js";
-import { normalizeErrorResponse } from "@/helpers/test-utils.js";
+import { normalizeErrorResponse } from "@/test-helpers/create-snapshot-result.js";
 
 describe("create-webhook", () => {
   const TEST_WEBHOOK_NAME = "_Test Webhook";

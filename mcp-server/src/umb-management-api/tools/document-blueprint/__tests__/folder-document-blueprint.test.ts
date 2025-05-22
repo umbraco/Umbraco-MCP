@@ -2,7 +2,7 @@ import { DocumentBlueprintTestHelper } from "./helpers/document-blueprint-test-h
 import CreateDocumentBlueprintFolderTool from "../folders/post/create-folder.js";
 import DeleteDocumentBlueprintFolderTool from "../folders/delete/delete-folder.js";
 import UpdateDocumentBlueprintFolderTool from "../folders/put/update-folder.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DocumentBlueprintFolderBuilder } from "./helpers/document-blueprint-folder-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

@@ -1,6 +1,6 @@
 import { MediaTypeTestHelper } from "./helpers/media-type-helper.js";
 import GetMediaTypeByIdTool from "../get/get-media-type-by-id.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MediaTypeBuilder } from "./helpers/media-type-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

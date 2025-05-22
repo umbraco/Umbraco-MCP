@@ -2,7 +2,7 @@ import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import CreateDocumentTypeFolderTool from "../folders/post/create-folder.js";
 import DeleteDocumentTypeFolderTool from "../folders/delete/delete-folder.js";
 import UpdateDocumentTypeFolderTool from "../folders/put/update-folder.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DocumentTypeFolderBuilder } from "./helpers/document-type-folder-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

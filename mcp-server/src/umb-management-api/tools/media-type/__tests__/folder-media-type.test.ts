@@ -2,7 +2,7 @@ import { MediaTypeTestHelper } from "./helpers/media-type-helper.js";
 import CreateMediaTypeFolderTool from "../folders/post/create-folder.js";
 import DeleteMediaTypeFolderTool from "../folders/delete/delete-folder.js";
 import UpdateMediaTypeFolderTool from "../folders/put/update-folder.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MediaTypeFolderBuilder } from "./helpers/media-type-folder-builder.js";
 import { MediaTypeFolderTestHelper } from "./helpers/media-type-folder-helper.js";

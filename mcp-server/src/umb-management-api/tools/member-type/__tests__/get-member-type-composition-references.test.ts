@@ -2,7 +2,7 @@ import GetMemberTypeCompositionReferencesTool from "../get/get-member-type-compo
 import { MemberTypeBuilder } from "./helpers/member-type-builder.js";
 import { MemberTypeTestHelper } from "./helpers/member-type-helper.js";
 import { jest } from "@jest/globals";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 
 const TEST_MEMBER_TYPE_NAME = "_Test MemberType Composition";
 const TEST_COMPOSITION_NAME = "_Test Composition MemberType";

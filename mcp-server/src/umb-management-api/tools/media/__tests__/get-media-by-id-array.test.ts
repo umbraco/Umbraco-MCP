@@ -1,6 +1,6 @@
 import { MediaTestHelper } from "./helpers/media-test-helper.js";
 import GetMediaByIdArrayTool from "../get/get-media-by-id-array.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MediaBuilder } from "./helpers/media-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

@@ -3,7 +3,7 @@ import CreateMediaTypeTool from "../post/create-media-type.js";
 import {
   createSnapshotResult,
   normalizeErrorResponse,
-} from "@/helpers/test-utils.js";
+} from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MediaTypeBuilder } from "./helpers/media-type-builder.js";
 

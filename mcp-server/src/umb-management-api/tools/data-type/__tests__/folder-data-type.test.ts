@@ -2,7 +2,7 @@ import { DataTypeTestHelper } from "./helpers/data-type-test-helper.js";
 import CreateDataTypeFolderTool from "../folders/post/create-folder.js";
 import DeleteDataTypeFolderTool from "../folders/delete/delete-folder.js";
 import UpdateDataTypeFolderTool from "../folders/put/update-folder.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DataTypeFolderBuilder } from "./helpers/data-type-folder-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

@@ -3,7 +3,7 @@ import CreateMemberTypeTool from "../post/create-member-type.js";
 import {
   createSnapshotResult,
   normalizeErrorResponse,
-} from "@/helpers/test-utils.js";
+} from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MemberTypeBuilder } from "./helpers/member-type-builder.js";
 

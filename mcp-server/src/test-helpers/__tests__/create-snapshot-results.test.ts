@@ -1,4 +1,7 @@
-import { createSnapshotResult, normalizeErrorResponse } from "../test-utils.js";
+import {
+  createSnapshotResult,
+  normalizeErrorResponse,
+} from "@/test-helpers/create-snapshot-result.js";
 import { BLANK_UUID } from "@/constants/constants.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 

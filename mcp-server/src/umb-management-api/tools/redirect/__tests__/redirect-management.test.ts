@@ -3,7 +3,7 @@ import { DocumentTestHelper } from "../../document/__tests__/helpers/document-te
 import GetRedirectByIdTool from "../get/get-redirect-by-id.js";
 import DeleteRedirectTool from "../delete/delete-redirect.js";
 import GetAllRedirectsTool from "../get/get-all-redirects.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { BLANK_UUID } from "@/constants/constants.js";
 
 const TEST_DOCUMENT_NAME = "_Test Redirect Document";

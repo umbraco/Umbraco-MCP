@@ -1,7 +1,7 @@
 import { DocumentTestHelper } from "./helpers/document-test-helper.js";
 import GetRecycleBinDocumentRootTool from "../items/get/get-recycle-bin-root.js";
 import GetRecycleBinDocumentChildrenTool from "../items/get/get-recycle-bin-children.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { DocumentBuilder } from "./helpers/document-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

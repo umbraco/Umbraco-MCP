@@ -1,7 +1,7 @@
 import FindDictionaryItemTool from "../get/find-dictionary-item.js";
 import { DictionaryBuilder } from "./helpers/dictionary-builder.js";
 import { DEFAULT_ISO_CODE } from "./helpers/dictionary-helper.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 
 const TEST_DICTIONARY_NAME = "_Test Dictionary Find";

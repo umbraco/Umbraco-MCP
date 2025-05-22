@@ -1,4 +1,4 @@
-import { normalizeErrorResponse } from "@/helpers/test-utils.js";
+import { normalizeErrorResponse } from "@/test-helpers/create-snapshot-result.js";
 import ValidateDocumentTypePostTool from "../post/validate-document-type.js";
 import { DocumentTypeBuilder } from "./helpers/document-type-builder.js";
 import { jest } from "@jest/globals";

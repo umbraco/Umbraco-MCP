@@ -3,7 +3,7 @@ import { MediaBuilder } from "./helpers/media-builder.js";
 import { MediaTestHelper } from "./helpers/media-test-helper.js";
 import { jest } from "@jest/globals";
 import { TemporaryFileBuilder } from "../../temporary-file/__tests__/helpers/temporary-file-builder.js";
-import { normalizeErrorResponse } from "@/helpers/test-utils.js";
+import { normalizeErrorResponse } from "@/test-helpers/create-snapshot-result.js";
 const TEST_MEDIA_NAME = "_Test ValidateMedia";
 
 // Helper to build a valid validation model from a created media

@@ -1,5 +1,5 @@
 import GetMemberGroupRootTool from "../get/get-root.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { MemberGroupBuilder } from "./helpers/member-group-builder.js";
 import { MemberGroupTestHelper } from "./helpers/member-group-helper.js";
 import { jest } from "@jest/globals";

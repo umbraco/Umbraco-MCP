@@ -1,4 +1,4 @@
-import { normalizeErrorResponse } from "@/helpers/test-utils.js";
+import { normalizeErrorResponse } from "@/test-helpers/create-snapshot-result.js";
 import CreateElementTypeTool from "../post/create-element-type.js";
 import { DocumentTypeTestHelper } from "./helpers/document-type-test-helper.js";
 import { jest } from "@jest/globals";
@@ -60,7 +60,6 @@ describe("create-element-type", () => {
     const rsp = await CreateElementTypeTool().handler(elementModel, {
       signal: new AbortController().signal,
     });
-
 
     // Try to create it again
     const result = await CreateElementTypeTool().handler(elementModel, {

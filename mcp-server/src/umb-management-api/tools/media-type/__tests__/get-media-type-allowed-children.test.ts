@@ -1,7 +1,7 @@
 import GetMediaTypeAllowedChildrenTool from "../get/get-media-type-allowed-children.js";
 import { MediaTypeBuilder } from "./helpers/media-type-builder.js";
 import { MediaTypeTestHelper } from "./helpers/media-type-helper.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { BLANK_UUID } from "@/constants/constants.js";
 

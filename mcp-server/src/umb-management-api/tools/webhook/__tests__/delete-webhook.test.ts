@@ -1,6 +1,6 @@
 import { WebhookTestHelper } from "./helpers/webhook-helper.js";
 import DeleteWebhookTool from "../delete/delete-webhook.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { WebhookBuilder } from "./helpers/webhook-builder.js";
 import { BLANK_UUID } from "@/constants/constants.js";

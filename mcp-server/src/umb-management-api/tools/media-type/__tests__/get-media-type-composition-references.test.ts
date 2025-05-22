@@ -2,7 +2,7 @@ import GetMediaTypeCompositionReferencesTool from "../get/get-media-type-composi
 import { MediaTypeBuilder } from "./helpers/media-type-builder.js";
 import { MediaTypeTestHelper } from "./helpers/media-type-helper.js";
 import { jest } from "@jest/globals";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 
 const TEST_MEDIA_TYPE_NAME = "_Test MediaType Composition";
 const TEST_COMPOSITION_NAME = "_Test Composition MediaType";

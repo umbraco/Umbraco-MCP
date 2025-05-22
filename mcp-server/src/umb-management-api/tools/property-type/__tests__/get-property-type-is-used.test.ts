@@ -3,7 +3,7 @@ import GetPropertyTypeIsUsedTool from "../get/get-property-type-is-used.js";
 import {
   createSnapshotResult,
   normalizeErrorResponse,
-} from "@/helpers/test-utils.js";
+} from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { PropertyTypeTestHelper } from "./helpers/property-type-test-helper.js";
 

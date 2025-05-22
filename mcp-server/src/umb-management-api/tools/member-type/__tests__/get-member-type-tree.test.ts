@@ -1,6 +1,6 @@
 import { MemberTypeTestHelper } from "./helpers/member-type-helper.js";
 import GetMemberTypeRootTool from "../items/get/get-root.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 import { MemberTypeBuilder } from "./helpers/member-type-builder.js";
 

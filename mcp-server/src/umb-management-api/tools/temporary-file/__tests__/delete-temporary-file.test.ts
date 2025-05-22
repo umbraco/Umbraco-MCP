@@ -3,7 +3,7 @@ import { TemporaryFileBuilder } from "./helpers/temporary-file-builder.js";
 import { TemporaryFileTestHelper } from "./helpers/temporary-file-helper.js";
 import { jest } from "@jest/globals";
 import { BLANK_UUID } from "@/constants/constants.js";
-import { createSnapshotResult } from "@/helpers/test-utils.js";
+import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 
 describe("delete-temporary-file", () => {
   let originalConsoleError: typeof console.error;
