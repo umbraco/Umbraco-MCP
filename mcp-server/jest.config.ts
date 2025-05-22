@@ -1,16 +1,18 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-const config = {
+const config: import("ts-jest").JestConfigWithTsJest = {
   preset: "ts-jest/presets/js-with-ts-esm",
   testEnvironment: "node",
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
+    "\\.md$": "<rootDir>/src/__mocks__/markdownMock.js",
     "^@/clients/(.*)\\.js$": "<rootDir>/src/clients/$1",
     "^@/helpers/(.*)\\.js$": "<rootDir>/src/helpers/$1",
-    "^@/umb-management-api/(.*)\\.js$":
-      "<rootDir>/src/api/umbraco/management/$1",
+    "@/test-helpers/(.*)\\.js$": "<rootDir>/src/test-helpers/$1",
     "^@/constants/(.*)\\.js$": "<rootDir>/src/constants/$1",
-    "\\.md$": "<rootDir>/src/__mocks__/markdownMock.js"
+    "^@/umb-management-api/(.*)\\.js$":
+      "<rootDir>/src/umb-management-api/api/$1",
+    "^@umb-management-client":
+      "<rootDir>/src/umb-management-api/umbraco-management-client.ts",
   },
   transform: {
     "^.+\\.tsx?$": [

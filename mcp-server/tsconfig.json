@@ -14,8 +14,14 @@
     "paths": {
       "@/clients/*": ["./clients/*"],
       "@/helpers/*": ["./helpers/*"],
-      "@/umb-management-api/*": ["./api/umbraco/management/*"],
-      "@/constants/*": ["./constants/*"]
+      "@/test-helpers/*": ["./test-helpers/*"],
+      "@/constants/*": ["./constants/*"],
+      "@/umb-management-api/*": ["./umb-management-api/api/*"],
+      "@umb-management-client": [
+        "./umb-management-api/umbraco-management-client.ts"
+      ],
+      "@/umb-workflow-api/*": ["./umb-workflow/api/*"],
+      "@umb-workflow-client": ["./umb-workflow/umbraco-workflow-client.ts"]
     }
   },
   "files": ["global.d.ts"],
