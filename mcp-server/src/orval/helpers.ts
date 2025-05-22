@@ -22,6 +22,7 @@ const fixSchemaDirectory = (dir: any) => {
   });
 };
 
+//TODO: Remove  PR for Orval has been merged - https://github.com/orval-labs/orval/pull/1797
 const fixApiFile = (file: any) => {
   const content = fs.readFileSync(file, "utf8");
 
