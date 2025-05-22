@@ -2,7 +2,8 @@
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { UmbracoMcpServer } from "./server/umbraco-mcp-server.js";
-import { ToolFactory } from "./tools/tool-factory.js";
+import { UmbracoToolFactory } from "./tools/management-api/tool-factory.js";
+import { UmbracoWorkflowToolFactory } from "tools/workflow-api/tool-factory.js";
 import { ResourceFactory } from "./resources/resource-factory.js";
 
 const main = async () => {
@@ -10,7 +11,8 @@ const main = async () => {
   const server = UmbracoMcpServer.GetServer();
 
   ResourceFactory(server);
-  ToolFactory(server);
+  UmbracoToolFactory(server);
+  await UmbracoWorkflowToolFactory(server);
 
   // Start receiving messages on stdin and sending messages on stdout
   const transport = new StdioServerTransport();
