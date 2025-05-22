@@ -1,4 +1,4 @@
-import { BLANK_UUID } from "../tools/constants.js";
+import { BLANK_UUID } from "@/constants/constants.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 export function createSnapshotResult(result: any, idToReplace?: string) {
@@ -105,4 +105,4 @@ export function normalizeErrorResponse(result: CallToolResult): CallToolResult {
     );
   }
   return result;
-} 
+}

@@ -1,5 +1,5 @@
 import { createSnapshotResult, normalizeErrorResponse } from "../test-utils.js";
-import { BLANK_UUID } from "../../tools/constants.js";
+import { BLANK_UUID } from "@/constants/constants.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 describe("createSnapshotResult", () => {

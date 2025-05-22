@@ -1,8 +1,8 @@
 import { defineConfig } from "orval";
-import { importFixer } from "./tools.js";
+import { importFixer } from "./helpers.js";
 
 export const UmbManagementApiOrvalConfig = defineConfig({
-  "umbraco-managment-api": {
+  "umbraco-management-api": {
     input: {
       target: "http://localhost:56472/umbraco/swagger/management/swagger.json",
       validation: false,
@@ -10,12 +10,12 @@ export const UmbManagementApiOrvalConfig = defineConfig({
     output: {
       mode: "split",
       clean: true,
-      target: "./src/api/umbraco/management",
-      schemas: "./src/api/umbraco/management/schemas",
+      target: "./src/umb-management-api/api/api",
+      schemas: "./src/umb-management-api/api/schemas",
       client: "axios",
       override: {
         mutator: {
-          path: "./src/api/umbraco/clients/umbraco-management-client.ts",
+          path: "./src/orval/client/mutators/umbraco-management.ts",
           name: "UmbracoManagementClient",
         },
       },
@@ -26,7 +26,7 @@ export const UmbManagementApiOrvalConfig = defineConfig({
       },
     },
   },
-  "umbraco-managment-api-zod": {
+  "umbraco-management-api-zod": {
     input: {
       target: "http://localhost:56472/umbraco/swagger/management/swagger.json",
       validation: false,
@@ -34,7 +34,7 @@ export const UmbManagementApiOrvalConfig = defineConfig({
     output: {
       mode: "split",
       client: "zod",
-      target: "./src/api/umbraco/management",
+      target: "./src/umb-management-api/api/",
       fileExtension: ".zod.ts",
       override: {
         zod: {

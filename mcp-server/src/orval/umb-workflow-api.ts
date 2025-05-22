@@ -1,8 +1,8 @@
 import { defineConfig } from "orval";
-import { importFixer } from "./tools.js";
+import { importFixer } from "./helpers.js";
 
 export const UmbWorkflowApiOrvalConfig = defineConfig({
-  "umbraco-managment-api": {
+  "umbraco-management-api": {
     input: {
       target:
         "http://localhost:56472/umbraco/swagger/workflow-management/swagger.json",
@@ -11,13 +11,13 @@ export const UmbWorkflowApiOrvalConfig = defineConfig({
     output: {
       mode: "split",
       clean: true,
-      target: "./src/api/umbraco/workflow",
-      schemas: "./src/api/umbraco/workflow/schemas",
+      target: "./src/umb-workflow/api/api",
+      schemas: "./src/umb-workflow/api/schemas",
       client: "axios",
       override: {
         mutator: {
-          path: "./src/api/umbraco/clients/umbraco-management-client.ts",
-          name: "UmbracoManagementClient",
+          path: "./src/orval/client/mutators/umbraco-workflow.ts",
+          name: "UmbracoWorkflowClient",
         },
       },
     },
@@ -27,7 +27,7 @@ export const UmbWorkflowApiOrvalConfig = defineConfig({
       },
     },
   },
-  "umbraco-managment-api-zod": {
+  "umbraco-management-api-zod": {
     input: {
       target:
         "http://localhost:56472/umbraco/swagger/workflow-management/swagger.json",
@@ -36,7 +36,7 @@ export const UmbWorkflowApiOrvalConfig = defineConfig({
     output: {
       mode: "split",
       client: "zod",
-      target: "./src/api/umbraco/workflow",
+      target: "./src/umb-workflow/api/api",
       fileExtension: ".zod.ts",
       override: {
         zod: {

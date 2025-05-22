@@ -2,9 +2,11 @@
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { UmbracoMcpServer } from "./server/umbraco-mcp-server.js";
-import { UmbracoToolFactory } from "./tools/management-api/tool-factory.js";
-import { UmbracoWorkflowToolFactory } from "tools/workflow-api/tool-factory.js";
-import { ResourceFactory } from "./resources/resource-factory.js";
+
+import { UmbracoToolFactory } from "./umb-management-api/tools/tool-factory.js";
+import { ResourceFactory } from "./umb-management-api/resources/resource-factory.js";
+
+import { UmbracoWorkflowToolFactory } from "./umb-workflow/tools/tool-factory.js";
 
 const main = async () => {
   // Create an MCP server
