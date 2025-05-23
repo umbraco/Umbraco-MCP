@@ -331,7 +331,6 @@ import type {
   PartialViewSnippetResponseModel,
   PostDocumentVersionByIdRollbackParams,
   PostRedirectManagementStatusParams,
-  PostTemporaryFileBody,
   ProfilingStatusRequestModel,
   ProfilingStatusResponseModel,
   PublicAccessRequestModel,
@@ -375,8 +374,6 @@ import type {
   TemplateQueryResultResponseModel,
   TemplateQuerySettingsResponseModel,
   TemplateResponseModel,
-  TemporaryFileConfigurationResponseModel,
-  TemporaryFileResponseModel,
   UnlockUsersRequestModel,
   UnpublishDocumentRequestModel,
   UpdateDataTypeRequestModel,
@@ -420,8398 +417,4462 @@ import type {
   VerifyResetPasswordResponseModel,
   VerifyResetPasswordTokenRequestModel,
   WebhookItemResponseModel,
-  WebhookResponseModel,
-} from "../schemas/index.js";
+  WebhookResponseModel
+} from '../schemas/index.js';
 
-import FormData from "form-data";
-
-import { UmbracoManagementClient } from "../../../orval/client/mutators/umbraco-management.js";
+import { UmbracoManagementClient } from '../../../orval/client/mutators/umbraco-management.js';
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
-  T
+T,
 >() => T extends Y ? 1 : 2
-  ? A
-  : B;
+? A
+: B;
 
 type WritableKeys<T> = {
-  [P in keyof T]-?: IfEquals<
-    { [Q in P]: T[P] },
-    { -readonly [Q in P]: T[P] },
-    P
-  >;
+[P in keyof T]-?: IfEquals<
+  { [Q in P]: T[P] },
+  { -readonly [Q in P]: T[P] },
+  P
+>;
 }[keyof T];
 
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never;
+type UnionToIntersection<U> =
+  (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
 type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
 
 type Writable<T> = Pick<T, WritableKeys<T>>;
-type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
-  ? {
-      [P in keyof Writable<T>]: T[P] extends object
-        ? NonReadonly<NonNullable<T[P]>>
-        : T[P];
-    }
-  : DistributeReadOnlyOverUnions<T>;
+type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
+  [P in keyof Writable<T>]: T[P] extends object
+    ? NonReadonly<NonNullable<T[P]>>
+    : T[P];
+} : DistributeReadOnlyOverUnions<T>;
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export const getUmbracoManagementAPI = () => {
-  const getCulture = (
+
+  export const getUmbracoManagementAPI = () => {
+const getCulture = (
     params?: GetCultureParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedCultureReponseModel>(
-      { url: `/umbraco/management/api/v1/culture`, method: "GET", params },
-      options
-    );
-  };
-
-  const postDataType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedCultureReponseModel>(
+      {url: `/umbraco/management/api/v1/culture`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDataType = (
     createDataTypeRequestModel: CreateDataTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/data-type`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createDataTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDataTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDataTypeRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DataTypeResponseModel>(
-      { url: `/umbraco/management/api/v1/data-type/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteDataTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/data-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDataTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/data-type/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putDataTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDataTypeById = (
     id: string,
     updateDataTypeRequestModel: UpdateDataTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/data-type/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDataTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const postDataTypeByIdCopy = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDataTypeRequestModel
+    },
+      options);
+    }
+  
+const postDataTypeByIdCopy = (
     id: string,
     copyDataTypeRequestModel: CopyDataTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/data-type/${id}/copy`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: copyDataTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDataTypeByIdIsUsed = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyDataTypeRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeByIdIsUsed = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<boolean>(
-      {
-        url: `/umbraco/management/api/v1/data-type/${id}/is-used`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putDataTypeByIdMove = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<boolean>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/is-used`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDataTypeByIdMove = (
     id: string,
     moveDataTypeRequestModel: MoveDataTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/data-type/${id}/move`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveDataTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDataTypeByIdReferences = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDataTypeRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeByIdReferences = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DataTypeReferenceResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/data-type/${id}/references`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getDataTypeConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DatatypeConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/data-type/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postDataTypeFolder = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeReferenceResponseModel[]>(
+      {url: `/umbraco/management/api/v1/data-type/${id}/references`, method: 'GET'
+    },
+      options);
+    }
+  
+const getDataTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DatatypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/data-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postDataTypeFolder = (
     createFolderRequestModel: CreateFolderRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/data-type/folder`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createFolderRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDataTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getDataTypeFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FolderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/data-type/folder/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteDataTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/data-type/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDataTypeFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/data-type/folder/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putDataTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDataTypeFolderById = (
     id: string,
     updateFolderResponseModel: UpdateFolderResponseModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/data-type/folder/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateFolderResponseModel,
-      },
-      options
-    );
-  };
-
-  const getFilterDataType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/data-type/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const getFilterDataType = (
     params?: GetFilterDataTypeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDataTypeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/filter/data-type`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemDataType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDataTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/data-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDataType = (
     params?: GetItemDataTypeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DataTypeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/data-type`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemDataTypeSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/data-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDataTypeSearch = (
     params?: GetItemDataTypeSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelDataTypeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/data-type/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDataTypeAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelDataTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/data-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDataTypeAncestors = (
     params?: GetTreeDataTypeAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DataTypeTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/data-type/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDataTypeChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DataTypeTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/data-type/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDataTypeChildren = (
     params?: GetTreeDataTypeChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDataTypeTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/data-type/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDataTypeRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDataTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/data-type/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDataTypeRoot = (
     params?: GetTreeDataTypeRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDataTypeTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/data-type/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getDictionary = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDataTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/data-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDictionary = (
     params?: GetDictionaryParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDictionaryOverviewResponseModel>(
-      { url: `/umbraco/management/api/v1/dictionary`, method: "GET", params },
-      options
-    );
-  };
-
-  const postDictionary = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDictionaryOverviewResponseModel>(
+      {url: `/umbraco/management/api/v1/dictionary`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDictionary = (
     createDictionaryItemRequestModel: CreateDictionaryItemRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/dictionary`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createDictionaryItemRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDictionaryById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDictionaryItemRequestModel
+    },
+      options);
+    }
+  
+const getDictionaryById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DictionaryItemResponseModel>(
-      { url: `/umbraco/management/api/v1/dictionary/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteDictionaryById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DictionaryItemResponseModel>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDictionaryById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/dictionary/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putDictionaryById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDictionaryById = (
     id: string,
     updateDictionaryItemRequestModel: UpdateDictionaryItemRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/dictionary/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDictionaryItemRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDictionaryByIdExport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDictionaryItemRequestModel
+    },
+      options);
+    }
+  
+const getDictionaryByIdExport = (
     id: string,
     params?: GetDictionaryByIdExportParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<Blob>(
-      {
-        url: `/umbraco/management/api/v1/dictionary/${id}/export`,
-        method: "GET",
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}/export`, method: 'GET',
         params,
-        responseType: "blob",
-      },
-      options
-    );
-  };
-
-  const putDictionaryByIdMove = (
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const putDictionaryByIdMove = (
     id: string,
     moveDictionaryRequestModel: MoveDictionaryRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/dictionary/${id}/move`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveDictionaryRequestModel,
-      },
-      options
-    );
-  };
-
-  const postDictionaryImport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDictionaryRequestModel
+    },
+      options);
+    }
+  
+const postDictionaryImport = (
     importDictionaryRequestModel: ImportDictionaryRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/dictionary/import`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: importDictionaryRequestModel,
-      },
-      options
-    );
-  };
-
-  const getItemDictionary = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/dictionary/import`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: importDictionaryRequestModel
+    },
+      options);
+    }
+  
+const getItemDictionary = (
     params?: GetItemDictionaryParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DictionaryItemItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/dictionary`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDictionaryAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DictionaryItemItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/dictionary`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDictionaryAncestors = (
     params?: GetTreeDictionaryAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<NamedEntityTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/dictionary/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDictionaryChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NamedEntityTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/dictionary/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDictionaryChildren = (
     params?: GetTreeDictionaryChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/dictionary/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDictionaryRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/dictionary/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDictionaryRoot = (
     params?: GetTreeDictionaryRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/dictionary/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDocumentBlueprint = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/dictionary/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentBlueprint = (
     createDocumentBlueprintRequestModel: CreateDocumentBlueprintRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createDocumentBlueprintRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentBlueprintById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentBlueprintRequestModel
+    },
+      options);
+    }
+  
+const getDocumentBlueprintById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentBlueprintResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteDocumentBlueprintById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentBlueprintResponseModel>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentBlueprintById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putDocumentBlueprintById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentBlueprintById = (
     id: string,
     updateDocumentBlueprintRequestModel: UpdateDocumentBlueprintRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDocumentBlueprintRequestModel,
-      },
-      options
-    );
-  };
-
-  const putDocumentBlueprintByIdMove = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentBlueprintRequestModel
+    },
+      options);
+    }
+  
+const putDocumentBlueprintByIdMove = (
     id: string,
     moveDocumentBlueprintRequestModel: MoveDocumentBlueprintRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/${id}/move`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveDocumentBlueprintRequestModel,
-      },
-      options
-    );
-  };
-
-  const postDocumentBlueprintFolder = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDocumentBlueprintRequestModel
+    },
+      options);
+    }
+  
+const postDocumentBlueprintFolder = (
     createFolderRequestModel: CreateFolderRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/folder`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createFolderRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentBlueprintFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getDocumentBlueprintFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FolderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteDocumentBlueprintFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentBlueprintFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putDocumentBlueprintFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentBlueprintFolderById = (
     id: string,
     updateFolderResponseModel: UpdateFolderResponseModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateFolderResponseModel,
-      },
-      options
-    );
-  };
-
-  const postDocumentBlueprintFromDocument = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const postDocumentBlueprintFromDocument = (
     createDocumentBlueprintFromDocumentRequestModel: CreateDocumentBlueprintFromDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-blueprint/from-document`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createDocumentBlueprintFromDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const getItemDocumentBlueprint = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-blueprint/from-document`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentBlueprintFromDocumentRequestModel
+    },
+      options);
+    }
+  
+const getItemDocumentBlueprint = (
     params?: GetItemDocumentBlueprintParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentBlueprintItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/document-blueprint`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentBlueprintAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentBlueprintItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/document-blueprint`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentBlueprintAncestors = (
     params?: GetTreeDocumentBlueprintAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentBlueprintTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/document-blueprint/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentBlueprintChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentBlueprintTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/document-blueprint/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentBlueprintChildren = (
     params?: GetTreeDocumentBlueprintChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentBlueprintTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/document-blueprint/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentBlueprintRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentBlueprintTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-blueprint/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentBlueprintRoot = (
     params?: GetTreeDocumentBlueprintRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentBlueprintTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/document-blueprint/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDocumentType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentBlueprintTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-blueprint/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentType = (
     createDocumentTypeRequestModel: CreateDocumentTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createDocumentTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentTypeResponseModel>(
-      { url: `/umbraco/management/api/v1/document-type/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteDocumentTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putDocumentTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentTypeById = (
     id: string,
     updateDocumentTypeRequestModel: UpdateDocumentTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDocumentTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeByIdAllowedChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdAllowedChildren = (
     id: string,
     params?: GetDocumentTypeByIdAllowedChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedAllowedDocumentTypeModel>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}/allowed-children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeByIdBlueprint = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedDocumentTypeModel>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/allowed-children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdBlueprint = (
     id: string,
     params?: GetDocumentTypeByIdBlueprintParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentTypeBlueprintItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}/blueprint`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeByIdCompositionReferences = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTypeBlueprintItemResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/blueprint`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdCompositionReferences = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentTypeCompositionResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}/composition-references`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postDocumentTypeByIdCopy = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/composition-references`, method: 'GET'
+    },
+      options);
+    }
+  
+const postDocumentTypeByIdCopy = (
     id: string,
     copyDocumentTypeRequestModel: CopyDocumentTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}/copy`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: copyDocumentTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeByIdExport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeByIdExport = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<Blob>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}/export`,
-        method: "GET",
-        responseType: "blob",
-      },
-      options
-    );
-  };
-
-  const putDocumentTypeByIdImport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/export`, method: 'GET',
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const putDocumentTypeByIdImport = (
     id: string,
     importDocumentTypeRequestModel: ImportDocumentTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}/import`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: importDocumentTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const putDocumentTypeByIdMove = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/import`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: importDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const putDocumentTypeByIdMove = (
     id: string,
     moveDocumentTypeRequestModel: MoveDocumentTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/${id}/move`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveDocumentTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeAllowedAtRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeAllowedAtRoot = (
     params?: GetDocumentTypeAllowedAtRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedAllowedDocumentTypeModel>(
-      {
-        url: `/umbraco/management/api/v1/document-type/allowed-at-root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDocumentTypeAvailableCompositions = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedDocumentTypeModel>(
+      {url: `/umbraco/management/api/v1/document-type/allowed-at-root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentTypeAvailableCompositions = (
     documentTypeCompositionRequestModel: DocumentTypeCompositionRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<
-      AvailableDocumentTypeCompositionResponseModel[]
-    >(
-      {
-        url: `/umbraco/management/api/v1/document-type/available-compositions`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: documentTypeCompositionRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentTypeConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document-type/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postDocumentTypeFolder = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<AvailableDocumentTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document-type/available-compositions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: documentTypeCompositionRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postDocumentTypeFolder = (
     createFolderRequestModel: CreateFolderRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/folder`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createFolderRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getDocumentTypeFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FolderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document-type/folder/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteDocumentTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/document-type/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentTypeFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/folder/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putDocumentTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentTypeFolderById = (
     id: string,
     updateFolderResponseModel: UpdateFolderResponseModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/folder/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateFolderResponseModel,
-      },
-      options
-    );
-  };
-
-  const postDocumentTypeImport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const postDocumentTypeImport = (
     importDocumentTypeRequestModel: ImportDocumentTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-type/import`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: importDocumentTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getItemDocumentType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-type/import`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: importDocumentTypeRequestModel
+    },
+      options);
+    }
+  
+const getItemDocumentType = (
     params?: GetItemDocumentTypeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentTypeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/document-type`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemDocumentTypeSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/document-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDocumentTypeSearch = (
     params?: GetItemDocumentTypeSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelDocumentTypeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/document-type/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentTypeAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelDocumentTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/document-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentTypeAncestors = (
     params?: GetTreeDocumentTypeAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentTypeTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/document-type/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentTypeChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTypeTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/document-type/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentTypeChildren = (
     params?: GetTreeDocumentTypeChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentTypeTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/document-type/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentTypeRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-type/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentTypeRoot = (
     params?: GetTreeDocumentTypeRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentTypeTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/document-type/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getDocumentVersion = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentVersion = (
     params: GetDocumentVersionParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentVersionItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document-version`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getDocumentVersionById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentVersionItemResponseModel>(
+      {url: `/umbraco/management/api/v1/document-version`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentVersionById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentVersionResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document-version/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putDocumentVersionByIdPreventCleanup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentVersionResponseModel>(
+      {url: `/umbraco/management/api/v1/document-version/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentVersionByIdPreventCleanup = (
     id: string,
     params?: PutDocumentVersionByIdPreventCleanupParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-version/${id}/prevent-cleanup`,
-        method: "PUT",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDocumentVersionByIdRollback = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-version/${id}/prevent-cleanup`, method: 'PUT',
+        params
+    },
+      options);
+    }
+  
+const postDocumentVersionByIdRollback = (
     id: string,
     params?: PostDocumentVersionByIdRollbackParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document-version/${id}/rollback`,
-        method: "POST",
-        params,
-      },
-      options
-    );
-  };
-
-  const getCollectionDocumentById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document-version/${id}/rollback`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+const getCollectionDocumentById = (
     id: string,
     params?: GetCollectionDocumentByIdParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentCollectionResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/collection/document/${id}`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDocument = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentCollectionResponseModel>(
+      {url: `/umbraco/management/api/v1/collection/document/${id}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocument = (
     createDocumentRequestModel: CreateDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentResponseModel>(
-      { url: `/umbraco/management/api/v1/document/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteDocumentById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteDocumentById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/document/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putDocumentById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putDocumentById = (
     id: string,
     updateDocumentRequestModel: UpdateDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentByIdAuditLog = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentByIdAuditLog = (
     id: string,
     params?: GetDocumentByIdAuditLogParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedAuditLogResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/audit-log`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDocumentByIdCopy = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAuditLogResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/audit-log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentByIdCopy = (
     id: string,
     copyDocumentRequestModel: CopyDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/copy`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: copyDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentByIdDomains = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentByIdDomains = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DomainsResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/domains`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdDomains = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DomainsResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/domains`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentByIdDomains = (
     id: string,
     updateDomainsRequestModel: UpdateDomainsRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/domains`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDomainsRequestModel,
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdMove = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/domains`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDomainsRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdMove = (
     id: string,
     moveDocumentRequestModel: MoveDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/move`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdMoveToRecycleBin = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveDocumentRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdMoveToRecycleBin = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/move-to-recycle-bin`,
-        method: "PUT",
-      },
-      options
-    );
-  };
-
-  const getDocumentByIdNotifications = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/move-to-recycle-bin`, method: 'PUT'
+    },
+      options);
+    }
+  
+const getDocumentByIdNotifications = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentNotificationResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/notifications`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdNotifications = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentNotificationResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document/${id}/notifications`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentByIdNotifications = (
     id: string,
     updateDocumentNotificationsRequestModel: UpdateDocumentNotificationsRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/notifications`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDocumentNotificationsRequestModel,
-      },
-      options
-    );
-  };
-
-  const postDocumentByIdPublicAccess = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/notifications`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentNotificationsRequestModel
+    },
+      options);
+    }
+  
+const postDocumentByIdPublicAccess = (
     id: string,
     publicAccessRequestModel: PublicAccessRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/public-access`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: publicAccessRequestModel,
-      },
-      options
-    );
-  };
-
-  const deleteDocumentByIdPublicAccess = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: publicAccessRequestModel
+    },
+      options);
+    }
+  
+const deleteDocumentByIdPublicAccess = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/public-access`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getDocumentByIdPublicAccess = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getDocumentByIdPublicAccess = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PublicAccessResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/public-access`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdPublicAccess = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PublicAccessResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentByIdPublicAccess = (
     id: string,
     publicAccessRequestModel: PublicAccessRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/public-access`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: publicAccessRequestModel,
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdPublish = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/public-access`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: publicAccessRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdPublish = (
     id: string,
     publishDocumentRequestModel: PublishDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/publish`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: publishDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdPublishWithDescendants = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/publish`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: publishDocumentRequestModel
+    },
+      options);
+    }
+  
+const putDocumentByIdPublishWithDescendants = (
     id: string,
     publishDocumentWithDescendantsRequestModel: PublishDocumentWithDescendantsRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/publish-with-descendants`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: publishDocumentWithDescendantsRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentByIdPublished = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/publish-with-descendants`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: publishDocumentWithDescendantsRequestModel
+    },
+      options);
+    }
+  
+const getDocumentByIdPublished = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PublishedDocumentResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/published`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getDocumentByIdReferencedBy = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PublishedDocumentResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/published`, method: 'GET'
+    },
+      options);
+    }
+  
+const getDocumentByIdReferencedBy = (
     id: string,
     params?: GetDocumentByIdReferencedByParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedIReferenceResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/referenced-by`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getDocumentByIdReferencedDescendants = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedIReferenceResponseModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/referenced-by`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentByIdReferencedDescendants = (
     id: string,
     params?: GetDocumentByIdReferencedDescendantsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedReferenceByIdModel>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/referenced-descendants`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const putDocumentByIdUnpublish = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/document/${id}/referenced-descendants`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putDocumentByIdUnpublish = (
     id: string,
     unpublishDocumentRequestModel: UnpublishDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/unpublish`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: unpublishDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  /**
-   * @deprecated
-   */
-  const putDocumentByIdValidate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/unpublish`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: unpublishDocumentRequestModel
+    },
+      options);
+    }
+  
+/**
+ * @deprecated
+ */
+const putDocumentByIdValidate = (
     id: string,
     updateDocumentRequestModel: UpdateDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/${id}/validate`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const putUmbracoManagementApiV11DocumentByIdValidate11 = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateDocumentRequestModel
+    },
+      options);
+    }
+  
+const putUmbracoManagementApiV11DocumentByIdValidate11 = (
     id: string,
     validateUpdateDocumentRequestModel: ValidateUpdateDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1.1/document/${id}/validate`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: validateUpdateDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentAreReferenced = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1.1/document/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: validateUpdateDocumentRequestModel
+    },
+      options);
+    }
+  
+const getDocumentAreReferenced = (
     params?: GetDocumentAreReferencedParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedReferenceByIdModel>(
-      {
-        url: `/umbraco/management/api/v1/document/are-referenced`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getDocumentConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/document/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putDocumentSort = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/document/are-referenced`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getDocumentConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/document/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const putDocumentSort = (
     sortingRequestModel: SortingRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/sort`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: sortingRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDocumentUrls = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/sort`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sortingRequestModel
+    },
+      options);
+    }
+  
+const getDocumentUrls = (
     params?: GetDocumentUrlsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentUrlInfoResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/document/urls`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDocumentValidate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentUrlInfoResponseModel[]>(
+      {url: `/umbraco/management/api/v1/document/urls`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDocumentValidate = (
     createDocumentRequestModel: CreateDocumentRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/document/validate`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createDocumentRequestModel,
-      },
-      options
-    );
-  };
-
-  const getItemDocument = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/document/validate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createDocumentRequestModel
+    },
+      options);
+    }
+  
+const getItemDocument = (
     params?: GetItemDocumentParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/document`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemDocumentSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/document`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemDocumentSearch = (
     params?: GetItemDocumentSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelDocumentItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/document/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const deleteRecycleBinDocument = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/document`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const deleteRecycleBinDocumentById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelDocumentItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/document/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deleteRecycleBinDocument = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const deleteRecycleBinDocumentById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/document/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getRecycleBinDocumentByIdOriginalParent = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getRecycleBinDocumentByIdOriginalParent = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ReferenceByIdModel>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/document/${id}/original-parent`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putRecycleBinDocumentByIdRestore = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/${id}/original-parent`, method: 'GET'
+    },
+      options);
+    }
+  
+const putRecycleBinDocumentByIdRestore = (
     id: string,
     moveMediaRequestModel: MoveMediaRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/document/${id}/restore`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveMediaRequestModel,
-      },
-      options
-    );
-  };
-
-  const getRecycleBinDocumentChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/${id}/restore`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaRequestModel
+    },
+      options);
+    }
+  
+const getRecycleBinDocumentChildren = (
     params?: GetRecycleBinDocumentChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentRecycleBinItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/document/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getRecycleBinDocumentRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRecycleBinDocumentRoot = (
     params?: GetRecycleBinDocumentRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentRecycleBinItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/document/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/document/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentAncestors = (
     params?: GetTreeDocumentAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DocumentTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/document/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DocumentTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/document/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentChildren = (
     params?: GetTreeDocumentChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/document/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeDocumentRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeDocumentRoot = (
     params?: GetTreeDocumentRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedDocumentTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/document/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postDynamicRootQuery = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedDocumentTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/document/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postDynamicRootQuery = (
     dynamicRootRequestModel: DynamicRootRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<DynamicRootResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/dynamic-root/query`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: dynamicRootRequestModel,
-      },
-      options
-    );
-  };
-
-  const getDynamicRootSteps = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<string[]>(
-      { url: `/umbraco/management/api/v1/dynamic-root/steps`, method: "GET" },
-      options
-    );
-  };
-
-  const getHealthCheckGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<DynamicRootResponseModel>(
+      {url: `/umbraco/management/api/v1/dynamic-root/query`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: dynamicRootRequestModel
+    },
+      options);
+    }
+  
+const getDynamicRootSteps = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<string[]>(
+      {url: `/umbraco/management/api/v1/dynamic-root/steps`, method: 'GET'
+    },
+      options);
+    }
+  
+const getHealthCheckGroup = (
     params?: GetHealthCheckGroupParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedHealthCheckGroupResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/health-check-group`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getHealthCheckGroupByName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedHealthCheckGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/health-check-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getHealthCheckGroupByName = (
     name: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<HealthCheckGroupPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/health-check-group/${name}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postHealthCheckGroupByNameCheck = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<HealthCheckGroupPresentationModel>(
+      {url: `/umbraco/management/api/v1/health-check-group/${name}`, method: 'GET'
+    },
+      options);
+    }
+  
+const postHealthCheckGroupByNameCheck = (
     name: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<HealthCheckGroupWithResultResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/health-check-group/${name}/check`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const postHealthCheckExecuteAction = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<HealthCheckGroupWithResultResponseModel>(
+      {url: `/umbraco/management/api/v1/health-check-group/${name}/check`, method: 'POST'
+    },
+      options);
+    }
+  
+const postHealthCheckExecuteAction = (
     healthCheckActionRequestModel: HealthCheckActionRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<HealthCheckResultResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/health-check/execute-action`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: healthCheckActionRequestModel,
-      },
-      options
-    );
-  };
-
-  const getHelp = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<HealthCheckResultResponseModel>(
+      {url: `/umbraco/management/api/v1/health-check/execute-action`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: healthCheckActionRequestModel
+    },
+      options);
+    }
+  
+const getHelp = (
     params?: GetHelpParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedHelpPageResponseModel>(
-      { url: `/umbraco/management/api/v1/help`, method: "GET", params },
-      options
-    );
-  };
-
-  const getImagingResizeUrls = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedHelpPageResponseModel>(
+      {url: `/umbraco/management/api/v1/help`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getImagingResizeUrls = (
     params?: GetImagingResizeUrlsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaUrlInfoResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/imaging/resize/urls`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getImportAnalyze = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaUrlInfoResponseModel[]>(
+      {url: `/umbraco/management/api/v1/imaging/resize/urls`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getImportAnalyze = (
     params?: GetImportAnalyzeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<EntityImportAnalysisResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/import/analyze`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getIndexer = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<EntityImportAnalysisResponseModel>(
+      {url: `/umbraco/management/api/v1/import/analyze`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getIndexer = (
     params?: GetIndexerParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedIndexResponseModel>(
-      { url: `/umbraco/management/api/v1/indexer`, method: "GET", params },
-      options
-    );
-  };
-
-  const getIndexerByIndexName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedIndexResponseModel>(
+      {url: `/umbraco/management/api/v1/indexer`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getIndexerByIndexName = (
     indexName: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<IndexResponseModel>(
-      { url: `/umbraco/management/api/v1/indexer/${indexName}`, method: "GET" },
-      options
-    );
-  };
-
-  const postIndexerByIndexNameRebuild = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<IndexResponseModel>(
+      {url: `/umbraco/management/api/v1/indexer/${indexName}`, method: 'GET'
+    },
+      options);
+    }
+  
+const postIndexerByIndexNameRebuild = (
     indexName: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/indexer/${indexName}/rebuild`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const getInstallSettings = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<InstallSettingsResponseModel>(
-      { url: `/umbraco/management/api/v1/install/settings`, method: "GET" },
-      options
-    );
-  };
-
-  const postInstallSetup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/indexer/${indexName}/rebuild`, method: 'POST'
+    },
+      options);
+    }
+  
+const getInstallSettings = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<InstallSettingsResponseModel>(
+      {url: `/umbraco/management/api/v1/install/settings`, method: 'GET'
+    },
+      options);
+    }
+  
+const postInstallSetup = (
     installRequestModel: InstallRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/install/setup`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: installRequestModel,
-      },
-      options
-    );
-  };
-
-  const postInstallValidateDatabase = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/install/setup`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: installRequestModel
+    },
+      options);
+    }
+  
+const postInstallValidateDatabase = (
     databaseInstallRequestModel: DatabaseInstallRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/install/validate-database`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: databaseInstallRequestModel,
-      },
-      options
-    );
-  };
-
-  const getItemLanguage = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/install/validate-database`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: databaseInstallRequestModel
+    },
+      options);
+    }
+  
+const getItemLanguage = (
     params?: GetItemLanguageParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<LanguageItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/language`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemLanguageDefault = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<LanguageItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/language/default`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getLanguage = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LanguageItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/language`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemLanguageDefault = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LanguageItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/language/default`, method: 'GET'
+    },
+      options);
+    }
+  
+const getLanguage = (
     params?: GetLanguageParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedLanguageResponseModel>(
-      { url: `/umbraco/management/api/v1/language`, method: "GET", params },
-      options
-    );
-  };
-
-  const postLanguage = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLanguageResponseModel>(
+      {url: `/umbraco/management/api/v1/language`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postLanguage = (
     createLanguageRequestModel: CreateLanguageRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/language`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createLanguageRequestModel,
-      },
-      options
-    );
-  };
-
-  const getLanguageByIsoCode = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/language`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createLanguageRequestModel
+    },
+      options);
+    }
+  
+const getLanguageByIsoCode = (
     isoCode: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<LanguageResponseModel>(
-      { url: `/umbraco/management/api/v1/language/${isoCode}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteLanguageByIsoCode = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LanguageResponseModel>(
+      {url: `/umbraco/management/api/v1/language/${isoCode}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteLanguageByIsoCode = (
     isoCode: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/language/${isoCode}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putLanguageByIsoCode = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/language/${isoCode}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putLanguageByIsoCode = (
     isoCode: string,
     updateLanguageRequestModel: UpdateLanguageRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/language/${isoCode}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateLanguageRequestModel,
-      },
-      options
-    );
-  };
-
-  const getLogViewerLevel = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/language/${isoCode}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateLanguageRequestModel
+    },
+      options);
+    }
+  
+const getLogViewerLevel = (
     params?: GetLogViewerLevelParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedLoggerResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/level`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getLogViewerLevelCount = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLoggerResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/level`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerLevelCount = (
     params?: GetLogViewerLevelCountParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<LogLevelCountsReponseModel>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/level-count`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getLogViewerLog = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<LogLevelCountsReponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/level-count`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerLog = (
     params?: GetLogViewerLogParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedLogMessageResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/log`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getLogViewerMessageTemplate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLogMessageResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerMessageTemplate = (
     params?: GetLogViewerMessageTemplateParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedLogTemplateResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/message-template`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getLogViewerSavedSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedLogTemplateResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/message-template`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getLogViewerSavedSearch = (
     params?: GetLogViewerSavedSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedSavedLogSearchResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/saved-search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postLogViewerSavedSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSavedLogSearchResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postLogViewerSavedSearch = (
     savedLogSearchRequestModel: SavedLogSearchRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/saved-search`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: savedLogSearchRequestModel,
-      },
-      options
-    );
-  };
-
-  const getLogViewerSavedSearchByName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: savedLogSearchRequestModel
+    },
+      options);
+    }
+  
+const getLogViewerSavedSearchByName = (
     name: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<SavedLogSearchResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/saved-search/${name}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteLogViewerSavedSearchByName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<SavedLogSearchResponseModel>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search/${name}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteLogViewerSavedSearchByName = (
     name: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/saved-search/${name}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getLogViewerValidateLogsSize = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/log-viewer/saved-search/${name}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getLogViewerValidateLogsSize = (
     params?: GetLogViewerValidateLogsSizeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/log-viewer/validate-logs-size`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getManifestManifest = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ManifestResponseModel[]>(
-      { url: `/umbraco/management/api/v1/manifest/manifest`, method: "GET" },
-      options
-    );
-  };
-
-  const getManifestManifestPrivate = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ManifestResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/manifest/manifest/private`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getManifestManifestPublic = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ManifestResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/manifest/manifest/public`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getItemMediaType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/log-viewer/validate-logs-size`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getManifestManifest = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ManifestResponseModel[]>(
+      {url: `/umbraco/management/api/v1/manifest/manifest`, method: 'GET'
+    },
+      options);
+    }
+  
+const getManifestManifestPrivate = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ManifestResponseModel[]>(
+      {url: `/umbraco/management/api/v1/manifest/manifest/private`, method: 'GET'
+    },
+      options);
+    }
+  
+const getManifestManifestPublic = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ManifestResponseModel[]>(
+      {url: `/umbraco/management/api/v1/manifest/manifest/public`, method: 'GET'
+    },
+      options);
+    }
+  
+const getItemMediaType = (
     params?: GetItemMediaTypeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaTypeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/media-type`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMediaTypeAllowed = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/media-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaTypeAllowed = (
     params?: GetItemMediaTypeAllowedParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/media-type/allowed`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMediaTypeFolders = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media-type/allowed`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaTypeFolders = (
     params?: GetItemMediaTypeFoldersParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/media-type/folders`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMediaTypeSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media-type/folders`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaTypeSearch = (
     params?: GetItemMediaTypeSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/media-type/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postMediaType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMediaType = (
     createMediaTypeRequestModel: CreateMediaTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createMediaTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaTypeResponseModel>(
-      { url: `/umbraco/management/api/v1/media-type/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteMediaTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/media-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMediaTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/media-type/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putMediaTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMediaTypeById = (
     id: string,
     updateMediaTypeRequestModel: UpdateMediaTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateMediaTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaTypeByIdAllowedChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeByIdAllowedChildren = (
     id: string,
     params?: GetMediaTypeByIdAllowedChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedAllowedMediaTypeModel>(
-      {
-        url: `/umbraco/management/api/v1/media-type/${id}/allowed-children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getMediaTypeByIdCompositionReferences = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedMediaTypeModel>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/allowed-children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMediaTypeByIdCompositionReferences = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaTypeCompositionResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/media-type/${id}/composition-references`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postMediaTypeByIdCopy = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/composition-references`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMediaTypeByIdCopy = (
     id: string,
     copyMediaTypeRequestModel: CopyMediaTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/${id}/copy`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: copyMediaTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaTypeByIdExport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/copy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: copyMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeByIdExport = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<Blob>(
-      {
-        url: `/umbraco/management/api/v1/media-type/${id}/export`,
-        method: "GET",
-        responseType: "blob",
-      },
-      options
-    );
-  };
-
-  const putMediaTypeByIdImport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/export`, method: 'GET',
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const putMediaTypeByIdImport = (
     id: string,
     importMediaTypeRequestModel: ImportMediaTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/${id}/import`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: importMediaTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const putMediaTypeByIdMove = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/import`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: importMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const putMediaTypeByIdMove = (
     id: string,
     moveMediaTypeRequestModel: MoveMediaTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/${id}/move`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveMediaTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaTypeAllowedAtRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeAllowedAtRoot = (
     params?: GetMediaTypeAllowedAtRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedAllowedMediaTypeModel>(
-      {
-        url: `/umbraco/management/api/v1/media-type/allowed-at-root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postMediaTypeAvailableCompositions = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAllowedMediaTypeModel>(
+      {url: `/umbraco/management/api/v1/media-type/allowed-at-root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMediaTypeAvailableCompositions = (
     mediaTypeCompositionRequestModel: MediaTypeCompositionRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<
-      AvailableMediaTypeCompositionResponseModel[]
-    >(
-      {
-        url: `/umbraco/management/api/v1/media-type/available-compositions`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: mediaTypeCompositionRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaTypeConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaTypeConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/media-type/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postMediaTypeFolder = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<AvailableMediaTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/media-type/available-compositions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: mediaTypeCompositionRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/media-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMediaTypeFolder = (
     createFolderRequestModel: CreateFolderRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/folder`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createFolderRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createFolderRequestModel
+    },
+      options);
+    }
+  
+const getMediaTypeFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FolderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/media-type/folder/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteMediaTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FolderResponseModel>(
+      {url: `/umbraco/management/api/v1/media-type/folder/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMediaTypeFolderById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/folder/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putMediaTypeFolderById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/folder/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMediaTypeFolderById = (
     id: string,
     updateFolderResponseModel: UpdateFolderResponseModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/folder/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateFolderResponseModel,
-      },
-      options
-    );
-  };
-
-  const postMediaTypeImport = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/folder/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateFolderResponseModel
+    },
+      options);
+    }
+  
+const postMediaTypeImport = (
     importMediaTypeRequestModel: ImportMediaTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media-type/import`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: importMediaTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getTreeMediaTypeAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media-type/import`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: importMediaTypeRequestModel
+    },
+      options);
+    }
+  
+const getTreeMediaTypeAncestors = (
     params?: GetTreeMediaTypeAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaTypeTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/media-type/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeMediaTypeChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTypeTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/media-type/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaTypeChildren = (
     params?: GetTreeMediaTypeChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMediaTypeTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/media-type/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeMediaTypeRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media-type/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaTypeRoot = (
     params?: GetTreeMediaTypeRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMediaTypeTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/media-type/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getCollectionMedia = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getCollectionMedia = (
     params?: GetCollectionMediaParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMediaCollectionResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/collection/media`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMedia = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaCollectionResponseModel>(
+      {url: `/umbraco/management/api/v1/collection/media`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMedia = (
     params?: GetItemMediaParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaItemResponseModel[]>(
-      { url: `/umbraco/management/api/v1/item/media`, method: "GET", params },
-      options
-    );
-  };
-
-  const getItemMediaSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/media`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMediaSearch = (
     params?: GetItemMediaSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelMediaItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/media/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postMedia = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMediaItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/media/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMedia = (
     createMediaRequestModel: CreateMediaRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createMediaRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMediaRequestModel
+    },
+      options);
+    }
+  
+const getMediaById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaResponseModel>(
-      { url: `/umbraco/management/api/v1/media/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteMediaById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaResponseModel>(
+      {url: `/umbraco/management/api/v1/media/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMediaById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/media/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putMediaById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMediaById = (
     id: string,
     updateMediaRequestModel: UpdateMediaRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateMediaRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaByIdAuditLog = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMediaRequestModel
+    },
+      options);
+    }
+  
+const getMediaByIdAuditLog = (
     id: string,
     params?: GetMediaByIdAuditLogParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedAuditLogResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/media/${id}/audit-log`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const putMediaByIdMove = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedAuditLogResponseModel>(
+      {url: `/umbraco/management/api/v1/media/${id}/audit-log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putMediaByIdMove = (
     id: string,
     moveMediaRequestModel: MoveMediaRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media/${id}/move`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveMediaRequestModel,
-      },
-      options
-    );
-  };
-
-  const putMediaByIdMoveToRecycleBin = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}/move`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaRequestModel
+    },
+      options);
+    }
+  
+const putMediaByIdMoveToRecycleBin = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media/${id}/move-to-recycle-bin`,
-        method: "PUT",
-      },
-      options
-    );
-  };
-
-  const getMediaByIdReferencedBy = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}/move-to-recycle-bin`, method: 'PUT'
+    },
+      options);
+    }
+  
+const getMediaByIdReferencedBy = (
     id: string,
     params?: GetMediaByIdReferencedByParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedIReferenceResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/media/${id}/referenced-by`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getMediaByIdReferencedDescendants = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedIReferenceResponseModel>(
+      {url: `/umbraco/management/api/v1/media/${id}/referenced-by`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMediaByIdReferencedDescendants = (
     id: string,
     params?: GetMediaByIdReferencedDescendantsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedReferenceByIdModel>(
-      {
-        url: `/umbraco/management/api/v1/media/${id}/referenced-descendants`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const putMediaByIdValidate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/media/${id}/referenced-descendants`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putMediaByIdValidate = (
     id: string,
     updateMediaRequestModel: UpdateMediaRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media/${id}/validate`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateMediaRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaAreReferenced = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMediaRequestModel
+    },
+      options);
+    }
+  
+const getMediaAreReferenced = (
     params?: GetMediaAreReferencedParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedReferenceByIdModel>(
-      {
-        url: `/umbraco/management/api/v1/media/are-referenced`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getMediaConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaConfigurationResponseModel>(
-      { url: `/umbraco/management/api/v1/media/configuration`, method: "GET" },
-      options
-    );
-  };
-
-  const putMediaSort = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/media/are-referenced`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMediaConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/media/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const putMediaSort = (
     sortingRequestModel: SortingRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media/sort`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: sortingRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMediaUrls = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/sort`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sortingRequestModel
+    },
+      options);
+    }
+  
+const getMediaUrls = (
     params?: GetMediaUrlsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaUrlInfoResponseModel[]>(
-      { url: `/umbraco/management/api/v1/media/urls`, method: "GET", params },
-      options
-    );
-  };
-
-  const postMediaValidate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaUrlInfoResponseModel[]>(
+      {url: `/umbraco/management/api/v1/media/urls`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMediaValidate = (
     createMediaRequestModel: CreateMediaRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/media/validate`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createMediaRequestModel,
-      },
-      options
-    );
-  };
-
-  const deleteRecycleBinMedia = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/recycle-bin/media`, method: "DELETE" },
-      options
-    );
-  };
-
-  const deleteRecycleBinMediaById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/media/validate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMediaRequestModel
+    },
+      options);
+    }
+  
+const deleteRecycleBinMedia = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const deleteRecycleBinMediaById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/media/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getRecycleBinMediaByIdOriginalParent = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getRecycleBinMediaByIdOriginalParent = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ReferenceByIdModel>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/media/${id}/original-parent`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const putRecycleBinMediaByIdRestore = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ReferenceByIdModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/${id}/original-parent`, method: 'GET'
+    },
+      options);
+    }
+  
+const putRecycleBinMediaByIdRestore = (
     id: string,
     moveMediaRequestModel: MoveMediaRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/media/${id}/restore`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: moveMediaRequestModel,
-      },
-      options
-    );
-  };
-
-  const getRecycleBinMediaChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/${id}/restore`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: moveMediaRequestModel
+    },
+      options);
+    }
+  
+const getRecycleBinMediaChildren = (
     params?: GetRecycleBinMediaChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMediaRecycleBinItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/media/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getRecycleBinMediaRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRecycleBinMediaRoot = (
     params?: GetRecycleBinMediaRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMediaRecycleBinItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/recycle-bin/media/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeMediaAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaRecycleBinItemResponseModel>(
+      {url: `/umbraco/management/api/v1/recycle-bin/media/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaAncestors = (
     params?: GetTreeMediaAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MediaTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/media/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeMediaChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MediaTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/media/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaChildren = (
     params?: GetTreeMediaChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMediaTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/media/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeMediaRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeMediaRoot = (
     params?: GetTreeMediaRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMediaTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/media/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMemberGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMediaTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/media/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberGroup = (
     params?: GetItemMemberGroupParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberGroupItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/member-group`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getMemberGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberGroupItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/member-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getMemberGroup = (
     params?: GetMemberGroupParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMemberGroupResponseModel>(
-      { url: `/umbraco/management/api/v1/member-group`, method: "GET", params },
-      options
-    );
-  };
-
-  const postMemberGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMemberGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/member-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMemberGroup = (
     createMemberGroupRequestModel: CreateMemberGroupRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member-group`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createMemberGroupRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMemberGroupById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-group`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberGroupRequestModel
+    },
+      options);
+    }
+  
+const getMemberGroupById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberGroupResponseModel>(
-      { url: `/umbraco/management/api/v1/member-group/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteMemberGroupById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/member-group/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMemberGroupById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member-group/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putMemberGroupById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-group/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMemberGroupById = (
     id: string,
     updateMemberGroupRequestModel: UpdateMemberGroupRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member-group/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateMemberGroupRequestModel,
-      },
-      options
-    );
-  };
-
-  const getTreeMemberGroupRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-group/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberGroupRequestModel
+    },
+      options);
+    }
+  
+const getTreeMemberGroupRoot = (
     params?: GetTreeMemberGroupRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/member-group/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMemberType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/member-group/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberType = (
     params?: GetItemMemberTypeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberTypeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/member-type`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMemberTypeSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/member-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberTypeSearch = (
     params?: GetItemMemberTypeSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelMemberTypeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/member-type/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postMemberType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMemberTypeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/member-type/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMemberType = (
     createMemberTypeRequestModel: CreateMemberTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member-type`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createMemberTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMemberTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberTypeRequestModel
+    },
+      options);
+    }
+  
+const getMemberTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberTypeResponseModel>(
-      { url: `/umbraco/management/api/v1/member-type/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteMemberTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/member-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMemberTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/member-type/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putMemberTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMemberTypeById = (
     id: string,
     updateMemberTypeRequestModel: UpdateMemberTypeRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member-type/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateMemberTypeRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMemberTypeByIdCompositionReferences = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberTypeRequestModel
+    },
+      options);
+    }
+  
+const getMemberTypeByIdCompositionReferences = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberTypeCompositionResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/member-type/${id}/composition-references`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postMemberTypeByIdCopy = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/member-type/${id}/composition-references`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMemberTypeByIdCopy = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member-type/${id}/copy`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const postMemberTypeAvailableCompositions = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member-type/${id}/copy`, method: 'POST'
+    },
+      options);
+    }
+  
+const postMemberTypeAvailableCompositions = (
     memberTypeCompositionRequestModel: MemberTypeCompositionRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<
-      AvailableMemberTypeCompositionResponseModel[]
-    >(
-      {
-        url: `/umbraco/management/api/v1/member-type/available-compositions`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: memberTypeCompositionRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMemberTypeConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberTypeConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/member-type/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getTreeMemberTypeRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<AvailableMemberTypeCompositionResponseModel[]>(
+      {url: `/umbraco/management/api/v1/member-type/available-compositions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: memberTypeCompositionRequestModel
+    },
+      options);
+    }
+  
+const getMemberTypeConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberTypeConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/member-type/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getTreeMemberTypeRoot = (
     params?: GetTreeMemberTypeRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMemberTypeTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/member-type/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getFilterMember = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMemberTypeTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/member-type/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getFilterMember = (
     params?: GetFilterMemberParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedMemberResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/filter/member`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemMember = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedMemberResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/member`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMember = (
     params?: GetItemMemberParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberItemResponseModel[]>(
-      { url: `/umbraco/management/api/v1/item/member`, method: "GET", params },
-      options
-    );
-  };
-
-  const getItemMemberSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/member`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemMemberSearch = (
     params?: GetItemMemberSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelMemberItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/member/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postMember = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelMemberItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/member/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postMember = (
     createMemberRequestModel: CreateMemberRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createMemberRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMemberById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberRequestModel
+    },
+      options);
+    }
+  
+const getMemberById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberResponseModel>(
-      { url: `/umbraco/management/api/v1/member/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteMemberById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberResponseModel>(
+      {url: `/umbraco/management/api/v1/member/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteMemberById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/member/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putMemberById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putMemberById = (
     id: string,
     updateMemberRequestModel: UpdateMemberRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateMemberRequestModel,
-      },
-      options
-    );
-  };
-
-  const putMemberByIdValidate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberRequestModel
+    },
+      options);
+    }
+  
+const putMemberByIdValidate = (
     id: string,
     updateMemberRequestModel: UpdateMemberRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member/${id}/validate`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateMemberRequestModel,
-      },
-      options
-    );
-  };
-
-  const getMemberConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<MemberConfigurationResponseModel>(
-      { url: `/umbraco/management/api/v1/member/configuration`, method: "GET" },
-      options
-    );
-  };
-
-  const postMemberValidate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/${id}/validate`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateMemberRequestModel
+    },
+      options);
+    }
+  
+const getMemberConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<MemberConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/member/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postMemberValidate = (
     createMemberRequestModel: CreateMemberRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/member/validate`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createMemberRequestModel,
-      },
-      options
-    );
-  };
-
-  const postModelsBuilderBuild = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/models-builder/build`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const getModelsBuilderDashboard = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ModelsBuilderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/models-builder/dashboard`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getModelsBuilderStatus = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<OutOfDateStatusResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/models-builder/status`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getObjectTypes = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/member/validate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createMemberRequestModel
+    },
+      options);
+    }
+  
+const postModelsBuilderBuild = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/models-builder/build`, method: 'POST'
+    },
+      options);
+    }
+  
+const getModelsBuilderDashboard = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ModelsBuilderResponseModel>(
+      {url: `/umbraco/management/api/v1/models-builder/dashboard`, method: 'GET'
+    },
+      options);
+    }
+  
+const getModelsBuilderStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<OutOfDateStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/models-builder/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const getObjectTypes = (
     params?: GetObjectTypesParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedObjectTypeResponseModel>(
-      { url: `/umbraco/management/api/v1/object-types`, method: "GET", params },
-      options
-    );
-  };
-
-  const getOembedQuery = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedObjectTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/object-types`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getOembedQuery = (
     params?: GetOembedQueryParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<OEmbedResponseModel>(
-      { url: `/umbraco/management/api/v1/oembed/query`, method: "GET", params },
-      options
-    );
-  };
-
-  const postPackageByNameRunMigration = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<OEmbedResponseModel>(
+      {url: `/umbraco/management/api/v1/oembed/query`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postPackageByNameRunMigration = (
     name: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/package/${name}/run-migration`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const getPackageConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PackageConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/package/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getPackageCreated = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/${name}/run-migration`, method: 'POST'
+    },
+      options);
+    }
+  
+const getPackageConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PackageConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/package/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getPackageCreated = (
     params?: GetPackageCreatedParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedPackageDefinitionResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/package/created`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postPackageCreated = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedPackageDefinitionResponseModel>(
+      {url: `/umbraco/management/api/v1/package/created`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postPackageCreated = (
     createPackageRequestModel: CreatePackageRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/package/created`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createPackageRequestModel,
-      },
-      options
-    );
-  };
-
-  const getPackageCreatedById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/created`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createPackageRequestModel
+    },
+      options);
+    }
+  
+const getPackageCreatedById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PackageDefinitionResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/package/created/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deletePackageCreatedById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PackageDefinitionResponseModel>(
+      {url: `/umbraco/management/api/v1/package/created/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deletePackageCreatedById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/package/created/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putPackageCreatedById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/created/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putPackageCreatedById = (
     id: string,
     updatePackageRequestModel: NonReadonly<UpdatePackageRequestModel>,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/package/created/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updatePackageRequestModel,
-      },
-      options
-    );
-  };
-
-  const getPackageCreatedByIdDownload = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/package/created/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updatePackageRequestModel
+    },
+      options);
+    }
+  
+const getPackageCreatedByIdDownload = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<Blob>(
-      {
-        url: `/umbraco/management/api/v1/package/created/${id}/download`,
-        method: "GET",
-        responseType: "blob",
-      },
-      options
-    );
-  };
-
-  const getPackageMigrationStatus = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<Blob>(
+      {url: `/umbraco/management/api/v1/package/created/${id}/download`, method: 'GET',
+        responseType: 'blob'
+    },
+      options);
+    }
+  
+const getPackageMigrationStatus = (
     params?: GetPackageMigrationStatusParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedPackageMigrationStatusResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/package/migration-status`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemPartialView = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedPackageMigrationStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/package/migration-status`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemPartialView = (
     params?: GetItemPartialViewParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PartialViewItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/partial-view`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postPartialView = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/partial-view`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postPartialView = (
     createPartialViewRequestModel: CreatePartialViewRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/partial-view`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createPartialViewRequestModel,
-      },
-      options
-    );
-  };
-
-  const getPartialViewByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createPartialViewRequestModel
+    },
+      options);
+    }
+  
+const getPartialViewByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PartialViewResponseModel>(
-      { url: `/umbraco/management/api/v1/partial-view/${path}`, method: "GET" },
-      options
-    );
-  };
-
-  const deletePartialViewByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deletePartialViewByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/${path}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putPartialViewByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putPartialViewByPath = (
     path: string,
     updatePartialViewRequestModel: UpdatePartialViewRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/${path}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updatePartialViewRequestModel,
-      },
-      options
-    );
-  };
-
-  const putPartialViewByPathRename = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updatePartialViewRequestModel
+    },
+      options);
+    }
+  
+const putPartialViewByPathRename = (
     path: string,
     renamePartialViewRequestModel: RenamePartialViewRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/${path}/rename`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: renamePartialViewRequestModel,
-      },
-      options
-    );
-  };
-
-  const postPartialViewFolder = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/${path}/rename`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: renamePartialViewRequestModel
+    },
+      options);
+    }
+  
+const postPartialViewFolder = (
     createPartialViewFolderRequestModel: CreatePartialViewFolderRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/folder`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createPartialViewFolderRequestModel,
-      },
-      options
-    );
-  };
-
-  const getPartialViewFolderByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createPartialViewFolderRequestModel
+    },
+      options);
+    }
+  
+const getPartialViewFolderByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PartialViewFolderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/folder/${path}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deletePartialViewFolderByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewFolderResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/folder/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deletePartialViewFolderByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/folder/${path}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getPartialViewSnippet = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/partial-view/folder/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getPartialViewSnippet = (
     params?: GetPartialViewSnippetParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedPartialViewSnippetItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/snippet`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getPartialViewSnippetById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedPartialViewSnippetItemResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/snippet`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getPartialViewSnippetById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PartialViewSnippetResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/partial-view/snippet/${id}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getTreePartialViewAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PartialViewSnippetResponseModel>(
+      {url: `/umbraco/management/api/v1/partial-view/snippet/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const getTreePartialViewAncestors = (
     params?: GetTreePartialViewAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/partial-view/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreePartialViewChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/partial-view/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreePartialViewChildren = (
     params?: GetTreePartialViewChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/partial-view/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreePartialViewRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/partial-view/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreePartialViewRoot = (
     params?: GetTreePartialViewRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/partial-view/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const deletePreview = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/preview`, method: "DELETE" },
-      options
-    );
-  };
-
-  const postPreview = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/preview`, method: "POST" },
-      options
-    );
-  };
-
-  const getProfilingStatus = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ProfilingStatusResponseModel>(
-      { url: `/umbraco/management/api/v1/profiling/status`, method: "GET" },
-      options
-    );
-  };
-
-  const putProfilingStatus = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/partial-view/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deletePreview = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/preview`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const postPreview = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/preview`, method: 'POST'
+    },
+      options);
+    }
+  
+const getProfilingStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ProfilingStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/profiling/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const putProfilingStatus = (
     profilingStatusRequestModel: ProfilingStatusRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/profiling/status`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: profilingStatusRequestModel,
-      },
-      options
-    );
-  };
-
-  const getPropertyTypeIsUsed = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/profiling/status`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: profilingStatusRequestModel
+    },
+      options);
+    }
+  
+const getPropertyTypeIsUsed = (
     params?: GetPropertyTypeIsUsedParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<boolean>(
-      {
-        url: `/umbraco/management/api/v1/property-type/is-used`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  /**
-   * @deprecated
-   */
-  const postPublishedCacheCollect = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<unknown>(
-      {
-        url: `/umbraco/management/api/v1/published-cache/collect`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const postPublishedCacheRebuild = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/published-cache/rebuild`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const postPublishedCacheReload = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/published-cache/reload`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  /**
-   * @deprecated
-   */
-  const getPublishedCacheStatus = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<unknown>(
-      {
-        url: `/umbraco/management/api/v1/published-cache/status`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getRedirectManagement = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<boolean>(
+      {url: `/umbraco/management/api/v1/property-type/is-used`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+/**
+ * @deprecated
+ */
+const postPublishedCacheCollect = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<unknown>(
+      {url: `/umbraco/management/api/v1/published-cache/collect`, method: 'POST'
+    },
+      options);
+    }
+  
+const postPublishedCacheRebuild = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/published-cache/rebuild`, method: 'POST'
+    },
+      options);
+    }
+  
+const postPublishedCacheReload = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/published-cache/reload`, method: 'POST'
+    },
+      options);
+    }
+  
+/**
+ * @deprecated
+ */
+const getPublishedCacheStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<unknown>(
+      {url: `/umbraco/management/api/v1/published-cache/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const getRedirectManagement = (
     params?: GetRedirectManagementParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedRedirectUrlResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/redirect-management`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getRedirectManagementById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRedirectUrlResponseModel>(
+      {url: `/umbraco/management/api/v1/redirect-management`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRedirectManagementById = (
     id: string,
     params?: GetRedirectManagementByIdParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedRedirectUrlResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/redirect-management/${id}`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const deleteRedirectManagementById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRedirectUrlResponseModel>(
+      {url: `/umbraco/management/api/v1/redirect-management/${id}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deleteRedirectManagementById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/redirect-management/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getRedirectManagementStatus = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<RedirectUrlStatusResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/redirect-management/status`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postRedirectManagementStatus = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/redirect-management/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getRedirectManagementStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<RedirectUrlStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/redirect-management/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const postRedirectManagementStatus = (
     params?: PostRedirectManagementStatusParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/redirect-management/status`,
-        method: "POST",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemRelationType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/redirect-management/status`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+const getItemRelationType = (
     params?: GetItemRelationTypeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<RelationTypeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/relation-type`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getRelationType = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<RelationTypeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/relation-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRelationType = (
     params?: GetRelationTypeParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedRelationTypeResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/relation-type`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getRelationTypeById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRelationTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/relation-type`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getRelationTypeById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<RelationTypeResponseModel>(
-      { url: `/umbraco/management/api/v1/relation-type/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const getRelationByRelationTypeId = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<RelationTypeResponseModel>(
+      {url: `/umbraco/management/api/v1/relation-type/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const getRelationByRelationTypeId = (
     id: string,
     params?: GetRelationByRelationTypeIdParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedRelationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/relation/type/${id}`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemScript = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedRelationResponseModel>(
+      {url: `/umbraco/management/api/v1/relation/type/${id}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemScript = (
     params?: GetItemScriptParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ScriptItemResponseModel[]>(
-      { url: `/umbraco/management/api/v1/item/script`, method: "GET", params },
-      options
-    );
-  };
-
-  const postScript = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ScriptItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/script`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postScript = (
     createScriptRequestModel: CreateScriptRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/script`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createScriptRequestModel,
-      },
-      options
-    );
-  };
-
-  const getScriptByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createScriptRequestModel
+    },
+      options);
+    }
+  
+const getScriptByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ScriptResponseModel>(
-      { url: `/umbraco/management/api/v1/script/${path}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteScriptByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ScriptResponseModel>(
+      {url: `/umbraco/management/api/v1/script/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteScriptByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/script/${path}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putScriptByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putScriptByPath = (
     path: string,
     updateScriptRequestModel: UpdateScriptRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/script/${path}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateScriptRequestModel,
-      },
-      options
-    );
-  };
-
-  const putScriptByPathRename = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/${path}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateScriptRequestModel
+    },
+      options);
+    }
+  
+const putScriptByPathRename = (
     path: string,
     renameScriptRequestModel: RenameScriptRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/script/${path}/rename`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: renameScriptRequestModel,
-      },
-      options
-    );
-  };
-
-  const postScriptFolder = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/${path}/rename`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: renameScriptRequestModel
+    },
+      options);
+    }
+  
+const postScriptFolder = (
     createScriptFolderRequestModel: CreateScriptFolderRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/script/folder`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createScriptFolderRequestModel,
-      },
-      options
-    );
-  };
-
-  const getScriptFolderByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createScriptFolderRequestModel
+    },
+      options);
+    }
+  
+const getScriptFolderByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ScriptFolderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/script/folder/${path}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteScriptFolderByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ScriptFolderResponseModel>(
+      {url: `/umbraco/management/api/v1/script/folder/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteScriptFolderByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/script/folder/${path}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getTreeScriptAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/script/folder/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getTreeScriptAncestors = (
     params?: GetTreeScriptAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/script/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeScriptChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/script/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeScriptChildren = (
     params?: GetTreeScriptChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/script/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeScriptRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/script/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeScriptRoot = (
     params?: GetTreeScriptRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/script/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getSearcher = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/script/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getSearcher = (
     params?: GetSearcherParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedSearcherResponseModel>(
-      { url: `/umbraco/management/api/v1/searcher`, method: "GET", params },
-      options
-    );
-  };
-
-  const getSearcherBySearcherNameQuery = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSearcherResponseModel>(
+      {url: `/umbraco/management/api/v1/searcher`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getSearcherBySearcherNameQuery = (
     searcherName: string,
     params?: GetSearcherBySearcherNameQueryParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedSearchResultResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/searcher/${searcherName}/query`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getSecurityConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<SecurityConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/security/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postSecurityForgotPassword = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSearchResultResponseModel>(
+      {url: `/umbraco/management/api/v1/searcher/${searcherName}/query`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getSecurityConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<SecurityConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/security/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postSecurityForgotPassword = (
     resetPasswordRequestModel: ResetPasswordRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/security/forgot-password`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: resetPasswordRequestModel,
-      },
-      options
-    );
-  };
-
-  const postSecurityForgotPasswordReset = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/security/forgot-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: resetPasswordRequestModel
+    },
+      options);
+    }
+  
+const postSecurityForgotPasswordReset = (
     resetPasswordTokenRequestModel: ResetPasswordTokenRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/security/forgot-password/reset`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: resetPasswordTokenRequestModel,
-      },
-      options
-    );
-  };
-
-  const postSecurityForgotPasswordVerify = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/security/forgot-password/reset`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: resetPasswordTokenRequestModel
+    },
+      options);
+    }
+  
+const postSecurityForgotPasswordVerify = (
     verifyResetPasswordTokenRequestModel: VerifyResetPasswordTokenRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<VerifyResetPasswordResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/security/forgot-password/verify`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: verifyResetPasswordTokenRequestModel,
-      },
-      options
-    );
-  };
-
-  const getSegment = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<VerifyResetPasswordResponseModel>(
+      {url: `/umbraco/management/api/v1/security/forgot-password/verify`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: verifyResetPasswordTokenRequestModel
+    },
+      options);
+    }
+  
+const getSegment = (
     params?: GetSegmentParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedSegmentResponseModel>(
-      { url: `/umbraco/management/api/v1/segment`, method: "GET", params },
-      options
-    );
-  };
-
-  const getServerConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ServerConfigurationResponseModel>(
-      { url: `/umbraco/management/api/v1/server/configuration`, method: "GET" },
-      options
-    );
-  };
-
-  const getServerInformation = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ServerInformationResponseModel>(
-      { url: `/umbraco/management/api/v1/server/information`, method: "GET" },
-      options
-    );
-  };
-
-  const getServerStatus = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ServerStatusResponseModel>(
-      { url: `/umbraco/management/api/v1/server/status`, method: "GET" },
-      options
-    );
-  };
-
-  const getServerTroubleshooting = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ServerTroubleshootingResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/server/troubleshooting`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getServerUpgradeCheck = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UpgradeCheckResponseModel>(
-      { url: `/umbraco/management/api/v1/server/upgrade-check`, method: "GET" },
-      options
-    );
-  };
-
-  const getItemStaticFile = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedSegmentResponseModel>(
+      {url: `/umbraco/management/api/v1/segment`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getServerConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/server/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerInformation = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerInformationResponseModel>(
+      {url: `/umbraco/management/api/v1/server/information`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerStatus = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerStatusResponseModel>(
+      {url: `/umbraco/management/api/v1/server/status`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerTroubleshooting = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ServerTroubleshootingResponseModel>(
+      {url: `/umbraco/management/api/v1/server/troubleshooting`, method: 'GET'
+    },
+      options);
+    }
+  
+const getServerUpgradeCheck = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UpgradeCheckResponseModel>(
+      {url: `/umbraco/management/api/v1/server/upgrade-check`, method: 'GET'
+    },
+      options);
+    }
+  
+const getItemStaticFile = (
     params?: GetItemStaticFileParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<StaticFileItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/static-file`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeStaticFileAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StaticFileItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/static-file`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStaticFileAncestors = (
     params?: GetTreeStaticFileAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/static-file/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeStaticFileChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/static-file/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStaticFileChildren = (
     params?: GetTreeStaticFileChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/static-file/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeStaticFileRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/static-file/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStaticFileRoot = (
     params?: GetTreeStaticFileRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/static-file/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemStylesheet = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/static-file/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemStylesheet = (
     params?: GetItemStylesheetParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<StylesheetItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/stylesheet`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postStylesheet = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StylesheetItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/stylesheet`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postStylesheet = (
     createStylesheetRequestModel: CreateStylesheetRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/stylesheet`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createStylesheetRequestModel,
-      },
-      options
-    );
-  };
-
-  const getStylesheetByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createStylesheetRequestModel
+    },
+      options);
+    }
+  
+const getStylesheetByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<StylesheetResponseModel>(
-      { url: `/umbraco/management/api/v1/stylesheet/${path}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteStylesheetByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StylesheetResponseModel>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteStylesheetByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/stylesheet/${path}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const putStylesheetByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putStylesheetByPath = (
     path: string,
     updateStylesheetRequestModel: UpdateStylesheetRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/stylesheet/${path}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateStylesheetRequestModel,
-      },
-      options
-    );
-  };
-
-  const putStylesheetByPathRename = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateStylesheetRequestModel
+    },
+      options);
+    }
+  
+const putStylesheetByPathRename = (
     path: string,
     renameStylesheetRequestModel: RenameStylesheetRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/stylesheet/${path}/rename`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: renameStylesheetRequestModel,
-      },
-      options
-    );
-  };
-
-  const postStylesheetFolder = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/${path}/rename`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: renameStylesheetRequestModel
+    },
+      options);
+    }
+  
+const postStylesheetFolder = (
     createStylesheetFolderRequestModel: CreateStylesheetFolderRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/stylesheet/folder`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createStylesheetFolderRequestModel,
-      },
-      options
-    );
-  };
-
-  const getStylesheetFolderByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/folder`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createStylesheetFolderRequestModel
+    },
+      options);
+    }
+  
+const getStylesheetFolderByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<StylesheetFolderResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/stylesheet/folder/${path}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteStylesheetFolderByPath = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<StylesheetFolderResponseModel>(
+      {url: `/umbraco/management/api/v1/stylesheet/folder/${path}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteStylesheetFolderByPath = (
     path: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/stylesheet/folder/${path}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getTreeStylesheetAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/stylesheet/folder/${path}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getTreeStylesheetAncestors = (
     params?: GetTreeStylesheetAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/stylesheet/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeStylesheetChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<FileSystemTreeItemPresentationModel[]>(
+      {url: `/umbraco/management/api/v1/tree/stylesheet/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStylesheetChildren = (
     params?: GetTreeStylesheetChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/stylesheet/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeStylesheetRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/stylesheet/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeStylesheetRoot = (
     params?: GetTreeStylesheetRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/stylesheet/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTag = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedFileSystemTreeItemPresentationModel>(
+      {url: `/umbraco/management/api/v1/tree/stylesheet/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTag = (
     params?: GetTagParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedTagResponseModel>(
-      { url: `/umbraco/management/api/v1/tag`, method: "GET", params },
-      options
-    );
-  };
-
-  const getTelemetry = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedTagResponseModel>(
+      {url: `/umbraco/management/api/v1/tag`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTelemetry = (
     params?: GetTelemetryParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedTelemetryResponseModel>(
-      { url: `/umbraco/management/api/v1/telemetry`, method: "GET", params },
-      options
-    );
-  };
-
-  const getTelemetryLevel = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TelemetryResponseModel>(
-      { url: `/umbraco/management/api/v1/telemetry/level`, method: "GET" },
-      options
-    );
-  };
-
-  const postTelemetryLevel = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedTelemetryResponseModel>(
+      {url: `/umbraco/management/api/v1/telemetry`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTelemetryLevel = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TelemetryResponseModel>(
+      {url: `/umbraco/management/api/v1/telemetry/level`, method: 'GET'
+    },
+      options);
+    }
+  
+const postTelemetryLevel = (
     telemetryRequestModel: TelemetryRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/telemetry/level`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: telemetryRequestModel,
-      },
-      options
-    );
-  };
-
-  const getItemTemplate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/telemetry/level`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: telemetryRequestModel
+    },
+      options);
+    }
+  
+const getItemTemplate = (
     params?: GetItemTemplateParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TemplateItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/template`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemTemplateSearch = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/template`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemTemplateSearch = (
     params?: GetItemTemplateSearchParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedModelTemplateItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/item/template/search`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postTemplate = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedModelTemplateItemResponseModel>(
+      {url: `/umbraco/management/api/v1/item/template/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postTemplate = (
     createTemplateRequestModel: CreateTemplateRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/template`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createTemplateRequestModel,
-      },
-      options
-    );
-  };
-
-  const getTemplateById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/template`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createTemplateRequestModel
+    },
+      options);
+    }
+  
+const getTemplateById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TemplateResponseModel>(
-      { url: `/umbraco/management/api/v1/template/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteTemplateById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateResponseModel>(
+      {url: `/umbraco/management/api/v1/template/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteTemplateById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/template/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putTemplateById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/template/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putTemplateById = (
     id: string,
     updateTemplateRequestModel: UpdateTemplateRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/template/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateTemplateRequestModel,
-      },
-      options
-    );
-  };
-
-  const getTemplateConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TemplateConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/template/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postTemplateQueryExecute = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/template/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateTemplateRequestModel
+    },
+      options);
+    }
+  
+const getTemplateConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/template/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const postTemplateQueryExecute = (
     templateQueryExecuteModel: TemplateQueryExecuteModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TemplateQueryResultResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/template/query/execute`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: templateQueryExecuteModel,
-      },
-      options
-    );
-  };
-
-  const getTemplateQuerySettings = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TemplateQuerySettingsResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/template/query/settings`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getTreeTemplateAncestors = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateQueryResultResponseModel>(
+      {url: `/umbraco/management/api/v1/template/query/execute`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: templateQueryExecuteModel
+    },
+      options);
+    }
+  
+const getTemplateQuerySettings = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<TemplateQuerySettingsResponseModel>(
+      {url: `/umbraco/management/api/v1/template/query/settings`, method: 'GET'
+    },
+      options);
+    }
+  
+const getTreeTemplateAncestors = (
     params?: GetTreeTemplateAncestorsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<NamedEntityTreeItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/tree/template/ancestors`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeTemplateChildren = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NamedEntityTreeItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/tree/template/ancestors`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeTemplateChildren = (
     params?: GetTreeTemplateChildrenParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/template/children`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getTreeTemplateRoot = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/template/children`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getTreeTemplateRoot = (
     params?: GetTreeTemplateRootParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/tree/template/root`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postTemporaryFile = (
-    postTemporaryFileBody: PostTemporaryFileBody,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    const formData = new FormData();
-    formData.append("Id", postTemporaryFileBody.Id);
-    formData.append("File", postTemporaryFileBody.File);
-
-    const headers = {
-      ...formData.getHeaders(),
-      ...options?.headers,
-    };
-
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/temporary-file`,
-        method: "POST",
-        headers: headers,
-        data: formData,
-      },
-      options
-    );
-  };
-
-  const getTemporaryFileById = (
-    id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TemporaryFileResponseModel>(
-      { url: `/umbraco/management/api/v1/temporary-file/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteTemporaryFileById = (
-    id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/temporary-file/${id}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getTemporaryFileConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<TemporaryFileConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/temporary-file/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postUpgradeAuthorize = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/upgrade/authorize`, method: "POST" },
-      options
-    );
-  };
-
-  const getUpgradeSettings = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UpgradeSettingsResponseModel>(
-      { url: `/umbraco/management/api/v1/upgrade/settings`, method: "GET" },
-      options
-    );
-  };
-
-  const postUserData = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedNamedEntityTreeItemResponseModel>(
+      {url: `/umbraco/management/api/v1/tree/template/root`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postUpgradeAuthorize = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/upgrade/authorize`, method: 'POST'
+    },
+      options);
+    }
+  
+const getUpgradeSettings = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UpgradeSettingsResponseModel>(
+      {url: `/umbraco/management/api/v1/upgrade/settings`, method: 'GET'
+    },
+      options);
+    }
+  
+const postUserData = (
     createUserDataRequestModel: CreateUserDataRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user-data`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createUserDataRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserData = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-data`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserDataRequestModel
+    },
+      options);
+    }
+  
+const getUserData = (
     params?: GetUserDataParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedUserDataResponseModel>(
-      { url: `/umbraco/management/api/v1/user-data`, method: "GET", params },
-      options
-    );
-  };
-
-  const putUserData = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserDataResponseModel>(
+      {url: `/umbraco/management/api/v1/user-data`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const putUserData = (
     updateUserDataRequestModel: UpdateUserDataRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user-data`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateUserDataRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserDataById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-data`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserDataRequestModel
+    },
+      options);
+    }
+  
+const getUserDataById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserDataModel>(
-      { url: `/umbraco/management/api/v1/user-data/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const getFilterUserGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserDataModel>(
+      {url: `/umbraco/management/api/v1/user-data/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const getFilterUserGroup = (
     params?: GetFilterUserGroupParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedUserGroupResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/filter/user-group`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getItemUserGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/user-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemUserGroup = (
     params?: GetItemUserGroupParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserGroupItemResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/item/user-group`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const deleteUserGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserGroupItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/user-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deleteUserGroup = (
     deleteUserGroupsRequestModel: DeleteUserGroupsRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user-group`,
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        data: deleteUserGroupsRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group`, method: 'DELETE',
+      headers: {'Content-Type': 'application/json', },
+      data: deleteUserGroupsRequestModel
+    },
+      options);
+    }
+  
+const postUserGroup = (
     createUserGroupRequestModel: CreateUserGroupRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user-group`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createUserGroupRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserGroup = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserGroupRequestModel
+    },
+      options);
+    }
+  
+const getUserGroup = (
     params?: GetUserGroupParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedUserGroupResponseModel>(
-      { url: `/umbraco/management/api/v1/user-group`, method: "GET", params },
-      options
-    );
-  };
-
-  const getUserGroupById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/user-group`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserGroupById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserGroupResponseModel>(
-      { url: `/umbraco/management/api/v1/user-group/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteUserGroupById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserGroupResponseModel>(
+      {url: `/umbraco/management/api/v1/user-group/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserGroupById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/user-group/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putUserGroupById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putUserGroupById = (
     id: string,
     updateUserGroupRequestModel: UpdateUserGroupRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user-group/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateUserGroupRequestModel,
-      },
-      options
-    );
-  };
-
-  const deleteUserGroupByIdUsers = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserGroupRequestModel
+    },
+      options);
+    }
+  
+const deleteUserGroupByIdUsers = (
     id: string,
     referenceByIdModel: ReferenceByIdModel[],
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user-group/${id}/users`,
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        data: referenceByIdModel,
-      },
-      options
-    );
-  };
-
-  const postUserGroupByIdUsers = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}/users`, method: 'DELETE',
+      headers: {'Content-Type': 'application/json', },
+      data: referenceByIdModel
+    },
+      options);
+    }
+  
+const postUserGroupByIdUsers = (
     id: string,
     referenceByIdModel: ReferenceByIdModel[],
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user-group/${id}/users`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: referenceByIdModel,
-      },
-      options
-    );
-  };
-
-  const getFilterUser = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user-group/${id}/users`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: referenceByIdModel
+    },
+      options);
+    }
+  
+const getFilterUser = (
     params?: GetFilterUserParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedUserResponseModel>(
-      { url: `/umbraco/management/api/v1/filter/user`, method: "GET", params },
-      options
-    );
-  };
-
-  const getItemUser = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserResponseModel>(
+      {url: `/umbraco/management/api/v1/filter/user`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getItemUser = (
     params?: GetItemUserParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserItemResponseModel[]>(
-      { url: `/umbraco/management/api/v1/item/user`, method: "GET", params },
-      options
-    );
-  };
-
-  const postUser = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/user`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postUser = (
     createUserRequestModel: CreateUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const deleteUser = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserRequestModel
+    },
+      options);
+    }
+  
+const deleteUser = (
     deleteUsersRequestModel: DeleteUsersRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user`,
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        data: deleteUsersRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUser = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user`, method: 'DELETE',
+      headers: {'Content-Type': 'application/json', },
+      data: deleteUsersRequestModel
+    },
+      options);
+    }
+  
+const getUser = (
     params?: GetUserParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedUserResponseModel>(
-      { url: `/umbraco/management/api/v1/user`, method: "GET", params },
-      options
-    );
-  };
-
-  const getUserById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserResponseModel>(
-      { url: `/umbraco/management/api/v1/user/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteUserById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/user/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putUserById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putUserById = (
     id: string,
     updateUserRequestModel: UpdateUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserById2fa = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserRequestModel
+    },
+      options);
+    }
+  
+const getUserById2fa = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserTwoFactorProviderModel[]>(
-      { url: `/umbraco/management/api/v1/user/${id}/2fa`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteUserById2faByProviderName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserTwoFactorProviderModel[]>(
+      {url: `/umbraco/management/api/v1/user/${id}/2fa`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserById2faByProviderName = (
     id: string,
     providerName: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}/2fa/${providerName}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const getUserByIdCalculateStartNodes = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/2fa/${providerName}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const getUserByIdCalculateStartNodes = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<CalculatedUserStartNodesResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}/calculate-start-nodes`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postUserByIdChangePassword = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<CalculatedUserStartNodesResponseModel>(
+      {url: `/umbraco/management/api/v1/user/${id}/calculate-start-nodes`, method: 'GET'
+    },
+      options);
+    }
+  
+const postUserByIdChangePassword = (
     id: string,
     changePasswordUserRequestModel: ChangePasswordUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}/change-password`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: changePasswordUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserByIdClientCredentials = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/change-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: changePasswordUserRequestModel
+    },
+      options);
+    }
+  
+const postUserByIdClientCredentials = (
     id: string,
     createUserClientCredentialsRequestModel: CreateUserClientCredentialsRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}/client-credentials`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createUserClientCredentialsRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserByIdClientCredentials = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/client-credentials`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserClientCredentialsRequestModel
+    },
+      options);
+    }
+  
+const getUserByIdClientCredentials = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<string[]>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}/client-credentials`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const deleteUserByIdClientCredentialsByClientId = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<string[]>(
+      {url: `/umbraco/management/api/v1/user/${id}/client-credentials`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserByIdClientCredentialsByClientId = (
     id: string,
     clientId: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}/client-credentials/${clientId}`,
-        method: "DELETE",
-      },
-      options
-    );
-  };
-
-  const postUserByIdResetPassword = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/${id}/client-credentials/${clientId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const postUserByIdResetPassword = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<ResetPasswordUserResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/user/${id}/reset-password`,
-        method: "POST",
-      },
-      options
-    );
-  };
-
-  const deleteUserAvatarById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<ResetPasswordUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/${id}/reset-password`, method: 'POST'
+    },
+      options);
+    }
+  
+const deleteUserAvatarById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/user/avatar/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const postUserAvatarById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/avatar/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const postUserAvatarById = (
     id: string,
     setAvatarRequestModel: SetAvatarRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/avatar/${id}`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: setAvatarRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserConfigurationResponseModel>(
-      { url: `/umbraco/management/api/v1/user/configuration`, method: "GET" },
-      options
-    );
-  };
-
-  const getUserCurrent = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<CurrentUserResponseModel>(
-      { url: `/umbraco/management/api/v1/user/current`, method: "GET" },
-      options
-    );
-  };
-
-  const getUserCurrent2fa = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserTwoFactorProviderModel[]>(
-      { url: `/umbraco/management/api/v1/user/current/2fa`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteUserCurrent2faByProviderName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/avatar/${id}`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: setAvatarRequestModel
+    },
+      options);
+    }
+  
+const getUserConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/user/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrent = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<CurrentUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrent2fa = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserTwoFactorProviderModel[]>(
+      {url: `/umbraco/management/api/v1/user/current/2fa`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteUserCurrent2faByProviderName = (
     providerName: string,
     params?: DeleteUserCurrent2faByProviderNameParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`,
-        method: "DELETE",
-        params,
-      },
-      options
-    );
-  };
-
-  const postUserCurrent2faByProviderName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`, method: 'DELETE',
+        params
+    },
+      options);
+    }
+  
+const postUserCurrent2faByProviderName = (
     providerName: string,
     enableTwoFactorRequestModel: EnableTwoFactorRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<NoopSetupTwoFactorModel>(
-      {
-        url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: enableTwoFactorRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserCurrent2faByProviderName = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NoopSetupTwoFactorModel>(
+      {url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: enableTwoFactorRequestModel
+    },
+      options);
+    }
+  
+const getUserCurrent2faByProviderName = (
     providerName: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<NoopSetupTwoFactorModel>(
-      {
-        url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const postUserCurrentAvatar = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<NoopSetupTwoFactorModel>(
+      {url: `/umbraco/management/api/v1/user/current/2fa/${providerName}`, method: 'GET'
+    },
+      options);
+    }
+  
+const postUserCurrentAvatar = (
     setAvatarRequestModel: SetAvatarRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/current/avatar`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: setAvatarRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserCurrentChangePassword = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/current/avatar`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: setAvatarRequestModel
+    },
+      options);
+    }
+  
+const postUserCurrentChangePassword = (
     changePasswordCurrentUserRequestModel: ChangePasswordCurrentUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/current/change-password`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: changePasswordCurrentUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const getUserCurrentConfiguration = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<CurrenUserConfigurationResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/user/current/configuration`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getUserCurrentLoginProviders = (
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserExternalLoginProviderModel[]>(
-      {
-        url: `/umbraco/management/api/v1/user/current/login-providers`,
-        method: "GET",
-      },
-      options
-    );
-  };
-
-  const getUserCurrentPermissions = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/current/change-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: changePasswordCurrentUserRequestModel
+    },
+      options);
+    }
+  
+const getUserCurrentConfiguration = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<CurrenUserConfigurationResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current/configuration`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrentLoginProviders = (
+    
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserExternalLoginProviderModel[]>(
+      {url: `/umbraco/management/api/v1/user/current/login-providers`, method: 'GET'
+    },
+      options);
+    }
+  
+const getUserCurrentPermissions = (
     params?: GetUserCurrentPermissionsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserPermissionsResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/user/current/permissions`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getUserCurrentPermissionsDocument = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserPermissionsResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current/permissions`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserCurrentPermissionsDocument = (
     params?: GetUserCurrentPermissionsDocumentParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserPermissionsResponseModel[]>(
-      {
-        url: `/umbraco/management/api/v1/user/current/permissions/document`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getUserCurrentPermissionsMedia = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserPermissionsResponseModel[]>(
+      {url: `/umbraco/management/api/v1/user/current/permissions/document`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getUserCurrentPermissionsMedia = (
     params?: GetUserCurrentPermissionsMediaParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<UserPermissionsResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/user/current/permissions/media`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const postUserDisable = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<UserPermissionsResponseModel>(
+      {url: `/umbraco/management/api/v1/user/current/permissions/media`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postUserDisable = (
     disableUserRequestModel: DisableUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/disable`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: disableUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserEnable = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/disable`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: disableUserRequestModel
+    },
+      options);
+    }
+  
+const postUserEnable = (
     enableUserRequestModel: EnableUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/enable`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: enableUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserInvite = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/enable`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: enableUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInvite = (
     inviteUserRequestModel: InviteUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/invite`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: inviteUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserInviteCreatePassword = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/invite`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: inviteUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInviteCreatePassword = (
     createInitialPasswordUserRequestModel: CreateInitialPasswordUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/invite/create-password`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createInitialPasswordUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserInviteResend = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/invite/create-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createInitialPasswordUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInviteResend = (
     resendInviteUserRequestModel: ResendInviteUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/invite/resend`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: resendInviteUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserInviteVerify = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/invite/resend`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: resendInviteUserRequestModel
+    },
+      options);
+    }
+  
+const postUserInviteVerify = (
     verifyInviteUserRequestModel: VerifyInviteUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<VerifyInviteUserResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/user/invite/verify`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: verifyInviteUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserSetUserGroups = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<VerifyInviteUserResponseModel>(
+      {url: `/umbraco/management/api/v1/user/invite/verify`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: verifyInviteUserRequestModel
+    },
+      options);
+    }
+  
+const postUserSetUserGroups = (
     updateUserGroupsOnUserRequestModel: UpdateUserGroupsOnUserRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/set-user-groups`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: updateUserGroupsOnUserRequestModel,
-      },
-      options
-    );
-  };
-
-  const postUserUnlock = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/set-user-groups`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserGroupsOnUserRequestModel
+    },
+      options);
+    }
+  
+const postUserUnlock = (
     unlockUsersRequestModel: UnlockUsersRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/user/unlock`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: unlockUsersRequestModel,
-      },
-      options
-    );
-  };
-
-  const getItemWebhook = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/user/unlock`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: unlockUsersRequestModel
+    },
+      options);
+    }
+  
+const getItemWebhook = (
     params?: GetItemWebhookParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<WebhookItemResponseModel[]>(
-      { url: `/umbraco/management/api/v1/item/webhook`, method: "GET", params },
-      options
-    );
-  };
-
-  const getWebhook = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<WebhookItemResponseModel[]>(
+      {url: `/umbraco/management/api/v1/item/webhook`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getWebhook = (
     params?: GetWebhookParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedWebhookResponseModel>(
-      { url: `/umbraco/management/api/v1/webhook`, method: "GET", params },
-      options
-    );
-  };
-
-  const postWebhook = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postWebhook = (
     createWebhookRequestModel: CreateWebhookRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/webhook`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: createWebhookRequestModel,
-      },
-      options
-    );
-  };
-
-  const getWebhookById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/webhook`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createWebhookRequestModel
+    },
+      options);
+    }
+  
+const getWebhookById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<WebhookResponseModel>(
-      { url: `/umbraco/management/api/v1/webhook/${id}`, method: "GET" },
-      options
-    );
-  };
-
-  const deleteWebhookById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<WebhookResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteWebhookById = (
     id: string,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      { url: `/umbraco/management/api/v1/webhook/${id}`, method: "DELETE" },
-      options
-    );
-  };
-
-  const putWebhookById = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/webhook/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putWebhookById = (
     id: string,
     updateWebhookRequestModel: UpdateWebhookRequestModel,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<void>(
-      {
-        url: `/umbraco/management/api/v1/webhook/${id}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        data: updateWebhookRequestModel,
-      },
-      options
-    );
-  };
-
-  const getWebhookByIdLogs = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<void>(
+      {url: `/umbraco/management/api/v1/webhook/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateWebhookRequestModel
+    },
+      options);
+    }
+  
+const getWebhookByIdLogs = (
     id: string,
     params?: GetWebhookByIdLogsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedWebhookLogResponseModel>(
-      {
-        url: `/umbraco/management/api/v1/webhook/${id}/logs`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getWebhookEvents = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookLogResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook/${id}/logs`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getWebhookEvents = (
     params?: GetWebhookEventsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedWebhookEventModel>(
-      {
-        url: `/umbraco/management/api/v1/webhook/events`,
-        method: "GET",
-        params,
-      },
-      options
-    );
-  };
-
-  const getWebhookLogs = (
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookEventModel>(
+      {url: `/umbraco/management/api/v1/webhook/events`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getWebhookLogs = (
     params?: GetWebhookLogsParams,
-    options?: SecondParameter<typeof UmbracoManagementClient>
-  ) => {
-    return UmbracoManagementClient<PagedWebhookLogResponseModel>(
-      { url: `/umbraco/management/api/v1/webhook/logs`, method: "GET", params },
-      options
-    );
-  };
-
-  return {
-    getCulture,
-    postDataType,
-    getDataTypeById,
-    deleteDataTypeById,
-    putDataTypeById,
-    postDataTypeByIdCopy,
-    getDataTypeByIdIsUsed,
-    putDataTypeByIdMove,
-    getDataTypeByIdReferences,
-    getDataTypeConfiguration,
-    postDataTypeFolder,
-    getDataTypeFolderById,
-    deleteDataTypeFolderById,
-    putDataTypeFolderById,
-    getFilterDataType,
-    getItemDataType,
-    getItemDataTypeSearch,
-    getTreeDataTypeAncestors,
-    getTreeDataTypeChildren,
-    getTreeDataTypeRoot,
-    getDictionary,
-    postDictionary,
-    getDictionaryById,
-    deleteDictionaryById,
-    putDictionaryById,
-    getDictionaryByIdExport,
-    putDictionaryByIdMove,
-    postDictionaryImport,
-    getItemDictionary,
-    getTreeDictionaryAncestors,
-    getTreeDictionaryChildren,
-    getTreeDictionaryRoot,
-    postDocumentBlueprint,
-    getDocumentBlueprintById,
-    deleteDocumentBlueprintById,
-    putDocumentBlueprintById,
-    putDocumentBlueprintByIdMove,
-    postDocumentBlueprintFolder,
-    getDocumentBlueprintFolderById,
-    deleteDocumentBlueprintFolderById,
-    putDocumentBlueprintFolderById,
-    postDocumentBlueprintFromDocument,
-    getItemDocumentBlueprint,
-    getTreeDocumentBlueprintAncestors,
-    getTreeDocumentBlueprintChildren,
-    getTreeDocumentBlueprintRoot,
-    postDocumentType,
-    getDocumentTypeById,
-    deleteDocumentTypeById,
-    putDocumentTypeById,
-    getDocumentTypeByIdAllowedChildren,
-    getDocumentTypeByIdBlueprint,
-    getDocumentTypeByIdCompositionReferences,
-    postDocumentTypeByIdCopy,
-    getDocumentTypeByIdExport,
-    putDocumentTypeByIdImport,
-    putDocumentTypeByIdMove,
-    getDocumentTypeAllowedAtRoot,
-    postDocumentTypeAvailableCompositions,
-    getDocumentTypeConfiguration,
-    postDocumentTypeFolder,
-    getDocumentTypeFolderById,
-    deleteDocumentTypeFolderById,
-    putDocumentTypeFolderById,
-    postDocumentTypeImport,
-    getItemDocumentType,
-    getItemDocumentTypeSearch,
-    getTreeDocumentTypeAncestors,
-    getTreeDocumentTypeChildren,
-    getTreeDocumentTypeRoot,
-    getDocumentVersion,
-    getDocumentVersionById,
-    putDocumentVersionByIdPreventCleanup,
-    postDocumentVersionByIdRollback,
-    getCollectionDocumentById,
-    postDocument,
-    getDocumentById,
-    deleteDocumentById,
-    putDocumentById,
-    getDocumentByIdAuditLog,
-    postDocumentByIdCopy,
-    getDocumentByIdDomains,
-    putDocumentByIdDomains,
-    putDocumentByIdMove,
-    putDocumentByIdMoveToRecycleBin,
-    getDocumentByIdNotifications,
-    putDocumentByIdNotifications,
-    postDocumentByIdPublicAccess,
-    deleteDocumentByIdPublicAccess,
-    getDocumentByIdPublicAccess,
-    putDocumentByIdPublicAccess,
-    putDocumentByIdPublish,
-    putDocumentByIdPublishWithDescendants,
-    getDocumentByIdPublished,
-    getDocumentByIdReferencedBy,
-    getDocumentByIdReferencedDescendants,
-    putDocumentByIdUnpublish,
-    putDocumentByIdValidate,
-    putUmbracoManagementApiV11DocumentByIdValidate11,
-    getDocumentAreReferenced,
-    getDocumentConfiguration,
-    putDocumentSort,
-    getDocumentUrls,
-    postDocumentValidate,
-    getItemDocument,
-    getItemDocumentSearch,
-    deleteRecycleBinDocument,
-    deleteRecycleBinDocumentById,
-    getRecycleBinDocumentByIdOriginalParent,
-    putRecycleBinDocumentByIdRestore,
-    getRecycleBinDocumentChildren,
-    getRecycleBinDocumentRoot,
-    getTreeDocumentAncestors,
-    getTreeDocumentChildren,
-    getTreeDocumentRoot,
-    postDynamicRootQuery,
-    getDynamicRootSteps,
-    getHealthCheckGroup,
-    getHealthCheckGroupByName,
-    postHealthCheckGroupByNameCheck,
-    postHealthCheckExecuteAction,
-    getHelp,
-    getImagingResizeUrls,
-    getImportAnalyze,
-    getIndexer,
-    getIndexerByIndexName,
-    postIndexerByIndexNameRebuild,
-    getInstallSettings,
-    postInstallSetup,
-    postInstallValidateDatabase,
-    getItemLanguage,
-    getItemLanguageDefault,
-    getLanguage,
-    postLanguage,
-    getLanguageByIsoCode,
-    deleteLanguageByIsoCode,
-    putLanguageByIsoCode,
-    getLogViewerLevel,
-    getLogViewerLevelCount,
-    getLogViewerLog,
-    getLogViewerMessageTemplate,
-    getLogViewerSavedSearch,
-    postLogViewerSavedSearch,
-    getLogViewerSavedSearchByName,
-    deleteLogViewerSavedSearchByName,
-    getLogViewerValidateLogsSize,
-    getManifestManifest,
-    getManifestManifestPrivate,
-    getManifestManifestPublic,
-    getItemMediaType,
-    getItemMediaTypeAllowed,
-    getItemMediaTypeFolders,
-    getItemMediaTypeSearch,
-    postMediaType,
-    getMediaTypeById,
-    deleteMediaTypeById,
-    putMediaTypeById,
-    getMediaTypeByIdAllowedChildren,
-    getMediaTypeByIdCompositionReferences,
-    postMediaTypeByIdCopy,
-    getMediaTypeByIdExport,
-    putMediaTypeByIdImport,
-    putMediaTypeByIdMove,
-    getMediaTypeAllowedAtRoot,
-    postMediaTypeAvailableCompositions,
-    getMediaTypeConfiguration,
-    postMediaTypeFolder,
-    getMediaTypeFolderById,
-    deleteMediaTypeFolderById,
-    putMediaTypeFolderById,
-    postMediaTypeImport,
-    getTreeMediaTypeAncestors,
-    getTreeMediaTypeChildren,
-    getTreeMediaTypeRoot,
-    getCollectionMedia,
-    getItemMedia,
-    getItemMediaSearch,
-    postMedia,
-    getMediaById,
-    deleteMediaById,
-    putMediaById,
-    getMediaByIdAuditLog,
-    putMediaByIdMove,
-    putMediaByIdMoveToRecycleBin,
-    getMediaByIdReferencedBy,
-    getMediaByIdReferencedDescendants,
-    putMediaByIdValidate,
-    getMediaAreReferenced,
-    getMediaConfiguration,
-    putMediaSort,
-    getMediaUrls,
-    postMediaValidate,
-    deleteRecycleBinMedia,
-    deleteRecycleBinMediaById,
-    getRecycleBinMediaByIdOriginalParent,
-    putRecycleBinMediaByIdRestore,
-    getRecycleBinMediaChildren,
-    getRecycleBinMediaRoot,
-    getTreeMediaAncestors,
-    getTreeMediaChildren,
-    getTreeMediaRoot,
-    getItemMemberGroup,
-    getMemberGroup,
-    postMemberGroup,
-    getMemberGroupById,
-    deleteMemberGroupById,
-    putMemberGroupById,
-    getTreeMemberGroupRoot,
-    getItemMemberType,
-    getItemMemberTypeSearch,
-    postMemberType,
-    getMemberTypeById,
-    deleteMemberTypeById,
-    putMemberTypeById,
-    getMemberTypeByIdCompositionReferences,
-    postMemberTypeByIdCopy,
-    postMemberTypeAvailableCompositions,
-    getMemberTypeConfiguration,
-    getTreeMemberTypeRoot,
-    getFilterMember,
-    getItemMember,
-    getItemMemberSearch,
-    postMember,
-    getMemberById,
-    deleteMemberById,
-    putMemberById,
-    putMemberByIdValidate,
-    getMemberConfiguration,
-    postMemberValidate,
-    postModelsBuilderBuild,
-    getModelsBuilderDashboard,
-    getModelsBuilderStatus,
-    getObjectTypes,
-    getOembedQuery,
-    postPackageByNameRunMigration,
-    getPackageConfiguration,
-    getPackageCreated,
-    postPackageCreated,
-    getPackageCreatedById,
-    deletePackageCreatedById,
-    putPackageCreatedById,
-    getPackageCreatedByIdDownload,
-    getPackageMigrationStatus,
-    getItemPartialView,
-    postPartialView,
-    getPartialViewByPath,
-    deletePartialViewByPath,
-    putPartialViewByPath,
-    putPartialViewByPathRename,
-    postPartialViewFolder,
-    getPartialViewFolderByPath,
-    deletePartialViewFolderByPath,
-    getPartialViewSnippet,
-    getPartialViewSnippetById,
-    getTreePartialViewAncestors,
-    getTreePartialViewChildren,
-    getTreePartialViewRoot,
-    deletePreview,
-    postPreview,
-    getProfilingStatus,
-    putProfilingStatus,
-    getPropertyTypeIsUsed,
-    postPublishedCacheCollect,
-    postPublishedCacheRebuild,
-    postPublishedCacheReload,
-    getPublishedCacheStatus,
-    getRedirectManagement,
-    getRedirectManagementById,
-    deleteRedirectManagementById,
-    getRedirectManagementStatus,
-    postRedirectManagementStatus,
-    getItemRelationType,
-    getRelationType,
-    getRelationTypeById,
-    getRelationByRelationTypeId,
-    getItemScript,
-    postScript,
-    getScriptByPath,
-    deleteScriptByPath,
-    putScriptByPath,
-    putScriptByPathRename,
-    postScriptFolder,
-    getScriptFolderByPath,
-    deleteScriptFolderByPath,
-    getTreeScriptAncestors,
-    getTreeScriptChildren,
-    getTreeScriptRoot,
-    getSearcher,
-    getSearcherBySearcherNameQuery,
-    getSecurityConfiguration,
-    postSecurityForgotPassword,
-    postSecurityForgotPasswordReset,
-    postSecurityForgotPasswordVerify,
-    getSegment,
-    getServerConfiguration,
-    getServerInformation,
-    getServerStatus,
-    getServerTroubleshooting,
-    getServerUpgradeCheck,
-    getItemStaticFile,
-    getTreeStaticFileAncestors,
-    getTreeStaticFileChildren,
-    getTreeStaticFileRoot,
-    getItemStylesheet,
-    postStylesheet,
-    getStylesheetByPath,
-    deleteStylesheetByPath,
-    putStylesheetByPath,
-    putStylesheetByPathRename,
-    postStylesheetFolder,
-    getStylesheetFolderByPath,
-    deleteStylesheetFolderByPath,
-    getTreeStylesheetAncestors,
-    getTreeStylesheetChildren,
-    getTreeStylesheetRoot,
-    getTag,
-    getTelemetry,
-    getTelemetryLevel,
-    postTelemetryLevel,
-    getItemTemplate,
-    getItemTemplateSearch,
-    postTemplate,
-    getTemplateById,
-    deleteTemplateById,
-    putTemplateById,
-    getTemplateConfiguration,
-    postTemplateQueryExecute,
-    getTemplateQuerySettings,
-    getTreeTemplateAncestors,
-    getTreeTemplateChildren,
-    getTreeTemplateRoot,
-    postTemporaryFile,
-    getTemporaryFileById,
-    deleteTemporaryFileById,
-    getTemporaryFileConfiguration,
-    postUpgradeAuthorize,
-    getUpgradeSettings,
-    postUserData,
-    getUserData,
-    putUserData,
-    getUserDataById,
-    getFilterUserGroup,
-    getItemUserGroup,
-    deleteUserGroup,
-    postUserGroup,
-    getUserGroup,
-    getUserGroupById,
-    deleteUserGroupById,
-    putUserGroupById,
-    deleteUserGroupByIdUsers,
-    postUserGroupByIdUsers,
-    getFilterUser,
-    getItemUser,
-    postUser,
-    deleteUser,
-    getUser,
-    getUserById,
-    deleteUserById,
-    putUserById,
-    getUserById2fa,
-    deleteUserById2faByProviderName,
-    getUserByIdCalculateStartNodes,
-    postUserByIdChangePassword,
-    postUserByIdClientCredentials,
-    getUserByIdClientCredentials,
-    deleteUserByIdClientCredentialsByClientId,
-    postUserByIdResetPassword,
-    deleteUserAvatarById,
-    postUserAvatarById,
-    getUserConfiguration,
-    getUserCurrent,
-    getUserCurrent2fa,
-    deleteUserCurrent2faByProviderName,
-    postUserCurrent2faByProviderName,
-    getUserCurrent2faByProviderName,
-    postUserCurrentAvatar,
-    postUserCurrentChangePassword,
-    getUserCurrentConfiguration,
-    getUserCurrentLoginProviders,
-    getUserCurrentPermissions,
-    getUserCurrentPermissionsDocument,
-    getUserCurrentPermissionsMedia,
-    postUserDisable,
-    postUserEnable,
-    postUserInvite,
-    postUserInviteCreatePassword,
-    postUserInviteResend,
-    postUserInviteVerify,
-    postUserSetUserGroups,
-    postUserUnlock,
-    getItemWebhook,
-    getWebhook,
-    postWebhook,
-    getWebhookById,
-    deleteWebhookById,
-    putWebhookById,
-    getWebhookByIdLogs,
-    getWebhookEvents,
-    getWebhookLogs,
-  };
-};
-export type GetCultureResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getCulture"]>>
->;
-export type PostDataTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postDataType"]>
-  >
->;
-export type GetDataTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getDataTypeById"]>
-  >
->;
-export type DeleteDataTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteDataTypeById"]>
-  >
->;
-export type PutDataTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putDataTypeById"]>
-  >
->;
-export type PostDataTypeByIdCopyResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDataTypeByIdCopy"]
-    >
-  >
->;
-export type GetDataTypeByIdIsUsedResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDataTypeByIdIsUsed"]
-    >
-  >
->;
-export type PutDataTypeByIdMoveResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDataTypeByIdMove"]
-    >
-  >
->;
-export type GetDataTypeByIdReferencesResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDataTypeByIdReferences"]
-    >
-  >
->;
-export type GetDataTypeConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDataTypeConfiguration"]
-    >
-  >
->;
-export type PostDataTypeFolderResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postDataTypeFolder"]>
-  >
->;
-export type GetDataTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDataTypeFolderById"]
-    >
-  >
->;
-export type DeleteDataTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteDataTypeFolderById"]
-    >
-  >
->;
-export type PutDataTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDataTypeFolderById"]
-    >
-  >
->;
-export type GetFilterDataTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getFilterDataType"]>
-  >
->;
-export type GetItemDataTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemDataType"]>
-  >
->;
-export type GetItemDataTypeSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemDataTypeSearch"]
-    >
-  >
->;
-export type GetTreeDataTypeAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDataTypeAncestors"]
-    >
-  >
->;
-export type GetTreeDataTypeChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDataTypeChildren"]
-    >
-  >
->;
-export type GetTreeDataTypeRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDataTypeRoot"]
-    >
-  >
->;
-export type GetDictionaryResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getDictionary"]>
-  >
->;
-export type PostDictionaryResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postDictionary"]>
-  >
->;
-export type GetDictionaryByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getDictionaryById"]>
-  >
->;
-export type DeleteDictionaryByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteDictionaryById"]
-    >
-  >
->;
-export type PutDictionaryByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putDictionaryById"]>
-  >
->;
-export type GetDictionaryByIdExportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDictionaryByIdExport"]
-    >
-  >
->;
-export type PutDictionaryByIdMoveResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDictionaryByIdMove"]
-    >
-  >
->;
-export type PostDictionaryImportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDictionaryImport"]
-    >
-  >
->;
-export type GetItemDictionaryResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemDictionary"]>
-  >
->;
-export type GetTreeDictionaryAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDictionaryAncestors"]
-    >
-  >
->;
-export type GetTreeDictionaryChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDictionaryChildren"]
-    >
-  >
->;
-export type GetTreeDictionaryRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDictionaryRoot"]
-    >
-  >
->;
-export type PostDocumentBlueprintResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentBlueprint"]
-    >
-  >
->;
-export type GetDocumentBlueprintByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentBlueprintById"]
-    >
-  >
->;
-export type DeleteDocumentBlueprintByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteDocumentBlueprintById"]
-    >
-  >
->;
-export type PutDocumentBlueprintByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentBlueprintById"]
-    >
-  >
->;
-export type PutDocumentBlueprintByIdMoveResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentBlueprintByIdMove"]
-    >
-  >
->;
-export type PostDocumentBlueprintFolderResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentBlueprintFolder"]
-    >
-  >
->;
-export type GetDocumentBlueprintFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getDocumentBlueprintFolderById"]
-    >
-  >
->;
-export type DeleteDocumentBlueprintFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["deleteDocumentBlueprintFolderById"]
-    >
-  >
->;
-export type PutDocumentBlueprintFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["putDocumentBlueprintFolderById"]
-    >
-  >
->;
-export type PostDocumentBlueprintFromDocumentResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postDocumentBlueprintFromDocument"]
-    >
-  >
->;
-export type GetItemDocumentBlueprintResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemDocumentBlueprint"]
-    >
-  >
->;
-export type GetTreeDocumentBlueprintAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getTreeDocumentBlueprintAncestors"]
-    >
-  >
->;
-export type GetTreeDocumentBlueprintChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getTreeDocumentBlueprintChildren"]
-    >
-  >
->;
-export type GetTreeDocumentBlueprintRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDocumentBlueprintRoot"]
-    >
-  >
->;
-export type PostDocumentTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postDocumentType"]>
-  >
->;
-export type GetDocumentTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentTypeById"]
-    >
-  >
->;
-export type DeleteDocumentTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteDocumentTypeById"]
-    >
-  >
->;
-export type PutDocumentTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentTypeById"]
-    >
-  >
->;
-export type GetDocumentTypeByIdAllowedChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getDocumentTypeByIdAllowedChildren"]
-    >
-  >
->;
-export type GetDocumentTypeByIdBlueprintResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentTypeByIdBlueprint"]
-    >
-  >
->;
-export type GetDocumentTypeByIdCompositionReferencesResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getDocumentTypeByIdCompositionReferences"]
-    >
-  >
->;
-export type PostDocumentTypeByIdCopyResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentTypeByIdCopy"]
-    >
-  >
->;
-export type GetDocumentTypeByIdExportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentTypeByIdExport"]
-    >
-  >
->;
-export type PutDocumentTypeByIdImportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentTypeByIdImport"]
-    >
-  >
->;
-export type PutDocumentTypeByIdMoveResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentTypeByIdMove"]
-    >
-  >
->;
-export type GetDocumentTypeAllowedAtRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentTypeAllowedAtRoot"]
-    >
-  >
->;
-export type PostDocumentTypeAvailableCompositionsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postDocumentTypeAvailableCompositions"]
-    >
-  >
->;
-export type GetDocumentTypeConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentTypeConfiguration"]
-    >
-  >
->;
-export type PostDocumentTypeFolderResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentTypeFolder"]
-    >
-  >
->;
-export type GetDocumentTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentTypeFolderById"]
-    >
-  >
->;
-export type DeleteDocumentTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteDocumentTypeFolderById"]
-    >
-  >
->;
-export type PutDocumentTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentTypeFolderById"]
-    >
-  >
->;
-export type PostDocumentTypeImportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentTypeImport"]
-    >
-  >
->;
-export type GetItemDocumentTypeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemDocumentType"]
-    >
-  >
->;
-export type GetItemDocumentTypeSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemDocumentTypeSearch"]
-    >
-  >
->;
-export type GetTreeDocumentTypeAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDocumentTypeAncestors"]
-    >
-  >
->;
-export type GetTreeDocumentTypeChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDocumentTypeChildren"]
-    >
-  >
->;
-export type GetTreeDocumentTypeRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDocumentTypeRoot"]
-    >
-  >
->;
-export type GetDocumentVersionResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getDocumentVersion"]>
-  >
->;
-export type GetDocumentVersionByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentVersionById"]
-    >
-  >
->;
-export type PutDocumentVersionByIdPreventCleanupResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["putDocumentVersionByIdPreventCleanup"]
-    >
-  >
->;
-export type PostDocumentVersionByIdRollbackResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postDocumentVersionByIdRollback"]
-    >
-  >
->;
-export type GetCollectionDocumentByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getCollectionDocumentById"]
-    >
-  >
->;
-export type PostDocumentResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postDocument"]>
-  >
->;
-export type GetDocumentByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getDocumentById"]>
-  >
->;
-export type DeleteDocumentByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteDocumentById"]>
-  >
->;
-export type PutDocumentByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putDocumentById"]>
-  >
->;
-export type GetDocumentByIdAuditLogResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentByIdAuditLog"]
-    >
-  >
->;
-export type PostDocumentByIdCopyResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentByIdCopy"]
-    >
-  >
->;
-export type GetDocumentByIdDomainsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentByIdDomains"]
-    >
-  >
->;
-export type PutDocumentByIdDomainsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentByIdDomains"]
-    >
-  >
->;
-export type PutDocumentByIdMoveResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentByIdMove"]
-    >
-  >
->;
-export type PutDocumentByIdMoveToRecycleBinResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["putDocumentByIdMoveToRecycleBin"]
-    >
-  >
->;
-export type GetDocumentByIdNotificationsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentByIdNotifications"]
-    >
-  >
->;
-export type PutDocumentByIdNotificationsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentByIdNotifications"]
-    >
-  >
->;
-export type PostDocumentByIdPublicAccessResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentByIdPublicAccess"]
-    >
-  >
->;
-export type DeleteDocumentByIdPublicAccessResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["deleteDocumentByIdPublicAccess"]
-    >
-  >
->;
-export type GetDocumentByIdPublicAccessResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentByIdPublicAccess"]
-    >
-  >
->;
-export type PutDocumentByIdPublicAccessResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentByIdPublicAccess"]
-    >
-  >
->;
-export type PutDocumentByIdPublishResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentByIdPublish"]
-    >
-  >
->;
-export type PutDocumentByIdPublishWithDescendantsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["putDocumentByIdPublishWithDescendants"]
-    >
-  >
->;
-export type GetDocumentByIdPublishedResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentByIdPublished"]
-    >
-  >
->;
-export type GetDocumentByIdReferencedByResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentByIdReferencedBy"]
-    >
-  >
->;
-export type GetDocumentByIdReferencedDescendantsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getDocumentByIdReferencedDescendants"]
-    >
-  >
->;
-export type PutDocumentByIdUnpublishResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentByIdUnpublish"]
-    >
-  >
->;
-export type PutDocumentByIdValidateResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putDocumentByIdValidate"]
-    >
-  >
->;
-export type PutUmbracoManagementApiV11DocumentByIdValidate11Result =
-  NonNullable<
-    Awaited<
-      ReturnType<
-        ReturnType<
-          typeof getUmbracoManagementAPI
-        >["putUmbracoManagementApiV11DocumentByIdValidate11"]
-      >
-    >
-  >;
-export type GetDocumentAreReferencedResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentAreReferenced"]
-    >
-  >
->;
-export type GetDocumentConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDocumentConfiguration"]
-    >
-  >
->;
-export type PutDocumentSortResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putDocumentSort"]>
-  >
->;
-export type GetDocumentUrlsResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getDocumentUrls"]>
-  >
->;
-export type PostDocumentValidateResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDocumentValidate"]
-    >
-  >
->;
-export type GetItemDocumentResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemDocument"]>
-  >
->;
-export type GetItemDocumentSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemDocumentSearch"]
-    >
-  >
->;
-export type DeleteRecycleBinDocumentResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteRecycleBinDocument"]
-    >
-  >
->;
-export type DeleteRecycleBinDocumentByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteRecycleBinDocumentById"]
-    >
-  >
->;
-export type GetRecycleBinDocumentByIdOriginalParentResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getRecycleBinDocumentByIdOriginalParent"]
-    >
-  >
->;
-export type PutRecycleBinDocumentByIdRestoreResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["putRecycleBinDocumentByIdRestore"]
-    >
-  >
->;
-export type GetRecycleBinDocumentChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getRecycleBinDocumentChildren"]
-    >
-  >
->;
-export type GetRecycleBinDocumentRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRecycleBinDocumentRoot"]
-    >
-  >
->;
-export type GetTreeDocumentAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDocumentAncestors"]
-    >
-  >
->;
-export type GetTreeDocumentChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDocumentChildren"]
-    >
-  >
->;
-export type GetTreeDocumentRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeDocumentRoot"]
-    >
-  >
->;
-export type PostDynamicRootQueryResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postDynamicRootQuery"]
-    >
-  >
->;
-export type GetDynamicRootStepsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getDynamicRootSteps"]
-    >
-  >
->;
-export type GetHealthCheckGroupResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getHealthCheckGroup"]
-    >
-  >
->;
-export type GetHealthCheckGroupByNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getHealthCheckGroupByName"]
-    >
-  >
->;
-export type PostHealthCheckGroupByNameCheckResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postHealthCheckGroupByNameCheck"]
-    >
-  >
->;
-export type PostHealthCheckExecuteActionResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postHealthCheckExecuteAction"]
-    >
-  >
->;
-export type GetHelpResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getHelp"]>>
->;
-export type GetImagingResizeUrlsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getImagingResizeUrls"]
-    >
-  >
->;
-export type GetImportAnalyzeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getImportAnalyze"]>
-  >
->;
-export type GetIndexerResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getIndexer"]>>
->;
-export type GetIndexerByIndexNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getIndexerByIndexName"]
-    >
-  >
->;
-export type PostIndexerByIndexNameRebuildResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postIndexerByIndexNameRebuild"]
-    >
-  >
->;
-export type GetInstallSettingsResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getInstallSettings"]>
-  >
->;
-export type PostInstallSetupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postInstallSetup"]>
-  >
->;
-export type PostInstallValidateDatabaseResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postInstallValidateDatabase"]
-    >
-  >
->;
-export type GetItemLanguageResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemLanguage"]>
-  >
->;
-export type GetItemLanguageDefaultResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemLanguageDefault"]
-    >
-  >
->;
-export type GetLanguageResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getLanguage"]>>
->;
-export type PostLanguageResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postLanguage"]>
-  >
->;
-export type GetLanguageByIsoCodeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getLanguageByIsoCode"]
-    >
-  >
->;
-export type DeleteLanguageByIsoCodeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteLanguageByIsoCode"]
-    >
-  >
->;
-export type PutLanguageByIsoCodeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putLanguageByIsoCode"]
-    >
-  >
->;
-export type GetLogViewerLevelResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getLogViewerLevel"]>
-  >
->;
-export type GetLogViewerLevelCountResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getLogViewerLevelCount"]
-    >
-  >
->;
-export type GetLogViewerLogResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getLogViewerLog"]>
-  >
->;
-export type GetLogViewerMessageTemplateResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getLogViewerMessageTemplate"]
-    >
-  >
->;
-export type GetLogViewerSavedSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getLogViewerSavedSearch"]
-    >
-  >
->;
-export type PostLogViewerSavedSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postLogViewerSavedSearch"]
-    >
-  >
->;
-export type GetLogViewerSavedSearchByNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getLogViewerSavedSearchByName"]
-    >
-  >
->;
-export type DeleteLogViewerSavedSearchByNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["deleteLogViewerSavedSearchByName"]
-    >
-  >
->;
-export type GetLogViewerValidateLogsSizeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getLogViewerValidateLogsSize"]
-    >
-  >
->;
-export type GetManifestManifestResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getManifestManifest"]
-    >
-  >
->;
-export type GetManifestManifestPrivateResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getManifestManifestPrivate"]
-    >
-  >
->;
-export type GetManifestManifestPublicResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getManifestManifestPublic"]
-    >
-  >
->;
-export type GetItemMediaTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemMediaType"]>
-  >
->;
-export type GetItemMediaTypeAllowedResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemMediaTypeAllowed"]
-    >
-  >
->;
-export type GetItemMediaTypeFoldersResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemMediaTypeFolders"]
-    >
-  >
->;
-export type GetItemMediaTypeSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemMediaTypeSearch"]
-    >
-  >
->;
-export type PostMediaTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postMediaType"]>
-  >
->;
-export type GetMediaTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getMediaTypeById"]>
-  >
->;
-export type DeleteMediaTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteMediaTypeById"]
-    >
-  >
->;
-export type PutMediaTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putMediaTypeById"]>
-  >
->;
-export type GetMediaTypeByIdAllowedChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getMediaTypeByIdAllowedChildren"]
-    >
-  >
->;
-export type GetMediaTypeByIdCompositionReferencesResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getMediaTypeByIdCompositionReferences"]
-    >
-  >
->;
-export type PostMediaTypeByIdCopyResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postMediaTypeByIdCopy"]
-    >
-  >
->;
-export type GetMediaTypeByIdExportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaTypeByIdExport"]
-    >
-  >
->;
-export type PutMediaTypeByIdImportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putMediaTypeByIdImport"]
-    >
-  >
->;
-export type PutMediaTypeByIdMoveResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putMediaTypeByIdMove"]
-    >
-  >
->;
-export type GetMediaTypeAllowedAtRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaTypeAllowedAtRoot"]
-    >
-  >
->;
-export type PostMediaTypeAvailableCompositionsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postMediaTypeAvailableCompositions"]
-    >
-  >
->;
-export type GetMediaTypeConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaTypeConfiguration"]
-    >
-  >
->;
-export type PostMediaTypeFolderResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postMediaTypeFolder"]
-    >
-  >
->;
-export type GetMediaTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaTypeFolderById"]
-    >
-  >
->;
-export type DeleteMediaTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteMediaTypeFolderById"]
-    >
-  >
->;
-export type PutMediaTypeFolderByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putMediaTypeFolderById"]
-    >
-  >
->;
-export type PostMediaTypeImportResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postMediaTypeImport"]
-    >
-  >
->;
-export type GetTreeMediaTypeAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeMediaTypeAncestors"]
-    >
-  >
->;
-export type GetTreeMediaTypeChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeMediaTypeChildren"]
-    >
-  >
->;
-export type GetTreeMediaTypeRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeMediaTypeRoot"]
-    >
-  >
->;
-export type GetCollectionMediaResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getCollectionMedia"]>
-  >
->;
-export type GetItemMediaResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemMedia"]>
-  >
->;
-export type GetItemMediaSearchResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemMediaSearch"]>
-  >
->;
-export type PostMediaResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postMedia"]>>
->;
-export type GetMediaByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getMediaById"]>
-  >
->;
-export type DeleteMediaByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteMediaById"]>
-  >
->;
-export type PutMediaByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putMediaById"]>
-  >
->;
-export type GetMediaByIdAuditLogResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaByIdAuditLog"]
-    >
-  >
->;
-export type PutMediaByIdMoveResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putMediaByIdMove"]>
-  >
->;
-export type PutMediaByIdMoveToRecycleBinResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putMediaByIdMoveToRecycleBin"]
-    >
-  >
->;
-export type GetMediaByIdReferencedByResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaByIdReferencedBy"]
-    >
-  >
->;
-export type GetMediaByIdReferencedDescendantsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getMediaByIdReferencedDescendants"]
-    >
-  >
->;
-export type PutMediaByIdValidateResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putMediaByIdValidate"]
-    >
-  >
->;
-export type GetMediaAreReferencedResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaAreReferenced"]
-    >
-  >
->;
-export type GetMediaConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMediaConfiguration"]
-    >
-  >
->;
-export type PutMediaSortResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putMediaSort"]>
-  >
->;
-export type GetMediaUrlsResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getMediaUrls"]>
-  >
->;
-export type PostMediaValidateResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postMediaValidate"]>
-  >
->;
-export type DeleteRecycleBinMediaResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteRecycleBinMedia"]
-    >
-  >
->;
-export type DeleteRecycleBinMediaByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteRecycleBinMediaById"]
-    >
-  >
->;
-export type GetRecycleBinMediaByIdOriginalParentResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getRecycleBinMediaByIdOriginalParent"]
-    >
-  >
->;
-export type PutRecycleBinMediaByIdRestoreResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["putRecycleBinMediaByIdRestore"]
-    >
-  >
->;
-export type GetRecycleBinMediaChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRecycleBinMediaChildren"]
-    >
-  >
->;
-export type GetRecycleBinMediaRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRecycleBinMediaRoot"]
-    >
-  >
->;
-export type GetTreeMediaAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeMediaAncestors"]
-    >
-  >
->;
-export type GetTreeMediaChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeMediaChildren"]
-    >
-  >
->;
-export type GetTreeMediaRootResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getTreeMediaRoot"]>
-  >
->;
-export type GetItemMemberGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemMemberGroup"]>
-  >
->;
-export type GetMemberGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getMemberGroup"]>
-  >
->;
-export type PostMemberGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postMemberGroup"]>
-  >
->;
-export type GetMemberGroupByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getMemberGroupById"]>
-  >
->;
-export type DeleteMemberGroupByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteMemberGroupById"]
-    >
-  >
->;
-export type PutMemberGroupByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putMemberGroupById"]>
-  >
->;
-export type GetTreeMemberGroupRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeMemberGroupRoot"]
-    >
-  >
->;
-export type GetItemMemberTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemMemberType"]>
-  >
->;
-export type GetItemMemberTypeSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemMemberTypeSearch"]
-    >
-  >
->;
-export type PostMemberTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postMemberType"]>
-  >
->;
-export type GetMemberTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getMemberTypeById"]>
-  >
->;
-export type DeleteMemberTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteMemberTypeById"]
-    >
-  >
->;
-export type PutMemberTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putMemberTypeById"]>
-  >
->;
-export type GetMemberTypeByIdCompositionReferencesResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getMemberTypeByIdCompositionReferences"]
-    >
-  >
->;
-export type PostMemberTypeByIdCopyResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postMemberTypeByIdCopy"]
-    >
-  >
->;
-export type PostMemberTypeAvailableCompositionsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postMemberTypeAvailableCompositions"]
-    >
-  >
->;
-export type GetMemberTypeConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMemberTypeConfiguration"]
-    >
-  >
->;
-export type GetTreeMemberTypeRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeMemberTypeRoot"]
-    >
-  >
->;
-export type GetFilterMemberResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getFilterMember"]>
-  >
->;
-export type GetItemMemberResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemMember"]>
-  >
->;
-export type GetItemMemberSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemMemberSearch"]
-    >
-  >
->;
-export type PostMemberResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postMember"]>>
->;
-export type GetMemberByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getMemberById"]>
-  >
->;
-export type DeleteMemberByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteMemberById"]>
-  >
->;
-export type PutMemberByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putMemberById"]>
-  >
->;
-export type PutMemberByIdValidateResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putMemberByIdValidate"]
-    >
-  >
->;
-export type GetMemberConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getMemberConfiguration"]
-    >
-  >
->;
-export type PostMemberValidateResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postMemberValidate"]>
-  >
->;
-export type PostModelsBuilderBuildResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postModelsBuilderBuild"]
-    >
-  >
->;
-export type GetModelsBuilderDashboardResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getModelsBuilderDashboard"]
-    >
-  >
->;
-export type GetModelsBuilderStatusResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getModelsBuilderStatus"]
-    >
-  >
->;
-export type GetObjectTypesResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getObjectTypes"]>
-  >
->;
-export type GetOembedQueryResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getOembedQuery"]>
-  >
->;
-export type PostPackageByNameRunMigrationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postPackageByNameRunMigration"]
-    >
-  >
->;
-export type GetPackageConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPackageConfiguration"]
-    >
-  >
->;
-export type GetPackageCreatedResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getPackageCreated"]>
-  >
->;
-export type PostPackageCreatedResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postPackageCreated"]>
-  >
->;
-export type GetPackageCreatedByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPackageCreatedById"]
-    >
-  >
->;
-export type DeletePackageCreatedByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deletePackageCreatedById"]
-    >
-  >
->;
-export type PutPackageCreatedByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putPackageCreatedById"]
-    >
-  >
->;
-export type GetPackageCreatedByIdDownloadResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getPackageCreatedByIdDownload"]
-    >
-  >
->;
-export type GetPackageMigrationStatusResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPackageMigrationStatus"]
-    >
-  >
->;
-export type GetItemPartialViewResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemPartialView"]>
-  >
->;
-export type PostPartialViewResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postPartialView"]>
-  >
->;
-export type GetPartialViewByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPartialViewByPath"]
-    >
-  >
->;
-export type DeletePartialViewByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deletePartialViewByPath"]
-    >
-  >
->;
-export type PutPartialViewByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putPartialViewByPath"]
-    >
-  >
->;
-export type PutPartialViewByPathRenameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putPartialViewByPathRename"]
-    >
-  >
->;
-export type PostPartialViewFolderResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postPartialViewFolder"]
-    >
-  >
->;
-export type GetPartialViewFolderByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPartialViewFolderByPath"]
-    >
-  >
->;
-export type DeletePartialViewFolderByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["deletePartialViewFolderByPath"]
-    >
-  >
->;
-export type GetPartialViewSnippetResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPartialViewSnippet"]
-    >
-  >
->;
-export type GetPartialViewSnippetByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPartialViewSnippetById"]
-    >
-  >
->;
-export type GetTreePartialViewAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreePartialViewAncestors"]
-    >
-  >
->;
-export type GetTreePartialViewChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreePartialViewChildren"]
-    >
-  >
->;
-export type GetTreePartialViewRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreePartialViewRoot"]
-    >
-  >
->;
-export type DeletePreviewResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deletePreview"]>
-  >
->;
-export type PostPreviewResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postPreview"]>>
->;
-export type GetProfilingStatusResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getProfilingStatus"]>
-  >
->;
-export type PutProfilingStatusResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putProfilingStatus"]>
-  >
->;
-export type GetPropertyTypeIsUsedResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPropertyTypeIsUsed"]
-    >
-  >
->;
-export type PostPublishedCacheCollectResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postPublishedCacheCollect"]
-    >
-  >
->;
-export type PostPublishedCacheRebuildResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postPublishedCacheRebuild"]
-    >
-  >
->;
-export type PostPublishedCacheReloadResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postPublishedCacheReload"]
-    >
-  >
->;
-export type GetPublishedCacheStatusResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getPublishedCacheStatus"]
-    >
-  >
->;
-export type GetRedirectManagementResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRedirectManagement"]
-    >
-  >
->;
-export type GetRedirectManagementByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRedirectManagementById"]
-    >
-  >
->;
-export type DeleteRedirectManagementByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteRedirectManagementById"]
-    >
-  >
->;
-export type GetRedirectManagementStatusResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRedirectManagementStatus"]
-    >
-  >
->;
-export type PostRedirectManagementStatusResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postRedirectManagementStatus"]
-    >
-  >
->;
-export type GetItemRelationTypeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemRelationType"]
-    >
-  >
->;
-export type GetRelationTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getRelationType"]>
-  >
->;
-export type GetRelationTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRelationTypeById"]
-    >
-  >
->;
-export type GetRelationByRelationTypeIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getRelationByRelationTypeId"]
-    >
-  >
->;
-export type GetItemScriptResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemScript"]>
-  >
->;
-export type PostScriptResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postScript"]>>
->;
-export type GetScriptByPathResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getScriptByPath"]>
-  >
->;
-export type DeleteScriptByPathResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteScriptByPath"]>
-  >
->;
-export type PutScriptByPathResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putScriptByPath"]>
-  >
->;
-export type PutScriptByPathRenameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putScriptByPathRename"]
-    >
-  >
->;
-export type PostScriptFolderResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postScriptFolder"]>
-  >
->;
-export type GetScriptFolderByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getScriptFolderByPath"]
-    >
-  >
->;
-export type DeleteScriptFolderByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteScriptFolderByPath"]
-    >
-  >
->;
-export type GetTreeScriptAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeScriptAncestors"]
-    >
-  >
->;
-export type GetTreeScriptChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeScriptChildren"]
-    >
-  >
->;
-export type GetTreeScriptRootResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getTreeScriptRoot"]>
-  >
->;
-export type GetSearcherResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getSearcher"]>>
->;
-export type GetSearcherBySearcherNameQueryResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getSearcherBySearcherNameQuery"]
-    >
-  >
->;
-export type GetSecurityConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getSecurityConfiguration"]
-    >
-  >
->;
-export type PostSecurityForgotPasswordResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postSecurityForgotPassword"]
-    >
-  >
->;
-export type PostSecurityForgotPasswordResetResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postSecurityForgotPasswordReset"]
-    >
-  >
->;
-export type PostSecurityForgotPasswordVerifyResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postSecurityForgotPasswordVerify"]
-    >
-  >
->;
-export type GetSegmentResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getSegment"]>>
->;
-export type GetServerConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getServerConfiguration"]
-    >
-  >
->;
-export type GetServerInformationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getServerInformation"]
-    >
-  >
->;
-export type GetServerStatusResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getServerStatus"]>
-  >
->;
-export type GetServerTroubleshootingResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getServerTroubleshooting"]
-    >
-  >
->;
-export type GetServerUpgradeCheckResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getServerUpgradeCheck"]
-    >
-  >
->;
-export type GetItemStaticFileResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemStaticFile"]>
-  >
->;
-export type GetTreeStaticFileAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeStaticFileAncestors"]
-    >
-  >
->;
-export type GetTreeStaticFileChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeStaticFileChildren"]
-    >
-  >
->;
-export type GetTreeStaticFileRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeStaticFileRoot"]
-    >
-  >
->;
-export type GetItemStylesheetResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemStylesheet"]>
-  >
->;
-export type PostStylesheetResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postStylesheet"]>
-  >
->;
-export type GetStylesheetByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getStylesheetByPath"]
-    >
-  >
->;
-export type DeleteStylesheetByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteStylesheetByPath"]
-    >
-  >
->;
-export type PutStylesheetByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putStylesheetByPath"]
-    >
-  >
->;
-export type PutStylesheetByPathRenameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["putStylesheetByPathRename"]
-    >
-  >
->;
-export type PostStylesheetFolderResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postStylesheetFolder"]
-    >
-  >
->;
-export type GetStylesheetFolderByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getStylesheetFolderByPath"]
-    >
-  >
->;
-export type DeleteStylesheetFolderByPathResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteStylesheetFolderByPath"]
-    >
-  >
->;
-export type GetTreeStylesheetAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeStylesheetAncestors"]
-    >
-  >
->;
-export type GetTreeStylesheetChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeStylesheetChildren"]
-    >
-  >
->;
-export type GetTreeStylesheetRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeStylesheetRoot"]
-    >
-  >
->;
-export type GetTagResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getTag"]>>
->;
-export type GetTelemetryResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getTelemetry"]>
-  >
->;
-export type GetTelemetryLevelResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getTelemetryLevel"]>
-  >
->;
-export type PostTelemetryLevelResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postTelemetryLevel"]>
-  >
->;
-export type GetItemTemplateResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemTemplate"]>
-  >
->;
-export type GetItemTemplateSearchResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getItemTemplateSearch"]
-    >
-  >
->;
-export type PostTemplateResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postTemplate"]>
-  >
->;
-export type GetTemplateByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getTemplateById"]>
-  >
->;
-export type DeleteTemplateByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteTemplateById"]>
-  >
->;
-export type PutTemplateByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putTemplateById"]>
-  >
->;
-export type GetTemplateConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTemplateConfiguration"]
-    >
-  >
->;
-export type PostTemplateQueryExecuteResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postTemplateQueryExecute"]
-    >
-  >
->;
-export type GetTemplateQuerySettingsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTemplateQuerySettings"]
-    >
-  >
->;
-export type GetTreeTemplateAncestorsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeTemplateAncestors"]
-    >
-  >
->;
-export type GetTreeTemplateChildrenResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeTemplateChildren"]
-    >
-  >
->;
-export type GetTreeTemplateRootResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTreeTemplateRoot"]
-    >
-  >
->;
-export type PostTemporaryFileResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postTemporaryFile"]>
-  >
->;
-export type GetTemporaryFileByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getTemporaryFileById"]
-    >
-  >
->;
-export type DeleteTemporaryFileByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteTemporaryFileById"]
-    >
-  >
->;
-export type GetTemporaryFileConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getTemporaryFileConfiguration"]
-    >
-  >
->;
-export type PostUpgradeAuthorizeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUpgradeAuthorize"]
-    >
-  >
->;
-export type GetUpgradeSettingsResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUpgradeSettings"]>
-  >
->;
-export type PostUserDataResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUserData"]>
-  >
->;
-export type GetUserDataResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserData"]>>
->;
-export type PutUserDataResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putUserData"]>>
->;
-export type GetUserDataByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserDataById"]>
-  >
->;
-export type GetFilterUserGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getFilterUserGroup"]>
-  >
->;
-export type GetItemUserGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemUserGroup"]>
-  >
->;
-export type DeleteUserGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteUserGroup"]>
-  >
->;
-export type PostUserGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUserGroup"]>
-  >
->;
-export type GetUserGroupResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserGroup"]>
-  >
->;
-export type GetUserGroupByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserGroupById"]>
-  >
->;
-export type DeleteUserGroupByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteUserGroupById"]
-    >
-  >
->;
-export type PutUserGroupByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putUserGroupById"]>
-  >
->;
-export type DeleteUserGroupByIdUsersResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteUserGroupByIdUsers"]
-    >
-  >
->;
-export type PostUserGroupByIdUsersResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserGroupByIdUsers"]
-    >
-  >
->;
-export type GetFilterUserResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getFilterUser"]>
-  >
->;
-export type GetItemUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemUser"]>>
->;
-export type PostUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUser"]>>
->;
-export type DeleteUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteUser"]>>
->;
-export type GetUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUser"]>>
->;
-export type GetUserByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserById"]>>
->;
-export type DeleteUserByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteUserById"]>
-  >
->;
-export type PutUserByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putUserById"]>>
->;
-export type GetUserById2faResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserById2fa"]>
-  >
->;
-export type DeleteUserById2faByProviderNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["deleteUserById2faByProviderName"]
-    >
-  >
->;
-export type GetUserByIdCalculateStartNodesResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getUserByIdCalculateStartNodes"]
-    >
-  >
->;
-export type PostUserByIdChangePasswordResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserByIdChangePassword"]
-    >
-  >
->;
-export type PostUserByIdClientCredentialsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postUserByIdClientCredentials"]
-    >
-  >
->;
-export type GetUserByIdClientCredentialsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getUserByIdClientCredentials"]
-    >
-  >
->;
-export type DeleteUserByIdClientCredentialsByClientIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["deleteUserByIdClientCredentialsByClientId"]
-    >
-  >
->;
-export type PostUserByIdResetPasswordResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserByIdResetPassword"]
-    >
-  >
->;
-export type DeleteUserAvatarByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["deleteUserAvatarById"]
-    >
-  >
->;
-export type PostUserAvatarByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUserAvatarById"]>
-  >
->;
-export type GetUserConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getUserConfiguration"]
-    >
-  >
->;
-export type GetUserCurrentResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserCurrent"]>
-  >
->;
-export type GetUserCurrent2faResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getUserCurrent2fa"]>
-  >
->;
-export type DeleteUserCurrent2faByProviderNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["deleteUserCurrent2faByProviderName"]
-    >
-  >
->;
-export type PostUserCurrent2faByProviderNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postUserCurrent2faByProviderName"]
-    >
-  >
->;
-export type GetUserCurrent2faByProviderNameResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getUserCurrent2faByProviderName"]
-    >
-  >
->;
-export type PostUserCurrentAvatarResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserCurrentAvatar"]
-    >
-  >
->;
-export type PostUserCurrentChangePasswordResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["postUserCurrentChangePassword"]
-    >
-  >
->;
-export type GetUserCurrentConfigurationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getUserCurrentConfiguration"]
-    >
-  >
->;
-export type GetUserCurrentLoginProvidersResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getUserCurrentLoginProviders"]
-    >
-  >
->;
-export type GetUserCurrentPermissionsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["getUserCurrentPermissions"]
-    >
-  >
->;
-export type GetUserCurrentPermissionsDocumentResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getUserCurrentPermissionsDocument"]
-    >
-  >
->;
-export type GetUserCurrentPermissionsMediaResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getUmbracoManagementAPI
-      >["getUserCurrentPermissionsMedia"]
-    >
-  >
->;
-export type PostUserDisableResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUserDisable"]>
-  >
->;
-export type PostUserEnableResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUserEnable"]>
-  >
->;
-export type PostUserInviteResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUserInvite"]>
-  >
->;
-export type PostUserInviteCreatePasswordResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserInviteCreatePassword"]
-    >
-  >
->;
-export type PostUserInviteResendResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserInviteResend"]
-    >
-  >
->;
-export type PostUserInviteVerifyResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserInviteVerify"]
-    >
-  >
->;
-export type PostUserSetUserGroupsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getUmbracoManagementAPI>["postUserSetUserGroups"]
-    >
-  >
->;
-export type PostUserUnlockResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postUserUnlock"]>
-  >
->;
-export type GetItemWebhookResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getItemWebhook"]>
-  >
->;
-export type GetWebhookResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getWebhook"]>>
->;
-export type PostWebhookResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>["postWebhook"]>>
->;
-export type GetWebhookByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getWebhookById"]>
-  >
->;
-export type DeleteWebhookByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["deleteWebhookById"]>
-  >
->;
-export type PutWebhookByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["putWebhookById"]>
-  >
->;
-export type GetWebhookByIdLogsResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getWebhookByIdLogs"]>
-  >
->;
-export type GetWebhookEventsResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getWebhookEvents"]>
-  >
->;
-export type GetWebhookLogsResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getUmbracoManagementAPI>["getWebhookLogs"]>
-  >
->;
+ options?: SecondParameter<typeof UmbracoManagementClient>,) => {
+      return UmbracoManagementClient<PagedWebhookLogResponseModel>(
+      {url: `/umbraco/management/api/v1/webhook/logs`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+return {getCulture,postDataType,getDataTypeById,deleteDataTypeById,putDataTypeById,postDataTypeByIdCopy,getDataTypeByIdIsUsed,putDataTypeByIdMove,getDataTypeByIdReferences,getDataTypeConfiguration,postDataTypeFolder,getDataTypeFolderById,deleteDataTypeFolderById,putDataTypeFolderById,getFilterDataType,getItemDataType,getItemDataTypeSearch,getTreeDataTypeAncestors,getTreeDataTypeChildren,getTreeDataTypeRoot,getDictionary,postDictionary,getDictionaryById,deleteDictionaryById,putDictionaryById,getDictionaryByIdExport,putDictionaryByIdMove,postDictionaryImport,getItemDictionary,getTreeDictionaryAncestors,getTreeDictionaryChildren,getTreeDictionaryRoot,postDocumentBlueprint,getDocumentBlueprintById,deleteDocumentBlueprintById,putDocumentBlueprintById,putDocumentBlueprintByIdMove,postDocumentBlueprintFolder,getDocumentBlueprintFolderById,deleteDocumentBlueprintFolderById,putDocumentBlueprintFolderById,postDocumentBlueprintFromDocument,getItemDocumentBlueprint,getTreeDocumentBlueprintAncestors,getTreeDocumentBlueprintChildren,getTreeDocumentBlueprintRoot,postDocumentType,getDocumentTypeById,deleteDocumentTypeById,putDocumentTypeById,getDocumentTypeByIdAllowedChildren,getDocumentTypeByIdBlueprint,getDocumentTypeByIdCompositionReferences,postDocumentTypeByIdCopy,getDocumentTypeByIdExport,putDocumentTypeByIdImport,putDocumentTypeByIdMove,getDocumentTypeAllowedAtRoot,postDocumentTypeAvailableCompositions,getDocumentTypeConfiguration,postDocumentTypeFolder,getDocumentTypeFolderById,deleteDocumentTypeFolderById,putDocumentTypeFolderById,postDocumentTypeImport,getItemDocumentType,getItemDocumentTypeSearch,getTreeDocumentTypeAncestors,getTreeDocumentTypeChildren,getTreeDocumentTypeRoot,getDocumentVersion,getDocumentVersionById,putDocumentVersionByIdPreventCleanup,postDocumentVersionByIdRollback,getCollectionDocumentById,postDocument,getDocumentById,deleteDocumentById,putDocumentById,getDocumentByIdAuditLog,postDocumentByIdCopy,getDocumentByIdDomains,putDocumentByIdDomains,putDocumentByIdMove,putDocumentByIdMoveToRecycleBin,getDocumentByIdNotifications,putDocumentByIdNotifications,postDocumentByIdPublicAccess,deleteDocumentByIdPublicAccess,getDocumentByIdPublicAccess,putDocumentByIdPublicAccess,putDocumentByIdPublish,putDocumentByIdPublishWithDescendants,getDocumentByIdPublished,getDocumentByIdReferencedBy,getDocumentByIdReferencedDescendants,putDocumentByIdUnpublish,putDocumentByIdValidate,putUmbracoManagementApiV11DocumentByIdValidate11,getDocumentAreReferenced,getDocumentConfiguration,putDocumentSort,getDocumentUrls,postDocumentValidate,getItemDocument,getItemDocumentSearch,deleteRecycleBinDocument,deleteRecycleBinDocumentById,getRecycleBinDocumentByIdOriginalParent,putRecycleBinDocumentByIdRestore,getRecycleBinDocumentChildren,getRecycleBinDocumentRoot,getTreeDocumentAncestors,getTreeDocumentChildren,getTreeDocumentRoot,postDynamicRootQuery,getDynamicRootSteps,getHealthCheckGroup,getHealthCheckGroupByName,postHealthCheckGroupByNameCheck,postHealthCheckExecuteAction,getHelp,getImagingResizeUrls,getImportAnalyze,getIndexer,getIndexerByIndexName,postIndexerByIndexNameRebuild,getInstallSettings,postInstallSetup,postInstallValidateDatabase,getItemLanguage,getItemLanguageDefault,getLanguage,postLanguage,getLanguageByIsoCode,deleteLanguageByIsoCode,putLanguageByIsoCode,getLogViewerLevel,getLogViewerLevelCount,getLogViewerLog,getLogViewerMessageTemplate,getLogViewerSavedSearch,postLogViewerSavedSearch,getLogViewerSavedSearchByName,deleteLogViewerSavedSearchByName,getLogViewerValidateLogsSize,getManifestManifest,getManifestManifestPrivate,getManifestManifestPublic,getItemMediaType,getItemMediaTypeAllowed,getItemMediaTypeFolders,getItemMediaTypeSearch,postMediaType,getMediaTypeById,deleteMediaTypeById,putMediaTypeById,getMediaTypeByIdAllowedChildren,getMediaTypeByIdCompositionReferences,postMediaTypeByIdCopy,getMediaTypeByIdExport,putMediaTypeByIdImport,putMediaTypeByIdMove,getMediaTypeAllowedAtRoot,postMediaTypeAvailableCompositions,getMediaTypeConfiguration,postMediaTypeFolder,getMediaTypeFolderById,deleteMediaTypeFolderById,putMediaTypeFolderById,postMediaTypeImport,getTreeMediaTypeAncestors,getTreeMediaTypeChildren,getTreeMediaTypeRoot,getCollectionMedia,getItemMedia,getItemMediaSearch,postMedia,getMediaById,deleteMediaById,putMediaById,getMediaByIdAuditLog,putMediaByIdMove,putMediaByIdMoveToRecycleBin,getMediaByIdReferencedBy,getMediaByIdReferencedDescendants,putMediaByIdValidate,getMediaAreReferenced,getMediaConfiguration,putMediaSort,getMediaUrls,postMediaValidate,deleteRecycleBinMedia,deleteRecycleBinMediaById,getRecycleBinMediaByIdOriginalParent,putRecycleBinMediaByIdRestore,getRecycleBinMediaChildren,getRecycleBinMediaRoot,getTreeMediaAncestors,getTreeMediaChildren,getTreeMediaRoot,getItemMemberGroup,getMemberGroup,postMemberGroup,getMemberGroupById,deleteMemberGroupById,putMemberGroupById,getTreeMemberGroupRoot,getItemMemberType,getItemMemberTypeSearch,postMemberType,getMemberTypeById,deleteMemberTypeById,putMemberTypeById,getMemberTypeByIdCompositionReferences,postMemberTypeByIdCopy,postMemberTypeAvailableCompositions,getMemberTypeConfiguration,getTreeMemberTypeRoot,getFilterMember,getItemMember,getItemMemberSearch,postMember,getMemberById,deleteMemberById,putMemberById,putMemberByIdValidate,getMemberConfiguration,postMemberValidate,postModelsBuilderBuild,getModelsBuilderDashboard,getModelsBuilderStatus,getObjectTypes,getOembedQuery,postPackageByNameRunMigration,getPackageConfiguration,getPackageCreated,postPackageCreated,getPackageCreatedById,deletePackageCreatedById,putPackageCreatedById,getPackageCreatedByIdDownload,getPackageMigrationStatus,getItemPartialView,postPartialView,getPartialViewByPath,deletePartialViewByPath,putPartialViewByPath,putPartialViewByPathRename,postPartialViewFolder,getPartialViewFolderByPath,deletePartialViewFolderByPath,getPartialViewSnippet,getPartialViewSnippetById,getTreePartialViewAncestors,getTreePartialViewChildren,getTreePartialViewRoot,deletePreview,postPreview,getProfilingStatus,putProfilingStatus,getPropertyTypeIsUsed,postPublishedCacheCollect,postPublishedCacheRebuild,postPublishedCacheReload,getPublishedCacheStatus,getRedirectManagement,getRedirectManagementById,deleteRedirectManagementById,getRedirectManagementStatus,postRedirectManagementStatus,getItemRelationType,getRelationType,getRelationTypeById,getRelationByRelationTypeId,getItemScript,postScript,getScriptByPath,deleteScriptByPath,putScriptByPath,putScriptByPathRename,postScriptFolder,getScriptFolderByPath,deleteScriptFolderByPath,getTreeScriptAncestors,getTreeScriptChildren,getTreeScriptRoot,getSearcher,getSearcherBySearcherNameQuery,getSecurityConfiguration,postSecurityForgotPassword,postSecurityForgotPasswordReset,postSecurityForgotPasswordVerify,getSegment,getServerConfiguration,getServerInformation,getServerStatus,getServerTroubleshooting,getServerUpgradeCheck,getItemStaticFile,getTreeStaticFileAncestors,getTreeStaticFileChildren,getTreeStaticFileRoot,getItemStylesheet,postStylesheet,getStylesheetByPath,deleteStylesheetByPath,putStylesheetByPath,putStylesheetByPathRename,postStylesheetFolder,getStylesheetFolderByPath,deleteStylesheetFolderByPath,getTreeStylesheetAncestors,getTreeStylesheetChildren,getTreeStylesheetRoot,getTag,getTelemetry,getTelemetryLevel,postTelemetryLevel,getItemTemplate,getItemTemplateSearch,postTemplate,getTemplateById,deleteTemplateById,putTemplateById,getTemplateConfiguration,postTemplateQueryExecute,getTemplateQuerySettings,getTreeTemplateAncestors,getTreeTemplateChildren,getTreeTemplateRoot,postUpgradeAuthorize,getUpgradeSettings,postUserData,getUserData,putUserData,getUserDataById,getFilterUserGroup,getItemUserGroup,deleteUserGroup,postUserGroup,getUserGroup,getUserGroupById,deleteUserGroupById,putUserGroupById,deleteUserGroupByIdUsers,postUserGroupByIdUsers,getFilterUser,getItemUser,postUser,deleteUser,getUser,getUserById,deleteUserById,putUserById,getUserById2fa,deleteUserById2faByProviderName,getUserByIdCalculateStartNodes,postUserByIdChangePassword,postUserByIdClientCredentials,getUserByIdClientCredentials,deleteUserByIdClientCredentialsByClientId,postUserByIdResetPassword,deleteUserAvatarById,postUserAvatarById,getUserConfiguration,getUserCurrent,getUserCurrent2fa,deleteUserCurrent2faByProviderName,postUserCurrent2faByProviderName,getUserCurrent2faByProviderName,postUserCurrentAvatar,postUserCurrentChangePassword,getUserCurrentConfiguration,getUserCurrentLoginProviders,getUserCurrentPermissions,getUserCurrentPermissionsDocument,getUserCurrentPermissionsMedia,postUserDisable,postUserEnable,postUserInvite,postUserInviteCreatePassword,postUserInviteResend,postUserInviteVerify,postUserSetUserGroups,postUserUnlock,getItemWebhook,getWebhook,postWebhook,getWebhookById,deleteWebhookById,putWebhookById,getWebhookByIdLogs,getWebhookEvents,getWebhookLogs}};
+export type GetCultureResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getCulture']>>>
+export type PostDataTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDataType']>>>
+export type GetDataTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeById']>>>
+export type DeleteDataTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDataTypeById']>>>
+export type PutDataTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDataTypeById']>>>
+export type PostDataTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDataTypeByIdCopy']>>>
+export type GetDataTypeByIdIsUsedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeByIdIsUsed']>>>
+export type PutDataTypeByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDataTypeByIdMove']>>>
+export type GetDataTypeByIdReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeByIdReferences']>>>
+export type GetDataTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeConfiguration']>>>
+export type PostDataTypeFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDataTypeFolder']>>>
+export type GetDataTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDataTypeFolderById']>>>
+export type DeleteDataTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDataTypeFolderById']>>>
+export type PutDataTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDataTypeFolderById']>>>
+export type GetFilterDataTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterDataType']>>>
+export type GetItemDataTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDataType']>>>
+export type GetItemDataTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDataTypeSearch']>>>
+export type GetTreeDataTypeAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDataTypeAncestors']>>>
+export type GetTreeDataTypeChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDataTypeChildren']>>>
+export type GetTreeDataTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDataTypeRoot']>>>
+export type GetDictionaryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDictionary']>>>
+export type PostDictionaryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDictionary']>>>
+export type GetDictionaryByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDictionaryById']>>>
+export type DeleteDictionaryByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDictionaryById']>>>
+export type PutDictionaryByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDictionaryById']>>>
+export type GetDictionaryByIdExportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDictionaryByIdExport']>>>
+export type PutDictionaryByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDictionaryByIdMove']>>>
+export type PostDictionaryImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDictionaryImport']>>>
+export type GetItemDictionaryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDictionary']>>>
+export type GetTreeDictionaryAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDictionaryAncestors']>>>
+export type GetTreeDictionaryChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDictionaryChildren']>>>
+export type GetTreeDictionaryRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDictionaryRoot']>>>
+export type PostDocumentBlueprintResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentBlueprint']>>>
+export type GetDocumentBlueprintByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentBlueprintById']>>>
+export type DeleteDocumentBlueprintByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentBlueprintById']>>>
+export type PutDocumentBlueprintByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentBlueprintById']>>>
+export type PutDocumentBlueprintByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentBlueprintByIdMove']>>>
+export type PostDocumentBlueprintFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentBlueprintFolder']>>>
+export type GetDocumentBlueprintFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentBlueprintFolderById']>>>
+export type DeleteDocumentBlueprintFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentBlueprintFolderById']>>>
+export type PutDocumentBlueprintFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentBlueprintFolderById']>>>
+export type PostDocumentBlueprintFromDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentBlueprintFromDocument']>>>
+export type GetItemDocumentBlueprintResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentBlueprint']>>>
+export type GetTreeDocumentBlueprintAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentBlueprintAncestors']>>>
+export type GetTreeDocumentBlueprintChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentBlueprintChildren']>>>
+export type GetTreeDocumentBlueprintRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentBlueprintRoot']>>>
+export type PostDocumentTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentType']>>>
+export type GetDocumentTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeById']>>>
+export type DeleteDocumentTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentTypeById']>>>
+export type PutDocumentTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeById']>>>
+export type GetDocumentTypeByIdAllowedChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdAllowedChildren']>>>
+export type GetDocumentTypeByIdBlueprintResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdBlueprint']>>>
+export type GetDocumentTypeByIdCompositionReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdCompositionReferences']>>>
+export type PostDocumentTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeByIdCopy']>>>
+export type GetDocumentTypeByIdExportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeByIdExport']>>>
+export type PutDocumentTypeByIdImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeByIdImport']>>>
+export type PutDocumentTypeByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeByIdMove']>>>
+export type GetDocumentTypeAllowedAtRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeAllowedAtRoot']>>>
+export type PostDocumentTypeAvailableCompositionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeAvailableCompositions']>>>
+export type GetDocumentTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeConfiguration']>>>
+export type PostDocumentTypeFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeFolder']>>>
+export type GetDocumentTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentTypeFolderById']>>>
+export type DeleteDocumentTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentTypeFolderById']>>>
+export type PutDocumentTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentTypeFolderById']>>>
+export type PostDocumentTypeImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentTypeImport']>>>
+export type GetItemDocumentTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentType']>>>
+export type GetItemDocumentTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentTypeSearch']>>>
+export type GetTreeDocumentTypeAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentTypeAncestors']>>>
+export type GetTreeDocumentTypeChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentTypeChildren']>>>
+export type GetTreeDocumentTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentTypeRoot']>>>
+export type GetDocumentVersionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentVersion']>>>
+export type GetDocumentVersionByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentVersionById']>>>
+export type PutDocumentVersionByIdPreventCleanupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentVersionByIdPreventCleanup']>>>
+export type PostDocumentVersionByIdRollbackResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentVersionByIdRollback']>>>
+export type GetCollectionDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getCollectionDocumentById']>>>
+export type PostDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocument']>>>
+export type GetDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentById']>>>
+export type DeleteDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentById']>>>
+export type PutDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentById']>>>
+export type GetDocumentByIdAuditLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdAuditLog']>>>
+export type PostDocumentByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentByIdCopy']>>>
+export type GetDocumentByIdDomainsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdDomains']>>>
+export type PutDocumentByIdDomainsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdDomains']>>>
+export type PutDocumentByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdMove']>>>
+export type PutDocumentByIdMoveToRecycleBinResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdMoveToRecycleBin']>>>
+export type GetDocumentByIdNotificationsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdNotifications']>>>
+export type PutDocumentByIdNotificationsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdNotifications']>>>
+export type PostDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentByIdPublicAccess']>>>
+export type DeleteDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteDocumentByIdPublicAccess']>>>
+export type GetDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdPublicAccess']>>>
+export type PutDocumentByIdPublicAccessResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdPublicAccess']>>>
+export type PutDocumentByIdPublishResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdPublish']>>>
+export type PutDocumentByIdPublishWithDescendantsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdPublishWithDescendants']>>>
+export type GetDocumentByIdPublishedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdPublished']>>>
+export type GetDocumentByIdReferencedByResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdReferencedBy']>>>
+export type GetDocumentByIdReferencedDescendantsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentByIdReferencedDescendants']>>>
+export type PutDocumentByIdUnpublishResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdUnpublish']>>>
+export type PutDocumentByIdValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentByIdValidate']>>>
+export type PutUmbracoManagementApiV11DocumentByIdValidate11Result = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUmbracoManagementApiV11DocumentByIdValidate11']>>>
+export type GetDocumentAreReferencedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentAreReferenced']>>>
+export type GetDocumentConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentConfiguration']>>>
+export type PutDocumentSortResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putDocumentSort']>>>
+export type GetDocumentUrlsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDocumentUrls']>>>
+export type PostDocumentValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDocumentValidate']>>>
+export type GetItemDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocument']>>>
+export type GetItemDocumentSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemDocumentSearch']>>>
+export type DeleteRecycleBinDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinDocument']>>>
+export type DeleteRecycleBinDocumentByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinDocumentById']>>>
+export type GetRecycleBinDocumentByIdOriginalParentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinDocumentByIdOriginalParent']>>>
+export type PutRecycleBinDocumentByIdRestoreResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putRecycleBinDocumentByIdRestore']>>>
+export type GetRecycleBinDocumentChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinDocumentChildren']>>>
+export type GetRecycleBinDocumentRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinDocumentRoot']>>>
+export type GetTreeDocumentAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentAncestors']>>>
+export type GetTreeDocumentChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentChildren']>>>
+export type GetTreeDocumentRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeDocumentRoot']>>>
+export type PostDynamicRootQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postDynamicRootQuery']>>>
+export type GetDynamicRootStepsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getDynamicRootSteps']>>>
+export type GetHealthCheckGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getHealthCheckGroup']>>>
+export type GetHealthCheckGroupByNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getHealthCheckGroupByName']>>>
+export type PostHealthCheckGroupByNameCheckResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postHealthCheckGroupByNameCheck']>>>
+export type PostHealthCheckExecuteActionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postHealthCheckExecuteAction']>>>
+export type GetHelpResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getHelp']>>>
+export type GetImagingResizeUrlsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getImagingResizeUrls']>>>
+export type GetImportAnalyzeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getImportAnalyze']>>>
+export type GetIndexerResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getIndexer']>>>
+export type GetIndexerByIndexNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getIndexerByIndexName']>>>
+export type PostIndexerByIndexNameRebuildResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postIndexerByIndexNameRebuild']>>>
+export type GetInstallSettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getInstallSettings']>>>
+export type PostInstallSetupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postInstallSetup']>>>
+export type PostInstallValidateDatabaseResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postInstallValidateDatabase']>>>
+export type GetItemLanguageResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemLanguage']>>>
+export type GetItemLanguageDefaultResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemLanguageDefault']>>>
+export type GetLanguageResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLanguage']>>>
+export type PostLanguageResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postLanguage']>>>
+export type GetLanguageByIsoCodeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLanguageByIsoCode']>>>
+export type DeleteLanguageByIsoCodeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteLanguageByIsoCode']>>>
+export type PutLanguageByIsoCodeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putLanguageByIsoCode']>>>
+export type GetLogViewerLevelResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerLevel']>>>
+export type GetLogViewerLevelCountResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerLevelCount']>>>
+export type GetLogViewerLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerLog']>>>
+export type GetLogViewerMessageTemplateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerMessageTemplate']>>>
+export type GetLogViewerSavedSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerSavedSearch']>>>
+export type PostLogViewerSavedSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postLogViewerSavedSearch']>>>
+export type GetLogViewerSavedSearchByNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerSavedSearchByName']>>>
+export type DeleteLogViewerSavedSearchByNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteLogViewerSavedSearchByName']>>>
+export type GetLogViewerValidateLogsSizeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getLogViewerValidateLogsSize']>>>
+export type GetManifestManifestResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getManifestManifest']>>>
+export type GetManifestManifestPrivateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getManifestManifestPrivate']>>>
+export type GetManifestManifestPublicResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getManifestManifestPublic']>>>
+export type GetItemMediaTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaType']>>>
+export type GetItemMediaTypeAllowedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaTypeAllowed']>>>
+export type GetItemMediaTypeFoldersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaTypeFolders']>>>
+export type GetItemMediaTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaTypeSearch']>>>
+export type PostMediaTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaType']>>>
+export type GetMediaTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeById']>>>
+export type DeleteMediaTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMediaTypeById']>>>
+export type PutMediaTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeById']>>>
+export type GetMediaTypeByIdAllowedChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeByIdAllowedChildren']>>>
+export type GetMediaTypeByIdCompositionReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeByIdCompositionReferences']>>>
+export type PostMediaTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeByIdCopy']>>>
+export type GetMediaTypeByIdExportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeByIdExport']>>>
+export type PutMediaTypeByIdImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeByIdImport']>>>
+export type PutMediaTypeByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeByIdMove']>>>
+export type GetMediaTypeAllowedAtRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeAllowedAtRoot']>>>
+export type PostMediaTypeAvailableCompositionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeAvailableCompositions']>>>
+export type GetMediaTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeConfiguration']>>>
+export type PostMediaTypeFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeFolder']>>>
+export type GetMediaTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaTypeFolderById']>>>
+export type DeleteMediaTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMediaTypeFolderById']>>>
+export type PutMediaTypeFolderByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaTypeFolderById']>>>
+export type PostMediaTypeImportResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaTypeImport']>>>
+export type GetTreeMediaTypeAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaTypeAncestors']>>>
+export type GetTreeMediaTypeChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaTypeChildren']>>>
+export type GetTreeMediaTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaTypeRoot']>>>
+export type GetCollectionMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getCollectionMedia']>>>
+export type GetItemMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMedia']>>>
+export type GetItemMediaSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMediaSearch']>>>
+export type PostMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMedia']>>>
+export type GetMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaById']>>>
+export type DeleteMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMediaById']>>>
+export type PutMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaById']>>>
+export type GetMediaByIdAuditLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaByIdAuditLog']>>>
+export type PutMediaByIdMoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaByIdMove']>>>
+export type PutMediaByIdMoveToRecycleBinResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaByIdMoveToRecycleBin']>>>
+export type GetMediaByIdReferencedByResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaByIdReferencedBy']>>>
+export type GetMediaByIdReferencedDescendantsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaByIdReferencedDescendants']>>>
+export type PutMediaByIdValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaByIdValidate']>>>
+export type GetMediaAreReferencedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaAreReferenced']>>>
+export type GetMediaConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaConfiguration']>>>
+export type PutMediaSortResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMediaSort']>>>
+export type GetMediaUrlsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMediaUrls']>>>
+export type PostMediaValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMediaValidate']>>>
+export type DeleteRecycleBinMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinMedia']>>>
+export type DeleteRecycleBinMediaByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRecycleBinMediaById']>>>
+export type GetRecycleBinMediaByIdOriginalParentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinMediaByIdOriginalParent']>>>
+export type PutRecycleBinMediaByIdRestoreResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putRecycleBinMediaByIdRestore']>>>
+export type GetRecycleBinMediaChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinMediaChildren']>>>
+export type GetRecycleBinMediaRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRecycleBinMediaRoot']>>>
+export type GetTreeMediaAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaAncestors']>>>
+export type GetTreeMediaChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaChildren']>>>
+export type GetTreeMediaRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMediaRoot']>>>
+export type GetItemMemberGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberGroup']>>>
+export type GetMemberGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberGroup']>>>
+export type PostMemberGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberGroup']>>>
+export type GetMemberGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberGroupById']>>>
+export type DeleteMemberGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMemberGroupById']>>>
+export type PutMemberGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberGroupById']>>>
+export type GetTreeMemberGroupRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMemberGroupRoot']>>>
+export type GetItemMemberTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberType']>>>
+export type GetItemMemberTypeSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberTypeSearch']>>>
+export type PostMemberTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberType']>>>
+export type GetMemberTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberTypeById']>>>
+export type DeleteMemberTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMemberTypeById']>>>
+export type PutMemberTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberTypeById']>>>
+export type GetMemberTypeByIdCompositionReferencesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberTypeByIdCompositionReferences']>>>
+export type PostMemberTypeByIdCopyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberTypeByIdCopy']>>>
+export type PostMemberTypeAvailableCompositionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberTypeAvailableCompositions']>>>
+export type GetMemberTypeConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberTypeConfiguration']>>>
+export type GetTreeMemberTypeRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeMemberTypeRoot']>>>
+export type GetFilterMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterMember']>>>
+export type GetItemMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMember']>>>
+export type GetItemMemberSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemMemberSearch']>>>
+export type PostMemberResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMember']>>>
+export type GetMemberByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberById']>>>
+export type DeleteMemberByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteMemberById']>>>
+export type PutMemberByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberById']>>>
+export type PutMemberByIdValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putMemberByIdValidate']>>>
+export type GetMemberConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getMemberConfiguration']>>>
+export type PostMemberValidateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postMemberValidate']>>>
+export type PostModelsBuilderBuildResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postModelsBuilderBuild']>>>
+export type GetModelsBuilderDashboardResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getModelsBuilderDashboard']>>>
+export type GetModelsBuilderStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getModelsBuilderStatus']>>>
+export type GetObjectTypesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getObjectTypes']>>>
+export type GetOembedQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getOembedQuery']>>>
+export type PostPackageByNameRunMigrationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPackageByNameRunMigration']>>>
+export type GetPackageConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageConfiguration']>>>
+export type GetPackageCreatedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageCreated']>>>
+export type PostPackageCreatedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPackageCreated']>>>
+export type GetPackageCreatedByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageCreatedById']>>>
+export type DeletePackageCreatedByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePackageCreatedById']>>>
+export type PutPackageCreatedByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putPackageCreatedById']>>>
+export type GetPackageCreatedByIdDownloadResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageCreatedByIdDownload']>>>
+export type GetPackageMigrationStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPackageMigrationStatus']>>>
+export type GetItemPartialViewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemPartialView']>>>
+export type PostPartialViewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPartialView']>>>
+export type GetPartialViewByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewByPath']>>>
+export type DeletePartialViewByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePartialViewByPath']>>>
+export type PutPartialViewByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putPartialViewByPath']>>>
+export type PutPartialViewByPathRenameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putPartialViewByPathRename']>>>
+export type PostPartialViewFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPartialViewFolder']>>>
+export type GetPartialViewFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewFolderByPath']>>>
+export type DeletePartialViewFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePartialViewFolderByPath']>>>
+export type GetPartialViewSnippetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewSnippet']>>>
+export type GetPartialViewSnippetByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPartialViewSnippetById']>>>
+export type GetTreePartialViewAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreePartialViewAncestors']>>>
+export type GetTreePartialViewChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreePartialViewChildren']>>>
+export type GetTreePartialViewRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreePartialViewRoot']>>>
+export type DeletePreviewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deletePreview']>>>
+export type PostPreviewResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPreview']>>>
+export type GetProfilingStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getProfilingStatus']>>>
+export type PutProfilingStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putProfilingStatus']>>>
+export type GetPropertyTypeIsUsedResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPropertyTypeIsUsed']>>>
+export type PostPublishedCacheCollectResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPublishedCacheCollect']>>>
+export type PostPublishedCacheRebuildResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPublishedCacheRebuild']>>>
+export type PostPublishedCacheReloadResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postPublishedCacheReload']>>>
+export type GetPublishedCacheStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getPublishedCacheStatus']>>>
+export type GetRedirectManagementResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRedirectManagement']>>>
+export type GetRedirectManagementByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRedirectManagementById']>>>
+export type DeleteRedirectManagementByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteRedirectManagementById']>>>
+export type GetRedirectManagementStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRedirectManagementStatus']>>>
+export type PostRedirectManagementStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postRedirectManagementStatus']>>>
+export type GetItemRelationTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemRelationType']>>>
+export type GetRelationTypeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRelationType']>>>
+export type GetRelationTypeByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRelationTypeById']>>>
+export type GetRelationByRelationTypeIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getRelationByRelationTypeId']>>>
+export type GetItemScriptResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemScript']>>>
+export type PostScriptResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postScript']>>>
+export type GetScriptByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getScriptByPath']>>>
+export type DeleteScriptByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteScriptByPath']>>>
+export type PutScriptByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putScriptByPath']>>>
+export type PutScriptByPathRenameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putScriptByPathRename']>>>
+export type PostScriptFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postScriptFolder']>>>
+export type GetScriptFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getScriptFolderByPath']>>>
+export type DeleteScriptFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteScriptFolderByPath']>>>
+export type GetTreeScriptAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeScriptAncestors']>>>
+export type GetTreeScriptChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeScriptChildren']>>>
+export type GetTreeScriptRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeScriptRoot']>>>
+export type GetSearcherResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSearcher']>>>
+export type GetSearcherBySearcherNameQueryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSearcherBySearcherNameQuery']>>>
+export type GetSecurityConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSecurityConfiguration']>>>
+export type PostSecurityForgotPasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postSecurityForgotPassword']>>>
+export type PostSecurityForgotPasswordResetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postSecurityForgotPasswordReset']>>>
+export type PostSecurityForgotPasswordVerifyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postSecurityForgotPasswordVerify']>>>
+export type GetSegmentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getSegment']>>>
+export type GetServerConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerConfiguration']>>>
+export type GetServerInformationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerInformation']>>>
+export type GetServerStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerStatus']>>>
+export type GetServerTroubleshootingResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerTroubleshooting']>>>
+export type GetServerUpgradeCheckResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getServerUpgradeCheck']>>>
+export type GetItemStaticFileResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemStaticFile']>>>
+export type GetTreeStaticFileAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStaticFileAncestors']>>>
+export type GetTreeStaticFileChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStaticFileChildren']>>>
+export type GetTreeStaticFileRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStaticFileRoot']>>>
+export type GetItemStylesheetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemStylesheet']>>>
+export type PostStylesheetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postStylesheet']>>>
+export type GetStylesheetByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getStylesheetByPath']>>>
+export type DeleteStylesheetByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteStylesheetByPath']>>>
+export type PutStylesheetByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putStylesheetByPath']>>>
+export type PutStylesheetByPathRenameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putStylesheetByPathRename']>>>
+export type PostStylesheetFolderResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postStylesheetFolder']>>>
+export type GetStylesheetFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getStylesheetFolderByPath']>>>
+export type DeleteStylesheetFolderByPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteStylesheetFolderByPath']>>>
+export type GetTreeStylesheetAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStylesheetAncestors']>>>
+export type GetTreeStylesheetChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStylesheetChildren']>>>
+export type GetTreeStylesheetRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeStylesheetRoot']>>>
+export type GetTagResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTag']>>>
+export type GetTelemetryResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTelemetry']>>>
+export type GetTelemetryLevelResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTelemetryLevel']>>>
+export type PostTelemetryLevelResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postTelemetryLevel']>>>
+export type GetItemTemplateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemTemplate']>>>
+export type GetItemTemplateSearchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemTemplateSearch']>>>
+export type PostTemplateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postTemplate']>>>
+export type GetTemplateByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemplateById']>>>
+export type DeleteTemplateByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteTemplateById']>>>
+export type PutTemplateByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putTemplateById']>>>
+export type GetTemplateConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemplateConfiguration']>>>
+export type PostTemplateQueryExecuteResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postTemplateQueryExecute']>>>
+export type GetTemplateQuerySettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTemplateQuerySettings']>>>
+export type GetTreeTemplateAncestorsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeTemplateAncestors']>>>
+export type GetTreeTemplateChildrenResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeTemplateChildren']>>>
+export type GetTreeTemplateRootResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getTreeTemplateRoot']>>>
+export type PostUpgradeAuthorizeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUpgradeAuthorize']>>>
+export type GetUpgradeSettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUpgradeSettings']>>>
+export type PostUserDataResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserData']>>>
+export type GetUserDataResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserData']>>>
+export type PutUserDataResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUserData']>>>
+export type GetUserDataByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserDataById']>>>
+export type GetFilterUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterUserGroup']>>>
+export type GetItemUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemUserGroup']>>>
+export type DeleteUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserGroup']>>>
+export type PostUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserGroup']>>>
+export type GetUserGroupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserGroup']>>>
+export type GetUserGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserGroupById']>>>
+export type DeleteUserGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserGroupById']>>>
+export type PutUserGroupByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUserGroupById']>>>
+export type DeleteUserGroupByIdUsersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserGroupByIdUsers']>>>
+export type PostUserGroupByIdUsersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserGroupByIdUsers']>>>
+export type GetFilterUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getFilterUser']>>>
+export type GetItemUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemUser']>>>
+export type PostUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUser']>>>
+export type DeleteUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUser']>>>
+export type GetUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUser']>>>
+export type GetUserByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserById']>>>
+export type DeleteUserByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserById']>>>
+export type PutUserByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putUserById']>>>
+export type GetUserById2faResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserById2fa']>>>
+export type DeleteUserById2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserById2faByProviderName']>>>
+export type GetUserByIdCalculateStartNodesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserByIdCalculateStartNodes']>>>
+export type PostUserByIdChangePasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserByIdChangePassword']>>>
+export type PostUserByIdClientCredentialsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserByIdClientCredentials']>>>
+export type GetUserByIdClientCredentialsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserByIdClientCredentials']>>>
+export type DeleteUserByIdClientCredentialsByClientIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserByIdClientCredentialsByClientId']>>>
+export type PostUserByIdResetPasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserByIdResetPassword']>>>
+export type DeleteUserAvatarByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserAvatarById']>>>
+export type PostUserAvatarByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserAvatarById']>>>
+export type GetUserConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserConfiguration']>>>
+export type GetUserCurrentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrent']>>>
+export type GetUserCurrent2faResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrent2fa']>>>
+export type DeleteUserCurrent2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteUserCurrent2faByProviderName']>>>
+export type PostUserCurrent2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserCurrent2faByProviderName']>>>
+export type GetUserCurrent2faByProviderNameResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrent2faByProviderName']>>>
+export type PostUserCurrentAvatarResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserCurrentAvatar']>>>
+export type PostUserCurrentChangePasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserCurrentChangePassword']>>>
+export type GetUserCurrentConfigurationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentConfiguration']>>>
+export type GetUserCurrentLoginProvidersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentLoginProviders']>>>
+export type GetUserCurrentPermissionsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentPermissions']>>>
+export type GetUserCurrentPermissionsDocumentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentPermissionsDocument']>>>
+export type GetUserCurrentPermissionsMediaResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getUserCurrentPermissionsMedia']>>>
+export type PostUserDisableResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserDisable']>>>
+export type PostUserEnableResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserEnable']>>>
+export type PostUserInviteResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInvite']>>>
+export type PostUserInviteCreatePasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInviteCreatePassword']>>>
+export type PostUserInviteResendResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInviteResend']>>>
+export type PostUserInviteVerifyResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserInviteVerify']>>>
+export type PostUserSetUserGroupsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserSetUserGroups']>>>
+export type PostUserUnlockResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postUserUnlock']>>>
+export type GetItemWebhookResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getItemWebhook']>>>
+export type GetWebhookResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhook']>>>
+export type PostWebhookResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['postWebhook']>>>
+export type GetWebhookByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookById']>>>
+export type DeleteWebhookByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['deleteWebhookById']>>>
+export type PutWebhookByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['putWebhookById']>>>
+export type GetWebhookByIdLogsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookByIdLogs']>>>
+export type GetWebhookEventsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookEvents']>>>
+export type GetWebhookLogsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoManagementAPI>['getWebhookLogs']>>>

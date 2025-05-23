@@ -6,6 +6,10 @@ export const UmbManagementApiOrvalConfig = defineConfig({
     input: {
       target: "http://localhost:56472/umbraco/swagger/management/swagger.json",
       validation: false,
+      filters: {
+        mode: "exclude",
+        tags: ["Temporary File"],
+      },
     },
     output: {
       mode: "split",
@@ -31,6 +35,10 @@ export const UmbManagementApiOrvalConfig = defineConfig({
     input: {
       target: "http://localhost:56472/umbraco/swagger/management/swagger.json",
       validation: false,
+      filters: {
+        mode: "exclude",
+        tags: ["Temporary File"],
+      },
     },
     output: {
       mode: "split",

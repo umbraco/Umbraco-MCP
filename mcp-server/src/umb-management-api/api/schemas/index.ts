@@ -521,7 +521,6 @@ export * from './partialViewSnippetResponseModel.js';
 export * from './passwordConfigurationResponseModel.js';
 export * from './postDocumentVersionByIdRollbackParams.js';
 export * from './postRedirectManagementStatusParams.js';
-export * from './postTemporaryFileBody.js';
 export * from './problemDetails.js';
 export * from './problemDetailsBuilderModel.js';
 export * from './profilingStatusRequestModel.js';
