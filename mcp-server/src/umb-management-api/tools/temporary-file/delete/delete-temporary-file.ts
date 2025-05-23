@@ -1,6 +1,6 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { deleteTemporaryFileByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { deleteTemporaryFileByIdParams } from "@/umb-management-api/temporary-file/types.zod.js";
 
 const DeleteTemporaryFileTool = CreateUmbracoTool(
   "delete-temporary-file",

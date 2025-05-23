@@ -1,6 +1,6 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { getTemporaryFileByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { getTemporaryFileByIdParams } from "@/umb-management-api/temporary-file/types.zod.js";
 
 const GetTemporaryFileTool = CreateUmbracoTool(
   "get-temporary-file",

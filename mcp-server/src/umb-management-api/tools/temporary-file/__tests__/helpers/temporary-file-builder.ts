@@ -1,11 +1,11 @@
 import { UmbracoManagementClient } from "@umb-management-client";
-import { PostTemporaryFileBody } from "@/umb-management-api/schemas/index.js";
-import { postTemporaryFileBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { PostTemporaryFileBody } from "@/umb-management-api/temporary-file/schemas/index.js";
+import { postTemporaryFileBody } from "@/umb-management-api/temporary-file/types.zod.js";
 import { ReadStream } from "fs";
 import { v4 as uuidv4 } from "uuid";
 import { createReadStream } from "fs";
 import { join } from "path";
-import { EXAMPLE_IMAGE_PATH } from "../../../../../constants/constants.js";
+import { EXAMPLE_IMAGE_PATH } from "@/constants/constants.js";
 
 export class TemporaryFileBuilder {
   private model: Partial<PostTemporaryFileBody> = {
