@@ -1,8 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
-import { PostTemporaryFileBody } from "@/umb-management-api/schemas/index.js";
-import { postTemporaryFileBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
-import { v4 as uuidv4 } from "uuid";
+import { PostTemporaryFileBody } from "@/umb-management-api/temporary-file/schemas/index.js";
+import { postTemporaryFileBody } from "@/umb-management-api/temporary-file/types.zod.js";
 
 const CreateTemporaryFileTool = CreateUmbracoTool(
   "create-temporary-file",
