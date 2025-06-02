@@ -1,6 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { getDocumentByIdPublishedParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 const GetDocumentPublishTool = CreateUmbracoTool(
   "get-document-publish",
@@ -17,7 +18,8 @@ const GetDocumentPublishTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Read")
 );
 
 export default GetDocumentPublishTool;

@@ -1,6 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { deleteDocumentByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 const DeleteDocumentTool = CreateUmbracoTool(
   "delete-document",
@@ -17,7 +18,8 @@ const DeleteDocumentTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Delete")
 );
 
 export default DeleteDocumentTool;

@@ -5,6 +5,7 @@ import GetDocumentByIdTool from "./get/get-document-by-id.js";
 import GetDocumentDomainsTool from "./get/get-document-domains.js";
 import GetDocumentNotificationsTool from "./get/get-document-notifications.js";
 import GetDocumentPublicAccessTool from "./get/get-document-public-access.js";
+import GetDocumentAuditLogTool from "./get/get-document-audit-log.js";
 import GetDocumentPublishTool from "./get/get-document-publish.js";
 import GetDocumentConfigurationTool from "./get/get-document-configuration.js";
 import GetDocumentUrlsTool from "./get/get-document-urls.js";
@@ -29,37 +30,48 @@ import GetDocumentChildrenTool from "./items/get/get-children.js";
 import GetDocumentAncestorsTool from "./items/get/get-ancestors.js";
 import GetRecycleBinRootTool from "./items/get/get-recycle-bin-root.js";
 import GetRecycleBinChildrenTool from "./items/get/get-recycle-bin-children.js";
+import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { ToolDefinition } from "types/tool-definition.js";
 
-export const DocumentTools = [
-  DeleteDocumentTool,
-  DeleteFromRecycleBinTool,
-  DeleteDocumentPublicAccessTool,
-  GetDocumentByIdTool,
-  GetDocumentDomainsTool,
-  GetDocumentNotificationsTool,
-  GetDocumentPublicAccessTool,
-  GetDocumentPublishTool,
-  GetDocumentConfigurationTool,
-  GetDocumentUrlsTool,
-  SearchDocumentTool,
-  PostDocumentPublicAccessTool,
-  ValidateDocumentTool,
-  CopyDocumentTool,
-  CreateDocumentTool,
-  PutDocumentPublicAccessTool,
-  PutDocumentDomainsTool,
-  PutDocumentNotificationsTool,
-  PublishDocumentWithDescendantsTool,
-  UnpublishDocumentTool,
-  SortDocumentTool,
-  MoveDocumentTool,
-  PublishDocumentTool,
-  EmptyRecycleBinTool,
-  MoveToRecycleBinTool,
-  UpdateDocumentTool,
-  GetDocumentRootTool,
-  GetDocumentChildrenTool,
-  GetDocumentAncestorsTool,
-  GetRecycleBinRootTool,
-  GetRecycleBinChildrenTool,
-]; 
+export const DocumentTools = (user: CurrentUserResponseModel) => {
+  const tools: ToolDefinition<any>[] = [SearchDocumentTool(), ValidateDocumentTool()];
+
+  if (AuthorizationPolicies.TreeAccessDocuments(user)) {
+    tools.push(GetDocumentByIdTool());
+    tools.push(GetDocumentPublishTool());
+    tools.push(GetDocumentConfigurationTool());
+    tools.push(CopyDocumentTool());
+    tools.push(CreateDocumentTool());
+    tools.push(PostDocumentPublicAccessTool());
+    tools.push(DeleteDocumentTool());
+    tools.push(DeleteDocumentPublicAccessTool());
+    tools.push(GetDocumentUrlsTool());
+    tools.push(GetDocumentDomainsTool());
+    tools.push(GetDocumentAuditLogTool());
+    tools.push(GetDocumentPublicAccessTool());
+    tools.push(MoveDocumentTool());
+    tools.push(MoveToRecycleBinTool());
+    tools.push(GetDocumentNotificationsTool());
+    tools.push(PublishDocumentTool());
+    tools.push(PublishDocumentWithDescendantsTool());
+    tools.push(SortDocumentTool());
+    tools.push(UnpublishDocumentTool());
+    tools.push(UpdateDocumentTool());
+    tools.push(PutDocumentDomainsTool());
+    tools.push(PutDocumentNotificationsTool());
+    tools.push(PutDocumentPublicAccessTool());
+    tools.push(DeleteFromRecycleBinTool());
+    tools.push(EmptyRecycleBinTool());
+    tools.push(GetRecycleBinRootTool());
+    tools.push(GetRecycleBinChildrenTool());
+  }
+
+  if (AuthorizationPolicies.SectionAccessForContentTree(user)) {
+    tools.push(GetDocumentRootTool());
+    tools.push(GetDocumentChildrenTool());
+    tools.push(GetDocumentAncestorsTool());
+  }
+
+  return tools;
+}

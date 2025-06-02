@@ -1,17 +1,20 @@
 import { ZodRawShape } from "zod";
 import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolDefinition } from "../types/tool-definition.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 export const CreateUmbracoTool =
   <Args extends undefined | ZodRawShape = any>(
     name: string,
-    description: string,
+    description: string,    
     schema: Args,
-    handler: ToolCallback<Args>
+    handler: ToolCallback<Args>,
+    enabled?: (user: CurrentUserResponseModel) => boolean
   ): (() => ToolDefinition<Args>) =>
   () => ({
     name: name,
     description: description,
+    enabled: enabled,
     schema: schema,
     handler: (async (args: any, context: any) => {
       try {

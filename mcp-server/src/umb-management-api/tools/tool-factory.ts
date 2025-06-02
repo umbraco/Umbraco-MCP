@@ -19,63 +19,38 @@ import { RedirectTools } from "./redirect/index.js";
 import { UserGroupTools } from "./user-group/index.js";
 import { TemporaryFileTools } from "./temporary-file/index.js";
 import { MediaTools } from "./media/index.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { ToolDefinition } from "types/tool-definition.js";
 
-export function UmbracoToolFactory(server: McpServer) {
-  CultureTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  DataTypeTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  DictionaryTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  DocumentBlueprintTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  DocumentTypeTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  DocumentTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  MediaTypeTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  MemberGroupTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  MemberTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  LogViewerTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  LanguageTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  PropertyTypeTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  MemberTypeTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  WebhookTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  ServerTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  RedirectTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  UserGroupTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  TemporaryFileTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
-  MediaTools.map((tool) => tool()).forEach((tool) =>
-    server.tool(tool.name, tool.description, tool.schema, tool.handler)
-  );
+
+const mapTools = (server: McpServer,
+  user: CurrentUserResponseModel,
+  tools: ToolDefinition<any>[]) => {
+  return tools.forEach(tool => {
+    if (tool.enabled === undefined || tool.enabled(user)) {
+      server.tool(tool.name, tool.description, tool.schema, tool.handler);
+    }
+  })
+}
+
+export function UmbracoToolFactory(server: McpServer, user: CurrentUserResponseModel) {
+  mapTools(server, user, CultureTools());
+  mapTools(server, user, DataTypeTools(user));
+  mapTools(server, user, DictionaryTools(user));
+  mapTools(server, user, DocumentBlueprintTools(user));
+  mapTools(server, user, DocumentTypeTools(user));
+  mapTools(server, user, DocumentTools(user));
+  mapTools(server, user, MediaTypeTools);
+  mapTools(server, user, MemberGroupTools);
+  mapTools(server, user, MemberTools);
+  mapTools(server, user, LogViewerTools);
+  mapTools(server, user, LanguageTools);
+  mapTools(server, user, PropertyTypeTools);
+  mapTools(server, user, MemberTypeTools);
+  mapTools(server, user, WebhookTools);
+  mapTools(server, user, ServerTools);
+  mapTools(server, user, RedirectTools);
+  mapTools(server, user, UserGroupTools);
+  mapTools(server, user, TemporaryFileTools);
+  mapTools(server, user, MediaTools);
 }

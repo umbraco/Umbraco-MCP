@@ -5,6 +5,7 @@ import {
   putDocumentByIdPublicAccessBody,
 } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 const PutDocumentPublicAccessTool = CreateUmbracoTool(
   "put-document-public-access",
@@ -27,7 +28,8 @@ const PutDocumentPublicAccessTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.PublicAccess")
 );
 
 export default PutDocumentPublicAccessTool;

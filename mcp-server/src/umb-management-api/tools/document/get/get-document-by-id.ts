@@ -1,6 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { getDocumentByIdParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 const GetDocumentByIdTool = CreateUmbracoTool(
   "get-document-by-id",
@@ -19,7 +20,8 @@ const GetDocumentByIdTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Read")
 );
 
 export default GetDocumentByIdTool;

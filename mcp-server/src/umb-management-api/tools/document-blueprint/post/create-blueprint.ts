@@ -1,6 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { postDocumentBlueprintBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 const CreateDocumentBlueprintTool = CreateUmbracoTool(
   "create-document-blueprint",
@@ -17,7 +18,8 @@ const CreateDocumentBlueprintTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.CreateBlueprint")
 );
 
 export default CreateDocumentBlueprintTool;

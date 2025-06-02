@@ -5,6 +5,7 @@ import {
   putDocumentByIdBody,
 } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 const UpdateDocumentTool = CreateUmbracoTool(
   "update-document",
@@ -26,7 +27,8 @@ const UpdateDocumentTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Update")
 );
 
 export default UpdateDocumentTool;
