@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`data-type-tool-index should have tools when user meets TreeAccessDataTypes policy 1`] = `
+[
+  "get-data-type-search",
+  "get-references-data-type",
+  "is-used-data-type",
+  "get-data-type",
+  "get-data-type-root",
+  "get-data-type-children",
+  "get-data-type-ancestors",
+  "get-all-data-types",
+  "delete-data-type",
+  "create-data-type",
+  "update-data-type",
+  "copy-data-type",
+  "move-data-type",
+  "find-data-type",
+  "create-data-type-folder",
+  "delete-data-type-folder",
+  "get-data-type-folder",
+  "update-data-type-folder",
+]
+`;
+
+exports[`data-type-tool-index should have tools when user meets TreeAccessDocumentsOrMediaOrMembersOrContentTypes policy 1`] = `
+[
+  "get-data-type-search",
+  "get-references-data-type",
+  "is-used-data-type",
+  "get-data-type",
+  "find-data-type",
+]
+`;
+
+exports[`data-type-tool-index should have tools when user meets multiple policies 1`] = `
+[
+  "get-data-type-search",
+  "get-references-data-type",
+  "is-used-data-type",
+  "get-data-type",
+  "get-data-type-root",
+  "get-data-type-children",
+  "get-data-type-ancestors",
+  "get-all-data-types",
+  "delete-data-type",
+  "create-data-type",
+  "update-data-type",
+  "copy-data-type",
+  "move-data-type",
+  "find-data-type",
+  "create-data-type-folder",
+  "delete-data-type-folder",
+  "get-data-type-folder",
+  "update-data-type-folder",
+]
+`;
+
+exports[`data-type-tool-index should only have search tool when user meets no policies 1`] = `
+[
+  "get-data-type-search",
+]
+`;

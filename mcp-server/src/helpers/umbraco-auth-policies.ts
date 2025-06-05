@@ -1,8 +1,8 @@
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js"
 
-const AdminGroupKeyString = "E5E7F6C8-7F9C-4B5B-8D5D-9E1E5A4F7E4D";
+export const AdminGroupKeyString = "E5E7F6C8-7F9C-4B5B-8D5D-9E1E5A4F7E4D";
 
-const sections = {
+export const sections = {
     content: "Umb.Section.Content",
     forms: "Umb.Section.Forms",
     media: "Umb.Section.Media",
