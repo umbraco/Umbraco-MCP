@@ -21,13 +21,13 @@ import { TemporaryFileTools } from "./temporary-file/index.js";
 import { MediaTools } from "./media/index.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
-
+import env from "@/helpers/env.js";
 
 const mapTools = (server: McpServer,
   user: CurrentUserResponseModel,
   tools: ToolDefinition<any>[]) => {
   return tools.forEach(tool => {
-    if (tool.enabled === undefined || tool.enabled(user)) {
+    if ((tool.enabled === undefined || tool.enabled(user)) && !env.EXCLUDE_MANAGEMENT_TOOLS?.includes(tool.name)) {
       server.tool(tool.name, tool.description, tool.schema, tool.handler);
     }
   })

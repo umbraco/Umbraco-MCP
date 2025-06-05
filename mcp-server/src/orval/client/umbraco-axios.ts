@@ -1,11 +1,12 @@
 import qs from "qs";
 import Axios from "axios";
+import env from "@/helpers/env.js";
 
-const client_id = process.env.UMBRACO_CLIENT_ID;
-const client_secret = process.env.UMBRACO_CLIENT_SECRET;
+const client_id = env.UMBRACO_CLIENT_ID;
+const client_secret = env.UMBRACO_CLIENT_SECRET;
 const grant_type = "client_credentials";
 
-const baseURL = process.env.UMBRACO_BASE_URL;
+const baseURL = env.UMBRACO_BASE_URL;
 
 if (!baseURL)
   throw new Error("Missing required environment variable: UMBRACO_BASE_URL");
