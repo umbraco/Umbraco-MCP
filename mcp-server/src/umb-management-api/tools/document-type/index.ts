@@ -28,32 +28,37 @@ export const DocumentTypeTools = (user: CurrentUserResponseModel) => {
 
   const tools: ToolDefinition<any>[] = [];
 
+  tools.push(GetDocumentTypeTool());
+
   if (AuthorizationPolicies.TreeAccessDocumentsOrDocumentTypes(user)) {
-    tools.push(CreateDocumentTypeTool());
-    tools.push(CreateElementTypeTool());
-    tools.push(DeleteDocumentTypeTool());
-    tools.push(GetDocumentTypeTool());
+
+    tools.push(GetDocumentTypeConfigurationTool());
+    tools.push(GetDocumentTypeBlueprintTool());
+    tools.push(GetDocumentTypesByIdArrayTool());
+  }
+
+  if (AuthorizationPolicies.TreeAccessDocumentTypes(user)) {
+
+    tools.push(GetDocumentTypeAvailableCompositionsTool());
+    tools.push(GetDocumentTypeCompositionReferencesTool());
     tools.push(UpdateDocumentTypeTool());
     tools.push(CopyDocumentTypeTool());
     tools.push(MoveDocumentTypeTool());
+    tools.push(CreateDocumentTypeTool());
+    tools.push(DeleteDocumentTypeTool());
+    tools.push(CreateElementTypeTool());
     tools.push(GetIconsTool());
     tools.push(GetDocumentTypeAllowedChildrenTool());
     tools.push(GetAllDocumentTypesTool());
 
-    tools.push(GetDocumentTypeRootTool());
-    tools.push(GetDocumentTypeAncestorsTool());
-    tools.push(GetDocumentTypeChildrenTool());
-    tools.push(GetDocumentTypeAvailableCompositionsTool());
-    tools.push(GetDocumentTypeCompositionReferencesTool());
-    tools.push(GetDocumentTypeTool());
-    tools.push(GetDocumentTypeConfigurationTool());
-    tools.push(GetDocumentTypeBlueprintTool());
     tools.push(CreateDocumentTypeFolderTool());
     tools.push(DeleteDocumentTypeFolderTool());
     tools.push(GetDocumentTypeFolderTool());
     tools.push(UpdateDocumentTypeFolderTool());
-    tools.push(GetDocumentTypesByIdArrayTool());
-    tools.push(GetIconsTool());
+
+    tools.push(GetDocumentTypeRootTool());
+    tools.push(GetDocumentTypeAncestorsTool());
+    tools.push(GetDocumentTypeChildrenTool());
   }
 
   return tools;

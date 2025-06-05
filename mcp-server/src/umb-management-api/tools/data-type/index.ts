@@ -24,13 +24,9 @@ export const DataTypeTools = (user: CurrentUserResponseModel) => {
   const tools: ToolDefinition<any>[] = [GetDataTypeSearchTool()];
 
   if (AuthorizationPolicies.TreeAccessDocumentsOrMediaOrMembersOrContentTypes(user)) {
-    tools.push(UpdateDataTypeTool());
+
     tools.push(GetReferencesDataTypeTool());
-    tools.push(MoveDataTypeTool());
     tools.push(IsUsedDataTypeTool());
-    tools.push(DeleteDataTypeTool());
-    tools.push(CreateDataTypeTool());
-    tools.push(CopyDataTypeTool());
     tools.push(GetDataTypeTool());
   }
 
@@ -39,6 +35,13 @@ export const DataTypeTools = (user: CurrentUserResponseModel) => {
     tools.push(GetDataTypeChildrenTool());
     tools.push(GetDataTypeAncestorsTool());
     tools.push(GetAllDataTypesTool());
+
+    tools.push(DeleteDataTypeTool());
+    tools.push(CreateDataTypeTool());
+    tools.push(UpdateDataTypeTool());
+
+    tools.push(CopyDataTypeTool());
+    tools.push(MoveDataTypeTool());
   }
 
   if (AuthorizationPolicies.TreeAccessDocumentsOrDocumentTypes(user)) {

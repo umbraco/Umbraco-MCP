@@ -23,7 +23,6 @@ export const LogViewerTools = (user: CurrentUserResponseModel) => {
 
 
     tools.push(GetLogViewerTool())
-    tools.push(GetLogViewerTool());
     tools.push(GetLogViewerLevelTool());
     tools.push(GetLogViewerSearchTool());
     tools.push(GetLogViewerValidateLogsTool());

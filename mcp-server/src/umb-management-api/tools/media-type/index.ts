@@ -33,6 +33,13 @@ export const MediaTypeTools = (user: CurrentUserResponseModel) => {
     tools.push(DeleteMediaTypeFolderTool());
     tools.push(UpdateMediaTypeFolderTool());
 
+    tools.push(CreateMediaTypeTool());
+    tools.push(CopyMediaTypeTool());
+    tools.push(GetMediaTypeAvailableCompositionsTool());
+    tools.push(UpdateMediaTypeTool());
+    tools.push(MoveMediaTypeTool());
+    tools.push(DeleteMediaTypeTool());
+
 
     tools.push(GetMediaTypeRootTool());
     tools.push(GetMediaTypeChildrenTool());
@@ -48,14 +55,6 @@ export const MediaTypeTools = (user: CurrentUserResponseModel) => {
     tools.push(GetMediaTypeAllowedAtRootTool());
     tools.push(GetMediaTypeAllowedChildrenTool());
     tools.push(GetMediaTypeCompositionReferencesTool());
-
-
-    tools.push(CreateMediaTypeTool());
-    tools.push(CopyMediaTypeTool());
-    tools.push(GetMediaTypeAvailableCompositionsTool());
-    tools.push(UpdateMediaTypeTool());
-    tools.push(MoveMediaTypeTool());
-    tools.push(DeleteMediaTypeTool());
   }
 
 
