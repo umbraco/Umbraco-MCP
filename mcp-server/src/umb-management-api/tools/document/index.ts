@@ -35,7 +35,7 @@ import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js"
 import { ToolDefinition } from "types/tool-definition.js";
 
 export const DocumentTools = (user: CurrentUserResponseModel) => {
-  const tools: ToolDefinition<any>[] = [SearchDocumentTool(), ValidateDocumentTool()];
+  const tools: ToolDefinition<any>[] = [];
 
   if (AuthorizationPolicies.TreeAccessDocuments(user)) {
     tools.push(GetDocumentByIdTool());
@@ -65,6 +65,8 @@ export const DocumentTools = (user: CurrentUserResponseModel) => {
     tools.push(EmptyRecycleBinTool());
     tools.push(GetRecycleBinRootTool());
     tools.push(GetRecycleBinChildrenTool());
+    tools.push(SearchDocumentTool());
+    tools.push(ValidateDocumentTool());
   }
 
   if (AuthorizationPolicies.SectionAccessForContentTree(user)) {

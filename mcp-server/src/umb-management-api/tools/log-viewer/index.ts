@@ -7,15 +7,28 @@ import GetLogViewerSavedSearchByNameTool from "./get/get-log-viewer-saved-search
 import GetLogViewerLevelCountTool from "./get/get-log-viewer-level-count.js";
 import PostLogViewerSavedSearchTool from "./post/post-log-viewer-saved-search.js";
 import DeleteLogViewerSavedSearchByNameTool from "./delete/delete-log-viewer-saved-search-by-name.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { ToolDefinition } from "types/tool-definition.js";
+import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
 
-export const LogViewerTools = [
-  GetLogViewerTool,
-  GetLogViewerLevelTool,
-  GetLogViewerSearchTool,
-  GetLogViewerValidateLogsTool,
-  GetLogViewerMessageTemplateTool,
-  GetLogViewerSavedSearchByNameTool,
-  GetLogViewerLevelCountTool,
-  PostLogViewerSavedSearchTool,
-  DeleteLogViewerSavedSearchByNameTool,
-];
+export const LogViewerTools = (user: CurrentUserResponseModel) => {
+  const tools: ToolDefinition<any>[] = [];
+
+  if (AuthorizationPolicies.SectionAccessSettings(user)) {
+
+    tools.push(GetLogViewerSavedSearchByNameTool());
+    tools.push(GetLogViewerLevelCountTool());
+    tools.push(PostLogViewerSavedSearchTool());
+    tools.push(DeleteLogViewerSavedSearchByNameTool());
+
+
+    tools.push(GetLogViewerTool())
+    tools.push(GetLogViewerTool());
+    tools.push(GetLogViewerLevelTool());
+    tools.push(GetLogViewerSearchTool());
+    tools.push(GetLogViewerValidateLogsTool());
+    tools.push(GetLogViewerMessageTemplateTool());
+  }
+
+  return tools;
+}

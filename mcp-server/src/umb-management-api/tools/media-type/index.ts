@@ -18,26 +18,47 @@ import GetMediaTypeAvailableCompositionsTool from "./post/get-media-type-availab
 import UpdateMediaTypeTool from "./put/update-media-type.js";
 import MoveMediaTypeTool from "./put/move-media-type.js";
 import DeleteMediaTypeTool from "./delete/delete-media-type.js";
+import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { ToolDefinition } from "types/tool-definition.js";
 
-export const MediaTypeTools = [
-  GetMediaTypeConfigurationTool,
-  GetMediaTypeByIdTool,
-  GetMediaTypeByIdsTool,
-  GetAllowedMediaTypeTool,
-  GetMediaTypeAllowedAtRootTool,
-  GetMediaTypeAllowedChildrenTool,
-  GetMediaTypeCompositionReferencesTool,
-  GetMediaTypeRootTool,
-  GetMediaTypeChildrenTool,
-  GetMediaTypeAncestorsTool,
-  GetMediaTypeFolderTool,
-  CreateMediaTypeFolderTool,
-  DeleteMediaTypeFolderTool,
-  UpdateMediaTypeFolderTool,
-  CreateMediaTypeTool,
-  CopyMediaTypeTool,
-  GetMediaTypeAvailableCompositionsTool,
-  UpdateMediaTypeTool,
-  MoveMediaTypeTool,
-  DeleteMediaTypeTool,
-]; 
+export const MediaTypeTools = (user: CurrentUserResponseModel) => {
+
+  const tools: ToolDefinition<any>[] = [];
+
+
+  if (AuthorizationPolicies.TreeAccessMediaTypes(user)) {
+    tools.push(GetMediaTypeFolderTool());
+    tools.push(CreateMediaTypeFolderTool());
+    tools.push(DeleteMediaTypeFolderTool());
+    tools.push(UpdateMediaTypeFolderTool());
+
+
+    tools.push(GetMediaTypeRootTool());
+    tools.push(GetMediaTypeChildrenTool());
+    tools.push(GetMediaTypeAncestorsTool());
+  }
+
+  if (AuthorizationPolicies.TreeAccessMediaOrMediaTypes(user)) {
+
+    tools.push(GetMediaTypeByIdTool());
+    tools.push(GetMediaTypeByIdsTool());
+    tools.push(GetMediaTypeConfigurationTool());
+    tools.push(GetAllowedMediaTypeTool());
+    tools.push(GetMediaTypeAllowedAtRootTool());
+    tools.push(GetMediaTypeAllowedChildrenTool());
+    tools.push(GetMediaTypeCompositionReferencesTool());
+
+
+    tools.push(CreateMediaTypeTool());
+    tools.push(CopyMediaTypeTool());
+    tools.push(GetMediaTypeAvailableCompositionsTool());
+    tools.push(UpdateMediaTypeTool());
+    tools.push(MoveMediaTypeTool());
+    tools.push(DeleteMediaTypeTool());
+  }
+
+
+  return tools;
+
+} 

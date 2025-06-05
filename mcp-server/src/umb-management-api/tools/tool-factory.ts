@@ -34,23 +34,23 @@ const mapTools = (server: McpServer,
 }
 
 export function UmbracoToolFactory(server: McpServer, user: CurrentUserResponseModel) {
-  mapTools(server, user, CultureTools());
+  mapTools(server, user, CultureTools(user));
   mapTools(server, user, DataTypeTools(user));
   mapTools(server, user, DictionaryTools(user));
   mapTools(server, user, DocumentBlueprintTools(user));
   mapTools(server, user, DocumentTypeTools(user));
   mapTools(server, user, DocumentTools(user));
-  mapTools(server, user, MediaTypeTools);
-  mapTools(server, user, MemberGroupTools);
-  mapTools(server, user, MemberTools);
-  mapTools(server, user, LogViewerTools);
-  mapTools(server, user, LanguageTools);
-  mapTools(server, user, PropertyTypeTools);
-  mapTools(server, user, MemberTypeTools);
-  mapTools(server, user, WebhookTools);
-  mapTools(server, user, ServerTools);
-  mapTools(server, user, RedirectTools);
-  mapTools(server, user, UserGroupTools);
-  mapTools(server, user, TemporaryFileTools);
-  mapTools(server, user, MediaTools);
+  mapTools(server, user, MediaTools(user));
+  mapTools(server, user, MediaTypeTools(user));
+  mapTools(server, user, MemberGroupTools(user));
+  mapTools(server, user, MemberTools(user));
+  mapTools(server, user, MemberTypeTools(user));
+  mapTools(server, user, LogViewerTools(user));
+  mapTools(server, user, LanguageTools(user));
+  mapTools(server, user, PropertyTypeTools(user));
+  mapTools(server, user, WebhookTools(user));
+  mapTools(server, user, ServerTools(user));
+  mapTools(server, user, RedirectTools(user));
+  mapTools(server, user, UserGroupTools(user));
+  mapTools(server, user, TemporaryFileTools(user));
 }
