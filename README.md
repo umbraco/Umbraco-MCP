@@ -67,14 +67,16 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Culture</summary>
+<br>
 
 `get-culture` - gets all cultures avaliable to Umbraco
 </details>
 
 <details>
 <summary>Data Type</summary>
+<br>
 
-`get-data-type-search` - Search for data types  
+`get-data-type-search` - Search for data types
 `get-data-type` - Get a specific data type by ID  
 `get-data-type-references` - Get references to a data type  
 `is-used-data-type` - Check if a data type is in use  
@@ -95,8 +97,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Dictionary</summary>
+<br>
 
-`get-dictionary-search` - Search for dictionary items  
+`get-dictionary-search` - Search for dictionary items
 `get-dictionary-by-key` - Get a dictionary item by key  
 `create-dictionary` - Create a new dictionary item  
 `update-dictionary` - Update a dictionary item  
@@ -105,8 +108,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Document</summary>
+<br>
 
-`get-document-by-id` - Get a document by ID  
+`get-document-by-id` - Get a document by ID
 `get-document-publish` - Get document publish status  
 `get-document-configuration` - Get document configuration  
 `copy-document` - Copy a document  
@@ -142,8 +146,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Document Blueprint</summary>
+<br>
 
-`get-blueprint` - Get a document blueprint  
+`get-blueprint` - Get a document blueprint
 `delete-blueprint` - Delete a document blueprint  
 `update-blueprint` - Update a document blueprint  
 `create-blueprint` - Create a new document blueprint  
@@ -154,8 +159,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Document Type</summary>
+<br>
 
-`get-document-type` - Get a document type  
+`get-document-type` - Get a document type
 `get-document-type-configuration` - Get document type configuration  
 `get-document-type-blueprint` - Get document type blueprint  
 `get-document-type-by-id-array` - Get document types by IDs  
@@ -181,8 +187,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Language</summary>
+<br>
 
-`get-language-items` - Get all languages  
+`get-language-items` - Get all languages
 `get-default-language` - Get default language  
 `create-language` - Create a new language  
 `update-language` - Update a language  
@@ -192,8 +199,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Log Viewer</summary>
+<br>
 
-`get-log-viewer-saved-search-by-name` - Get saved search by name  
+`get-log-viewer-saved-search-by-name` - Get saved search by name
 `get-log-viewer-level-count` - Get log level counts  
 `post-log-viewer-saved-search` - Save a log search  
 `delete-log-viewer-saved-search-by-name` - Delete saved search  
@@ -206,8 +214,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Media</summary>
+<br>
 
-`get-media-by-id` - Get media by ID  
+`get-media-by-id` - Get media by ID
 `get-media-ancestors` - Get media ancestors  
 `get-media-children` - Get media children  
 `get-media-root` - Get root media items  
@@ -231,8 +240,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Media Type</summary>
+<br>
 
-`get-media-type-configuration` - Get media type configuration  
+`get-media-type-configuration` - Get media type configuration
 `get-media-type-by-id` - Get media type by ID  
 `get-media-type-by-ids` - Get media types by IDs  
 `get-allowed` - Get allowed media types  
@@ -256,8 +266,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Member</summary>
+<br>
 
-`get-member` - Get member by ID  
+`get-member` - Get member by ID
 `create-member` - Create a new member  
 `delete-member` - Delete a member  
 `update-member` - Update a member  
@@ -266,8 +277,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Member Group</summary>
+<br>
 
-`get-member-group` - Get member group  
+`get-member-group` - Get member group
 `get-member-group-by-id-array` - Get member groups by IDs  
 `create-member-group` - Create a new member group  
 `update-member-group` - Update a member group  
@@ -277,8 +289,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Member Type</summary>
+<br>
 
-`get-member-type-by-id` - Get member type by ID  
+`get-member-type-by-id` - Get member type by ID
 `create-member-type` - Create a new member type  
 `get-member-type-by-id-array` - Get member types by IDs  
 `delete-member-type` - Delete a member type  
@@ -292,8 +305,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Property Type</summary>
+<br>
 
-`get-property-type` - Get property type by ID  
+`get-property-type` - Get property type by ID
 `get-property-type-all-property-type-groups` - Get all property type groups  
 `create-property-type` - Create a new property type  
 `update-property-type` - Update a property type  
@@ -302,8 +316,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Redirect</summary>
+<br>
 
-`get-all-redirects` - Get all redirects  
+`get-all-redirects` - Get all redirects
 `get-redirect-by-id` - Get redirect by ID  
 `delete-redirect` - Delete a redirect  
 `get-redirect-status` - Get redirect status  
@@ -312,8 +327,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Server</summary>
+<br>
 
-`get-server-status` - Get server status  
+`get-server-status` - Get server status
 `get-server-log-file` - Get server log file  
 `tour-status` - Get tour status  
 `upgrade-status` - Get upgrade status
@@ -321,8 +337,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Temporary File</summary>
+<br>
 
-`create-temporary-file` - Create a temporary file  
+`create-temporary-file` - Create a temporary file
 `get-temporary-file` - Get a temporary file  
 `delete-temporary-file` - Delete a temporary file  
 `get-temporary-file-configuration` - Get temporary file configuration
@@ -330,8 +347,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>User Group</summary>
+<br>
 
-`get-user-group` - Get user group  
+`get-user-group` - Get user group
 `get-user-group-by-id-array` - Get user groups by IDs  
 `get-user-groups` - Get all user groups  
 `get-filter-user-group` - Filter user groups  
@@ -343,8 +361,9 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 
 <details>
 <summary>Webhook</summary>
+<br>
 
-`get-webhook-by-id` - Get webhook by ID  
+`get-webhook-by-id` - Get webhook by ID
 `get-webhook-by-id-array` - Get webhooks by IDs  
 `delete-webhook` - Delete a webhook  
 `update-webhook` - Update a webhook  
