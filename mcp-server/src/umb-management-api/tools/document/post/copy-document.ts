@@ -3,6 +3,7 @@ import { postDocumentByIdCopyBody } from "@/umb-management-api/umbracoManagement
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { z } from "zod";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const CopyDocumentTool = CreateUmbracoTool(
   "copy-document",
@@ -40,7 +41,7 @@ const CopyDocumentTool = CreateUmbracoTool(
       ],
     };
   },
-  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Duplicate")
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Duplicate)
 );
 
 export default CopyDocumentTool;

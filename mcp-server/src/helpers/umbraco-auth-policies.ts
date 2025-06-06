@@ -1,5 +1,6 @@
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js"
 
+// matches hardcoded value in Umbraco source code
 export const AdminGroupKeyString = "E5E7F6C8-7F9C-4B5B-8D5D-9E1E5A4F7E4D";
 
 export const sections = {

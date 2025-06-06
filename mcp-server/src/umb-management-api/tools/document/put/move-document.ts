@@ -3,6 +3,7 @@ import { putDocumentByIdMoveBody } from "@/umb-management-api/umbracoManagementA
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { z } from "zod";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const MoveDocumentTool = CreateUmbracoTool(
   "move-document",
@@ -23,7 +24,7 @@ const MoveDocumentTool = CreateUmbracoTool(
       ],
     };
   },
-  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Move")
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Move)
 );
 
 export default MoveDocumentTool;

@@ -2,6 +2,7 @@ import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { deleteDocumentByIdPublicAccessParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const DeleteDocumentPublicAccessTool = CreateUmbracoTool(
   "delete-document-public-access",
@@ -19,7 +20,7 @@ const DeleteDocumentPublicAccessTool = CreateUmbracoTool(
       ],
     };
   },
-  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.PublicAccess")
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.PublicAccess)
 );
 
 export default DeleteDocumentPublicAccessTool;

@@ -6,6 +6,7 @@ import {
 } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const PostDocumentPublicAccessTool = CreateUmbracoTool(
   "post-document-public-access",
@@ -13,8 +14,7 @@ const PostDocumentPublicAccessTool = CreateUmbracoTool(
   {
     id: postDocumentByIdPublicAccessParams.shape.id,
     data: z.object(postDocumentByIdPublicAccessBody.shape),
-  },
-  async (model: { id: string; data: any }) => {
+  }, async (model: { id: string; data: any }) => {
     const client = UmbracoManagementClient.getClient();
     const response = await client.postDocumentByIdPublicAccess(
       model.id,
@@ -29,7 +29,7 @@ const PostDocumentPublicAccessTool = CreateUmbracoTool(
       ],
     };
   },
-  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.PublicAccess")
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.PublicAccess)
 );
 
 export default PostDocumentPublicAccessTool;

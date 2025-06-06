@@ -6,6 +6,7 @@ import {
 } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const GetDocumentAuditLogTool = CreateUmbracoTool(
   "get-document-audit-log",
@@ -26,7 +27,7 @@ const GetDocumentAuditLogTool = CreateUmbracoTool(
       ],
     };
   },
-  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Read")
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Read)
 );
 
 export default GetDocumentAuditLogTool;

@@ -2,6 +2,7 @@ import { UmbracoManagementClient } from "@umb-management-client";
 import { putDocumentByIdMoveToRecycleBinParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const MoveDocumentToRecycleBinTool = CreateUmbracoTool(
   "move-document-to-recycle-bin",
@@ -19,7 +20,7 @@ const MoveDocumentToRecycleBinTool = CreateUmbracoTool(
       ],
     };
   },
-  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes("Umb.Document.Delete")
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Delete)
 );
 
 export default MoveDocumentToRecycleBinTool;
