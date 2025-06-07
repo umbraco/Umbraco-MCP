@@ -1,10 +1,12 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { postDocumentValidateBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const ValidateDocumentTool = CreateUmbracoTool(
   "validate-document",
-  "Validates a document using the Umbraco API.",
+  "Validates a create document model, using the Umbraco API.",
   postDocumentValidateBody.shape,
   async (model) => {
     const client = UmbracoManagementClient.getClient();
@@ -17,7 +19,8 @@ const ValidateDocumentTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Create)
 );
 
 export default ValidateDocumentTool;

@@ -20,28 +20,46 @@ import GetDocumentTypesByIdArrayTool from "./get/get-document-type-by-id-array.j
 import GetIconsTool from "./templates/get-icons.js";
 import CreateElementTypeTool from "./post/create-element-type.js";
 import GetAllDocumentTypesTool from "./items/get/get-all.js";
+import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { ToolDefinition } from "types/tool-definition.js";
 
-export const DocumentTypeTools = [
-  CreateDocumentTypeTool,
-  CreateElementTypeTool,
-  GetIconsTool,
-  DeleteDocumentTypeTool,
-  GetDocumentTypeTool,
-  UpdateDocumentTypeTool,
-  CopyDocumentTypeTool,
-  MoveDocumentTypeTool,
-  GetAllDocumentTypesTool,
-  GetDocumentTypeRootTool,
-  GetDocumentTypeChildrenTool,
-  GetDocumentTypeAncestorsTool,
-  CreateDocumentTypeFolderTool,
-  DeleteDocumentTypeFolderTool,
-  GetDocumentTypeFolderTool,
-  UpdateDocumentTypeFolderTool,
-  GetDocumentTypeBlueprintTool,
-  GetDocumentTypeCompositionReferencesTool,
-  GetDocumentTypeAvailableCompositionsTool,
-  GetDocumentTypeAllowedChildrenTool,
-  GetDocumentTypeConfigurationTool,
-  GetDocumentTypesByIdArrayTool
-]; 
+export const DocumentTypeTools = (user: CurrentUserResponseModel) => {
+
+  const tools: ToolDefinition<any>[] = [];
+
+  tools.push(GetDocumentTypeTool());
+
+  if (AuthorizationPolicies.TreeAccessDocumentsOrDocumentTypes(user)) {
+
+    tools.push(GetDocumentTypeConfigurationTool());
+    tools.push(GetDocumentTypeBlueprintTool());
+    tools.push(GetDocumentTypesByIdArrayTool());
+  }
+
+  if (AuthorizationPolicies.TreeAccessDocumentTypes(user)) {
+
+    tools.push(GetDocumentTypeAvailableCompositionsTool());
+    tools.push(GetDocumentTypeCompositionReferencesTool());
+    tools.push(UpdateDocumentTypeTool());
+    tools.push(CopyDocumentTypeTool());
+    tools.push(MoveDocumentTypeTool());
+    tools.push(CreateDocumentTypeTool());
+    tools.push(DeleteDocumentTypeTool());
+    tools.push(CreateElementTypeTool());
+    tools.push(GetIconsTool());
+    tools.push(GetDocumentTypeAllowedChildrenTool());
+    tools.push(GetAllDocumentTypesTool());
+
+    tools.push(CreateDocumentTypeFolderTool());
+    tools.push(DeleteDocumentTypeFolderTool());
+    tools.push(GetDocumentTypeFolderTool());
+    tools.push(UpdateDocumentTypeFolderTool());
+
+    tools.push(GetDocumentTypeRootTool());
+    tools.push(GetDocumentTypeAncestorsTool());
+    tools.push(GetDocumentTypeChildrenTool());
+  }
+
+  return tools;
+}

@@ -2,6 +2,8 @@ import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { putDocumentByIdPublishWithDescendantsBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const PublishDocumentWithDescendantsTool = CreateUmbracoTool(
   "publish-document-with-descendants",
@@ -24,7 +26,8 @@ const PublishDocumentWithDescendantsTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Publish)
 );
 
 export default PublishDocumentWithDescendantsTool;

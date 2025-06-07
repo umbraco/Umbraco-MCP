@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`server-tool-index should have all tools when user has settings access 1`] = `
+[
+  "get-server-information",
+  "get-server-status",
+  "get-server-configuration",
+  "get-server-troubleshooting",
+  "get-server-upgrade-check",
+]
+`;
+
+exports[`server-tool-index should have no tools when user meets no policies 1`] = `
+[
+  "get-server-information",
+  "get-server-status",
+  "get-server-configuration",
+  "get-server-troubleshooting",
+  "get-server-upgrade-check",
+]
+`;

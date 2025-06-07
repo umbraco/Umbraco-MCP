@@ -7,13 +7,17 @@ import { UmbracoToolFactory } from "./umb-management-api/tools/tool-factory.js";
 import { ResourceFactory } from "./umb-management-api/resources/resource-factory.js";
 
 import { UmbracoWorkflowToolFactory } from "./umb-workflow/tools/tool-factory.js";
+import { UmbracoManagementClient } from "@umb-management-client";
 
 const main = async () => {
   // Create an MCP server
   const server = UmbracoMcpServer.GetServer();
+  const client = UmbracoManagementClient.getClient();
+
+  const user = await client.getUserCurrent();
 
   ResourceFactory(server);
-  UmbracoToolFactory(server);
+  UmbracoToolFactory(server, user);
   await UmbracoWorkflowToolFactory(server);
 
   // Start receiving messages on stdin and sending messages on stdout

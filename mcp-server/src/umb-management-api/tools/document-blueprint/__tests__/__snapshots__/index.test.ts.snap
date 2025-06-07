@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`document-blueprint-tool-index should have all blueprint tools when user has document type access 1`] = `
+[
+  "get-document-blueprint",
+  "delete-document-blueprint",
+  "update-document-blueprint",
+  "create-document-blueprint",
+  "get-document-blueprint-ancestors",
+  "get-document-blueprint-children",
+  "get-document-blueprint-root",
+]
+`;
+
+exports[`document-blueprint-tool-index should have no tools when user does not have document type access 1`] = `[]`;
+
+exports[`document-blueprint-tool-index should have no tools when user meets no policies 1`] = `[]`;

@@ -3,6 +3,8 @@ import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
 import { CreateDocumentRequestModel } from "@/umb-management-api/schemas/createDocumentRequestModel.js";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const createDocumentSchema = z.object({
   documentTypeId: z.string().uuid("Must be a valid document type type UUID"),
@@ -638,8 +640,8 @@ const CreateDocumentTool = CreateUmbracoTool(
       },
       parent: model.parentId
         ? {
-            id: model.parentId,
-          }
+          id: model.parentId,
+        }
         : undefined,
       template: null,
       values: model.values,
@@ -661,7 +663,8 @@ const CreateDocumentTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Create)
 );
 
 export default CreateDocumentTool;

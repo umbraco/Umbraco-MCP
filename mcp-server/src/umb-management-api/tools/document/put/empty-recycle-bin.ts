@@ -1,5 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const EmptyRecycleBinTool = CreateUmbracoTool(
   "empty-recycle-bin",
@@ -16,7 +18,8 @@ const EmptyRecycleBinTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Delete)
 );
 
 export default EmptyRecycleBinTool;

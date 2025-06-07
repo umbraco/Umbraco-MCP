@@ -1,6 +1,8 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { putDocumentSortBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const SortDocumentTool = CreateUmbracoTool(
   "sort-document",
@@ -17,7 +19,8 @@ const SortDocumentTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.Sort)
 );
 
 export default SortDocumentTool;

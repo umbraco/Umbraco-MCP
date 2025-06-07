@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`member-tool-index should have all tools when user has members section access 1`] = `
+[
+  "get-member",
+  "create-member",
+  "delete-member",
+  "update-member",
+  "find-member",
+]
+`;
+
+exports[`member-tool-index should only have find member tool when user meets no policies 1`] = `
+[
+  "find-member",
+]
+`;

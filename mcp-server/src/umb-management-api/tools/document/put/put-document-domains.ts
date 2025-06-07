@@ -5,6 +5,8 @@ import {
   putDocumentByIdDomainsBody,
 } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const PutDocumentDomainsTool = CreateUmbracoTool(
   "put-document-domains",
@@ -25,7 +27,8 @@ const PutDocumentDomainsTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.CultureAndHostnames)
 );
 
 export default PutDocumentDomainsTool;

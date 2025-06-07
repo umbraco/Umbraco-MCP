@@ -5,6 +5,8 @@ import {
   putDocumentByIdPublicAccessBody,
 } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { z } from "zod";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { UmbracoDocumentPermissions } from "../constants.js";
 
 const PutDocumentPublicAccessTool = CreateUmbracoTool(
   "put-document-public-access",
@@ -12,8 +14,7 @@ const PutDocumentPublicAccessTool = CreateUmbracoTool(
   {
     id: putDocumentByIdPublicAccessParams.shape.id,
     data: z.object(putDocumentByIdPublicAccessBody.shape),
-  },
-  async (model: { id: string; data: any }) => {
+  }, async (model: { id: string; data: any }) => {
     const client = UmbracoManagementClient.getClient();
     const response = await client.putDocumentByIdPublicAccess(
       model.id,
@@ -27,7 +28,8 @@ const PutDocumentPublicAccessTool = CreateUmbracoTool(
         },
       ],
     };
-  }
+  },
+  (user: CurrentUserResponseModel) => user.fallbackPermissions.includes(UmbracoDocumentPermissions.PublicAccess)
 );
 
 export default PutDocumentPublicAccessTool;

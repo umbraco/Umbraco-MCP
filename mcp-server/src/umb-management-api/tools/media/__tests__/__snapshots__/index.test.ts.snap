@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`media-tool-index should have all tools when user has all required access 1`] = `
+[
+  "get-media-by-id",
+  "get-media-ancestors",
+  "get-media-children",
+  "get-media-root",
+  "create-media",
+  "delete-media",
+  "update-media",
+  "get-media-configuration",
+  "get-media-urls",
+  "validate-media",
+  "sort-media",
+  "get-media-by-id-array",
+  "move-media",
+  "get-media-audit-log",
+  "get-recycle-bin-media-root",
+  "get-recycle-bin-media-children",
+  "empty-media-recycle-bin",
+  "restore-media-from-recycle-bin",
+  "move-media-to-recycle-bin",
+  "delete-media-from-recycle-bin",
+]
+`;
+
+exports[`media-tool-index should have basic query tool by default 1`] = `
+[
+  "get-media-by-id",
+]
+`;
+
+exports[`media-tool-index should have management tools when user has media section access 1`] = `
+[
+  "get-media-by-id",
+  "get-media-ancestors",
+  "get-media-children",
+  "get-media-root",
+  "create-media",
+  "delete-media",
+  "update-media",
+  "get-media-configuration",
+  "get-media-urls",
+  "validate-media",
+  "sort-media",
+  "get-media-by-id-array",
+  "move-media",
+  "get-media-audit-log",
+  "get-recycle-bin-media-root",
+  "get-recycle-bin-media-children",
+  "empty-media-recycle-bin",
+  "restore-media-from-recycle-bin",
+  "move-media-to-recycle-bin",
+  "delete-media-from-recycle-bin",
+]
+`;
+
+exports[`media-tool-index should have tree tools when user has media tree access 1`] = `
+[
+  "get-media-by-id",
+  "get-media-ancestors",
+  "get-media-children",
+  "get-media-root",
+  "create-media",
+  "delete-media",
+  "update-media",
+  "get-media-configuration",
+  "get-media-urls",
+  "validate-media",
+  "sort-media",
+  "get-media-by-id-array",
+  "move-media",
+  "get-media-audit-log",
+  "get-recycle-bin-media-root",
+  "get-recycle-bin-media-children",
+  "empty-media-recycle-bin",
+  "restore-media-from-recycle-bin",
+  "move-media-to-recycle-bin",
+  "delete-media-from-recycle-bin",
+]
+`;

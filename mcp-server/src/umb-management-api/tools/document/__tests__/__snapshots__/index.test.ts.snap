@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`document-tool-index should have all tools when user meets multiple policies 1`] = `
+[
+  "get-document-by-id",
+  "get-document-publish",
+  "get-document-configuration",
+  "copy-document",
+  "create-document",
+  "post-document-public-access",
+  "delete-document",
+  "delete-document-public-access",
+  "get-document-urls",
+  "get-document-domains",
+  "get-document-audit-log",
+  "get-document-public-access",
+  "move-document",
+  "move-document-to-recycle-bin",
+  "get-document-notifications",
+  "publish-document",
+  "publish-document-with-descendants",
+  "sort-document",
+  "unpublish-document",
+  "update-document",
+  "put-document-domains",
+  "put-document-notifications",
+  "put-document-public-access",
+  "delete-from-recycle-bin",
+  "empty-recycle-bin",
+  "get-recycle-bin-document-root",
+  "get-recycle-bin-document-children",
+  "search-document",
+  "validate-document",
+  "get-document-root",
+  "get-document-children",
+  "get-document-ancestors",
+]
+`;
+
+exports[`document-tool-index should have no tools when user meets no policies 1`] = `[]`;
+
+exports[`document-tool-index should have tools when user meets TreeAccessDocuments policy 1`] = `
+[
+  "get-document-by-id",
+  "get-document-publish",
+  "get-document-configuration",
+  "copy-document",
+  "create-document",
+  "post-document-public-access",
+  "delete-document",
+  "delete-document-public-access",
+  "get-document-urls",
+  "get-document-domains",
+  "get-document-audit-log",
+  "get-document-public-access",
+  "move-document",
+  "move-document-to-recycle-bin",
+  "get-document-notifications",
+  "publish-document",
+  "publish-document-with-descendants",
+  "sort-document",
+  "unpublish-document",
+  "update-document",
+  "put-document-domains",
+  "put-document-notifications",
+  "put-document-public-access",
+  "delete-from-recycle-bin",
+  "empty-recycle-bin",
+  "get-recycle-bin-document-root",
+  "get-recycle-bin-document-children",
+  "search-document",
+  "validate-document",
+  "get-document-root",
+  "get-document-children",
+  "get-document-ancestors",
+]
+`;
+
+exports[`document-tool-index should have tree tools when user meets SectionAccessForContentTree policy 1`] = `
+[
+  "get-document-root",
+  "get-document-children",
+  "get-document-ancestors",
+]
+`;

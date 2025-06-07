@@ -10,31 +10,18 @@ const InitiateActionTool = CreateUmbracoTool(
   The variant parameter should be the culture string (e.g., en-US) or use '*' for all cultures.`,
   postActionInitiateBody.shape,
   async (model: InitiateWorkflowRequestModel) => {
-    try {
-      const client = UmbracoWorkflowClient.getClient();
+    const client = UmbracoWorkflowClient.getClient();
 
-      const response = await client.postActionInitiate(model);
+    const response = await client.postActionInitiate(model);
 
-      return {
-        content: [
-          {
-            type: "text" as const,
-            text: JSON.stringify(response, null, 2),
-          },
-        ],
-      };
-    } catch (error) {
-      console.error("Error initiating workflow action:", error);
-      return {
-        content: [
-          {
-            type: "text" as const,
-            text: `Error: ${error}`,
-          },
-        ],
-      };
-    }
-  }
-);
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(response, null, 2),
+        },
+      ],
+    };
+  });
 
 export default InitiateActionTool;

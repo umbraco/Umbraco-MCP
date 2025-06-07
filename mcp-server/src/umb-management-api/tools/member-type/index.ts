@@ -8,16 +8,27 @@ import GetMemberTypeAvailableCompositionsTool from "./post/get-member-type-avail
 import GetMemberTypeCompositionReferencesTool from "./get/get-member-type-composition-references.js";
 import GetMemberTypeConfigurationTool from "./get/get-member-type-configuration.js";
 import GetMemberTypeRootTool from "./items/get/get-root.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { ToolDefinition } from "types/tool-definition.js";
+import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
 
-export const MemberTypeTools = [
-  CreateMemberTypeTool,
-  GetMemberTypesByIdArrayTool,
-  GetMemberTypeByIdTool,
-  DeleteMemberTypeTool,
-  UpdateMemberTypeTool,
-  CopyMemberTypeTool,
-  GetMemberTypeAvailableCompositionsTool,
-  GetMemberTypeCompositionReferencesTool,
-  GetMemberTypeConfigurationTool,
-  GetMemberTypeRootTool,
-]; 
+export const MemberTypeTools = (user: CurrentUserResponseModel) => {
+  const tools: ToolDefinition<any>[] = [];
+
+  tools.push(GetMemberTypeByIdTool());
+
+  if (AuthorizationPolicies.TreeAccessMembersOrMemberTypes(user)) {
+
+    tools.push(CreateMemberTypeTool());
+    tools.push(GetMemberTypesByIdArrayTool());
+    tools.push(DeleteMemberTypeTool());
+    tools.push(UpdateMemberTypeTool());
+    tools.push(CopyMemberTypeTool());
+    tools.push(GetMemberTypeAvailableCompositionsTool());
+    tools.push(GetMemberTypeCompositionReferencesTool());
+    tools.push(GetMemberTypeConfigurationTool());
+    tools.push(GetMemberTypeRootTool());
+  }
+
+  return tools;
+} 

@@ -16,24 +16,45 @@ import GetDataTypeRootTool from "./items/get/get-root.js";
 import GetDataTypeChildrenTool from "./items/get/get-children.js";
 import GetDataTypeAncestorsTool from "./items/get/get-ancestors.js";
 import GetAllDataTypesTool from "./items/get/get-all.js";
+import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
+import { ToolDefinition } from "types/tool-definition.js";
 
-export const DataTypeTools = [
-  GetDataTypeRootTool,
-  GetDataTypeSearchTool,
-  CreateDataTypeTool,
-  DeleteDataTypeTool,
-  FindDataTypeTool,
-  GetDataTypeTool,
-  UpdateDataTypeTool,
-  CopyDataTypeTool,
-  IsUsedDataTypeTool,
-  MoveDataTypeTool,
-  GetReferencesDataTypeTool,
-  CreateDataTypeFolderTool,
-  DeleteDataTypeFolderTool,
-  GetDataTypeFolderTool,
-  UpdateDataTypeFolderTool,
-  GetAllDataTypesTool,
-  GetDataTypeChildrenTool,
-  GetDataTypeAncestorsTool,
-];
+export const DataTypeTools = (user: CurrentUserResponseModel) => {
+  const tools: ToolDefinition<any>[] = [GetDataTypeSearchTool()];
+
+  if (AuthorizationPolicies.TreeAccessDocumentsOrMediaOrMembersOrContentTypes(user)) {
+
+    tools.push(GetReferencesDataTypeTool());
+    tools.push(IsUsedDataTypeTool());
+    tools.push(GetDataTypeTool());
+  }
+
+  if (AuthorizationPolicies.TreeAccessDataTypes(user)) {
+    tools.push(GetDataTypeRootTool());
+    tools.push(GetDataTypeChildrenTool());
+    tools.push(GetDataTypeAncestorsTool());
+    tools.push(GetAllDataTypesTool());
+
+    tools.push(DeleteDataTypeTool());
+    tools.push(CreateDataTypeTool());
+    tools.push(UpdateDataTypeTool());
+
+    tools.push(CopyDataTypeTool());
+    tools.push(MoveDataTypeTool());
+  }
+
+  if (AuthorizationPolicies.TreeAccessDocumentsOrDocumentTypes(user)) {
+    tools.push(FindDataTypeTool());
+  }
+
+  if (AuthorizationPolicies.TreeAccessDataTypes(user)) {
+    tools.push(CreateDataTypeFolderTool());
+    tools.push(DeleteDataTypeFolderTool());
+    tools.push(GetDataTypeFolderTool());
+    tools.push(UpdateDataTypeFolderTool());
+  }
+
+  return tools;
+}
+
