@@ -4,7 +4,7 @@ exports[`template-tree ancestors should get ancestor items 1`] = `
 {
   "content": [
     {
-      "text": "[{"name":"_Test Child Template","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":false}]",
+      "text": "[{"name":"_Test Parent Template","id":"00000000-0000-0000-0000-000000000000","parent":null,"hasChildren":true},{"name":"_Test Child Template","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]",
       "type": "text",
     },
   ],
@@ -26,7 +26,7 @@ exports[`template-tree children should get child items 1`] = `
 {
   "content": [
     {
-      "text": "{"total":0,"items":[]}",
+      "text": "{"total":1,"items":[{"name":"_Test Child Template","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]}",
       "type": "text",
     },
   ],

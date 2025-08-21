@@ -10,6 +10,7 @@ export class TemplateBuilder {
     content: null,
   };
   private createdItem: any = null;
+  private masterTemplateAlias: string | null = null;
 
   withName(name: string): TemplateBuilder {
     this.model.name = name;
@@ -28,9 +29,8 @@ export class TemplateBuilder {
   }
 
   withParent(parentId: string): TemplateBuilder {
-    // Note: Templates don't support parent relationships in the API
-    // This method is provided for consistency with other builders
-    // but will not affect the actual template creation
+    // Store the master template ID - we'll need to get its alias later
+    this.masterTemplateAlias = parentId;
     return this;
   }
 
@@ -41,6 +41,28 @@ export class TemplateBuilder {
   async create(): Promise<TemplateBuilder> {
     if (!this.model.name || !this.model.alias) {
       throw new Error("Name and alias are required");
+    }
+
+    // If a master template is specified, set up the content with Layout directive
+    if (this.masterTemplateAlias) {
+      // First get the master template to find its alias
+      const client = UmbracoManagementClient.getClient();
+      try {
+        const masterTemplate = await client.getTemplateById(this.masterTemplateAlias);
+        // Set the content with Layout pointing to the master template
+        this.model.content = `@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "${masterTemplate.alias}.cshtml";
+}`;
+      } catch (error) {
+        console.error("Failed to get master template:", error);
+        // Fallback to basic content if master template not found
+        this.model.content = this.model.content || "@using Umbraco.Cms.Web.Common.PublishedModels;\n@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage\n@{\n\tLayout = null;\n}";
+      }
+    } else if (!this.model.content) {
+      // Set default content if no content is provided
+      this.model.content = "@using Umbraco.Cms.Web.Common.PublishedModels;\n@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage\n@{\n\tLayout = null;\n}";
     }
 
     const client = UmbracoManagementClient.getClient();
