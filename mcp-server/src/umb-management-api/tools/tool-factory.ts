@@ -13,6 +13,7 @@ import { MemberTools } from "./member/index.js";
 import { LogViewerTools } from "./log-viewer/index.js";
 import { LanguageTools } from "./language/index.js";
 import { PropertyTypeTools } from "./property-type/index.js";
+import { TemplateTools } from "./template/index.js";
 import { WebhookTools } from "./webhook/index.js";
 import { ServerTools } from "./server/index.js";
 import { RedirectTools } from "./redirect/index.js";
@@ -48,6 +49,7 @@ export function UmbracoToolFactory(server: McpServer, user: CurrentUserResponseM
   mapTools(server, user, LogViewerTools(user));
   mapTools(server, user, LanguageTools(user));
   mapTools(server, user, PropertyTypeTools(user));
+  mapTools(server, user, TemplateTools(user));
   mapTools(server, user, WebhookTools(user));
   mapTools(server, user, ServerTools(user));
   mapTools(server, user, RedirectTools(user));

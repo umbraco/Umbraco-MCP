@@ -28,9 +28,34 @@ You are an expert in TypeScript and Jest and testing Model Context Protocol impl
 - don't rely on existing content, always create new content and delete when finished
 - test the tool handlers not MCP itself
 - any api params should use the zod schema to parse objects
-- always remove any UUID's for id's and parent id's as these cause snapshots to fail. Use the helper provider to convert these into blank id's
 - for the act phase of testing always use the call to the tool handle. For the arrange always use the helper or the builder.
 - any password field will need to be at least 10 characters and contain at least one number and one symbol.
+
+## Snapshot Testing and Data Normalization
+
+- **Always use `createSnapshotResult()` helper** from `@/test-helpers/create-snapshot-result.js` for normalizing API responses before snapshot testing
+- **Never manually manipulate IDs or dates** in test code - let the helper handle normalization
+- **Use `createSnapshotResult(result)` for list/tree responses** - it automatically normalizes all items in arrays
+- **Use `createSnapshotResult(result, specificId)` for single item responses** - when you need to normalize a specific ID
+
+### Example of correct snapshot testing:
+```typescript
+// ✅ Correct - let the helper normalize everything
+const result = await GetTemplateSearchTool().handler(params, { signal: new AbortController().signal });
+const normalizedItems = createSnapshotResult(result);
+expect(normalizedItems).toMatchSnapshot();
+
+// ❌ Wrong - manual ID manipulation
+const items = JSON.parse(result.content[0].text);
+items.items = items.items.map(item => ({ ...item, id: "normalized" }));
+expect(result).toMatchSnapshot();
+```
+
+The `createSnapshotResult` helper automatically:
+- Converts all `id` fields to `BLANK_UUID` 
+- Normalizes `createDate`, `updateDate`, `publishDate` to `"NORMALIZED_DATE"`
+- Handles nested objects like `parent` references
+- Works with both single items and arrays of items
 
 The Dictionary entity is the gold standard for testing. Use this as a reference for creating new feature testing suites. This is both in terms of the splitting between logical api endpoints and the number of tests created.
 

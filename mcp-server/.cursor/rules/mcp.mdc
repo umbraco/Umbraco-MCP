@@ -23,14 +23,15 @@ You are an expert in TypeScript and Model Context Protocol implementation.
 ## Naming Conventions
 
 - Use descriptive, consistent naming for provider files (e.g., `DocumentContextProvider`, `ConversationHistoryProvider`).
-- Use descripive, consistant file naming for provider files (e.g., `DocumentContextProvider`, `ConversationHistoryProvider`).
+- Use descriptive, consistent file naming for provider files (e.g., `DocumentContextProvider`, `ConversationHistoryProvider`).
 - Follow camelCase for methods and PascalCase for interface names.
 
 ## Umbraco API Integration
 
+- **Reference `wtf.md`** for documented API quirks, known issues, and limitations
 - The Umbraco API exposes the management API for Umbraco
-    - It contains Gets, Posts, Puts, Deletes for inreacting with Umbraco
-    - It contains groups of endpoints including Culture, Data Type, Dictionary, Document Blueprint, Document Type, Document Version, Document, Dynamic Root, Health Check, Help, Imaging, Import Indexer, Install, Lanuage, Log Viewer, Manifest, Media Type, Media, Member Group, Member Type, Member, Models Builder, Object Types, oEmbed, Package, Partial View, Preview, Profiling, Property Type, Published Cache, Redirect Management, Relation Type, Scripts, Search, Security, Segment, Server, Static File, Stylesheet, Segment, Telemetry, Template, Temporary File, Upgrade, User Data, User Group, User, Webhook
+    - It contains Gets, Posts, Puts, Deletes for interacting with Umbraco
+    - It contains groups of endpoints including Culture, Data Type, Dictionary, Document Blueprint, Document Type, Document Version, Document, Dynamic Root, Health Check, Help, Imaging, Import Indexer, Install, Language, Log Viewer, Manifest, Media Type, Media, Member Group, Member Type, Member, Models Builder, Object Types, oEmbed, Package, Partial View, Preview, Profiling, Property Type, Published Cache, Redirect Management, Relation Type, Scripts, Search, Security, Segment, Server, Static File, Stylesheet, Segment, Telemetry, Template, Temporary File, Upgrade, User Data, User Group, User, Webhook
 - The Umbraco API client and models are generated using Orval. 
 - The Umbraco API is in the /src/api/umbraco
 - Use the UmbracoManagmentClient to make an instance of the client
@@ -50,7 +51,7 @@ In MCP resources are readonly endpoints for LLM's to query and provide context. 
 
 ## Read Resource
 - Static resources using CreateUmbracoReadResource 
-    - they always have a url that starts with umbraco:// and breaks down the logical path for the endpoint e.g getItemLanguageDefault os umbraco://item/language/default
+    - they always have a url that starts with umbraco:// and breaks down the logical path for the endpoint e.g getItemLanguageDefault is umbraco://item/language/default
     - they always use a name that respresents the umbraco endpoint
     - they always use a description that represents the endpoint 
     - they always use a try catch to catch reponse errors 
@@ -88,7 +89,7 @@ export default GetLangagueDefaultResource;
 - Resource templates using CreateUmbracoTemplateResource 
     - they always use a name that respresents the umbraco endpoint
     - they always use a description that represents the endpoint 
-    - they always have a url that starts with umbraco:// and breaks down the logical path for the endpoint e.g getItemLanguageDefault os umbraco://item/language/default
+    - they always have a url that starts with umbraco:// and breaks down the logical path for the endpoint e.g getItemLanguageDefault is umbraco://item/language/default
     - the url always contains query strings for the params that are taken from the zod schema definition i.e params of skip, take and foldersOnly become ?skip={skip}&take={take}&foldersOnly={foldersOnly}
     - valid options for the params are shown in the complete property on the ResourceTemplate definition, they always match the param type i.e true and false for boolen but the value is always string. e.g
     ```
