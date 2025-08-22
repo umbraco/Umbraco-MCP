@@ -9,7 +9,6 @@
   },
   "scripts": {
     "clean": "rimraf build",
-    "prebuild": "copyfiles -u 1 \"../README.md\" \"../LICENSE\" \"./\"",
     "build": "tsup --config tsup.config.ts",
     "watch": "tsup --config tsup.config.ts --watch",
     "generate": "orval --config orval.config.ts",

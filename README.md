@@ -364,6 +364,23 @@ Restart Claude and try it out with a simple prompt such as `Tell me the GUID of 
 </details>
 
 <details>
+<summary>Template</summary>
+<br>
+
+`get-template-search` - Search for templates by name  
+`get-template` - Get a template by ID  
+`get-templates-by-id-array` - Get templates by IDs  
+`create-template` - Create a new template  
+`update-template` - Update a template by ID  
+`delete-template` - Delete a template by ID  
+`execute-template-query` - Execute template queries and return generated LINQ code  
+`get-template-query-settings` - Get schema for template queries (document types, properties, operators)  
+`get-template-root` - Get root template items  
+`get-template-children` - Get child templates or template folders by parent ID  
+`get-template-ancestors` - Get ancestors of a template by ID
+</details>
+
+<details>
 <summary>Temporary File</summary>
 <br>
 
@@ -405,4 +422,34 @@ Restart Claude and try it out with a simple prompt such as `Tell me the GUID of 
 
 If you have workflow installed, the AI will use this tool instead of directly publishing content
 
-`initiate-workflow-action` - Initiates a workflow approval process for content changes  
+`initiate-workflow-action` - Initiates a workflow approval process for content changes
+
+## Contributing with AI Tools
+
+This project is optimized for development with AI coding assistants. We provide instruction files for popular AI tools to help maintain consistency with our established patterns and testing standards.
+
+### Using rulesync
+
+The project includes rulesync configuration files that can automatically generate instruction files for 19+ AI development tools. Generate configuration files for your preferred AI tools:
+
+```bash
+# Generate only for Claude Code
+npx rulesync generate --claudecode
+
+# Generate only for Cursor
+npx rulesync generate --cursor
+
+# Generate only for Vs Code Copilot
+npx rulesync generate --copilot
+```
+
+### Other AI Tools
+
+rulesync supports 19+ AI development tools including GitHub Copilot, Cline, Aider, and more. Check the [rulesync repository](https://github.com/dyoshikawa/rulesync) for the complete list of supported tools.
+
+The instruction files cover:
+- MCP development patterns and conventions
+- TypeScript implementation guidelines  
+- Comprehensive testing standards with builders and helpers
+- Project-specific context and architecture
+- API integration patterns with Umbraco Management API  
