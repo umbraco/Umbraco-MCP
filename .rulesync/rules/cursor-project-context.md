@@ -1,8 +1,13 @@
 ---
+root: false
+targets:
+  - '*'
 description: Project context and background for the Umbraco MCP Server
-globs: 
-alwaysApply: true
+globs:
+  - '**/*'
+cursorRuleType: always
 ---
+
 # Umbraco MCP Server - Project Context
 
 ## Project Overview

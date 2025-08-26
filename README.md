@@ -5,7 +5,7 @@ it provides access to key parts of the Management API enabling you to do back of
 
 ## Intro
 
-The MCP server uses an Umbraco API user to access your Umbraco Management API, mean the tools avavile to the AI can be controlled using normal Umbraco user permissions.
+The MCP server uses an Umbraco API user to access your Umbraco Management API, mean the tools available to the AI can be controlled using normal Umbraco user permissions.
 
 ## Getting Started
 
@@ -18,47 +18,10 @@ The level of access you provider this user will determine what your agent is abl
 
 ### Installation
 
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522umbraco-mcp%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540umbraco-mcp%252Fumbraco-mcp-cms%2540alpha%2522%255D%252C%2522env%2522%253A%257B%2522UMBRACO_CLIENT_ID%2522%253A%2522%253CAPI%2520user%2520name%253E%2522%252C%2522UMBRACO_CLIENT_SECRET%2522%253A%2522%253CAPI%2520client%2520secert%253E%2522%252C%2522UMBRACO_BASE_URL%2522%253A%2522https%253A%252F%252F%253Cdomain%253E%2522%252C%2522EXCLUDE_MANAGEMENT_TOOLS%2522%253A%2522%253Ctoolname%253E%252C%253Ctoolname%253E%2522%257D%257D)
+First, create an Umbraco API user with appropriate permissions. You can find instructions in [Umbraco's documentation](https://docs.umbraco.com/umbraco-cms/fundamentals/data/users/api-users).
 
-
-First, install the Umbraco MCP server with your client. A typical configuration looks like this:
-
-```json
-{
-  "servers": {
-    "umbraco-mcp": {
-      "command": "npx",
-      "args": ["@umbraco-mcp/umbraco-mcp-cms@alpha"],
-      "env": {
-        "UMBRACO_CLIENT_ID": "<API user name>",
-        "UMBRACO_CLIENT_SECRET": "<API client secert>",
-        "UMBRACO_BASE_URL": "https://<domain>",
-        "EXCLUDE_MANAGEMENT_TOOLS": "<toolname>,<toolname>"
-      }
-    }
-  }
-}
-```
-
-### Configuration
-
-`UMBRACO_CLIENT_ID`
-
-Umbraco API User name
-
-`UMBRACO_CLIENT_SECRET` 
-
-Umbraco API User client secert
-
-`UMBRACO_BASE_URL`
-
-Url of the site you want to connect to, it only needs to be the scheme and domain e.g https://<nolink/>example.com
-
-`EXCLUDE_MANAGEMENT_TOOLS`
-
-The allows you to specify tools by name if you wish to exclude them for the usable tools list. This is helpful as some Agents, cant handle so many tools. This is a commma seperated list of tools which can be found below.
-
-## Using the Umbraco MCP With Claude
+<details>
+<summary>Claude Desktop</summary>
 
 To get started with using the Umbraco MCP with Claude, first download and install the [Claude.ai desktop app](https://claude.ai/download).  
 
@@ -87,6 +50,98 @@ Restart Claude and try it out with a simple prompt such as `Tell me the GUID of 
 
 > [!NOTE]
 > You may need to update to a paid version of Claude.ai in order to have a large enough context window to run your prompts.
+
+</details>
+
+
+<details>
+<summary>Claude Code</summary>
+
+Use the Claude Code CLI to add the Umbraco MCP server:
+
+```bash
+claude mcp add umbraco-mcp npx @umbraco-mcp/umbraco-mcp-cms@alpha
+```
+
+Or configure environment variables and scope:
+```bash
+# Install Claude Code globally (if not already installed)
+npm install -g @anthropic-ai/claude-code
+
+# Add with environment variables
+claude mcp add umbraco-mcp --scope user -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
+
+# Set environment variables
+claude config set UMBRACO_CLIENT_ID="<API user name>"
+claude config set UMBRACO_CLIENT_SECRET="<API client secret>"  
+claude config set UMBRACO_BASE_URL="https://<domain>"
+
+# Verify installation
+claude mcp list
+```
+</details>
+
+<details>
+<summary>VS Code</summary>
+
+#### Click the button to install:
+[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522umbraco-mcp%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540umbraco-mcp%252Fumbraco-mcp-cms%2540alpha%2522%255D%252C%2522env%2522%253A%257B%2522UMBRACO_CLIENT_ID%2522%253A%2522%253CAPI%2520user%2520name%253E%2522%252C%2522UMBRACO_CLIENT_SECRET%2522%253A%2522%253CAPI%2520client%2520secert%253E%2522%252C%2522UMBRACO_BASE_URL%2522%253A%2522https%253A%252F%252F%253Cdomain%253E%2522%252C%2522EXCLUDE_MANAGEMENT_TOOLS%2522%253A%2522%253Ctoolname%253E%252C%253Ctoolname%253E%2522%257D%257D)
+
+**Requirements:** VS Code 1.101+ with GitHub Copilot Chat extension installed.
+
+#### Or install manually:
+1. Open VS Code Extensions panel and search for `@mcp`
+2. Browse MCP Servers or use Command Palette: `MCP: Add Server`
+3. Search for "umbraco-mcp" and click Install
+4. Add required environment variables
+</details>
+
+<details>
+<summary>Cursor</summary>
+
+#### Or install manually:
+Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name it "umbraco-mcp", use `command` type with the command `npx @umbraco-mcp/umbraco-mcp-cms@alpha`. Add environment variables via the settings interface.
+
+#### Or configure via file:
+Create `.cursor/mcp.json` in your project directory or `~/.cursor/mcp.json` for global access:
+
+```json
+{
+  "mcpServers": {
+    "umbraco-mcp": {
+      "command": "npx", 
+      "args": ["@umbraco-mcp/umbraco-mcp-cms@alpha"],
+      "env": {
+        "UMBRACO_CLIENT_ID": "<API user name>",
+        "UMBRACO_CLIENT_SECRET": "<API client secret>",
+        "UMBRACO_BASE_URL": "https://<domain>",
+        "EXCLUDE_MANAGEMENT_TOOLS": "<toolname>,<toolname>"
+      }
+    }
+  }
+}
+```
+</details>
+
+
+### Configuration Environment Variables
+
+`UMBRACO_CLIENT_ID`
+
+Umbraco API User name
+
+`UMBRACO_CLIENT_SECRET` 
+
+Umbraco API User client secert
+
+`UMBRACO_BASE_URL`
+
+Url of the site you want to connect to, it only needs to be the scheme and domain e.g https://<nolink/>example.com
+
+`EXCLUDE_MANAGEMENT_TOOLS`
+
+The allows you to specify tools by name if you wish to exclude them for the usable tools list. This is helpful as some Agents, cant handle so many tools. This is a commma seperated list of tools which can be found below.
+
 
 ##  Umbraco Management API Tools
 <details>
@@ -364,6 +419,23 @@ Restart Claude and try it out with a simple prompt such as `Tell me the GUID of 
 </details>
 
 <details>
+<summary>Template</summary>
+<br>
+
+`get-template-search` - Search for templates by name  
+`get-template` - Get a template by ID  
+`get-templates-by-id-array` - Get templates by IDs  
+`create-template` - Create a new template  
+`update-template` - Update a template by ID  
+`delete-template` - Delete a template by ID  
+`execute-template-query` - Execute template queries and return generated LINQ code  
+`get-template-query-settings` - Get schema for template queries (document types, properties, operators)  
+`get-template-root` - Get root template items  
+`get-template-children` - Get child templates or template folders by parent ID  
+`get-template-ancestors` - Get ancestors of a template by ID
+</details>
+
+<details>
 <summary>Temporary File</summary>
 <br>
 
@@ -401,8 +473,32 @@ Restart Claude and try it out with a simple prompt such as `Tell me the GUID of 
 </details>
 </details>
 
-## Umbraco Workflow API Tools
+## Contributing with AI Tools
 
-If you have workflow installed, the AI will use this tool instead of directly publishing content
+This project is optimized for development with AI coding assistants. We provide instruction files for popular AI tools to help maintain consistency with our established patterns and testing standards.
 
-`initiate-workflow-action` - Initiates a workflow approval process for content changes  
+### Using rulesync
+
+The project includes rulesync configuration files that can automatically generate instruction files for 19+ AI development tools. Generate configuration files for your preferred AI tools:
+
+```bash
+# Generate only for Claude Code
+npx rulesync generate --claudecode
+
+# Generate only for Cursor
+npx rulesync generate --cursor
+
+# Generate only for Vs Code Copilot
+npx rulesync generate --copilot
+```
+
+### Other AI Tools
+
+rulesync supports 19+ AI development tools including GitHub Copilot, Cline, Aider, and more. Check the [rulesync repository](https://github.com/dyoshikawa/rulesync) for the complete list of supported tools.
+
+The instruction files cover:
+- MCP development patterns and conventions
+- TypeScript implementation guidelines  
+- Comprehensive testing standards with builders and helpers
+- Project-specific context and architecture
+- API integration patterns with Umbraco Management API  

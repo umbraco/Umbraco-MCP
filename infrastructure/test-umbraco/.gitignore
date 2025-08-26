@@ -356,4 +356,4 @@ MigrationBackup/
 src/.idea
 
 # Local app settings
-appsettings.*.Local.json
+appsettings.Local.json

@@ -35,17 +35,7 @@ exports[`validate-document-type-post should validate a valid document type (POST
 {
   "content": [
     {
-      "text": "Error using validate-document-type-post:
-{
-  "message": "Request failed with status code 400",
-  "response": {
-    "type": "Error",
-    "title": "Duplicate alias",
-    "status": 400,
-    "detail": "The specified document type alias is already in use",
-    "operationStatus": "DuplicateAlias"
-  }
-}",
+      "text": """",
       "type": "text",
     },
   ],

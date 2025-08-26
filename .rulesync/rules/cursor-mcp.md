@@ -1,8 +1,13 @@
 ---
-description: 
-globs: 
-alwaysApply: true
+root: false
+targets:
+  - '*'
+description: ''
+globs:
+  - '**/*'
+cursorRuleType: always
 ---
+
 # Model Context Providers Development Guide
 
 You are an expert in TypeScript and Model Context Protocol implementation.

@@ -1,8 +1,12 @@
 ---
+root: false
+targets:
+  - '*'
 description: Should be referenced when working with testing
-globs: 
-alwaysApply: false
+globs: []
+cursorRuleType: intelligently
 ---
+
 # Model Context Providers Testing Guide
 You are an expert in TypeScript and Jest and testing Model Context Protocol implementations.
 
@@ -156,4 +160,3 @@ Test builders help us to create a narrative around the arrange partt of the test
 - should include a getItem method that returns the created item,
 
 The builder shouls always have integration tests that test that the builder works and integrates correctly
-

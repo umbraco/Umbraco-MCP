@@ -5,15 +5,14 @@
   "description": "A model context protocol (MCP) server for Umbraco CMS",
   "main": "index.js",
   "bin": {
-    "umbraco": "build/index.js"
+    "umbraco": "dist/index.js"
   },
   "scripts": {
-    "clean": "rimraf build",
-    "prebuild": "copyfiles -u 1 \"../README.md\" \"../LICENSE\" \"./\"",
+    "clean": "rimraf dist",
     "build": "tsup --config tsup.config.ts",
     "watch": "tsup --config tsup.config.ts --watch",
     "generate": "orval --config orval.config.ts",
-    "inspect": "npx @modelcontextprotocol/inspector node build/index.js",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "patch-publish-alpha": "npm version prerelease --preid=alpha && npm publish --tag alpha --access public"
   },
@@ -21,7 +20,7 @@
     "node": ">=22.0.0"
   },
   "files": [
-    "build"
+    "dist"
   ],
   "repository": {
     "type": "git",
