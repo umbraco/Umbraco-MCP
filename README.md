@@ -69,16 +69,15 @@ Or configure environment variables and scope:
 npm install -g @anthropic-ai/claude-code
 
 # Add with environment variables
-claude mcp add umbraco-mcp --scope user -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
-
-# Set environment variables
-claude config set UMBRACO_CLIENT_ID="<API user name>"
-claude config set UMBRACO_CLIENT_SECRET="<API client secret>"  
-claude config set UMBRACO_BASE_URL="https://<domain>"
+claude mcp add umbraco-mcp --env UMBRACO_CLIENT_ID="your-id" --env UMBRACO_CLIENT_SECRET="your-secret" --env UMBRACO_BASE_URL="https://your-domain.com" -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
 
 # Verify installation
 claude mcp list
 ```
+
+This will add umbraco-mcp to the existing project in the claude.json config file.
+
+
 </details>
 
 <details>
@@ -89,21 +88,36 @@ claude mcp list
 
 **Requirements:** VS Code 1.101+ with GitHub Copilot Chat extension installed.
 
-#### Or install manually:
-1. Open VS Code Extensions panel and search for `@mcp`
-2. Browse MCP Servers or use Command Palette: `MCP: Add Server`
-3. Search for "umbraco-mcp" and click Install
-4. Add required environment variables
+Or install manually:
+Follow the MCP [install guide](https://code.visualstudio.com/docs/copilot/customization/mcp-servers#_add-an-mcp-server), use this config.
+
+```json
+{
+  "servers": {
+    "umbraco-mcp": {
+      "type": "stdio",
+      "command": "npx", 
+      "args": ["@umbraco-mcp/umbraco-mcp-cms@alpha"],
+      "env": {
+        "UMBRACO_CLIENT_ID": "<API user name>",
+        "UMBRACO_CLIENT_SECRET": "<API client secret>",
+        "UMBRACO_BASE_URL": "https://<domain>",
+        "EXCLUDE_MANAGEMENT_TOOLS": "<toolname>,<toolname>"
+      }
+    }
+  }
+}
+```
+
 </details>
 
 <details>
 <summary>Cursor</summary>
 
 #### Or install manually:
-Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name it "umbraco-mcp", use `command` type with the command `npx @umbraco-mcp/umbraco-mcp-cms@alpha`. Add environment variables via the settings interface.
+Go to `Cursor Settings` -> `Tools & Integrations` -> `Add new MCP Server`. 
 
-#### Or configure via file:
-Create `.cursor/mcp.json` in your project directory or `~/.cursor/mcp.json` for global access:
+Add the following to the config file and update the env variables.
 
 ```json
 {
