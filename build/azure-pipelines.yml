@@ -38,15 +38,14 @@ stages:
     - script: npm run build
       displayName: 'Build TypeScript'
     
-    - script: npm pack
+    - script: npm pack --pack-destination $(Build.ArtifactStagingDirectory)
       displayName: 'Create NPM package'
     
     - task: PublishPipelineArtifact@1
       displayName: 'Publish NPM package to artifacts'
       inputs:
-        path: '$(Build.SourcesDirectory)'
+        targetPath: '$(Build.ArtifactStagingDirectory)'
         artifact: 'npm-package'
-        patterns: '*.tgz'
 
 # - stage: PublishPackage
 #   displayName: 'Publish to NPM'
