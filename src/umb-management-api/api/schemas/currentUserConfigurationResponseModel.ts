@@ -7,10 +7,8 @@
  */
 import type { PasswordConfigurationResponseModel } from './passwordConfigurationResponseModel.js';
 
-export interface CurrenUserConfigurationResponseModel {
+export interface CurrentUserConfigurationResponseModel {
   keepUserLoggedIn: boolean;
-  /** @deprecated */
-  usernameIsEmail: boolean;
   passwordConfiguration: PasswordConfigurationResponseModel;
   allowChangePassword: boolean;
   allowTwoFactor: boolean;

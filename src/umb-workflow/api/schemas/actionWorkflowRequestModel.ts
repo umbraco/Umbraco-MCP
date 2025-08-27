@@ -12,5 +12,7 @@ export interface ActionWorkflowRequestModel {
   /** @nullable */
   userId?: string | null;
   /** @nullable */
+  entityType?: string | null;
+  /** @nullable */
   assignTo?: string | null;
 }

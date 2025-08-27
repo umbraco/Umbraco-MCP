@@ -9,6 +9,5 @@
 export interface DictionaryItemTranslationModel {
   /** @minLength 1 */
   isoCode: string;
-  /** @minLength 1 */
   translation: string;
 }

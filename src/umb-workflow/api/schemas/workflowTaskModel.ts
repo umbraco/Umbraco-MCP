@@ -6,6 +6,7 @@
  * OpenAPI spec version: Latest
  */
 import type { WorkflowTaskModelInstance } from './workflowTaskModelInstance.js';
+import type { TaskStatusModel } from './taskStatusModel.js';
 import type { WorkflowTaskModelNode } from './workflowTaskModelNode.js';
 import type { WorkflowTaskModelUserGroup } from './workflowTaskModelUserGroup.js';
 import type { WorkflowTaskModelGroup } from './workflowTaskModelGroup.js';
@@ -25,23 +26,13 @@ export interface WorkflowTaskModel {
   instance?: WorkflowTaskModelInstance;
   currentStep: number;
   id: number;
-  typeId: number;
-  /** @nullable */
-  status?: number | null;
+  status: TaskStatusModel;
   /** @nullable */
   node?: WorkflowTaskModelNode;
-  /** @nullable */
-  backofficeUrl?: string | null;
   /** @nullable */
   comment?: string | null;
   /** @nullable */
   completedBy?: string | null;
-  /** @nullable */
-  statusName?: string | null;
-  /** @nullable */
-  type?: string | null;
-  /** @nullable */
-  typeDescription?: string | null;
   /** @nullable */
   userGroup?: WorkflowTaskModelUserGroup;
   /** @nullable */

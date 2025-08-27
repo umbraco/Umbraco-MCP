@@ -5,12 +5,16 @@
  * Describes the Umbraco Workflow Management API.
  * OpenAPI spec version: Latest
  */
-import type { GlobalVariablesModel } from './globalVariablesModel.js';
+import type { GlobalWorkflowVariablesModel } from './globalWorkflowVariablesModel.js';
 import type { WorkflowInformationResponseModelLicense } from './workflowInformationResponseModelLicense.js';
+import type { WorkflowInformationResponseModelVersion } from './workflowInformationResponseModelVersion.js';
 
 export interface WorkflowInformationResponseModel {
-  globalVariables: GlobalVariablesModel;
+  globalVariables: GlobalWorkflowVariablesModel;
   /** @nullable */
   license: WorkflowInformationResponseModelLicense;
   hubUrl: string;
+  featureFlags: string[];
+  /** @nullable */
+  version: WorkflowInformationResponseModelVersion;
 }

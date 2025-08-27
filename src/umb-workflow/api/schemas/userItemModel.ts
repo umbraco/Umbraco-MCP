@@ -8,5 +8,6 @@
 
 export interface UserItemModel {
   unique: string;
-  name: string;
+  /** @nullable */
+  name?: string | null;
 }

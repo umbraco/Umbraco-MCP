@@ -5,11 +5,9 @@
  * Describes the Umbraco Workflow Management API.
  * OpenAPI spec version: Latest
  */
+import type { AuditLogResponseModel } from './auditLogResponseModel.js';
 
-export interface GlobalUserVariablesModel {
-  /** @nullable */
-  culture: string | null;
-  isAdmin: boolean;
-  /** @nullable */
-  unique: string | null;
+export interface PagedAuditLogResponseModel {
+  total: number;
+  items: AuditLogResponseModel[];
 }

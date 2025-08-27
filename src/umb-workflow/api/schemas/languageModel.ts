@@ -9,5 +9,4 @@
 export interface LanguageModel {
   name: string;
   culture: string;
-  isDefault: boolean;
 }
