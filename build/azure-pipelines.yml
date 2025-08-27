@@ -2,6 +2,7 @@ trigger:
   branches:
     include:
     - main
+    - feature/*
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -39,11 +40,22 @@ stages:
     
     - script: npm pack
       displayName: 'Create NPM package'
-      condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    
+    - script: |
+        echo "Current directory: $(pwd)"
+        echo "Build.SourcesDirectory: $(Build.SourcesDirectory)"
+        echo "Files in current directory:"
+        ls -la
+        echo "Looking for .tgz files:"
+        ls -la *.tgz || echo "No .tgz files found"
+        echo "Files in Build.SourcesDirectory:"
+        ls -la $(Build.SourcesDirectory)
+        echo "Looking for .tgz files in Build.SourcesDirectory:"
+        ls -la $(Build.SourcesDirectory)/*.tgz || echo "No .tgz files found in Build.SourcesDirectory"
+      displayName: 'Debug: List files and locate .tgz'
     
     - task: PublishPipelineArtifact@1
       displayName: 'Publish NPM package to artifacts'
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       inputs:
         targetPath: '$(Build.SourcesDirectory)/*.tgz'
         artifact: 'npm-package'
