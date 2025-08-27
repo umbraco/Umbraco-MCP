@@ -42,19 +42,6 @@ stages:
       displayName: 'Create NPM package'
     
     - script: |
-        echo "Current directory: $(pwd)"
-        echo "Build.SourcesDirectory: $(Build.SourcesDirectory)"
-        echo "Files in current directory:"
-        ls -la
-        echo "Looking for .tgz files:"
-        ls -la *.tgz || echo "No .tgz files found"
-        echo "Files in Build.SourcesDirectory:"
-        ls -la $(Build.SourcesDirectory)
-        echo "Looking for .tgz files in Build.SourcesDirectory:"
-        ls -la $(Build.SourcesDirectory)/*.tgz || echo "No .tgz files found in Build.SourcesDirectory"
-      displayName: 'Debug: List files and locate .tgz'
-    
-    - script: |
         tgz_file=$(ls *.tgz)
         echo "##vso[task.setvariable variable=TGZ_FILE]$tgz_file"
         echo "Found .tgz file: $tgz_file"
