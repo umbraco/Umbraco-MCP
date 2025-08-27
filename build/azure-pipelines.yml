@@ -44,8 +44,9 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: 'Publish NPM package to artifacts'
       inputs:
-        targetPath: '$(Build.SourcesDirectory)/*.tgz'
+        path: '$(Build.SourcesDirectory)'
         artifact: 'npm-package'
+        patterns: '*.tgz'
 
 # - stage: PublishPackage
 #   displayName: 'Publish to NPM'
