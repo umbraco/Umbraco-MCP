@@ -42,11 +42,11 @@ stages:
       condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
     
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish NPM package'
+      displayName: 'Publish NPM package to artifacts'
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       inputs:
-        pathtoPublish: '$(Build.SourcesDirectory)'
-        artifactName: 'npm'
+        pathtoPublish: '$(Build.SourcesDirectory)/*.tgz'
+        artifactName: 'npm-package'
         publishLocation: 'Container'
 
 # - stage: PublishPackage
