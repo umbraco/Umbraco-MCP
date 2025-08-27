@@ -41,16 +41,10 @@ stages:
     - script: npm pack
       displayName: 'Create NPM package'
     
-    - script: |
-        tgz_file=$(ls *.tgz)
-        echo "##vso[task.setvariable variable=TGZ_FILE]$tgz_file"
-        echo "Found .tgz file: $tgz_file"
-      displayName: 'Get .tgz filename'
-    
     - task: PublishPipelineArtifact@1
       displayName: 'Publish NPM package to artifacts'
       inputs:
-        targetPath: '$(Build.SourcesDirectory)/$(TGZ_FILE)'
+        targetPath: '$(Build.SourcesDirectory)/*.tgz'
         artifact: 'npm-package'
 
 # - stage: PublishPackage
