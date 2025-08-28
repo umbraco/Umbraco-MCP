@@ -50,7 +50,19 @@ exports[`GetUserGroupsTool should handle empty result 1`] = `
         ":",
         "5",
         "7",
-        "T"
+        "T",
+        "Umb.Document.PropertyValue.Read",
+        "Umb.Document.PropertyValue.Write",
+        "Workflow.ReleaseSet.Create",
+        "Workflow.ReleaseSet.Read",
+        "Workflow.ReleaseSet.Update",
+        "Workflow.ReleaseSet.Delete",
+        "Workflow.ReleaseSet.Publish",
+        "Workflow.AlternateVersion.Create",
+        "Workflow.AlternateVersion.Read",
+        "Workflow.AlternateVersion.Update",
+        "Workflow.AlternateVersion.Delete",
+        "Workflow.AlternateVersion.Publish"
       ],
       "permissions": []
     },
@@ -88,7 +100,19 @@ exports[`GetUserGroupsTool should handle empty result 1`] = `
         "Umb.Document.Notifications",
         ":",
         "5",
-        "T"
+        "T",
+        "Umb.Document.PropertyValue.Read",
+        "Umb.Document.PropertyValue.Write",
+        "Workflow.ReleaseSet.Create",
+        "Workflow.ReleaseSet.Read",
+        "Workflow.ReleaseSet.Update",
+        "Workflow.ReleaseSet.Delete",
+        "Workflow.ReleaseSet.Publish",
+        "Workflow.AlternateVersion.Create",
+        "Workflow.AlternateVersion.Read",
+        "Workflow.AlternateVersion.Update",
+        "Workflow.AlternateVersion.Delete",
+        "Workflow.AlternateVersion.Publish"
       ],
       "permissions": []
     },
@@ -127,7 +151,9 @@ exports[`GetUserGroupsTool should handle empty result 1`] = `
       "mediaRootAccess": true,
       "fallbackPermissions": [
         "Umb.Document.Update",
-        "Umb.Document.Read"
+        "Umb.Document.Read",
+        "Umb.Document.PropertyValue.Read",
+        "Umb.Document.PropertyValue.Write"
       ],
       "permissions": []
     },
@@ -152,7 +178,9 @@ exports[`GetUserGroupsTool should handle empty result 1`] = `
         "Umb.Document.Update",
         "Umb.Document.Read",
         "Umb.Document.Notifications",
-        ":"
+        ":",
+        "Umb.Document.PropertyValue.Read",
+        "Umb.Document.PropertyValue.Write"
       ],
       "permissions": []
     }

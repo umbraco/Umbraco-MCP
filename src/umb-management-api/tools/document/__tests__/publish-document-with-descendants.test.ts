@@ -75,7 +75,7 @@ describe("publish-document-with-descendants", () => {
   it("should handle publishing a non-existent document", async () => {
     const result = await PublishDocumentWithDescendantsTool().handler(
       {
-        id: BLANK_UUID,
+        id: "1234567890",
         data: { includeUnpublishedDescendants: true, cultures: [] },
       },
       { signal: new AbortController().signal }
