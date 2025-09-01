@@ -1,0 +1,39 @@
+evals:
+  models:
+    - "claude-3-5-haiku-20241022"
+  timeout: 120000
+  max_steps: 15
+  
+  tests:
+
+    - name: "Create and manage blog post workflow"
+      prompt: |
+        Complete these tasks in order:
+        1. Copy an existing blog post document and create a new blog post document with the following details:
+           - Title: "_Test Blog Post - Creating Amazing Content"
+           - Content/Body: A rich text content about creating amazing content for blogs
+           - Author: "Paul Seal"
+        2. Publish the blog post
+        3. Delete the blog post
+        4. When successfully completed all tasks, say 'The blog post workflow has completed successfully', nothing else
+      expected_tool_calls:
+        required:
+          - "search-document"
+          - "copy-document"
+          - "get-document-by-id"
+          - "publish-document"
+          - "delete-document"
+        allowed:
+          - "search-document"
+          - "get-document-root"
+          - "get-document-children"
+          - "get-document-by-id"
+          - "copy-document"
+          - "publish-document"
+          - "get-document-publish"
+          - "delete-document"
+          - "get-document-type-by-id"
+      response_scorers:
+        - type: 'llm-judge'
+          criteria: 'Did the last assistant step say "The blog post workflow has completed successfully"'
+          threshold: 0.8

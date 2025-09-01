@@ -7,6 +7,9 @@ const envSchema = z.object({
     EXCLUDE_MANAGEMENT_TOOLS: z.string().optional()
         .transform((val) => val?.split(',').map(tool => tool.trim()))
         .pipe(z.array(z.string()).optional()),
+    INCLUDE_MANAGEMENT_TOOLS: z.string().optional()
+        .transform((val) => val?.split(',').map(tool => tool.trim()).filter(Boolean))
+        .pipe(z.array(z.string()).optional()),
 });
 
 export default envSchema.parse(process.env);

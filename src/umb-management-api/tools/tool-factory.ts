@@ -28,9 +28,20 @@ const mapTools = (server: McpServer,
   user: CurrentUserResponseModel,
   tools: ToolDefinition<any>[]) => {
   return tools.forEach(tool => {
-    if ((tool.enabled === undefined || tool.enabled(user)) && !env.EXCLUDE_MANAGEMENT_TOOLS?.includes(tool.name)) {
-      server.tool(tool.name, tool.description, tool.schema, tool.handler);
+    // Check if user has permission for this tool
+    const userHasPermission = (tool.enabled === undefined || tool.enabled(user));
+    if (!userHasPermission) return;
+    
+    // Check if tool is explicitly excluded
+    if (env.EXCLUDE_MANAGEMENT_TOOLS?.includes(tool.name)) return;
+    
+    // If include list exists, only include tools in that list
+    if (env.INCLUDE_MANAGEMENT_TOOLS?.length) {
+      if (!env.INCLUDE_MANAGEMENT_TOOLS.includes(tool.name)) return;
     }
+    
+    // Register the tool
+    server.tool(tool.name, tool.description, tool.schema, tool.handler);
   })
 }
 

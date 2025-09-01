@@ -1,0 +1,26 @@
+evals:
+  models:
+    - "claude-3-5-haiku-20241022"
+  timeout: 60000
+  max_steps: 10
+  
+  tests:
+
+    - name: "Create new data type"
+      prompt: |
+        Complete these tasks in order:
+        1. Create a new data type called '_TestDataType' that is a textBox with 200 max characters.
+        2. Delete the data type called '_TestDataType'
+        3. When sucessfully completed the tasks, say 'The task has completed sucessfully', nothing else
+      expected_tool_calls:
+        required:
+          - "create-data-type"
+          - "delete-data-type"
+        allowed:
+          - "get-data-type-root"
+          - "create-data-type"    
+          - "delete-data-type"
+      response_scorers:
+        - type: 'llm-judge'
+          criteria: 'Did the last assistant step say "The task has completed sucessfully"'
+          threshold: 0.8
