@@ -23,7 +23,7 @@ export class PropertyTypeTestHelper {
 
       this.headerControlsId = response.items[0].id;
 
-      return response;
+      return response.items[0] as DocumentTypeResponseModel;
     } catch (error) {
       console.error("Error finding headerControls document type:", error);
       return null;

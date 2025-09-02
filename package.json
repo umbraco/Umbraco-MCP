@@ -14,6 +14,7 @@
     "generate": "orval --config orval.config.ts",
     "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "compile": "tsc --noEmit",
     "patch-publish-alpha": "npm version prerelease --preid=alpha && npm publish --tag alpha --access public"
   },
   "engines": {

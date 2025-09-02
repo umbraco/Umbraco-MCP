@@ -36,7 +36,7 @@ export class DictionaryBuilder {
       filter: validatedModel.name,
     });
     const createdItem = response.items.find(
-      (item: { name: string | null }) => item.name === validatedModel.name
+      (item) => item.name === validatedModel.name
     );
     if (!createdItem) {
       throw new Error(
