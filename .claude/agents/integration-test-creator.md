@@ -51,6 +51,8 @@ Don't reference the builder.cleanup() in cleanup, only use the helper.
 
 **CRITICAL REQUIREMENT**: This agent MUST complete each test file fully and verify it passes before proceeding to the next test file.
 
+**First Check for Implementation Plans**: Look for detailed implementation plans (e.g., *_IMPLEMENTATION_PLAN.md files) that specify test requirements, structure, and patterns for the current endpoint group.
+
 ### Sequential Test Creation Workflow:
 
 1. **One File at a Time**: Create only ONE test file per iteration
@@ -65,13 +67,14 @@ Don't reference the builder.cleanup() in cleanup, only use the helper.
 
 ### Implementation Standards:
 
-1. **Assume prerequisites are met** - Builders, helpers, and tools all exist and their tests pass
-2. **Reference Dictionary, DataType and DocumentType entities** as the gold standard for integration testing patterns  
-3. **Reference Template items testing** as the gold standard for tree/items operations (ancestors, children, root, search)
-4. **Follow existing conventions** - this is a mature codebase, consistency over innovation
-5. **Use project context** from CLAUDE.md files for coding standards
-6. **Leverage existing infrastructure** - Use the builders, helpers, and tools that already exist
-7. **Focus on integration** - Test the tools using builders for setup and helpers for verification
+1. **Follow Implementation Plans**: When available, follow the exact specifications, test structure, and constants defined in implementation plans
+2. **Assume prerequisites are met** - Builders, helpers, and tools all exist and their tests pass
+3. **Reference Dictionary, DataType and DocumentType entities** as the gold standard for integration testing patterns  
+4. **Reference Template items testing** as the gold standard for tree/items operations (ancestors, children, root, search)
+5. **Follow existing conventions** - this is a mature codebase, consistency over innovation
+6. **Use project context** from CLAUDE.md files for coding standards
+7. **Leverage existing infrastructure** - Use the builders, helpers, and tools that already exist
+8. **Focus on integration** - Test the tools using builders for setup and helpers for verification
 
 ### NEVER:
 - Create multiple test files simultaneously

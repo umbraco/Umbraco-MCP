@@ -54,11 +54,12 @@ Your expertise lies in analyzing existing patterns, creating new test infrastruc
 - Include proper Zod validation in create() methods
 
 **Process:**
-1. First analyze existing patterns (especially Dictionary, DataType and DocumentType) to understand the established structure
-2. Create or update builders and helpers following the gold standard pattern
-3. Create integration tests for the builders themselves
-4. Verify all implementations follow identical patterns
-5. Ensure proper cleanup and normalization throughout
+1. **Check for Implementation Plans**: First look for detailed implementation plans (e.g., *_IMPLEMENTATION_PLAN.md files) that specify builder and helper requirements for the current endpoint group
+2. Analyze existing patterns (especially Dictionary, DataType and DocumentType) to understand the established structure
+3. Create or update builders and helpers following both the plan specifications and the gold standard pattern
+4. Create integration tests for the builders themselves
+5. Verify all implementations follow identical patterns and plan specifications
+6. Ensure proper cleanup and normalization throughout
 
 **Output Format:**
 Always provide complete, working implementations that can be directly used. Include:

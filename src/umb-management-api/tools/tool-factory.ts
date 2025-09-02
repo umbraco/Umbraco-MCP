@@ -21,6 +21,7 @@ import { RedirectTools } from "./redirect/index.js";
 import { UserGroupTools } from "./user-group/index.js";
 import { TemporaryFileTools } from "./temporary-file/index.js";
 import { MediaTools } from "./media/index.js";
+import { ScriptTools } from "./script/index.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
 import env from "@/helpers/env.js";
@@ -57,4 +58,5 @@ export function UmbracoToolFactory(server: McpServer, user: CurrentUserResponseM
   mapTools(server, user, RedirectTools(user));
   mapTools(server, user, UserGroupTools(user));
   mapTools(server, user, TemporaryFileTools(user));
+  mapTools(server, user, ScriptTools(user));
 }
