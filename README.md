@@ -39,7 +39,9 @@ Once you have this information head back into Claude desktop app and head to Set
         "NODE_TLS_REJECT_UNAUTHORIZED": "0",
         "UMBRACO_CLIENT_ID": "umbraco-back-office-mcp",
         "UMBRACO_CLIENT_SECRET": "1234567890",
-        "UMBRACO_BASE_URL": "https://localhost:44391"
+        "UMBRACO_BASE_URL": "https://localhost:44391",
+        "INCLUDE_MANAGEMENT_COLLECTIONS": "culture,document,media",
+        "EXCLUDE_MANAGEMENT_TOOLS": "delete-document,empty-recycle-bin"
       }
     }
   }
@@ -69,7 +71,7 @@ Or configure environment variables and scope:
 npm install -g @anthropic-ai/claude-code
 
 # Add with environment variables
-claude mcp add umbraco-mcp --env UMBRACO_CLIENT_ID="your-id" --env UMBRACO_CLIENT_SECRET="your-secret" --env UMBRACO_BASE_URL="https://your-domain.com" -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
+claude mcp add umbraco-mcp --env UMBRACO_CLIENT_ID="your-id" --env UMBRACO_CLIENT_SECRET="your-secret" --env UMBRACO_BASE_URL="https://your-domain.com" --env INCLUDE_MANAGEMENT_COLLECTIONS="culture,document,media" -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
 
 # Verify installation
 claude mcp list
@@ -102,6 +104,7 @@ Follow the MCP [install guide](https://code.visualstudio.com/docs/copilot/custom
         "UMBRACO_CLIENT_ID": "<API user name>",
         "UMBRACO_CLIENT_SECRET": "<API client secret>",
         "UMBRACO_BASE_URL": "https://<domain>",
+        "INCLUDE_MANAGEMENT_COLLECTIONS": "<collection>,<collection>",
         "EXCLUDE_MANAGEMENT_TOOLS": "<toolname>,<toolname>"
       }
     }
@@ -129,6 +132,7 @@ Add the following to the config file and update the env variables.
         "UMBRACO_CLIENT_ID": "<API user name>",
         "UMBRACO_CLIENT_SECRET": "<API client secret>",
         "UMBRACO_BASE_URL": "https://<domain>",
+        "INCLUDE_MANAGEMENT_COLLECTIONS": "<collection>,<collection>",
         "EXCLUDE_MANAGEMENT_TOOLS": "<toolname>,<toolname>"
       }
     }
@@ -156,21 +160,36 @@ Url of the site you want to connect to, it only needs to be the scheme and domai
 
 The allows you to specify tools by name if you wish to exclude them for the usable tools list. This is helpful as some Agents, cant handle so many tools. This is a commma seperated list of tools which can be found below.
 
+`INCLUDE_MANAGEMENT_TOOLS`
+
+The allows you to specify tools by name if you wish to include only specific tools in the usable tools list. When specified, only these tools will be available. This is a commma seperated list of tools which can be found below.
+
+`INCLUDE_MANAGEMENT_COLLECTIONS`
+
+The allows you to specify collections by name if you wish to include only specific collections. When specified, only tools from these collections will be available. This is a commma seperated list of collection names (see tool list below for collection names).
+
+`EXCLUDE_MANAGEMENT_COLLECTIONS`
+
+The allows you to specify collections by name if you wish to exclude them from the usable tools list. This is a commma seperated list of collection names (see tool list below for collection names).
+
 
 ##  Umbraco Management API Tools
+
+**Note:** Collection names are shown in brackets for use with `INCLUDE_MANAGEMENT_COLLECTIONS` and `EXCLUDE_MANAGEMENT_COLLECTIONS`.
+
 <details>
 <summary> View Tool list</summary>
 <br>
 
 <details>
-<summary>Culture</summary>
+<summary>Culture (culture)</summary>
 <br>
 
 `get-culture` - gets all cultures avaliable to Umbraco  
 </details>
 
 <details>
-<summary>Data Type</summary>
+<summary>Data Type (data-type)</summary>
 <br>
 
 `get-data-type-search` - Search for data types  
@@ -193,7 +212,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Dictionary</summary>
+<summary>Dictionary (dictionary)</summary>
 <br>
 
 `get-dictionary-search` - Search for dictionary items  
@@ -204,7 +223,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Document</summary>
+<summary>Document (document)</summary>
 <br>
 
 `get-document-by-id` - Get a document by ID  
@@ -242,7 +261,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Document Blueprint</summary>
+<summary>Document Blueprint (document-blueprint)</summary>
 <br>
 
 `get-blueprint` - Get a document blueprint  
@@ -255,7 +274,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Document Type</summary>
+<summary>Document Type (document-type)</summary>
 <br>
 
 `get-document-type` - Get a document type  
@@ -283,7 +302,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Language</summary>
+<summary>Language (language)</summary>
 <br>
 
 `get-language-items` - Get all languages  
@@ -295,7 +314,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Log Viewer</summary>
+<summary>Log Viewer (log-viewer)</summary>
 <br>
 
 `get-log-viewer-saved-search-by-name` - Get saved search by name  
@@ -310,7 +329,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Media</summary>
+<summary>Media (media)</summary>
 <br>
 
 `get-media-by-id` - Get media by ID  
@@ -336,7 +355,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Media Type</summary>
+<summary>Media Type (media-type)</summary>
 <br>
 
 `get-media-type-configuration` - Get media type configuration  
@@ -362,7 +381,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Member</summary>
+<summary>Member (member)</summary>
 <br>
 
 `get-member` - Get member by ID  
@@ -373,7 +392,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Member Group</summary>
+<summary>Member Group (member-group)</summary>
 <br>
 
 `get-member-group` - Get member group  
@@ -385,7 +404,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Member Type</summary>
+<summary>Member Type (member-type)</summary>
 <br>
 
 `get-member-type-by-id` - Get member type by ID  
@@ -401,7 +420,27 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Property Type</summary>
+<summary>Partial View (partial-view)</summary>
+<br>
+
+`get-partial-view-by-path` - Get partial view by path  
+`get-partial-view-folder-by-path` - Get partial view folder by path  
+`get-partial-view-snippet-by-id` - Get partial view snippet by ID  
+`get-partial-view-snippet` - Get partial view snippet  
+`create-partial-view` - Create a new partial view  
+`create-partial-view-folder` - Create a partial view folder  
+`update-partial-view` - Update a partial view  
+`rename-partial-view` - Rename a partial view  
+`delete-partial-view` - Delete a partial view  
+`delete-partial-view-folder` - Delete a partial view folder  
+`get-partial-view-root` - Get root partial views  
+`get-partial-view-children` - Get child partial views  
+`get-partial-view-ancestors` - Get partial view ancestors  
+`get-partial-view-search` - Search partial views
+</details>
+
+<details>
+<summary>Property Type (property-type)</summary>
 <br>
 
 `get-property-type` - Get property type by ID  
@@ -412,7 +451,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Redirect</summary>
+<summary>Redirect (redirect)</summary>
 <br>
 
 `get-all-redirects` - Get all redirects  
@@ -423,7 +462,25 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Server</summary>
+<summary>Script (script)</summary>
+<br>
+
+`get-script-by-path` - Get script by path  
+`get-script-folder-by-path` - Get script folder by path  
+`get-script-items` - Get script items  
+`create-script` - Create a new script  
+`create-script-folder` - Create a script folder  
+`update-script` - Update a script  
+`rename-script` - Rename a script  
+`delete-script` - Delete a script  
+`delete-script-folder` - Delete a script folder  
+`get-script-tree-root` - Get root script items  
+`get-script-tree-children` - Get child script items  
+`get-script-tree-ancestors` - Get script ancestors
+</details>
+
+<details>
+<summary>Server (server)</summary>
 <br>
 
 `get-server-status` - Get server status  
@@ -433,7 +490,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Template</summary>
+<summary>Template (template)</summary>
 <br>
 
 `get-template-search` - Search for templates by name  
@@ -450,7 +507,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Temporary File</summary>
+<summary>Temporary File (temporary-file)</summary>
 <br>
 
 `create-temporary-file` - Create a temporary file  
@@ -460,7 +517,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>User Group</summary>
+<summary>User Group (user-group)</summary>
 <br>
 
 `get-user-group` - Get user group  
@@ -474,7 +531,7 @@ The allows you to specify tools by name if you wish to exclude them for the usab
 </details>
 
 <details>
-<summary>Webhook</summary>
+<summary>Webhook (webhook)</summary>
 <br>
 
 `get-webhook-by-id` - Get webhook by ID  
