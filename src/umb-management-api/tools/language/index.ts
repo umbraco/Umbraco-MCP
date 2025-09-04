@@ -6,23 +6,34 @@ import UpdateLanguageTool from "./put/update-language.js";
 import DeleteLanguageTool from "./delete/delete-language.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
 
-export const LanguageTools = (user: CurrentUserResponseModel) => {
-  const tools: ToolDefinition<any>[] = [];
+export const LanguageCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'language',
+    displayName: 'Languages',
+    description: 'Language and localization configuration',
+    dependencies: []
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [];
 
+    tools.push(GetLanguageItemsTool());
+    tools.push(GetDefaultLanguageTool());
 
-  tools.push(GetLanguageItemsTool());
-  tools.push(GetDefaultLanguageTool());
+    if (AuthorizationPolicies.TreeAccessLanguages(user)) {
+      tools.push(CreateLanguageTool());
+      tools.push(UpdateLanguageTool());
+      tools.push(DeleteLanguageTool());
+      tools.push(GetLanguageByIsoCodeTool());
+    }
 
-
-  if (AuthorizationPolicies.TreeAccessLanguages(user)) {
-
-    tools.push(CreateLanguageTool());
-    tools.push(UpdateLanguageTool());
-    tools.push(DeleteLanguageTool());
-    tools.push(GetLanguageByIsoCodeTool());
+    return tools;
   }
+};
 
-  return tools;
-}
+// Backwards compatibility export
+export const LanguageTools = (user: CurrentUserResponseModel) => {
+  return LanguageCollection.tools(user);
+};

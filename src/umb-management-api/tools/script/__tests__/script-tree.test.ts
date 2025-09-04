@@ -6,13 +6,15 @@ import { ScriptFolderBuilder } from "./helpers/script-folder-builder.js";
 import { createSnapshotResult } from "@/test-helpers/create-snapshot-result.js";
 import { jest } from "@jest/globals";
 
-const ROOT_FOLDER_NAME = "_RootFolder";
-const ROOT_SCRIPT_NAME = "_RootScript";
+// Generate unique names to avoid conflicts
+const timestamp = Date.now();
+const ROOT_FOLDER_NAME = `_RootFolder_${timestamp}`;
+const ROOT_SCRIPT_NAME = `_RootScript_${timestamp}`;
 const ROOT_SCRIPT_CONTENT = "console.log('root script');";
-const CHILD_FOLDER_NAME = "_ChildFolder";
-const CHILD_SCRIPT_NAME = "_ChildScript";
+const CHILD_FOLDER_NAME = `_ChildFolder_${timestamp}`;
+const CHILD_SCRIPT_NAME = `_ChildScript_${timestamp}`;
 const CHILD_SCRIPT_CONTENT = "console.log('child script');";
-const GRANDCHILD_SCRIPT_NAME = "_GrandchildScript";
+const GRANDCHILD_SCRIPT_NAME = `_GrandchildScript_${timestamp}`;
 const GRANDCHILD_SCRIPT_CONTENT = "console.log('grandchild script');";
 
 describe("script-tree", () => {

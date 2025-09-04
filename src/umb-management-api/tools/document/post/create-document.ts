@@ -1,5 +1,5 @@
 import { UmbracoManagementClient } from "@umb-management-client";
-import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CreateUmbracoTool } from "@/helpers/mcp/create-umbraco-tool.js";
 import { CreateDocumentRequestModel } from "@/umb-management-api/schemas/createDocumentRequestModel.js";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";

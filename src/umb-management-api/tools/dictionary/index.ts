@@ -7,26 +7,40 @@ import MoveDictionaryItemTool from "./put/move-dictionary-item.js";
 import GetDictionaryRootTool from "./items/get/get-root.js";
 import GetDictionaryChildrenTool from "./items/get/get-children.js";
 import GetDictionaryAncestorsTool from "./items/get/get-ancestors.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
+export const DictionaryCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'dictionary',
+    displayName: 'Dictionary',
+    description: 'Dictionary item management and localization',
+    dependencies: ['language'] // Dictionary items typically require language context
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [FindDictionaryItemTool()];
+    
+    if (AuthorizationPolicies.TreeAccessDictionary(user)) {
+      tools.push(CreateDictionaryItemTool());
+      tools.push(GetDictionaryItemTool());
+      tools.push(DeleteDictionaryItemTool());
+      tools.push(UpdateDictionaryItemTool());
+      tools.push(MoveDictionaryItemTool());
+    }
+
+    if (AuthorizationPolicies.TreeAccessDictionaryOrTemplates(user)) {
+      tools.push(GetDictionaryRootTool());
+      tools.push(GetDictionaryChildrenTool());
+      tools.push(GetDictionaryAncestorsTool());
+    }
+
+    return tools;
+  }
+};
+
+// Backwards compatibility export (can be removed later)
 export const DictionaryTools = (user: CurrentUserResponseModel) => {
-
-  const tools: ToolDefinition<any>[] = [FindDictionaryItemTool()];
-  if (AuthorizationPolicies.TreeAccessDictionary(user)) {
-    tools.push(CreateDictionaryItemTool());
-    tools.push(GetDictionaryItemTool());
-    tools.push(DeleteDictionaryItemTool());
-    tools.push(UpdateDictionaryItemTool());
-    tools.push(MoveDictionaryItemTool());
-  }
-
-  if (AuthorizationPolicies.TreeAccessDictionaryOrTemplates(user)) {
-    tools.push(GetDictionaryRootTool());
-    tools.push(GetDictionaryChildrenTool());
-    tools.push(GetDictionaryAncestorsTool());
-  }
-
-  return tools
+  return DictionaryCollection.tools(user);
 };

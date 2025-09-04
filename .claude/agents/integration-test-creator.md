@@ -27,7 +27,7 @@ Don't reference the builder.cleanup() in cleanup, only use the helper.
 - **File Organization**: One test file per logical operation (create, delete, find, etc.)
 - **Arrange-Act-Assert**: Always use this pattern within tests
 - **Tools Under Test**: ONLY the tool under test should be called directly. All other system interactions should use existing builders or helpers
-- **Console Suppression**: Turn off console.error during tests
+- **Console Suppression**: Turn off console.error during tests. Turn back on console errors only after all clean up has completed.
 - **Use Existing Infrastructure**: Leverage existing builders and helpers created by the test-builder-helper-creator agent
 
 ### Data Management

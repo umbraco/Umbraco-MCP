@@ -1,62 +1,155 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-import { CultureTools } from "./culture/index.js";
-import { DataTypeTools } from "./data-type/index.js";
-import { DictionaryTools } from "./dictionary/index.js";
-import { DocumentTypeTools } from "./document-type/index.js";
-import { DocumentBlueprintTools } from "./document-blueprint/index.js";
-import { DocumentTools } from "./document/index.js";
-import { MemberGroupTools } from "./member-group/index.js";
-import { MediaTypeTools } from "./media-type/index.js";
-import { MemberTypeTools } from "./member-type/index.js";
-import { MemberTools } from "./member/index.js";
-import { LogViewerTools } from "./log-viewer/index.js";
-import { LanguageTools } from "./language/index.js";
-import { PartialViewTools } from "./partial-view/index.js";
-import { PropertyTypeTools } from "./property-type/index.js";
-import { TemplateTools } from "./template/index.js";
-import { WebhookTools } from "./webhook/index.js";
-import { ServerTools } from "./server/index.js";
-import { RedirectTools } from "./redirect/index.js";
-import { UserGroupTools } from "./user-group/index.js";
-import { TemporaryFileTools } from "./temporary-file/index.js";
-import { MediaTools } from "./media/index.js";
-import { ScriptTools } from "./script/index.js";
+// Import collections (new format)
+import { CultureCollection } from "./culture/index.js";
+import { DataTypeCollection } from "./data-type/index.js";
+import { DictionaryCollection } from "./dictionary/index.js";
+import { DocumentTypeCollection } from "./document-type/index.js";
+import { LanguageCollection } from "./language/index.js";
+import { DocumentBlueprintCollection } from "./document-blueprint/index.js";
+import { DocumentCollection } from "./document/index.js";
+import { MediaCollection } from "./media/index.js";
+import { MediaTypeCollection } from "./media-type/index.js";
+import { MemberCollection } from "./member/index.js";
+import { MemberGroupCollection } from "./member-group/index.js";
+import { MemberTypeCollection } from "./member-type/index.js";
+import { LogViewerCollection } from "./log-viewer/index.js";
+import { PartialViewCollection } from "./partial-view/index.js";
+import { PropertyTypeCollection } from "./property-type/index.js";
+import { TemplateCollection } from "./template/index.js";
+import { WebhookCollection } from "./webhook/index.js";
+import { ServerCollection } from "./server/index.js";
+import { RedirectCollection } from "./redirect/index.js";
+import { UserGroupCollection } from "./user-group/index.js";
+import { TemporaryFileCollection } from "./temporary-file/index.js";
+import { ScriptCollection } from "./script/index.js";
+
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
-import env from "@/helpers/env.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
+import { CollectionConfigLoader } from "@/helpers/config/collection-config-loader.js";
+import { CollectionConfiguration } from "../../types/collection-configuration.js";
+import env from "@/helpers/config/env.js";
 
+// Available collections (converted to new format)
+const availableCollections: ToolCollectionExport[] = [
+  CultureCollection,
+  DataTypeCollection,
+  DictionaryCollection,
+  DocumentTypeCollection,
+  LanguageCollection,
+  DocumentBlueprintCollection,
+  DocumentCollection,
+  MediaCollection,
+  MediaTypeCollection,
+  MemberCollection,
+  MemberGroupCollection,
+  MemberTypeCollection,
+  LogViewerCollection,
+  PartialViewCollection,
+  PropertyTypeCollection,
+  TemplateCollection,
+  WebhookCollection,
+  ServerCollection,
+  RedirectCollection,
+  UserGroupCollection,
+  TemporaryFileCollection,
+  ScriptCollection
+];
+
+// Enhanced mapTools with collection filtering (existing function signature)
 const mapTools = (server: McpServer,
   user: CurrentUserResponseModel,
   tools: ToolDefinition<any>[]) => {
   return tools.forEach(tool => {
-    if ((tool.enabled === undefined || tool.enabled(user)) && !env.EXCLUDE_MANAGEMENT_TOOLS?.includes(tool.name)) {
-      server.tool(tool.name, tool.description, tool.schema, tool.handler);
-    }
+    // Check if user has permission for this tool
+    const userHasPermission = (tool.enabled === undefined || tool.enabled(user));
+    if (!userHasPermission) return;
+    
+    // Apply existing tool-level filtering (preserves current behavior)
+    if (env.EXCLUDE_MANAGEMENT_TOOLS?.includes(tool.name)) return;
+    if (env.INCLUDE_MANAGEMENT_TOOLS?.length && !env.INCLUDE_MANAGEMENT_TOOLS.includes(tool.name)) return;
+    
+    // Register the tool
+    server.tool(tool.name, tool.description, tool.schema, tool.handler);
   })
 }
 
+function validateConfiguration(config: CollectionConfiguration, collections: ToolCollectionExport[]): void {
+  const availableNames = new Set(collections.map(c => c.metadata.name));
+  
+  // Check all referenced collection names exist
+  const referencedNames = [
+    ...config.enabledCollections,
+    ...config.disabledCollections,
+    ...collections.flatMap(c => c.metadata.dependencies || [])
+  ];
+  
+  const invalid = referencedNames.filter(name => !availableNames.has(name));
+  if (invalid.length > 0) {
+    console.warn(`Referenced collections don't exist: ${[...new Set(invalid)].join(', ')}`);
+  }
+}
+
+function resolveDependencies(requestedNames: string[], collections: ToolCollectionExport[]): string[] {
+  const result = new Set(requestedNames);
+  const collectionMap = new Map(collections.map(c => [c.metadata.name, c]));
+  
+  // Recursively add dependencies
+  function addDependencies(collectionName: string) {
+    const collection = collectionMap.get(collectionName);
+    if (collection?.metadata.dependencies) {
+      collection.metadata.dependencies.forEach(dep => {
+        if (!result.has(dep)) {
+          result.add(dep);
+          addDependencies(dep); // Recursive dependency resolution
+        }
+      });
+    }
+  }
+  
+  requestedNames.forEach(addDependencies);
+  return Array.from(result);
+}
+
+function getEnabledCollections(config: CollectionConfiguration): ToolCollectionExport[] {
+  const allCollectionNames = availableCollections.map(c => c.metadata.name);
+  
+  // Apply collection filtering logic (same as tool filtering)
+  let enabledNames = allCollectionNames.filter(name => {
+    // Always exclude collections in the disabled list
+    if (config.disabledCollections.includes(name)) return false;
+    
+    // If enabled list exists, only include collections in that list
+    if (config.enabledCollections.length > 0) {
+      return config.enabledCollections.includes(name);
+    }
+    
+    // Otherwise, include all collections (default behavior)
+    return true;
+  });
+  
+  // Resolve dependencies - add required collections
+  const enabledWithDependencies = resolveDependencies(enabledNames, availableCollections);
+  
+  return availableCollections.filter(collection => 
+    enabledWithDependencies.includes(collection.metadata.name)
+  );
+}
+
 export function UmbracoToolFactory(server: McpServer, user: CurrentUserResponseModel) {
-  mapTools(server, user, CultureTools(user));
-  mapTools(server, user, DataTypeTools(user));
-  mapTools(server, user, DictionaryTools(user));
-  mapTools(server, user, DocumentBlueprintTools(user));
-  mapTools(server, user, DocumentTypeTools(user));
-  mapTools(server, user, DocumentTools(user));
-  mapTools(server, user, MediaTools(user));
-  mapTools(server, user, MediaTypeTools(user));
-  mapTools(server, user, MemberGroupTools(user));
-  mapTools(server, user, MemberTools(user));
-  mapTools(server, user, MemberTypeTools(user));
-  mapTools(server, user, LogViewerTools(user));
-  mapTools(server, user, LanguageTools(user));
-  mapTools(server, user, PartialViewTools(user));
-  mapTools(server, user, PropertyTypeTools(user));
-  mapTools(server, user, TemplateTools(user));
-  mapTools(server, user, WebhookTools(user));
-  mapTools(server, user, ServerTools(user));
-  mapTools(server, user, RedirectTools(user));
-  mapTools(server, user, UserGroupTools(user));
-  mapTools(server, user, TemporaryFileTools(user));
-  mapTools(server, user, ScriptTools(user));
+  // Load collection configuration
+  const config = CollectionConfigLoader.loadFromEnv();
+  
+  // Validate configuration
+  validateConfiguration(config, availableCollections);
+  
+  // Get enabled collections based on configuration
+  const enabledCollections = getEnabledCollections(config);
+  
+  // Load tools from enabled collections only
+  enabledCollections.forEach(collection => {
+    const tools = collection.tools(user);
+    mapTools(server, user, tools);
+  });
 }

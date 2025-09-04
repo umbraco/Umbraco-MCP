@@ -10,6 +10,10 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
     const item = { ...i, id: BLANK_UUID };
     if (item.parent) {
       item.parent = { ...item.parent, id: BLANK_UUID };
+      // Normalize parent path as well
+      if (item.parent.path && typeof item.parent.path === "string") {
+        item.parent.path = item.parent.path.replace(/_\d{13}(?=_|\.js$|\/|$)/g, "_NORMALIZED_TIMESTAMP");
+      }
     }
     if (item.createDate) {
       item.createDate = "NORMALIZED_DATE";
@@ -19,6 +23,13 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
     }
     if (item.updateDate) {
       item.updateDate = "NORMALIZED_DATE";
+    }
+    // Normalize test names that contain timestamps
+    if (item.name && typeof item.name === "string") {
+      item.name = item.name.replace(/_\d{13}(?=_|\.js$|$)/, "_NORMALIZED_TIMESTAMP");
+    }
+    if (item.path && typeof item.path === "string") {
+      item.path = item.path.replace(/_\d{13}(?=_|\.js$|\/|$)/g, "_NORMALIZED_TIMESTAMP");
     }
     return item;
   }

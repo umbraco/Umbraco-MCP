@@ -18,46 +18,54 @@ import GetMediaTypeAvailableCompositionsTool from "./post/get-media-type-availab
 import UpdateMediaTypeTool from "./put/update-media-type.js";
 import MoveMediaTypeTool from "./put/move-media-type.js";
 import DeleteMediaTypeTool from "./delete/delete-media-type.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
+export const MediaTypeCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'media-type',
+    displayName: 'Media Types',
+    description: 'Media type definitions and composition management',
+    dependencies: []
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [];
+
+    if (AuthorizationPolicies.TreeAccessMediaTypes(user)) {
+      tools.push(GetMediaTypeFolderTool());
+      tools.push(CreateMediaTypeFolderTool());
+      tools.push(DeleteMediaTypeFolderTool());
+      tools.push(UpdateMediaTypeFolderTool());
+
+      tools.push(CreateMediaTypeTool());
+      tools.push(CopyMediaTypeTool());
+      tools.push(GetMediaTypeAvailableCompositionsTool());
+      tools.push(UpdateMediaTypeTool());
+      tools.push(MoveMediaTypeTool());
+      tools.push(DeleteMediaTypeTool());
+
+      tools.push(GetMediaTypeRootTool());
+      tools.push(GetMediaTypeChildrenTool());
+      tools.push(GetMediaTypeAncestorsTool());
+    }
+
+    if (AuthorizationPolicies.TreeAccessMediaOrMediaTypes(user)) {
+      tools.push(GetMediaTypeByIdTool());
+      tools.push(GetMediaTypeByIdsTool());
+      tools.push(GetMediaTypeConfigurationTool());
+      tools.push(GetAllowedMediaTypeTool());
+      tools.push(GetMediaTypeAllowedAtRootTool());
+      tools.push(GetMediaTypeAllowedChildrenTool());
+      tools.push(GetMediaTypeCompositionReferencesTool());
+    }
+
+    return tools;
+  }
+};
+
+// Backwards compatibility export
 export const MediaTypeTools = (user: CurrentUserResponseModel) => {
-
-  const tools: ToolDefinition<any>[] = [];
-
-
-  if (AuthorizationPolicies.TreeAccessMediaTypes(user)) {
-    tools.push(GetMediaTypeFolderTool());
-    tools.push(CreateMediaTypeFolderTool());
-    tools.push(DeleteMediaTypeFolderTool());
-    tools.push(UpdateMediaTypeFolderTool());
-
-    tools.push(CreateMediaTypeTool());
-    tools.push(CopyMediaTypeTool());
-    tools.push(GetMediaTypeAvailableCompositionsTool());
-    tools.push(UpdateMediaTypeTool());
-    tools.push(MoveMediaTypeTool());
-    tools.push(DeleteMediaTypeTool());
-
-
-    tools.push(GetMediaTypeRootTool());
-    tools.push(GetMediaTypeChildrenTool());
-    tools.push(GetMediaTypeAncestorsTool());
-  }
-
-  if (AuthorizationPolicies.TreeAccessMediaOrMediaTypes(user)) {
-
-    tools.push(GetMediaTypeByIdTool());
-    tools.push(GetMediaTypeByIdsTool());
-    tools.push(GetMediaTypeConfigurationTool());
-    tools.push(GetAllowedMediaTypeTool());
-    tools.push(GetMediaTypeAllowedAtRootTool());
-    tools.push(GetMediaTypeAllowedChildrenTool());
-    tools.push(GetMediaTypeCompositionReferencesTool());
-  }
-
-
-  return tools;
-
-} 
+  return MediaTypeCollection.tools(user);
+}; 

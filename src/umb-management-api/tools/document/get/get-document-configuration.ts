@@ -1,5 +1,5 @@
 import { UmbracoManagementClient } from "@umb-management-client";
-import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CreateUmbracoTool } from "@/helpers/mcp/create-umbraco-tool.js";
 import { getDocumentConfigurationResponse } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 
 const GetDocumentConfigurationTool = CreateUmbracoTool(

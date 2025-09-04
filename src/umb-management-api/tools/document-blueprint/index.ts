@@ -5,24 +5,38 @@ import CreateDocumentBlueprintTool from "./post/create-blueprint.js";
 import GetDocumentBlueprintAncestorsTool from "./get/get-ancestors.js";
 import GetDocumentBlueprintChildrenTool from "./get/get-children.js";
 import GetDocumentBlueprintRootTool from "./get/get-root.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
-export const DocumentBlueprintTools = (user: CurrentUserResponseModel) => {
-  const tools: ToolDefinition<any>[] = [];
+export const DocumentBlueprintCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'document-blueprint',
+    displayName: 'Document Blueprints',
+    description: 'Document blueprint templates and management',
+    dependencies: []
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [];
 
-  if (AuthorizationPolicies.TreeAccessDocumentTypes(user)) {
+    if (AuthorizationPolicies.TreeAccessDocumentTypes(user)) {
 
-    tools.push(GetDocumentBlueprintTool());
-    tools.push(DeleteDocumentBlueprintTool());
-    tools.push(UpdateDocumentBlueprintTool());
-    tools.push(CreateDocumentBlueprintTool());
+      tools.push(GetDocumentBlueprintTool());
+      tools.push(DeleteDocumentBlueprintTool());
+      tools.push(UpdateDocumentBlueprintTool());
+      tools.push(CreateDocumentBlueprintTool());
 
-    tools.push(GetDocumentBlueprintAncestorsTool());
-    tools.push(GetDocumentBlueprintChildrenTool());
-    tools.push(GetDocumentBlueprintRootTool());
+      tools.push(GetDocumentBlueprintAncestorsTool());
+      tools.push(GetDocumentBlueprintChildrenTool());
+      tools.push(GetDocumentBlueprintRootTool());
+    }
+
+    return tools;
   }
+};
 
-  return tools;
-}
+// Backwards compatibility export
+export const DocumentBlueprintTools = (user: CurrentUserResponseModel) => {
+  return DocumentBlueprintCollection.tools(user);
+};

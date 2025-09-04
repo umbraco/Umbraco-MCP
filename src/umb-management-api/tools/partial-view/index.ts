@@ -18,35 +18,49 @@ import GetPartialViewChildrenTool from "./items/get/get-children.js";
 import GetPartialViewRootTool from "./items/get/get-root.js";
 import GetPartialViewSearchTool from "./items/get/get-search.js";
 
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
-export const PartialViewTools = (user: CurrentUserResponseModel) => {
-  const tools: ToolDefinition<any>[] = [GetPartialViewSearchTool()];
+export const PartialViewCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'partial-view',
+    displayName: 'Partial Views',
+    description: 'Razor partial view file management and templating',
+    dependencies: []
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [GetPartialViewSearchTool()];
 
-  if (AuthorizationPolicies.TreeAccessPartialViews(user)) {
-    // Basic CRUD operations
-    tools.push(CreatePartialViewTool());
-    tools.push(CreatePartialViewFolderTool());
-    tools.push(GetPartialViewByPathTool());
-    tools.push(GetPartialViewFolderByPathTool());
-    tools.push(UpdatePartialViewTool());
-    tools.push(RenamePartialViewTool());
-    tools.push(DeletePartialViewTool());
-    tools.push(DeletePartialViewFolderTool());
-    
-    // Snippet operations
-    tools.push(GetPartialViewSnippetTool());
-    tools.push(GetPartialViewSnippetByIdTool());
+    if (AuthorizationPolicies.TreeAccessPartialViews(user)) {
+      // Basic CRUD operations
+      tools.push(CreatePartialViewTool());
+      tools.push(CreatePartialViewFolderTool());
+      tools.push(GetPartialViewByPathTool());
+      tools.push(GetPartialViewFolderByPathTool());
+      tools.push(UpdatePartialViewTool());
+      tools.push(RenamePartialViewTool());
+      tools.push(DeletePartialViewTool());
+      tools.push(DeletePartialViewFolderTool());
+      
+      // Snippet operations
+      tools.push(GetPartialViewSnippetTool());
+      tools.push(GetPartialViewSnippetByIdTool());
 
-    // Tree operations
-    tools.push(GetPartialViewAncestorsTool());
-    tools.push(GetPartialViewChildrenTool());
-    tools.push(GetPartialViewRootTool());
+      // Tree operations
+      tools.push(GetPartialViewAncestorsTool());
+      tools.push(GetPartialViewChildrenTool());
+      tools.push(GetPartialViewRootTool());
+    }
+
+    return tools;
   }
+};
 
-  return tools;
+// Backwards compatibility export
+export const PartialViewTools = (user: CurrentUserResponseModel) => {
+  return PartialViewCollection.tools(user);
 };
 
 // Legacy exports for backward compatibility
