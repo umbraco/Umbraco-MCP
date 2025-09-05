@@ -23,6 +23,7 @@ import { RedirectCollection } from "./redirect/index.js";
 import { UserGroupCollection } from "./user-group/index.js";
 import { TemporaryFileCollection } from "./temporary-file/index.js";
 import { ScriptCollection } from "./script/index.js";
+import { StylesheetCollection } from "./stylesheet/index.js";
 
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
@@ -54,7 +55,8 @@ const availableCollections: ToolCollectionExport[] = [
   RedirectCollection,
   UserGroupCollection,
   TemporaryFileCollection,
-  ScriptCollection
+  ScriptCollection,
+  StylesheetCollection
 ];
 
 // Enhanced mapTools with collection filtering (existing function signature)

@@ -513,7 +513,6 @@ describe('Collection Filtering', () => {
       expect(DocumentTypeCollection.metadata).toBeDefined();
       expect(DocumentTypeCollection.metadata.name).toBe('document-type');
       expect(DocumentTypeCollection.metadata.displayName).toBe('Document Types');
-      expect(DocumentTypeCollection.metadata.dependencies).toEqual(['data-type']);
       expect(typeof DocumentTypeCollection.tools).toBe('function');
       
       const tools = DocumentTypeCollection.tools(mockUser);

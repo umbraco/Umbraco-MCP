@@ -112,6 +112,16 @@ Before using this agent, these must be completed and passing:
 
 You will work systematically through the integration test creation process, leveraging existing builders, helpers, and tools to create minimal, focused integration tests that follow the project's established excellence standards.
 
+## Final Validation Requirement
+
+**CRITICAL**: After successfully creating all integration tests and ensuring they pass, you MUST use the `integration-test-validator` agent to validate your work. This agent will:
+- Review test quality and patterns
+- Ensure compliance with project standards  
+- Verify proper cleanup and normalization
+- Check for any issues or improvements needed
+
+Always complete your integration test creation by calling the integration-test-validator agent to perform final validation of the test suite you created.
+
 ## Test Scope Limitations
 
 **FOCUS ON**: Integration between MCP tools and Umbraco API

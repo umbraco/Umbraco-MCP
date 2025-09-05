@@ -30,7 +30,7 @@ export const DocumentTypeCollection: ToolCollectionExport = {
     name: 'document-type',
     displayName: 'Document Types',
     description: 'Document type definitions and composition management',
-    dependencies: ['data-type'] // Document types typically use data types for properties
+    dependencies: []
   },
   tools: (user: CurrentUserResponseModel) => {
     const tools: ToolDefinition<any>[] = [];

@@ -480,6 +480,24 @@ The allows you to specify collections by name if you wish to exclude them from t
 </details>
 
 <details>
+<summary>Stylesheet (stylesheet)</summary>
+<br>
+
+`get-stylesheet-by-path` - Get stylesheet by path  
+`get-stylesheet-folder-by-path` - Get stylesheet folder by path  
+`create-stylesheet` - Create a new stylesheet  
+`create-stylesheet-folder` - Create a stylesheet folder  
+`update-stylesheet` - Update a stylesheet  
+`rename-stylesheet` - Rename a stylesheet  
+`delete-stylesheet` - Delete a stylesheet  
+`delete-stylesheet-folder` - Delete a stylesheet folder  
+`get-stylesheet-root` - Get root stylesheets  
+`get-stylesheet-children` - Get child stylesheets  
+`get-stylesheet-ancestors` - Get stylesheet ancestors  
+`get-stylesheet-search` - Search stylesheets
+</details>
+
+<details>
 <summary>Server (server)</summary>
 <br>
 

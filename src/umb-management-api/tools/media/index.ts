@@ -28,7 +28,7 @@ export const MediaCollection: ToolCollectionExport = {
     name: 'media',
     displayName: 'Media',
     description: 'Media asset management and organization',
-    dependencies: []
+    dependencies: ['temporary-file']
   },
   tools: (user: CurrentUserResponseModel) => {
     const tools: ToolDefinition<any>[] = [];

@@ -1,5 +1,5 @@
 import { UmbracoManagementClient } from "@umb-management-client";
-import { CreateUmbracoReadResource } from "@/helpers/create-umbraco-read-resource.js";
+import { CreateUmbracoReadResource } from "@/helpers/mcp/create-umbraco-read-resource.js";
 
 const GetLangagueDefaultResource = CreateUmbracoReadResource(
   "umbraco://item/langage/default",
