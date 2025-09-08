@@ -26,7 +26,7 @@ exports[`document-blueprint-tree children should get child items 1`] = `
 {
   "content": [
     {
-      "text": "{"total":1,"items":[{"documentType":{"id":"a95360e8-ff04-40b1-8f46-7aa4b5983096","icon":"icon-home color-blue","collection":null},"isFolder":false,"name":"_Test Child Blueprint","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]}",
+      "text": "{"total":1,"items":[{"documentType":{"id":"00000000-0000-0000-0000-000000000000","icon":"icon-home color-blue","collection":null},"isFolder":false,"name":"_Test Child Blueprint","id":"00000000-0000-0000-0000-000000000000","parent":{"id":"00000000-0000-0000-0000-000000000000"},"hasChildren":false}]}",
       "type": "text",
     },
   ],
