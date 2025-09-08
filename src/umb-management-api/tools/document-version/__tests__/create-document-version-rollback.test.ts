@@ -21,7 +21,7 @@ describe("create-document-version-rollback", () => {
     console.error = originalConsoleError;
   });
 
-  it.skip("should rollback document to a specific version", async () => {
+  it("should rollback document to a specific version", async () => {
     // Arrange
     documentBuilder = new DocumentVersionBuilder()
       .withName(TEST_DOCUMENT_NAME)
