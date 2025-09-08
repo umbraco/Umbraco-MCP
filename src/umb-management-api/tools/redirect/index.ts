@@ -5,19 +5,32 @@ import GetRedirectStatusTool from "./get/get-redirect-status.js";
 import UpdateRedirectStatusTool from "./post/update-redirect-status.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
-export const RedirectTools = (user: CurrentUserResponseModel) => {
-  const tools: ToolDefinition<any>[] = [];
+export const RedirectCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'redirect',
+    displayName: 'Redirects',
+    description: 'URL redirect management and configuration',
+    dependencies: []
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [];
 
-  if (AuthorizationPolicies.SectionAccessContent(user)) {
+    if (AuthorizationPolicies.SectionAccessContent(user)) {
+      tools.push(GetAllRedirectsTool());
+      tools.push(GetRedirectByIdTool());
+      tools.push(DeleteRedirectTool());
+      tools.push(GetRedirectStatusTool());
+      tools.push(UpdateRedirectStatusTool());
+    }
 
-    tools.push(GetAllRedirectsTool());
-    tools.push(GetRedirectByIdTool());
-    tools.push(DeleteRedirectTool());
-    tools.push(GetRedirectStatusTool());
-    tools.push(UpdateRedirectStatusTool());
+    return tools;
   }
+};
 
-  return tools;
+// Backwards compatibility export
+export const RedirectTools = (user: CurrentUserResponseModel) => {
+  return RedirectCollection.tools(user);
 };

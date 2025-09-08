@@ -9,25 +9,37 @@ import PostLogViewerSavedSearchTool from "./post/post-log-viewer-saved-search.js
 import DeleteLogViewerSavedSearchByNameTool from "./delete/delete-log-viewer-saved-search-by-name.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
-export const LogViewerTools = (user: CurrentUserResponseModel) => {
-  const tools: ToolDefinition<any>[] = [];
+export const LogViewerCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'log-viewer',
+    displayName: 'Log Viewer',
+    description: 'Application log viewing and analysis',
+    dependencies: []
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [];
 
-  if (AuthorizationPolicies.SectionAccessSettings(user)) {
+    if (AuthorizationPolicies.SectionAccessSettings(user)) {
+      tools.push(GetLogViewerSavedSearchByNameTool());
+      tools.push(GetLogViewerLevelCountTool());
+      tools.push(PostLogViewerSavedSearchTool());
+      tools.push(DeleteLogViewerSavedSearchByNameTool());
 
-    tools.push(GetLogViewerSavedSearchByNameTool());
-    tools.push(GetLogViewerLevelCountTool());
-    tools.push(PostLogViewerSavedSearchTool());
-    tools.push(DeleteLogViewerSavedSearchByNameTool());
+      tools.push(GetLogViewerTool())
+      tools.push(GetLogViewerLevelTool());
+      tools.push(GetLogViewerSearchTool());
+      tools.push(GetLogViewerValidateLogsTool());
+      tools.push(GetLogViewerMessageTemplateTool());
+    }
 
-
-    tools.push(GetLogViewerTool())
-    tools.push(GetLogViewerLevelTool());
-    tools.push(GetLogViewerSearchTool());
-    tools.push(GetLogViewerValidateLogsTool());
-    tools.push(GetLogViewerMessageTemplateTool());
+    return tools;
   }
+};
 
-  return tools;
-}
+// Backwards compatibility export
+export const LogViewerTools = (user: CurrentUserResponseModel) => {
+  return LogViewerCollection.tools(user);
+};

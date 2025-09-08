@@ -1,7 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { getLogViewerMessageTemplateQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { GetLogViewerMessageTemplateParams } from "@/umb-management-api/schemas/index.js";
-import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CreateUmbracoTool } from "@/helpers/mcp/create-umbraco-tool.js";
 
 const GetLogViewerMessageTemplateTool = CreateUmbracoTool(
   "get-log-viewer-message-template",

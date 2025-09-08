@@ -1,7 +1,7 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { getLogViewerLevelQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { GetLogViewerLevelParams } from "@/umb-management-api/schemas/index.js";
-import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CreateUmbracoTool } from "@/helpers/mcp/create-umbraco-tool.js";
 
 const GetLogViewerLevelTool = CreateUmbracoTool(
   "get-log-viewer-level",

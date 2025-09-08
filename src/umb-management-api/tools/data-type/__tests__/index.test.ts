@@ -1,5 +1,5 @@
-import { sections } from "@/helpers/umbraco-auth-policies.js";
-import { DataTypeTools } from "../index.js";
+import { sections } from "@/helpers/auth/umbraco-auth-policies.js";
+import { DataTypeCollection } from "../index.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/currentUserResponseModel.js";
 
 describe("data-type-tool-index", () => {
@@ -9,7 +9,7 @@ describe("data-type-tool-index", () => {
             allowedSections: [sections.content]
         } as Partial<CurrentUserResponseModel>;
 
-        const tools = DataTypeTools(userMock as CurrentUserResponseModel);
+        const tools = DataTypeCollection.tools(userMock as CurrentUserResponseModel);
         expect(tools.map(t => t.name)).toMatchSnapshot();
     });
 
@@ -18,7 +18,7 @@ describe("data-type-tool-index", () => {
             allowedSections: [sections.settings]
         } as Partial<CurrentUserResponseModel>;
 
-        const tools = DataTypeTools(userMock as CurrentUserResponseModel);
+        const tools = DataTypeCollection.tools(userMock as CurrentUserResponseModel);
         expect(tools.map(t => t.name)).toMatchSnapshot();
     });
 
@@ -27,7 +27,7 @@ describe("data-type-tool-index", () => {
             allowedSections: [sections.content, sections.settings]
         } as Partial<CurrentUserResponseModel>;
 
-        const tools = DataTypeTools(userMock as CurrentUserResponseModel);
+        const tools = DataTypeCollection.tools(userMock as CurrentUserResponseModel);
         expect(tools.map(t => t.name)).toMatchSnapshot();
     });
 
@@ -36,7 +36,7 @@ describe("data-type-tool-index", () => {
             allowedSections: []
         } as Partial<CurrentUserResponseModel>;
 
-        const tools = DataTypeTools(userMock as CurrentUserResponseModel);
+        const tools = DataTypeCollection.tools(userMock as CurrentUserResponseModel);
         expect(tools.map(t => t.name)).toMatchSnapshot();
     });
 

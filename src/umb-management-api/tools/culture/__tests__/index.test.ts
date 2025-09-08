@@ -1,5 +1,5 @@
-import { sections } from "@/helpers/umbraco-auth-policies.js";
-import { CultureTools } from "../index.js";
+import { sections } from "@/helpers/auth/umbraco-auth-policies.js";
+import { CultureCollection } from "../index.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/currentUserResponseModel.js";
 
 describe("culture-tool-index", () => {
@@ -8,7 +8,7 @@ describe("culture-tool-index", () => {
             allowedSections: []
         } as Partial<CurrentUserResponseModel>;
 
-        const tools = CultureTools(userMock as CurrentUserResponseModel);
+        const tools = CultureCollection.tools(userMock as CurrentUserResponseModel);
         expect(tools.map(t => t.name)).toMatchSnapshot();
     });
 
@@ -17,7 +17,7 @@ describe("culture-tool-index", () => {
             allowedSections: [sections.settings]
         } as Partial<CurrentUserResponseModel>;
 
-        const tools = CultureTools(userMock as CurrentUserResponseModel);
+        const tools = CultureCollection.tools(userMock as CurrentUserResponseModel);
         expect(tools.map(t => t.name)).toMatchSnapshot();
     });
 });

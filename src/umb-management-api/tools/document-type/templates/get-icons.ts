@@ -1,4 +1,4 @@
-import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CreateUmbracoTool } from "@/helpers/mcp/create-umbraco-tool.js";
 
 //TODO: THhis really should be an endpoint
 

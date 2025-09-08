@@ -4,9 +4,7 @@ export class MemberTypeTestHelper {
   static async verifyMemberType(id: string): Promise<boolean> {
     try {
       const client = UmbracoManagementClient.getClient();
-      await client.getItemMemberType({
-        id: [id],
-      });
+      await client.getItemMemberType({ id: [id] });
       return true;
     } catch (error) {
       return false;
