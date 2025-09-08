@@ -14,6 +14,7 @@ export const postActionApproveBody = zod.object({
   "comment": zod.string(),
   "instanceGuid": zod.string().uuid(),
   "userId": zod.string().uuid().nullish(),
+  "entityType": zod.string().nullish(),
   "assignTo": zod.string().nullish()
 })
 
@@ -33,21 +34,22 @@ export const postActionApproveResponse = zod.object({
   "releaseDate": zod.string().datetime({"local":true}).nullish(),
   "key": zod.string().uuid(),
   "requestedByKey": zod.string().uuid(),
+  "entityKey": zod.string().uuid().nullish(),
   "totalSteps": zod.number(),
   "requestedBy": zod.string().nullish(),
   "variantCode": zod.string().nullish(),
   "variantName": zod.string().nullish(),
   "attachment": zod.string().nullish(),
   "comment": zod.string().nullish(),
-  "status": zod.string().nullish(),
-  "type": zod.string().nullish(),
   "segments": zod.string().nullish(),
-  "scheduled": zod.boolean()
+  "entityType": zod.string().nullish(),
+  "scheduled": zod.boolean(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty']),
+  "type": zod.enum(['Null', 'Publish', 'Unpublish'])
 }).nullish(),
   "currentStep": zod.number(),
   "id": zod.number(),
-  "typeId": zod.number(),
-  "status": zod.number().nullish(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty', 'Excluded', 'AwaitingResubmission']),
   "node": zod.object({
   "key": zod.string().uuid(),
   "contentTypeKey": zod.string().uuid(),
@@ -57,12 +59,8 @@ export const postActionApproveResponse = zod.object({
   "new": zod.boolean(),
   "icon": zod.string()
 }).nullish(),
-  "backofficeUrl": zod.string().nullish(),
   "comment": zod.string().nullish(),
   "completedBy": zod.string().nullish(),
-  "statusName": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "typeDescription": zod.string().nullish(),
   "userGroup": zod.object({
   "entityType": zod.string(),
   "alias": zod.string(),
@@ -116,6 +114,7 @@ export const postActionCancelBody = zod.object({
   "comment": zod.string(),
   "instanceGuid": zod.string().uuid(),
   "userId": zod.string().uuid().nullish(),
+  "entityType": zod.string().nullish(),
   "assignTo": zod.string().nullish()
 })
 
@@ -135,21 +134,22 @@ export const postActionCancelResponse = zod.object({
   "releaseDate": zod.string().datetime({"local":true}).nullish(),
   "key": zod.string().uuid(),
   "requestedByKey": zod.string().uuid(),
+  "entityKey": zod.string().uuid().nullish(),
   "totalSteps": zod.number(),
   "requestedBy": zod.string().nullish(),
   "variantCode": zod.string().nullish(),
   "variantName": zod.string().nullish(),
   "attachment": zod.string().nullish(),
   "comment": zod.string().nullish(),
-  "status": zod.string().nullish(),
-  "type": zod.string().nullish(),
   "segments": zod.string().nullish(),
-  "scheduled": zod.boolean()
+  "entityType": zod.string().nullish(),
+  "scheduled": zod.boolean(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty']),
+  "type": zod.enum(['Null', 'Publish', 'Unpublish'])
 }).nullish(),
   "currentStep": zod.number(),
   "id": zod.number(),
-  "typeId": zod.number(),
-  "status": zod.number().nullish(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty', 'Excluded', 'AwaitingResubmission']),
   "node": zod.object({
   "key": zod.string().uuid(),
   "contentTypeKey": zod.string().uuid(),
@@ -159,12 +159,8 @@ export const postActionCancelResponse = zod.object({
   "new": zod.boolean(),
   "icon": zod.string()
 }).nullish(),
-  "backofficeUrl": zod.string().nullish(),
   "comment": zod.string().nullish(),
   "completedBy": zod.string().nullish(),
-  "statusName": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "typeDescription": zod.string().nullish(),
   "userGroup": zod.object({
   "entityType": zod.string(),
   "alias": zod.string(),
@@ -216,6 +212,7 @@ export const postActionCancelResponse = zod.object({
 
 export const postActionInitiateBody = zod.object({
   "entityId": zod.string().uuid(),
+  "entityType": zod.string().nullish(),
   "comment": zod.string(),
   "publish": zod.boolean(),
   "variant": zod.array(zod.string()),
@@ -241,21 +238,22 @@ export const postActionInitiateResponse = zod.object({
   "releaseDate": zod.string().datetime({"local":true}).nullish(),
   "key": zod.string().uuid(),
   "requestedByKey": zod.string().uuid(),
+  "entityKey": zod.string().uuid().nullish(),
   "totalSteps": zod.number(),
   "requestedBy": zod.string().nullish(),
   "variantCode": zod.string().nullish(),
   "variantName": zod.string().nullish(),
   "attachment": zod.string().nullish(),
   "comment": zod.string().nullish(),
-  "status": zod.string().nullish(),
-  "type": zod.string().nullish(),
   "segments": zod.string().nullish(),
-  "scheduled": zod.boolean()
+  "entityType": zod.string().nullish(),
+  "scheduled": zod.boolean(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty']),
+  "type": zod.enum(['Null', 'Publish', 'Unpublish'])
 }).nullish(),
   "currentStep": zod.number(),
   "id": zod.number(),
-  "typeId": zod.number(),
-  "status": zod.number().nullish(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty', 'Excluded', 'AwaitingResubmission']),
   "node": zod.object({
   "key": zod.string().uuid(),
   "contentTypeKey": zod.string().uuid(),
@@ -265,12 +263,8 @@ export const postActionInitiateResponse = zod.object({
   "new": zod.boolean(),
   "icon": zod.string()
 }).nullish(),
-  "backofficeUrl": zod.string().nullish(),
   "comment": zod.string().nullish(),
   "completedBy": zod.string().nullish(),
-  "statusName": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "typeDescription": zod.string().nullish(),
   "userGroup": zod.object({
   "entityType": zod.string(),
   "alias": zod.string(),
@@ -324,6 +318,7 @@ export const postActionRejectBody = zod.object({
   "comment": zod.string(),
   "instanceGuid": zod.string().uuid(),
   "userId": zod.string().uuid().nullish(),
+  "entityType": zod.string().nullish(),
   "assignTo": zod.string().nullish()
 })
 
@@ -343,21 +338,22 @@ export const postActionRejectResponse = zod.object({
   "releaseDate": zod.string().datetime({"local":true}).nullish(),
   "key": zod.string().uuid(),
   "requestedByKey": zod.string().uuid(),
+  "entityKey": zod.string().uuid().nullish(),
   "totalSteps": zod.number(),
   "requestedBy": zod.string().nullish(),
   "variantCode": zod.string().nullish(),
   "variantName": zod.string().nullish(),
   "attachment": zod.string().nullish(),
   "comment": zod.string().nullish(),
-  "status": zod.string().nullish(),
-  "type": zod.string().nullish(),
   "segments": zod.string().nullish(),
-  "scheduled": zod.boolean()
+  "entityType": zod.string().nullish(),
+  "scheduled": zod.boolean(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty']),
+  "type": zod.enum(['Null', 'Publish', 'Unpublish'])
 }).nullish(),
   "currentStep": zod.number(),
   "id": zod.number(),
-  "typeId": zod.number(),
-  "status": zod.number().nullish(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty', 'Excluded', 'AwaitingResubmission']),
   "node": zod.object({
   "key": zod.string().uuid(),
   "contentTypeKey": zod.string().uuid(),
@@ -367,12 +363,8 @@ export const postActionRejectResponse = zod.object({
   "new": zod.boolean(),
   "icon": zod.string()
 }).nullish(),
-  "backofficeUrl": zod.string().nullish(),
   "comment": zod.string().nullish(),
   "completedBy": zod.string().nullish(),
-  "statusName": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "typeDescription": zod.string().nullish(),
   "userGroup": zod.object({
   "entityType": zod.string(),
   "alias": zod.string(),
@@ -426,6 +418,7 @@ export const postActionResubmitBody = zod.object({
   "comment": zod.string(),
   "instanceGuid": zod.string().uuid(),
   "userId": zod.string().uuid().nullish(),
+  "entityType": zod.string().nullish(),
   "assignTo": zod.string().nullish()
 })
 
@@ -445,21 +438,22 @@ export const postActionResubmitResponse = zod.object({
   "releaseDate": zod.string().datetime({"local":true}).nullish(),
   "key": zod.string().uuid(),
   "requestedByKey": zod.string().uuid(),
+  "entityKey": zod.string().uuid().nullish(),
   "totalSteps": zod.number(),
   "requestedBy": zod.string().nullish(),
   "variantCode": zod.string().nullish(),
   "variantName": zod.string().nullish(),
   "attachment": zod.string().nullish(),
   "comment": zod.string().nullish(),
-  "status": zod.string().nullish(),
-  "type": zod.string().nullish(),
   "segments": zod.string().nullish(),
-  "scheduled": zod.boolean()
+  "entityType": zod.string().nullish(),
+  "scheduled": zod.boolean(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty']),
+  "type": zod.enum(['Null', 'Publish', 'Unpublish'])
 }).nullish(),
   "currentStep": zod.number(),
   "id": zod.number(),
-  "typeId": zod.number(),
-  "status": zod.number().nullish(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty', 'Excluded', 'AwaitingResubmission']),
   "node": zod.object({
   "key": zod.string().uuid(),
   "contentTypeKey": zod.string().uuid(),
@@ -469,12 +463,8 @@ export const postActionResubmitResponse = zod.object({
   "new": zod.boolean(),
   "icon": zod.string()
 }).nullish(),
-  "backofficeUrl": zod.string().nullish(),
   "comment": zod.string().nullish(),
   "completedBy": zod.string().nullish(),
-  "statusName": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "typeDescription": zod.string().nullish(),
   "userGroup": zod.object({
   "entityType": zod.string(),
   "alias": zod.string(),
@@ -883,7 +873,7 @@ export const putConfigBody = zod.object({
   "permissions": zod.array(zod.object({
   "permission": zod.number(),
   "name": zod.string().nullish(),
-  "approvalThreshold": zod.number().nullish(),
+  "approvalThreshold": zod.enum(['One', 'Most', 'All']),
   "icon": zod.string().nullish(),
   "groupUnique": zod.string().uuid()
 }))
@@ -895,7 +885,7 @@ export const putConfigResponse = zod.object({
   "permissions": zod.array(zod.object({
   "permission": zod.number(),
   "name": zod.string().nullish(),
-  "approvalThreshold": zod.number().nullish(),
+  "approvalThreshold": zod.enum(['One', 'Most', 'All']),
   "icon": zod.string().nullish(),
   "groupUnique": zod.string().uuid()
 }))
@@ -986,7 +976,7 @@ export const putContentReviewConfigBody = zod.object({
   "reviewedOn": zod.string().datetime({"local":true}).nullish(),
   "reviewedBy": zod.object({
   "unique": zod.string().uuid(),
-  "name": zod.string()
+  "name": zod.string().nullish()
 }).nullish(),
   "inheritedFrom": zod.string().nullish(),
   "inheritedType": zod.string().nullish(),
@@ -1204,8 +1194,7 @@ export const getContentDiffResponse = zod.object({
   "name": zod.string().nullish(),
   "language": zod.object({
   "name": zod.string(),
-  "culture": zod.string(),
-  "isDefault": zod.boolean()
+  "culture": zod.string()
 }).nullish(),
   "properties": zod.array(zod.object({
   "label": zod.string().nullish(),
@@ -1222,8 +1211,7 @@ export const getContentDiffResponse = zod.object({
   "name": zod.string().nullish(),
   "language": zod.object({
   "name": zod.string(),
-  "culture": zod.string(),
-  "isDefault": zod.boolean()
+  "culture": zod.string()
 }).nullish(),
   "properties": zod.array(zod.object({
   "label": zod.string().nullish(),
@@ -1235,6 +1223,31 @@ export const getContentDiffResponse = zod.object({
   "type": zod.string().nullable()
 }).nullish()
 }))
+}))
+})
+
+
+export const getContentScheduledQueryParams = zod.object({
+  "releaseSetUnique": zod.string().uuid().optional()
+})
+
+export const getContentScheduledResponse = zod.object({
+  "legend": zod.array(zod.object({
+  "key": zod.string(),
+  "type": zod.enum(['Null', 'Content', 'ReleaseSet', 'ReleaseSetItem'])
+})),
+  "items": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "nodeUnique": zod.string().uuid().nullish(),
+  "name": zod.string().nullish(),
+  "culture": zod.string().nullish(),
+  "fromDate": zod.string().datetime({"local":true}).nullish(),
+  "toDate": zod.string().datetime({"local":true}).nullish(),
+  "action": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "type": zod.enum(['Null', 'Content', 'ReleaseSet', 'ReleaseSetItem']),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete']),
+  "setStatus": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete'])
 }))
 })
 
@@ -1296,16 +1309,18 @@ export const getInstanceResponse = zod.object({
   "releaseDate": zod.string().datetime({"local":true}).nullish(),
   "key": zod.string().uuid(),
   "requestedByKey": zod.string().uuid(),
+  "entityKey": zod.string().uuid().nullish(),
   "totalSteps": zod.number(),
   "requestedBy": zod.string().nullish(),
   "variantCode": zod.string().nullish(),
   "variantName": zod.string().nullish(),
   "attachment": zod.string().nullish(),
   "comment": zod.string().nullish(),
-  "status": zod.string().nullish(),
-  "type": zod.string().nullish(),
   "segments": zod.string().nullish(),
-  "scheduled": zod.boolean()
+  "entityType": zod.string().nullish(),
+  "scheduled": zod.boolean(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty']),
+  "type": zod.enum(['Null', 'Publish', 'Unpublish'])
 }).nullish(),
   "permissions": zod.array(zod.object({
   "permission": zod.number(),
@@ -1378,6 +1393,8 @@ export const postInstanceActiveResponse = zod.object({
   "requestedBy": zod.string().nullish(),
   "requestedOn": zod.string().datetime({"local":true}).nullish(),
   "comment": zod.string().nullish(),
+  "entityType": zod.string().nullish(),
+  "entityKey": zod.string().uuid().nullish(),
   "scheduled": zod.boolean(),
   "tasks": zod.array(zod.object({
   "permission": zod.number(),
@@ -1449,6 +1466,8 @@ export const postInstanceAllResponse = zod.object({
   "requestedBy": zod.string().nullish(),
   "requestedOn": zod.string().datetime({"local":true}).nullish(),
   "comment": zod.string().nullish(),
+  "entityType": zod.string().nullish(),
+  "entityKey": zod.string().uuid().nullish(),
   "scheduled": zod.boolean(),
   "tasks": zod.array(zod.object({
   "permission": zod.number(),
@@ -1520,6 +1539,8 @@ export const postInstanceAssignedToResponse = zod.object({
   "requestedBy": zod.string().nullish(),
   "requestedOn": zod.string().datetime({"local":true}).nullish(),
   "comment": zod.string().nullish(),
+  "entityType": zod.string().nullish(),
+  "entityKey": zod.string().uuid().nullish(),
   "scheduled": zod.boolean(),
   "tasks": zod.array(zod.object({
   "permission": zod.number(),
@@ -1591,6 +1612,8 @@ export const postInstanceInitiatedByResponse = zod.object({
   "requestedBy": zod.string().nullish(),
   "requestedOn": zod.string().datetime({"local":true}).nullish(),
   "comment": zod.string().nullish(),
+  "entityType": zod.string().nullish(),
+  "entityKey": zod.string().uuid().nullish(),
   "scheduled": zod.boolean(),
   "tasks": zod.array(zod.object({
   "permission": zod.number(),
@@ -1619,40 +1642,291 @@ export const getInstanceStatusQueryParams = zod.object({
 export const getInstanceStatusResponse = zod.record(zod.string(), zod.boolean())
 
 
-export const getScaffoldQueryParams = zod.object({
-  "NodeKey": zod.string().uuid().optional(),
-  "ContentTypeKey": zod.string().uuid().optional(),
-  "IsDashboard": zod.coerce.boolean().optional(),
-  "Variant": zod.string().optional()
+export const postReleaseSetBody = zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "itemCount": zod.number(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete']),
+  "entityType": zod.string(),
+  "description": zod.string().nullish(),
+  "owner": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}),
+  "expireDate": zod.string().datetime({"local":true}).nullish(),
+  "releaseDate": zod.string().datetime({"local":true}).nullish(),
+  "createDate": zod.string().datetime({"local":true}).nullish(),
+  "updateDate": zod.string().datetime({"local":true}).nullish(),
+  "collaborators": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+})),
+  "items": zod.array(zod.object({
+  "entityType": zod.string(),
+  "name": zod.string(),
+  "unique": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published']),
+  "items": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid().nullish(),
+  "name": zod.string(),
+  "icon": zod.string().nullish(),
+  "entityType": zod.string(),
+  "releaseDate": zod.string().datetime({"local":true}).nullish(),
+  "expireDate": zod.string().datetime({"local":true}).nullish(),
+  "expireAction": zod.enum(['Revert', 'Unpublish']),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published']),
+  "variant": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "nodeUnique": zod.string().uuid()
+}))
+})),
+  "tasks": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid().nullish(),
+  "name": zod.string(),
+  "icon": zod.string().nullish(),
+  "entityType": zod.string(),
+  "createdOn": zod.string().datetime({"local":true}).nullish(),
+  "completedOn": zod.string().datetime({"local":true}).nullish(),
+  "assignedTo": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}).nullish(),
+  "createdBy": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}),
+  "status": zod.enum(['Active', 'Complete', 'Closed']),
+  "description": zod.string().nullish()
+}))
 })
 
-export const getScaffoldResponse = zod.object({
+
+export const getReleaseSetQuerySkipDefault = 0;export const getReleaseSetQueryTakeDefault = 5;export const getReleaseSetQueryFilterDefault = "";
+
+export const getReleaseSetQueryParams = zod.object({
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getReleaseSetQueryTakeDefault),
+  "filter": zod.string().optional()
+})
+
+export const getReleaseSetResponse = zod.object({
+  "currentPage": zod.number(),
+  "totalItems": zod.number(),
+  "itemsPerPage": zod.number(),
+  "items": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "itemCount": zod.number(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete'])
+}))
+})
+
+
+export const getReleaseSetByIdParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getReleaseSetByIdResponse = zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "itemCount": zod.number(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete']),
+  "entityType": zod.string(),
+  "description": zod.string().nullish(),
+  "owner": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}),
+  "expireDate": zod.string().datetime({"local":true}).nullish(),
+  "releaseDate": zod.string().datetime({"local":true}).nullish(),
+  "createDate": zod.string().datetime({"local":true}).nullish(),
+  "updateDate": zod.string().datetime({"local":true}).nullish(),
+  "collaborators": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+})),
+  "items": zod.array(zod.object({
+  "entityType": zod.string(),
+  "name": zod.string(),
+  "unique": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published']),
+  "items": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid().nullish(),
+  "name": zod.string(),
+  "icon": zod.string().nullish(),
+  "entityType": zod.string(),
+  "releaseDate": zod.string().datetime({"local":true}).nullish(),
+  "expireDate": zod.string().datetime({"local":true}).nullish(),
+  "expireAction": zod.enum(['Revert', 'Unpublish']),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published']),
+  "variant": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "nodeUnique": zod.string().uuid()
+}))
+})),
+  "tasks": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid().nullish(),
+  "name": zod.string(),
+  "icon": zod.string().nullish(),
+  "entityType": zod.string(),
+  "createdOn": zod.string().datetime({"local":true}).nullish(),
+  "completedOn": zod.string().datetime({"local":true}).nullish(),
+  "assignedTo": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}).nullish(),
+  "createdBy": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}),
+  "status": zod.enum(['Active', 'Complete', 'Closed']),
+  "description": zod.string().nullish()
+}))
+})
+
+
+export const deleteReleaseSetByIdParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+
+export const putReleaseSetByIdParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const putReleaseSetByIdBody = zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "itemCount": zod.number(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete']),
+  "entityType": zod.string(),
+  "description": zod.string().nullish(),
+  "owner": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}),
+  "expireDate": zod.string().datetime({"local":true}).nullish(),
+  "releaseDate": zod.string().datetime({"local":true}).nullish(),
+  "createDate": zod.string().datetime({"local":true}).nullish(),
+  "updateDate": zod.string().datetime({"local":true}).nullish(),
+  "collaborators": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+})),
+  "items": zod.array(zod.object({
+  "entityType": zod.string(),
+  "name": zod.string(),
+  "unique": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published']),
+  "items": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid().nullish(),
+  "name": zod.string(),
+  "icon": zod.string().nullish(),
+  "entityType": zod.string(),
+  "releaseDate": zod.string().datetime({"local":true}).nullish(),
+  "expireDate": zod.string().datetime({"local":true}).nullish(),
+  "expireAction": zod.enum(['Revert', 'Unpublish']),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published']),
+  "variant": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "nodeUnique": zod.string().uuid()
+}))
+})),
+  "tasks": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid().nullish(),
+  "name": zod.string(),
+  "icon": zod.string().nullish(),
+  "entityType": zod.string(),
+  "createdOn": zod.string().datetime({"local":true}).nullish(),
+  "completedOn": zod.string().datetime({"local":true}).nullish(),
+  "assignedTo": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}).nullish(),
+  "createdBy": zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish()
+}),
+  "status": zod.enum(['Active', 'Complete', 'Closed']),
+  "description": zod.string().nullish()
+}))
+})
+
+
+export const getReleaseSetByIdAuditLogParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getReleaseSetByIdAuditLogQuerySkipDefault = 0;export const getReleaseSetByIdAuditLogQueryTakeDefault = 100;
+
+export const getReleaseSetByIdAuditLogQueryParams = zod.object({
+  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getReleaseSetByIdAuditLogQueryTakeDefault)
+})
+
+export const getReleaseSetByIdAuditLogResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "user": zod.object({
+  "id": zod.string().uuid()
+}),
+  "timestamp": zod.string().datetime({"local":true}),
+  "logType": zod.enum(['New', 'Save', 'SaveVariant', 'Open', 'Delete', 'Publish', 'PublishVariant', 'SendToPublish', 'SendToPublishVariant', 'Unpublish', 'UnpublishVariant', 'Move', 'Copy', 'AssignDomain', 'PublicAccess', 'Sort', 'Notify', 'System', 'RollBack', 'PackagerInstall', 'PackagerUninstall', 'Custom', 'ContentVersionPreventCleanup', 'ContentVersionEnableCleanup']),
+  "comment": zod.string().nullish(),
+  "parameters": zod.string().nullish()
+}))
+})
+
+
+export const postScaffoldBody = zod.object({
+  "nodeKey": zod.string().uuid(),
+  "parentKey": zod.string().uuid().nullish(),
+  "isDashboard": zod.boolean(),
+  "variant": zod.string().nullish(),
+  "entityType": zod.string().nullish()
+})
+
+export const postScaffoldResponse = zod.object({
   "config": zod.object({
   "node": zod.array(zod.object({
   "permission": zod.number(),
   "name": zod.string().nullish(),
-  "approvalThreshold": zod.number().nullish(),
+  "approvalThreshold": zod.enum(['One', 'Most', 'All']),
   "icon": zod.string().nullish(),
   "groupUnique": zod.string().uuid()
 })),
   "contentType": zod.array(zod.object({
   "permission": zod.number(),
   "name": zod.string().nullish(),
-  "approvalThreshold": zod.number().nullish(),
+  "approvalThreshold": zod.enum(['One', 'Most', 'All']),
   "icon": zod.string().nullish(),
   "groupUnique": zod.string().uuid()
 })),
   "inherited": zod.array(zod.object({
   "permission": zod.number(),
   "name": zod.string().nullish(),
-  "approvalThreshold": zod.number().nullish(),
+  "approvalThreshold": zod.enum(['One', 'Most', 'All']),
   "icon": zod.string().nullish(),
   "groupUnique": zod.string().uuid()
 })),
   "new": zod.array(zod.object({
   "permission": zod.number(),
   "name": zod.string().nullish(),
-  "approvalThreshold": zod.number().nullish(),
+  "approvalThreshold": zod.enum(['One', 'Most', 'All']),
   "icon": zod.string().nullish(),
   "groupUnique": zod.string().uuid()
 })),
@@ -1688,21 +1962,22 @@ export const getScaffoldResponse = zod.object({
   "releaseDate": zod.string().datetime({"local":true}).nullish(),
   "key": zod.string().uuid(),
   "requestedByKey": zod.string().uuid(),
+  "entityKey": zod.string().uuid().nullish(),
   "totalSteps": zod.number(),
   "requestedBy": zod.string().nullish(),
   "variantCode": zod.string().nullish(),
   "variantName": zod.string().nullish(),
   "attachment": zod.string().nullish(),
   "comment": zod.string().nullish(),
-  "status": zod.string().nullish(),
-  "type": zod.string().nullish(),
   "segments": zod.string().nullish(),
-  "scheduled": zod.boolean()
+  "entityType": zod.string().nullish(),
+  "scheduled": zod.boolean(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty']),
+  "type": zod.enum(['Null', 'Publish', 'Unpublish'])
 }).nullish(),
   "currentStep": zod.number(),
   "id": zod.number(),
-  "typeId": zod.number(),
-  "status": zod.number().nullish(),
+  "status": zod.enum(['Null', 'Approved', 'Rejected', 'PendingApproval', 'NotRequired', 'Cancelled', 'Errored', 'Resubmitted', 'CancelledByThirdParty', 'Excluded', 'AwaitingResubmission']),
   "node": zod.object({
   "key": zod.string().uuid(),
   "contentTypeKey": zod.string().uuid(),
@@ -1712,12 +1987,8 @@ export const getScaffoldResponse = zod.object({
   "new": zod.boolean(),
   "icon": zod.string()
 }).nullish(),
-  "backofficeUrl": zod.string().nullish(),
   "comment": zod.string().nullish(),
   "completedBy": zod.string().nullish(),
-  "statusName": zod.string().nullish(),
-  "type": zod.string().nullish(),
-  "typeDescription": zod.string().nullish(),
   "userGroup": zod.object({
   "entityType": zod.string(),
   "alias": zod.string(),
@@ -1772,20 +2043,9 @@ export const getScaffoldResponse = zod.object({
 
 export const getInformationResponse = zod.object({
   "globalVariables": zod.object({
-  "culture": zod.object({
-  "name": zod.string(),
-  "culture": zod.string(),
-  "isDefault": zod.boolean()
-}),
-  "user": zod.object({
-  "culture": zod.string().nullable(),
-  "isAdmin": zod.boolean(),
-  "unique": zod.string().uuid().nullable()
-}),
-  "workflow": zod.object({
   "historyCleanupEnabled": zod.boolean(),
   "configureApprovalThreshold": zod.boolean(),
-  "defaultApprovalThreshold": zod.number(),
+  "defaultApprovalThreshold": zod.enum(['One', 'Most', 'All']),
   "mandatoryComments": zod.boolean(),
   "adminCanEdit": zod.boolean(),
   "allowAttachments": zod.boolean(),
@@ -1793,13 +2053,7 @@ export const getInformationResponse = zod.object({
   "extendPermissions": zod.boolean(),
   "lockIfActive": zod.boolean(),
   "requireUnpublish": zod.boolean(),
-  "flowType": zod.number()
-}),
-  "availableLanguages": zod.array(zod.object({
-  "name": zod.string(),
-  "culture": zod.string(),
-  "isDefault": zod.boolean()
-}))
+  "flowType": zod.enum(['Explicit', 'Implicit', 'Exclude'])
 }),
   "license": zod.object({
   "isTrial": zod.boolean(),
@@ -1807,7 +2061,13 @@ export const getInformationResponse = zod.object({
   "isLicensed": zod.boolean(),
   "maxGroups": zod.number()
 }).nullable(),
-  "hubUrl": zod.string()
+  "hubUrl": zod.string(),
+  "featureFlags": zod.array(zod.string()),
+  "version": zod.object({
+  "installedVersion": zod.string().nullish(),
+  "latestVersion": zod.string().nullish(),
+  "outOfDate": zod.boolean()
+}).nullable()
 })
 
 
@@ -2032,13 +2292,6 @@ export const putSettingsResponse = zod.object({
 })
 
 
-export const getSettingsVersionResponse = zod.object({
-  "installedVersion": zod.string().nullish(),
-  "latestVersion": zod.string().nullish(),
-  "outOfDate": zod.boolean()
-})
-
-
 export const getTaskByIdParams = zod.object({
   "id": zod.string().uuid()
 })
@@ -2064,7 +2317,6 @@ export const getTaskByIdResponse = zod.object({
   "actionedByAdmin": zod.boolean(),
   "approvalCount": zod.number(),
   "approvalsRequired": zod.number(),
-  "approvalsText": zod.string().nullish(),
   "approvalStep": zod.number(),
   "future": zod.boolean()
 })),
@@ -2079,5 +2331,187 @@ export const getTaskActiveVariantsByIdParams = zod.object({
 
 export const getTaskActiveVariantsByIdResponseItem = zod.string()
 export const getTaskActiveVariantsByIdResponse = zod.array(getTaskActiveVariantsByIdResponseItem)
+
+
+export const getSettingsSendQueryParams = zod.object({
+  "type": zod.enum(['ApprovalRequest', 'ApprovalRejection', 'ApprovedAndCompleted', 'ApprovedAndCompletedForScheduler', 'WorkflowCancelled', 'WorkflowErrored', 'Reminder', 'ContentReview']).optional(),
+  "guid": zod.string().uuid().optional()
+})
+
+
+export const postVersionBody = zod.object({
+  "entityType": zod.string(),
+  "icon": zod.string(),
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid(),
+  "versionName": zod.string().nullish(),
+  "variant": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "createDate": zod.string().datetime({"local":true}).nullish(),
+  "updateDate": zod.string().datetime({"local":true}).nullish(),
+  "values": zod.array(zod.object({
+  "culture": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "alias": zod.string().min(1),
+  "value": zod.any().nullish()
+})),
+  "active": zod.boolean().nullish(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'PendingApproval']),
+  "sets": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "itemCount": zod.number(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete'])
+})),
+  "documentName": zod.string().nullish()
+})
+
+
+export const getVersionByIdParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getVersionByIdQueryParams = zod.object({
+  "variant": zod.string().optional(),
+  "segment": zod.string().optional()
+})
+
+export const getVersionByIdResponse = zod.object({
+  "entityType": zod.string(),
+  "icon": zod.string(),
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid(),
+  "versionName": zod.string().nullish(),
+  "variant": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "createDate": zod.string().datetime({"local":true}).nullish(),
+  "updateDate": zod.string().datetime({"local":true}).nullish(),
+  "values": zod.array(zod.object({
+  "culture": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "alias": zod.string().min(1),
+  "value": zod.any().nullish()
+})),
+  "active": zod.boolean().nullish(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'PendingApproval']),
+  "sets": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "itemCount": zod.number(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete'])
+})),
+  "documentName": zod.string().nullish()
+})
+
+
+export const deleteVersionByIdParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const deleteVersionByIdQueryParams = zod.object({
+  "variant": zod.string().optional(),
+  "segment": zod.string().optional()
+})
+
+
+export const putVersionByIdParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const putVersionByIdBody = zod.object({
+  "entityType": zod.string(),
+  "icon": zod.string(),
+  "unique": zod.string().uuid(),
+  "parentUnique": zod.string().uuid(),
+  "versionName": zod.string().nullish(),
+  "variant": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "createDate": zod.string().datetime({"local":true}).nullish(),
+  "updateDate": zod.string().datetime({"local":true}).nullish(),
+  "values": zod.array(zod.object({
+  "culture": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "alias": zod.string().min(1),
+  "value": zod.any().nullish()
+})),
+  "active": zod.boolean().nullish(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'PendingApproval']),
+  "sets": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "icon": zod.string().nullish(),
+  "itemCount": zod.number(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'Complete'])
+})),
+  "documentName": zod.string().nullish()
+})
+
+
+export const getVersionByIdAuditLogParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getVersionByIdAuditLogQuerySkipDefault = 0;export const getVersionByIdAuditLogQueryTakeDefault = 100;
+
+export const getVersionByIdAuditLogQueryParams = zod.object({
+  "orderDirection": zod.enum(['Ascending', 'Descending']).optional(),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getVersionByIdAuditLogQueryTakeDefault)
+})
+
+export const getVersionByIdAuditLogResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "user": zod.object({
+  "id": zod.string().uuid()
+}),
+  "timestamp": zod.string().datetime({"local":true}),
+  "logType": zod.enum(['New', 'Save', 'SaveVariant', 'Open', 'Delete', 'Publish', 'PublishVariant', 'SendToPublish', 'SendToPublishVariant', 'Unpublish', 'UnpublishVariant', 'Move', 'Copy', 'AssignDomain', 'PublicAccess', 'Sort', 'Notify', 'System', 'RollBack', 'PackagerInstall', 'PackagerUninstall', 'Custom', 'ContentVersionPreventCleanup', 'ContentVersionEnableCleanup']),
+  "comment": zod.string().nullish(),
+  "parameters": zod.string().nullish()
+}))
+})
+
+
+export const postVersionActiveQueryParams = zod.object({
+  "unique": zod.string().uuid().optional()
+})
+
+
+export const getVersionAllQuerySkipDefault = 0;export const getVersionAllQueryTakeDefault = 10;
+
+export const getVersionAllQueryParams = zod.object({
+  "unique": zod.string().uuid().optional(),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getVersionAllQueryTakeDefault),
+  "variant": zod.string().optional(),
+  "segment": zod.string().optional()
+})
+
+export const getVersionAllResponse = zod.object({
+  "currentPage": zod.number(),
+  "totalItems": zod.number(),
+  "itemsPerPage": zod.number(),
+  "items": zod.array(zod.object({
+  "unique": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "updateDate": zod.string().datetime({"local":true}).nullish(),
+  "icon": zod.string().nullish(),
+  "active": zod.boolean().nullish(),
+  "variant": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "status": zod.enum(['Draft', 'ReadyToPublish', 'Published', 'PendingApproval']),
+  "inSet": zod.array(zod.string())
+}))
+})
+
+
+export const getVersionVariationsByIdParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getVersionVariationsByIdResponse = zod.enum(['Nothing', 'Culture', 'Segment', 'CultureAndSegment'])
 
 

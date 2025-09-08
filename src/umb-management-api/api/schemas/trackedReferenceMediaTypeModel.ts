@@ -7,6 +7,7 @@
  */
 
 export interface TrackedReferenceMediaTypeModel {
+  id: string;
   /** @nullable */
   icon?: string | null;
   /** @nullable */

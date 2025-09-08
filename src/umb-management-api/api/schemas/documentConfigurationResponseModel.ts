@@ -11,6 +11,4 @@ export interface DocumentConfigurationResponseModel {
   disableUnpublishWhenReferenced: boolean;
   allowEditInvariantFromNonDefault: boolean;
   allowNonExistingSegmentsCreation: boolean;
-  /** @deprecated */
-  reservedFieldNames: string[];
 }

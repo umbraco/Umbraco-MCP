@@ -27,6 +27,12 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
     if (item.user) {
       item.user = { ...item.user, id: BLANK_UUID };
     }
+    if (item.ancestors && Array.isArray(item.ancestors)) {
+      item.ancestors = item.ancestors.map((ancestor: any) => ({
+        ...ancestor,
+        id: BLANK_UUID
+      }));
+    }
     if (item.createDate) {
       item.createDate = "NORMALIZED_DATE";
     }

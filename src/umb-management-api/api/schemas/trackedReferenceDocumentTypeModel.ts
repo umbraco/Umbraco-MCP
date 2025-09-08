@@ -7,6 +7,7 @@
  */
 
 export interface TrackedReferenceDocumentTypeModel {
+  id: string;
   /** @nullable */
   icon?: string | null;
   /** @nullable */

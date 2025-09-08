@@ -5,11 +5,13 @@
  * Describes the Umbraco Workflow Management API.
  * OpenAPI spec version: Latest
  */
+import type { ApprovalThresholdModel } from './approvalThresholdModel.js';
+import type { FlowTypeModel } from './flowTypeModel.js';
 
 export interface GlobalWorkflowVariablesModel {
   historyCleanupEnabled: boolean;
   configureApprovalThreshold: boolean;
-  defaultApprovalThreshold: number;
+  defaultApprovalThreshold: ApprovalThresholdModel;
   mandatoryComments: boolean;
   adminCanEdit: boolean;
   allowAttachments: boolean;
@@ -17,5 +19,5 @@ export interface GlobalWorkflowVariablesModel {
   extendPermissions: boolean;
   lockIfActive: boolean;
   requireUnpublish: boolean;
-  flowType: number;
+  flowType: FlowTypeModel;
 }

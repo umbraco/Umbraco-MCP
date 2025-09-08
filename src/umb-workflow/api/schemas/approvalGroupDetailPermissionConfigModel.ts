@@ -5,13 +5,13 @@
  * Describes the Umbraco Workflow Management API.
  * OpenAPI spec version: Latest
  */
+import type { ApprovalThresholdModel } from './approvalThresholdModel.js';
 
 export interface ApprovalGroupDetailPermissionConfigModel {
   permission: number;
   /** @nullable */
   name?: string | null;
-  /** @nullable */
-  approvalThreshold?: number | null;
+  approvalThreshold: ApprovalThresholdModel;
   /** @nullable */
   icon?: string | null;
   groupUnique: string;

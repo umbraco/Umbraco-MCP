@@ -22,6 +22,10 @@ export interface WorkflowInstanceTableResponseModel {
   requestedOn?: string | null;
   /** @nullable */
   comment?: string | null;
+  /** @nullable */
+  entityType?: string | null;
+  /** @nullable */
+  entityKey?: string | null;
   scheduled: boolean;
   tasks: WorkflowInstanceTableTaskResponseModel[];
   /** @nullable */

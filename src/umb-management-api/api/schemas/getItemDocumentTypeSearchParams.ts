@@ -8,6 +8,7 @@
 
 export type GetItemDocumentTypeSearchParams = {
 query?: string;
+isElement?: boolean;
 skip?: number;
 take?: number;
 };

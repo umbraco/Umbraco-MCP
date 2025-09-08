@@ -5,6 +5,8 @@
  * Describes the Umbraco Workflow Management API.
  * OpenAPI spec version: Latest
  */
+import type { WorkflowStatusModel } from './workflowStatusModel.js';
+import type { WorkflowTypeModel } from './workflowTypeModel.js';
 
 export interface InstanceDetailModel {
   /** @nullable */
@@ -16,6 +18,8 @@ export interface InstanceDetailModel {
   releaseDate?: string | null;
   key: string;
   requestedByKey: string;
+  /** @nullable */
+  entityKey?: string | null;
   totalSteps: number;
   /** @nullable */
   requestedBy?: string | null;
@@ -28,10 +32,10 @@ export interface InstanceDetailModel {
   /** @nullable */
   comment?: string | null;
   /** @nullable */
-  readonly status?: string | null;
-  /** @nullable */
-  readonly type?: string | null;
-  /** @nullable */
   segments?: string | null;
+  /** @nullable */
+  entityType?: string | null;
   scheduled: boolean;
+  status: WorkflowStatusModel;
+  type: WorkflowTypeModel;
 }

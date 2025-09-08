@@ -1,12 +1,12 @@
 import { UmbracoManagementClient } from "@umb-management-client";
-import { DocumentTypeResponseModel } from "@/umb-management-api/schemas/index.js";
+import {  PagedModelDocumentTypeItemResponseModel } from "@/umb-management-api/schemas/index.js";
 
 export class PropertyTypeTestHelper {
   private static readonly HEADER_CONTROLS_QUERY = "header Controls";
 
   private static headerControlsId: string | null = null;
 
-  private static async getHeaderControlsData(): Promise<DocumentTypeResponseModel | null> {
+  private static async getHeaderControlsData(): Promise<PagedModelDocumentTypeItemResponseModel | null> {
     try {
       const client = UmbracoManagementClient.getClient();
       const response = await client.getItemDocumentTypeSearch({

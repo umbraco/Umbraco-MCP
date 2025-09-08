@@ -6,9 +6,8 @@
  * OpenAPI spec version: Latest
  */
 
-export type GetScaffoldParams = {
-NodeKey?: string;
-ContentTypeKey?: string;
-IsDashboard?: boolean;
-Variant?: string;
+export type GetReleaseSetParams = {
+skip?: number;
+take?: number;
+filter?: string;
 };

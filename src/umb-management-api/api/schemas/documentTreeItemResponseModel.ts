@@ -6,6 +6,7 @@
  * OpenAPI spec version: Latest
  */
 import type { DocumentTreeItemResponseModelParent } from './documentTreeItemResponseModelParent.js';
+import type { ReferenceByIdModel } from './referenceByIdModel.js';
 import type { DocumentTypeReferenceResponseModel } from './documentTypeReferenceResponseModel.js';
 import type { DocumentVariantItemResponseModel } from './documentVariantItemResponseModel.js';
 
@@ -18,6 +19,7 @@ export interface DocumentTreeItemResponseModel {
   id: string;
   createDate: string;
   isProtected: boolean;
+  ancestors: ReferenceByIdModel[];
   documentType: DocumentTypeReferenceResponseModel;
   variants: DocumentVariantItemResponseModel[];
 }

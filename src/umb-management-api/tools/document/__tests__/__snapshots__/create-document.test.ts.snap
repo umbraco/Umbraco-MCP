@@ -13,6 +13,7 @@ exports[`create-document should create a document 1`] = `
 
 exports[`create-document should create a document 2`] = `
 {
+  "ancestors": [],
   "createDate": "<normalized>",
   "documentType": {
     "collection": null,
@@ -48,6 +49,7 @@ exports[`create-document should create a document with additional properties 1`]
 
 exports[`create-document should create a document with additional properties 2`] = `
 {
+  "ancestors": [],
   "createDate": "<normalized>",
   "documentType": {
     "collection": null,

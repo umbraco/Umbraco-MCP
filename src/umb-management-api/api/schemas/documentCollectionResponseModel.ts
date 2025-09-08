@@ -8,6 +8,7 @@
 import type { DocumentValueResponseModel } from './documentValueResponseModel.js';
 import type { DocumentVariantResponseModel } from './documentVariantResponseModel.js';
 import type { DocumentTypeCollectionReferenceResponseModel } from './documentTypeCollectionReferenceResponseModel.js';
+import type { ReferenceByIdModel } from './referenceByIdModel.js';
 
 export interface DocumentCollectionResponseModel {
   values: DocumentValueResponseModel[];
@@ -19,6 +20,7 @@ export interface DocumentCollectionResponseModel {
   documentType: DocumentTypeCollectionReferenceResponseModel;
   isTrashed: boolean;
   isProtected: boolean;
+  ancestors: ReferenceByIdModel[];
   /** @nullable */
   updater?: string | null;
 }

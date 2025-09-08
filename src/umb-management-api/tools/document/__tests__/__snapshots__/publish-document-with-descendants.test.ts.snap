@@ -7,12 +7,7 @@ exports[`publish-document-with-descendants should handle publishing a non-existe
       "text": "Error using publish-document-with-descendants:
 {
   "message": "Request failed with status code 404",
-  "response": {
-    "type": "Error",
-    "title": "The requested document could not be found",
-    "status": 404,
-    "operationStatus": "ContentNotFound"
-  }
+  "response": ""
 }",
       "type": "text",
     },

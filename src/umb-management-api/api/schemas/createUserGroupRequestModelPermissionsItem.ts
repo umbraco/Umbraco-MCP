@@ -6,6 +6,7 @@
  * OpenAPI spec version: Latest
  */
 import type { DocumentPermissionPresentationModel } from './documentPermissionPresentationModel.js';
+import type { DocumentPropertyValuePermissionPresentationModel } from './documentPropertyValuePermissionPresentationModel.js';
 import type { UnknownTypePermissionPresentationModel } from './unknownTypePermissionPresentationModel.js';
 
-export type CreateUserGroupRequestModelPermissionsItem = DocumentPermissionPresentationModel | UnknownTypePermissionPresentationModel;
+export type CreateUserGroupRequestModelPermissionsItem = DocumentPermissionPresentationModel | DocumentPropertyValuePermissionPresentationModel | UnknownTypePermissionPresentationModel;

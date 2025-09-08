@@ -14,6 +14,7 @@ export interface MediaResponseModel {
   values: MediaValueResponseModel[];
   variants: MediaVariantResponseModel[];
   id: string;
+  /** @deprecated */
   urls: MediaUrlInfoModel[];
   isTrashed: boolean;
   mediaType: MediaTypeReferenceResponseModel;

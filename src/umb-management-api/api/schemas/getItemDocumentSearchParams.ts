@@ -8,6 +8,8 @@
 
 export type GetItemDocumentSearchParams = {
 query?: string;
+trashed?: boolean;
+culture?: string;
 skip?: number;
 take?: number;
 parentId?: string;
