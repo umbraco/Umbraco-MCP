@@ -7,6 +7,7 @@
  */
 
 export type GetMediaTypeByIdAllowedChildrenParams = {
+parentContentKey?: string;
 skip?: number;
 take?: number;
 };

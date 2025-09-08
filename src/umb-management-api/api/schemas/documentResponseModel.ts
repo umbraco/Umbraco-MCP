@@ -16,6 +16,7 @@ export interface DocumentResponseModel {
   variants: DocumentVariantResponseModel[];
   id: string;
   documentType: DocumentTypeReferenceResponseModel;
+  /** @deprecated */
   urls: DocumentUrlInfoModel[];
   /** @nullable */
   template?: DocumentResponseModelTemplate;

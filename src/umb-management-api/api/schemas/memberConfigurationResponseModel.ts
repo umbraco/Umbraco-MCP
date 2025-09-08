@@ -6,7 +6,4 @@
  * OpenAPI spec version: Latest
  */
 
-export interface MemberConfigurationResponseModel {
-  /** @deprecated */
-  reservedFieldNames: string[];
-}
+export interface MemberConfigurationResponseModel { [key: string]: unknown }

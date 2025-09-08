@@ -1,6 +1,6 @@
 import { UmbracoManagementClient } from "@umb-management-client";
 import { putMediaSortBody } from "@/umb-management-api/umbracoManagementAPI.zod.js";
-import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CreateUmbracoTool } from "@/helpers/mcp/create-umbraco-tool.js";
 
 const SortMediaTool = CreateUmbracoTool(
   "sort-media",

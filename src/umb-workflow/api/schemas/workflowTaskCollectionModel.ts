@@ -16,8 +16,6 @@ export interface WorkflowTaskCollectionModel {
   actionedByAdmin: boolean;
   approvalCount: number;
   approvalsRequired: number;
-  /** @nullable */
-  approvalsText?: string | null;
   approvalStep: number;
   future: boolean;
 }

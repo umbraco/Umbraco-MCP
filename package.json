@@ -10,6 +10,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsup --config tsup.config.ts",
+    "compile": "tsc --noEmit",
     "watch": "tsup --config tsup.config.ts --watch",
     "generate": "orval --config orval.config.ts",
     "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",

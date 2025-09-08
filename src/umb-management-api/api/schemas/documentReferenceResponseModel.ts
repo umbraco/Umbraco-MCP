@@ -7,6 +7,7 @@
  */
 import type { DocumentReferenceResponseModelType } from './documentReferenceResponseModelType.js';
 import type { TrackedReferenceDocumentTypeModel } from './trackedReferenceDocumentTypeModel.js';
+import type { DocumentVariantItemResponseModel } from './documentVariantItemResponseModel.js';
 
 export interface DocumentReferenceResponseModel {
   $type: DocumentReferenceResponseModelType;
@@ -16,4 +17,5 @@ export interface DocumentReferenceResponseModel {
   /** @nullable */
   published?: boolean | null;
   documentType: TrackedReferenceDocumentTypeModel;
+  variants: DocumentVariantItemResponseModel[];
 }

@@ -7,6 +7,7 @@
  */
 
 export type GetDocumentTypeByIdAllowedChildrenParams = {
+parentContentKey?: string;
 skip?: number;
 take?: number;
 };

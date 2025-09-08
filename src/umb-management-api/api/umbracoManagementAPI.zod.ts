@@ -108,6 +108,101 @@ export const putDataTypeByIdMoveBody = zod.object({
 })
 
 
+export const getDataTypeByIdReferencedByParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getDataTypeByIdReferencedByQuerySkipDefault = 0;export const getDataTypeByIdReferencedByQueryTakeDefault = 20;
+
+export const getDataTypeByIdReferencedByQueryParams = zod.object({
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getDataTypeByIdReferencedByQueryTakeDefault)
+})
+
+export const getDataTypeByIdReferencedByResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "$type": zod.enum(['DefaultReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "type": zod.string().nullish(),
+  "icon": zod.string().nullish()
+}).or(zod.object({
+  "$type": zod.enum(['DocumentReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "published": zod.boolean().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+}),
+  "variants": zod.array(zod.object({
+  "name": zod.string(),
+  "culture": zod.string().nullish(),
+  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
+}))
+})).or(zod.object({
+  "$type": zod.enum(['DocumentTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})))
+})
+
+
+/**
+ * @deprecated
+ */
 export const getDataTypeByIdReferencesParams = zod.object({
   "id": zod.string().uuid()
 })
@@ -315,7 +410,7 @@ export const postDictionaryBody = zod.object({
   "name": zod.string().min(1),
   "translations": zod.array(zod.object({
   "isoCode": zod.string().min(1),
-  "translation": zod.string().min(1)
+  "translation": zod.string()
 })),
   "id": zod.string().uuid().nullish(),
   "parent": zod.object({
@@ -332,7 +427,7 @@ export const getDictionaryByIdResponse = zod.object({
   "name": zod.string().min(1),
   "translations": zod.array(zod.object({
   "isoCode": zod.string().min(1),
-  "translation": zod.string().min(1)
+  "translation": zod.string()
 })),
   "id": zod.string().uuid()
 })
@@ -351,7 +446,7 @@ export const putDictionaryByIdBody = zod.object({
   "name": zod.string().min(1),
   "translations": zod.array(zod.object({
   "isoCode": zod.string().min(1),
-  "translation": zod.string().min(1)
+  "translation": zod.string()
 }))
 })
 
@@ -545,6 +640,40 @@ export const putDocumentBlueprintByIdMoveBody = zod.object({
   "target": zod.object({
   "id": zod.string().uuid()
 }).nullish()
+})
+
+
+export const getDocumentBlueprintByIdScaffoldParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getDocumentBlueprintByIdScaffoldResponse = zod.object({
+  "values": zod.array(zod.object({
+  "culture": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "alias": zod.string().min(1),
+  "value": zod.any().nullish(),
+  "editorAlias": zod.string().min(1)
+})),
+  "variants": zod.array(zod.object({
+  "culture": zod.string().nullish(),
+  "segment": zod.string().nullish(),
+  "name": zod.string().min(1),
+  "createDate": zod.string().datetime({"local":true}),
+  "updateDate": zod.string().datetime({"local":true}),
+  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges']),
+  "publishDate": zod.string().datetime({"local":true}).nullish(),
+  "scheduledPublishDate": zod.string().datetime({"local":true}).nullish(),
+  "scheduledUnpublishDate": zod.string().datetime({"local":true}).nullish()
+})),
+  "id": zod.string().uuid(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string(),
+  "collection": zod.object({
+  "id": zod.string().uuid()
+}).nullish()
+})
 })
 
 
@@ -931,6 +1060,7 @@ export const getDocumentTypeByIdAllowedChildrenParams = zod.object({
 export const getDocumentTypeByIdAllowedChildrenQuerySkipDefault = 0;export const getDocumentTypeByIdAllowedChildrenQueryTakeDefault = 100;
 
 export const getDocumentTypeByIdAllowedChildrenQueryParams = zod.object({
+  "parentContentKey": zod.string().uuid().optional(),
   "skip": zod.coerce.number().optional(),
   "take": zod.coerce.number().default(getDocumentTypeByIdAllowedChildrenQueryTakeDefault)
 })
@@ -1119,6 +1249,7 @@ export const getItemDocumentTypeSearchQuerySkipDefault = 0;export const getItemD
 
 export const getItemDocumentTypeSearchQueryParams = zod.object({
   "query": zod.string().optional(),
+  "isElement": zod.coerce.boolean().optional(),
   "skip": zod.coerce.number().optional(),
   "take": zod.coerce.number().default(getItemDocumentTypeSearchQueryTakeDefault)
 })
@@ -1334,6 +1465,9 @@ export const getCollectionDocumentByIdResponse = zod.object({
 }),
   "isTrashed": zod.boolean(),
   "isProtected": zod.boolean(),
+  "ancestors": zod.array(zod.object({
+  "id": zod.string().uuid()
+})),
   "updater": zod.string().nullish()
 }))
 })
@@ -1630,6 +1764,22 @@ export const putDocumentByIdPublishWithDescendantsBody = zod.object({
   "cultures": zod.array(zod.string())
 })
 
+export const putDocumentByIdPublishWithDescendantsResponse = zod.object({
+  "taskId": zod.string().uuid(),
+  "isComplete": zod.boolean()
+})
+
+
+export const getDocumentByIdPublishWithDescendantsResultByTaskIdParams = zod.object({
+  "id": zod.string().uuid(),
+  "taskId": zod.string().uuid()
+})
+
+export const getDocumentByIdPublishWithDescendantsResultByTaskIdResponse = zod.object({
+  "taskId": zod.string().uuid(),
+  "isComplete": zod.boolean()
+})
+
 
 export const getDocumentByIdPublishedParams = zod.object({
   "id": zod.string().uuid()
@@ -1698,6 +1848,23 @@ export const getDocumentByIdReferencedByResponse = zod.object({
   "name": zod.string().nullish(),
   "published": zod.boolean().nullish(),
   "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+}),
+  "variants": zod.array(zod.object({
+  "name": zod.string(),
+  "culture": zod.string().nullish(),
+  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
+}))
+})).or(zod.object({
+  "$type": zod.enum(['DocumentTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
   "icon": zod.string().nullish(),
   "alias": zod.string().nullish(),
   "name": zod.string().nullish()
@@ -1707,6 +1874,39 @@ export const getDocumentByIdReferencedByResponse = zod.object({
   "id": zod.string().uuid(),
   "name": zod.string().nullish(),
   "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
   "icon": zod.string().nullish(),
   "alias": zod.string().nullish(),
   "name": zod.string().nullish()
@@ -1740,31 +1940,6 @@ export const putDocumentByIdUnpublishParams = zod.object({
 
 export const putDocumentByIdUnpublishBody = zod.object({
   "cultures": zod.array(zod.string()).nullish()
-})
-
-
-/**
- * @deprecated
- */
-export const putDocumentByIdValidateParams = zod.object({
-  "id": zod.string().uuid()
-})
-
-export const putDocumentByIdValidateBody = zod.object({
-  "values": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "alias": zod.string().min(1),
-  "value": zod.any().nullish()
-})),
-  "variants": zod.array(zod.object({
-  "culture": zod.string().nullish(),
-  "segment": zod.string().nullish(),
-  "name": zod.string().min(1)
-})),
-  "template": zod.object({
-  "id": zod.string().uuid()
-}).nullish()
 })
 
 
@@ -1811,8 +1986,7 @@ export const getDocumentConfigurationResponse = zod.object({
   "disableDeleteWhenReferenced": zod.boolean(),
   "disableUnpublishWhenReferenced": zod.boolean(),
   "allowEditInvariantFromNonDefault": zod.boolean(),
-  "allowNonExistingSegmentsCreation": zod.boolean(),
-  "reservedFieldNames": zod.array(zod.string())
+  "allowNonExistingSegmentsCreation": zod.boolean()
 })
 
 
@@ -1898,6 +2072,8 @@ export const getItemDocumentSearchQuerySkipDefault = 0;export const getItemDocum
 
 export const getItemDocumentSearchQueryParams = zod.object({
   "query": zod.string().optional(),
+  "trashed": zod.coerce.boolean().optional(),
+  "culture": zod.string().optional(),
   "skip": zod.coerce.number().optional(),
   "take": zod.coerce.number().default(getItemDocumentSearchQueryTakeDefault),
   "parentId": zod.string().uuid().optional(),
@@ -1988,6 +2164,94 @@ export const getRecycleBinDocumentChildrenResponse = zod.object({
 })
 
 
+export const getRecycleBinDocumentReferencedByQuerySkipDefault = 0;export const getRecycleBinDocumentReferencedByQueryTakeDefault = 20;
+
+export const getRecycleBinDocumentReferencedByQueryParams = zod.object({
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRecycleBinDocumentReferencedByQueryTakeDefault)
+})
+
+export const getRecycleBinDocumentReferencedByResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "$type": zod.enum(['DefaultReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "type": zod.string().nullish(),
+  "icon": zod.string().nullish()
+}).or(zod.object({
+  "$type": zod.enum(['DocumentReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "published": zod.boolean().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+}),
+  "variants": zod.array(zod.object({
+  "name": zod.string(),
+  "culture": zod.string().nullish(),
+  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
+}))
+})).or(zod.object({
+  "$type": zod.enum(['DocumentTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})))
+})
+
+
 export const getRecycleBinDocumentRootQuerySkipDefault = 0;export const getRecycleBinDocumentRootQueryTakeDefault = 100;
 
 export const getRecycleBinDocumentRootQueryParams = zod.object({
@@ -2034,6 +2298,9 @@ export const getTreeDocumentAncestorsResponseItem = zod.object({
   "id": zod.string().uuid(),
   "createDate": zod.string().datetime({"local":true}),
   "isProtected": zod.boolean(),
+  "ancestors": zod.array(zod.object({
+  "id": zod.string().uuid()
+})),
   "documentType": zod.object({
   "id": zod.string().uuid(),
   "icon": zod.string(),
@@ -2071,6 +2338,9 @@ export const getTreeDocumentChildrenResponse = zod.object({
   "id": zod.string().uuid(),
   "createDate": zod.string().datetime({"local":true}),
   "isProtected": zod.boolean(),
+  "ancestors": zod.array(zod.object({
+  "id": zod.string().uuid()
+})),
   "documentType": zod.object({
   "id": zod.string().uuid(),
   "icon": zod.string(),
@@ -2107,6 +2377,9 @@ export const getTreeDocumentRootResponse = zod.object({
   "id": zod.string().uuid(),
   "createDate": zod.string().datetime({"local":true}),
   "isProtected": zod.boolean(),
+  "ancestors": zod.array(zod.object({
+  "id": zod.string().uuid()
+})),
   "documentType": zod.object({
   "id": zod.string().uuid(),
   "icon": zod.string(),
@@ -2901,6 +3174,7 @@ export const getMediaTypeByIdAllowedChildrenParams = zod.object({
 export const getMediaTypeByIdAllowedChildrenQuerySkipDefault = 0;export const getMediaTypeByIdAllowedChildrenQueryTakeDefault = 100;
 
 export const getMediaTypeByIdAllowedChildrenQueryParams = zod.object({
+  "parentContentKey": zod.string().uuid().optional(),
   "skip": zod.coerce.number().optional(),
   "take": zod.coerce.number().default(getMediaTypeByIdAllowedChildrenQueryTakeDefault)
 })
@@ -3185,6 +3459,8 @@ export const getItemMediaSearchQuerySkipDefault = 0;export const getItemMediaSea
 
 export const getItemMediaSearchQueryParams = zod.object({
   "query": zod.string().optional(),
+  "trashed": zod.coerce.boolean().optional(),
+  "culture": zod.string().optional(),
   "skip": zod.coerce.number().optional(),
   "take": zod.coerce.number().default(getItemMediaSearchQueryTakeDefault),
   "parentId": zod.string().uuid().optional(),
@@ -3364,6 +3640,23 @@ export const getMediaByIdReferencedByResponse = zod.object({
   "name": zod.string().nullish(),
   "published": zod.boolean().nullish(),
   "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+}),
+  "variants": zod.array(zod.object({
+  "name": zod.string(),
+  "culture": zod.string().nullish(),
+  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
+}))
+})).or(zod.object({
+  "$type": zod.enum(['DocumentTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
   "icon": zod.string().nullish(),
   "alias": zod.string().nullish(),
   "name": zod.string().nullish()
@@ -3373,6 +3666,39 @@ export const getMediaByIdReferencedByResponse = zod.object({
   "id": zod.string().uuid(),
   "name": zod.string().nullish(),
   "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
   "icon": zod.string().nullish(),
   "alias": zod.string().nullish(),
   "name": zod.string().nullish()
@@ -3435,10 +3761,12 @@ export const getMediaAreReferencedResponse = zod.object({
 })
 
 
+/**
+ * @deprecated
+ */
 export const getMediaConfigurationResponse = zod.object({
   "disableDeleteWhenReferenced": zod.boolean(),
-  "disableUnpublishWhenReferenced": zod.boolean(),
-  "reservedFieldNames": zod.array(zod.string())
+  "disableUnpublishWhenReferenced": zod.boolean()
 })
 
 
@@ -3543,6 +3871,94 @@ export const getRecycleBinMediaChildrenResponse = zod.object({
   "culture": zod.string().nullish()
 }))
 }))
+})
+
+
+export const getRecycleBinMediaReferencedByQuerySkipDefault = 0;export const getRecycleBinMediaReferencedByQueryTakeDefault = 20;
+
+export const getRecycleBinMediaReferencedByQueryParams = zod.object({
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getRecycleBinMediaReferencedByQueryTakeDefault)
+})
+
+export const getRecycleBinMediaReferencedByResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "$type": zod.enum(['DefaultReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "type": zod.string().nullish(),
+  "icon": zod.string().nullish()
+}).or(zod.object({
+  "$type": zod.enum(['DocumentReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "published": zod.boolean().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+}),
+  "variants": zod.array(zod.object({
+  "name": zod.string(),
+  "culture": zod.string().nullish(),
+  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
+}))
+})).or(zod.object({
+  "$type": zod.enum(['DocumentTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})))
 })
 
 
@@ -4234,6 +4650,117 @@ export const putMemberByIdBody = zod.object({
 })
 
 
+export const getMemberByIdReferencedByParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getMemberByIdReferencedByQuerySkipDefault = 0;export const getMemberByIdReferencedByQueryTakeDefault = 20;
+
+export const getMemberByIdReferencedByQueryParams = zod.object({
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMemberByIdReferencedByQueryTakeDefault)
+})
+
+export const getMemberByIdReferencedByResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "$type": zod.enum(['DefaultReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "type": zod.string().nullish(),
+  "icon": zod.string().nullish()
+}).or(zod.object({
+  "$type": zod.enum(['DocumentReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "published": zod.boolean().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+}),
+  "variants": zod.array(zod.object({
+  "name": zod.string(),
+  "culture": zod.string().nullish(),
+  "state": zod.enum(['NotCreated', 'Draft', 'Published', 'PublishedPendingChanges'])
+}))
+})).or(zod.object({
+  "$type": zod.enum(['DocumentTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "documentType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MediaTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "mediaType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})).or(zod.object({
+  "$type": zod.enum(['MemberTypePropertyTypeReferenceResponseModel']),
+  "id": zod.string().uuid(),
+  "name": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "memberType": zod.object({
+  "id": zod.string().uuid(),
+  "icon": zod.string().nullish(),
+  "alias": zod.string().nullish(),
+  "name": zod.string().nullish()
+})
+})))
+})
+
+
+export const getMemberByIdReferencedDescendantsParams = zod.object({
+  "id": zod.string().uuid()
+})
+
+export const getMemberByIdReferencedDescendantsQuerySkipDefault = 0;export const getMemberByIdReferencedDescendantsQueryTakeDefault = 20;
+
+export const getMemberByIdReferencedDescendantsQueryParams = zod.object({
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMemberByIdReferencedDescendantsQueryTakeDefault)
+})
+
+export const getMemberByIdReferencedDescendantsResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid()
+}))
+})
+
+
 export const putMemberByIdValidateParams = zod.object({
   "id": zod.string().uuid()
 })
@@ -4261,8 +4788,24 @@ export const putMemberByIdValidateBody = zod.object({
 })
 
 
+export const getMemberAreReferencedQuerySkipDefault = 0;export const getMemberAreReferencedQueryTakeDefault = 20;
+
+export const getMemberAreReferencedQueryParams = zod.object({
+  "id": zod.array(zod.string().uuid()).optional(),
+  "skip": zod.coerce.number().optional(),
+  "take": zod.coerce.number().default(getMemberAreReferencedQueryTakeDefault)
+})
+
+export const getMemberAreReferencedResponse = zod.object({
+  "total": zod.number(),
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid()
+}))
+})
+
+
 export const getMemberConfigurationResponse = zod.object({
-  "reservedFieldNames": zod.array(zod.string())
+
 })
 
 
@@ -4656,6 +5199,11 @@ export const getPropertyTypeIsUsedQueryParams = zod.object({
 })
 
 export const getPropertyTypeIsUsedResponse = zod.boolean()
+
+
+export const getPublishedCacheRebuildStatusResponse = zod.object({
+  "isRebuilding": zod.boolean()
+})
 
 
 export const getRedirectManagementQuerySkipDefault = 0;export const getRedirectManagementQueryTakeDefault = 100;
@@ -5622,6 +6170,15 @@ export const getFilterUserGroupResponse = zod.object({
 }),
   "verbs": zod.array(zod.string())
 }).or(zod.object({
+  "$type": zod.enum(['DocumentPropertyValuePermissionPresentationModel']),
+  "documentType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "propertyType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "verbs": zod.array(zod.string())
+})).or(zod.object({
   "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
   "verbs": zod.array(zod.string()),
   "context": zod.string()
@@ -5676,6 +6233,15 @@ export const postUserGroupBody = zod.object({
 }),
   "verbs": zod.array(zod.string())
 }).or(zod.object({
+  "$type": zod.enum(['DocumentPropertyValuePermissionPresentationModel']),
+  "documentType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "propertyType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "verbs": zod.array(zod.string())
+})).or(zod.object({
   "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
   "verbs": zod.array(zod.string()),
   "context": zod.string()
@@ -5716,6 +6282,15 @@ export const getUserGroupResponse = zod.object({
 }),
   "verbs": zod.array(zod.string())
 }).or(zod.object({
+  "$type": zod.enum(['DocumentPropertyValuePermissionPresentationModel']),
+  "documentType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "propertyType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "verbs": zod.array(zod.string())
+})).or(zod.object({
   "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
   "verbs": zod.array(zod.string()),
   "context": zod.string()
@@ -5754,6 +6329,15 @@ export const getUserGroupByIdResponse = zod.object({
 }),
   "verbs": zod.array(zod.string())
 }).or(zod.object({
+  "$type": zod.enum(['DocumentPropertyValuePermissionPresentationModel']),
+  "documentType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "propertyType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "verbs": zod.array(zod.string())
+})).or(zod.object({
   "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
   "verbs": zod.array(zod.string()),
   "context": zod.string()
@@ -5796,6 +6380,15 @@ export const putUserGroupByIdBody = zod.object({
 }),
   "verbs": zod.array(zod.string())
 }).or(zod.object({
+  "$type": zod.enum(['DocumentPropertyValuePermissionPresentationModel']),
+  "documentType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "propertyType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "verbs": zod.array(zod.string())
+})).or(zod.object({
   "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
   "verbs": zod.array(zod.string()),
   "context": zod.string()
@@ -6138,6 +6731,15 @@ export const getUserCurrentResponse = zod.object({
 }),
   "verbs": zod.array(zod.string())
 }).or(zod.object({
+  "$type": zod.enum(['DocumentPropertyValuePermissionPresentationModel']),
+  "documentType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "propertyType": zod.object({
+  "id": zod.string().uuid()
+}),
+  "verbs": zod.array(zod.string())
+})).or(zod.object({
   "$type": zod.enum(['UnknownTypePermissionPresentationModel']),
   "verbs": zod.array(zod.string()),
   "context": zod.string()
@@ -6201,7 +6803,6 @@ export const postUserCurrentChangePasswordBody = zod.object({
 
 export const getUserCurrentConfigurationResponse = zod.object({
   "keepUserLoggedIn": zod.boolean(),
-  "usernameIsEmail": zod.boolean(),
   "passwordConfiguration": zod.object({
   "minimumPasswordLength": zod.number(),
   "requireNonLetterOrDigit": zod.boolean(),

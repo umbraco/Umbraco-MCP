@@ -10,25 +10,38 @@ import GetMemberTypeConfigurationTool from "./get/get-member-type-configuration.
 import GetMemberTypeRootTool from "./items/get/get-root.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
-export const MemberTypeTools = (user: CurrentUserResponseModel) => {
-  const tools: ToolDefinition<any>[] = [];
+export const MemberTypeCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'member-type',
+    displayName: 'Member Types',
+    description: 'Member type definitions and composition management',
+    dependencies: ['member', 'member-group']
+  },
+  tools: (user: CurrentUserResponseModel) => {
+    const tools: ToolDefinition<any>[] = [];
 
-  tools.push(GetMemberTypeByIdTool());
+    tools.push(GetMemberTypeByIdTool());
 
-  if (AuthorizationPolicies.TreeAccessMembersOrMemberTypes(user)) {
+    if (AuthorizationPolicies.TreeAccessMembersOrMemberTypes(user)) {
+      tools.push(CreateMemberTypeTool());
+      tools.push(GetMemberTypesByIdArrayTool());
+      tools.push(DeleteMemberTypeTool());
+      tools.push(UpdateMemberTypeTool());
+      tools.push(CopyMemberTypeTool());
+      tools.push(GetMemberTypeAvailableCompositionsTool());
+      tools.push(GetMemberTypeCompositionReferencesTool());
+      tools.push(GetMemberTypeConfigurationTool());
+      tools.push(GetMemberTypeRootTool());
+    }
 
-    tools.push(CreateMemberTypeTool());
-    tools.push(GetMemberTypesByIdArrayTool());
-    tools.push(DeleteMemberTypeTool());
-    tools.push(UpdateMemberTypeTool());
-    tools.push(CopyMemberTypeTool());
-    tools.push(GetMemberTypeAvailableCompositionsTool());
-    tools.push(GetMemberTypeCompositionReferencesTool());
-    tools.push(GetMemberTypeConfigurationTool());
-    tools.push(GetMemberTypeRootTool());
+    return tools;
   }
+};
 
-  return tools;
-} 
+// Backwards compatibility export
+export const MemberTypeTools = (user: CurrentUserResponseModel) => {
+  return MemberTypeCollection.tools(user);
+}; 

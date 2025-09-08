@@ -11,6 +11,7 @@ import type {
   AdvancedSearchQueryModel,
   AdvancedSearchResponseModel,
   AdvancedSearchScaffoldResponseModel,
+  AlternateVersionDetailResponseModel,
   ApprovalGroupDetailResponseModel,
   ApprovalGroupItemResponseModel,
   ChartResponseModel,
@@ -19,6 +20,8 @@ import type {
   ContentReviewsSaveSettingsModel,
   ContentSlimModel,
   ContentTypePropertyModel,
+  ContentVariationModel,
+  DeleteVersionByIdParams,
   DocumentConfigResponseModel,
   DocumentConfigUpdateRequestModel,
   GetApprovalGroupInheritedMembersParams,
@@ -27,19 +30,31 @@ import type {
   GetChartWorkflowChartParams,
   GetContentContentSlimParams,
   GetContentDiffParams,
+  GetContentScheduledParams,
   GetHistoryCleanupParams,
   GetInstanceParams,
   GetInstanceStatus200,
   GetInstanceStatusParams,
   GetItemApprovalGroupParams,
-  GetScaffoldParams,
+  GetReleaseSetByIdAuditLogParams,
+  GetReleaseSetParams,
+  GetSettingsSendParams,
+  GetVersionAllParams,
+  GetVersionByIdAuditLogParams,
+  GetVersionByIdParams,
   HistoryCleanupModel,
   InitiateWorkflowRequestModel,
-  PackageVersionModel,
+  PagedAlternateVersionCollectionResponseModel,
   PagedApprovalGroupCollectionReponseModel,
+  PagedAuditLogResponseModel,
   PagedContentReviewCollectionResponseModel,
+  PagedReleaseSetCollectionResponseModel,
   PagedWorkflowInstanceTableResponseModel,
+  PostVersionActiveParams,
   PutHistoryCleanupBody,
+  ReleaseSetDetailResponseModel,
+  ScaffoldRequestModel,
+  ScheduledContentWithLegendResponseModel,
   UnlockDocumentRequestModel,
   User2ApprovalGroupModel,
   WorkflowDiffsModel,
@@ -361,6 +376,16 @@ const getContentDiff = (
       options);
     }
   
+const getContentScheduled = (
+    params?: GetContentScheduledParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<ScheduledContentWithLegendResponseModel>(
+      {url: `/umbraco/workflow/management/api/v1/content/scheduled`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
 const getEmailTemplateInstall = (
     
  options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
@@ -455,12 +480,75 @@ const getInstanceStatus = (
       options);
     }
   
-const getScaffold = (
-    params?: GetScaffoldParams,
+const postReleaseSet = (
+    releaseSetDetailResponseModel: NonReadonly<ReleaseSetDetailResponseModel>,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/release-set`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: releaseSetDetailResponseModel
+    },
+      options);
+    }
+  
+const getReleaseSet = (
+    params?: GetReleaseSetParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<PagedReleaseSetCollectionResponseModel>(
+      {url: `/umbraco/workflow/management/api/v1/release-set`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getReleaseSetById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<ReleaseSetDetailResponseModel>(
+      {url: `/umbraco/workflow/management/api/v1/release-set/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+const deleteReleaseSetById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/release-set/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+const putReleaseSetById = (
+    id: string,
+    releaseSetDetailResponseModel: NonReadonly<ReleaseSetDetailResponseModel>,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/release-set/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: releaseSetDetailResponseModel
+    },
+      options);
+    }
+  
+const getReleaseSetByIdAuditLog = (
+    id: string,
+    params?: GetReleaseSetByIdAuditLogParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<PagedAuditLogResponseModel>(
+      {url: `/umbraco/workflow/management/api/v1/release-set/${id}/audit-log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postScaffold = (
+    scaffoldRequestModel: ScaffoldRequestModel,
  options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
       return UmbracoWorkflowClient<WorkflowScaffoldResponseModel>(
-      {url: `/umbraco/workflow/management/api/v1/scaffold`, method: 'GET',
-        params
+      {url: `/umbraco/workflow/management/api/v1/scaffold`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: scaffoldRequestModel
     },
       options);
     }
@@ -494,15 +582,6 @@ const putSettings = (
       options);
     }
   
-const getSettingsVersion = (
-    
- options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
-      return UmbracoWorkflowClient<PackageVersionModel>(
-      {url: `/umbraco/workflow/management/api/v1/settings/version`, method: 'GET'
-    },
-      options);
-    }
-  
 const getTaskById = (
     id: string,
  options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
@@ -521,7 +600,102 @@ const getTaskActiveVariantsById = (
       options);
     }
   
-return {postActionApprove,postActionCancel,postActionInitiate,postActionReject,postActionResubmit,getAdvancedSearchContentTypes,postAdvancedSearchSearch,postApprovalGroup,getApprovalGroup,getApprovalGroupById,deleteApprovalGroupById,putApprovalGroupById,getApprovalGroupInheritedMembers,getApprovalGroupScaffold,getItemApprovalGroup,getChartContentReviewChart,getChartWorkflowChart,putConfig,postConfigUnlock,getContentReviewConfig,putContentReviewConfig,postContentReviewNodes,putContentReviewReview,getContentReviewSeed,getContentContentSlim,getContentContentTypes,getContentDiff,getEmailTemplateInstall,getHistoryCleanup,putHistoryCleanup,getInstance,postInstanceActive,postInstanceAll,postInstanceAssignedTo,postInstanceInitiatedBy,getInstanceStatus,getScaffold,getInformation,getSettings,putSettings,getSettingsVersion,getTaskById,getTaskActiveVariantsById}};
+const getSettingsSend = (
+    params?: GetSettingsSendParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/settings/send`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postVersion = (
+    alternateVersionDetailResponseModel: NonReadonly<AlternateVersionDetailResponseModel>,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/version`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: alternateVersionDetailResponseModel
+    },
+      options);
+    }
+  
+const getVersionById = (
+    id: string,
+    params?: GetVersionByIdParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<AlternateVersionDetailResponseModel>(
+      {url: `/umbraco/workflow/management/api/v1/version/${id}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const deleteVersionById = (
+    id: string,
+    params?: DeleteVersionByIdParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/version/${id}`, method: 'DELETE',
+        params
+    },
+      options);
+    }
+  
+const putVersionById = (
+    id: string,
+    alternateVersionDetailResponseModel: NonReadonly<AlternateVersionDetailResponseModel>,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/version/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: alternateVersionDetailResponseModel
+    },
+      options);
+    }
+  
+const getVersionByIdAuditLog = (
+    id: string,
+    params?: GetVersionByIdAuditLogParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<PagedAuditLogResponseModel>(
+      {url: `/umbraco/workflow/management/api/v1/version/${id}/audit-log`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const postVersionActive = (
+    params?: PostVersionActiveParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<void>(
+      {url: `/umbraco/workflow/management/api/v1/version/active`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+const getVersionAll = (
+    params?: GetVersionAllParams,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<PagedAlternateVersionCollectionResponseModel>(
+      {url: `/umbraco/workflow/management/api/v1/version/all`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+const getVersionVariationsById = (
+    id: string,
+ options?: SecondParameter<typeof UmbracoWorkflowClient>,) => {
+      return UmbracoWorkflowClient<ContentVariationModel>(
+      {url: `/umbraco/workflow/management/api/v1/version/variations/${id}`, method: 'GET'
+    },
+      options);
+    }
+  
+return {postActionApprove,postActionCancel,postActionInitiate,postActionReject,postActionResubmit,getAdvancedSearchContentTypes,postAdvancedSearchSearch,postApprovalGroup,getApprovalGroup,getApprovalGroupById,deleteApprovalGroupById,putApprovalGroupById,getApprovalGroupInheritedMembers,getApprovalGroupScaffold,getItemApprovalGroup,getChartContentReviewChart,getChartWorkflowChart,putConfig,postConfigUnlock,getContentReviewConfig,putContentReviewConfig,postContentReviewNodes,putContentReviewReview,getContentReviewSeed,getContentContentSlim,getContentContentTypes,getContentDiff,getContentScheduled,getEmailTemplateInstall,getHistoryCleanup,putHistoryCleanup,getInstance,postInstanceActive,postInstanceAll,postInstanceAssignedTo,postInstanceInitiatedBy,getInstanceStatus,postReleaseSet,getReleaseSet,getReleaseSetById,deleteReleaseSetById,putReleaseSetById,getReleaseSetByIdAuditLog,postScaffold,getInformation,getSettings,putSettings,getTaskById,getTaskActiveVariantsById,getSettingsSend,postVersion,getVersionById,deleteVersionById,putVersionById,getVersionByIdAuditLog,postVersionActive,getVersionAll,getVersionVariationsById}};
 export type PostActionApproveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postActionApprove']>>>
 export type PostActionCancelResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postActionCancel']>>>
 export type PostActionInitiateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postActionInitiate']>>>
@@ -549,6 +723,7 @@ export type GetContentReviewSeedResult = NonNullable<Awaited<ReturnType<ReturnTy
 export type GetContentContentSlimResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getContentContentSlim']>>>
 export type GetContentContentTypesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getContentContentTypes']>>>
 export type GetContentDiffResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getContentDiff']>>>
+export type GetContentScheduledResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getContentScheduled']>>>
 export type GetEmailTemplateInstallResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getEmailTemplateInstall']>>>
 export type GetHistoryCleanupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getHistoryCleanup']>>>
 export type PutHistoryCleanupResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['putHistoryCleanup']>>>
@@ -558,10 +733,24 @@ export type PostInstanceAllResult = NonNullable<Awaited<ReturnType<ReturnType<ty
 export type PostInstanceAssignedToResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postInstanceAssignedTo']>>>
 export type PostInstanceInitiatedByResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postInstanceInitiatedBy']>>>
 export type GetInstanceStatusResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getInstanceStatus']>>>
-export type GetScaffoldResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getScaffold']>>>
+export type PostReleaseSetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postReleaseSet']>>>
+export type GetReleaseSetResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getReleaseSet']>>>
+export type GetReleaseSetByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getReleaseSetById']>>>
+export type DeleteReleaseSetByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['deleteReleaseSetById']>>>
+export type PutReleaseSetByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['putReleaseSetById']>>>
+export type GetReleaseSetByIdAuditLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getReleaseSetByIdAuditLog']>>>
+export type PostScaffoldResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postScaffold']>>>
 export type GetInformationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getInformation']>>>
 export type GetSettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getSettings']>>>
 export type PutSettingsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['putSettings']>>>
-export type GetSettingsVersionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getSettingsVersion']>>>
 export type GetTaskByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getTaskById']>>>
 export type GetTaskActiveVariantsByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getTaskActiveVariantsById']>>>
+export type GetSettingsSendResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getSettingsSend']>>>
+export type PostVersionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postVersion']>>>
+export type GetVersionByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getVersionById']>>>
+export type DeleteVersionByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['deleteVersionById']>>>
+export type PutVersionByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['putVersionById']>>>
+export type GetVersionByIdAuditLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getVersionByIdAuditLog']>>>
+export type PostVersionActiveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['postVersionActive']>>>
+export type GetVersionAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getVersionAll']>>>
+export type GetVersionVariationsByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getUmbracoWorkflowManagementAPI>['getVersionVariationsById']>>>

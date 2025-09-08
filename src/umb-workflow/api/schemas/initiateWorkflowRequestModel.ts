@@ -8,6 +8,8 @@
 
 export interface InitiateWorkflowRequestModel {
   entityId: string;
+  /** @nullable */
+  entityType?: string | null;
   comment: string;
   publish: boolean;
   variant: string[];

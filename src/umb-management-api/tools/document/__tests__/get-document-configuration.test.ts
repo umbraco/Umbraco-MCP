@@ -21,7 +21,5 @@ describe("get-document-configuration", () => {
     expect(parsed).toHaveProperty("disableUnpublishWhenReferenced");
     expect(parsed).toHaveProperty("allowEditInvariantFromNonDefault");
     expect(parsed).toHaveProperty("allowNonExistingSegmentsCreation");
-    expect(parsed).toHaveProperty("reservedFieldNames");
-    expect(Array.isArray(parsed.reservedFieldNames)).toBe(true);
   });
 }); 

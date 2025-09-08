@@ -1,5 +1,5 @@
 import { UmbracoManagementClient } from "@umb-management-client";
-import { CreateUmbracoTemplateResource } from "@/helpers/create-umbraco-template-resource.js";
+import { CreateUmbracoTemplateResource } from "@/helpers/mcp/create-umbraco-template-resource.js";
 import { getTreeDataTypeAncestorsQueryParams } from "@/umb-management-api/umbracoManagementAPI.zod.js";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 

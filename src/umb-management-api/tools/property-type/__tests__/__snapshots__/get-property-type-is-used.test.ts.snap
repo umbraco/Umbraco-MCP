@@ -22,11 +22,13 @@ exports[`get-property-type-is-used should handle empty parameters 1`] = `
     "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
     "title": "One or more validation errors occurred.",
     "status": 400,
-    "errors": {
-      "propertyAlias": [
-        "The propertyAlias field is required."
-      ]
-    },
+    "errors": [
+      {
+        "$.propertyAlias": [
+          "The propertyAlias field is required."
+        ]
+      }
+    ],
     "traceId": "normalized-trace-id"
   }
 }",

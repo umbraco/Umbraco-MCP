@@ -8,6 +8,8 @@
 
 export type GetItemMediaSearchParams = {
 query?: string;
+trashed?: boolean;
+culture?: string;
 skip?: number;
 take?: number;
 parentId?: string;

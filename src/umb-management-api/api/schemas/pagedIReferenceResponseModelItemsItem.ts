@@ -7,6 +7,10 @@
  */
 import type { DefaultReferenceResponseModel } from './defaultReferenceResponseModel.js';
 import type { DocumentReferenceResponseModel } from './documentReferenceResponseModel.js';
+import type { DocumentTypePropertyTypeReferenceResponseModel } from './documentTypePropertyTypeReferenceResponseModel.js';
 import type { MediaReferenceResponseModel } from './mediaReferenceResponseModel.js';
+import type { MediaTypePropertyTypeReferenceResponseModel } from './mediaTypePropertyTypeReferenceResponseModel.js';
+import type { MemberReferenceResponseModel } from './memberReferenceResponseModel.js';
+import type { MemberTypePropertyTypeReferenceResponseModel } from './memberTypePropertyTypeReferenceResponseModel.js';
 
-export type PagedIReferenceResponseModelItemsItem = DefaultReferenceResponseModel | DocumentReferenceResponseModel | MediaReferenceResponseModel;
+export type PagedIReferenceResponseModelItemsItem = DefaultReferenceResponseModel | DocumentReferenceResponseModel | DocumentTypePropertyTypeReferenceResponseModel | MediaReferenceResponseModel | MediaTypePropertyTypeReferenceResponseModel | MemberReferenceResponseModel | MemberTypePropertyTypeReferenceResponseModel;
