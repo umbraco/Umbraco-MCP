@@ -71,7 +71,7 @@ Or configure environment variables and scope:
 npm install -g @anthropic-ai/claude-code
 
 # Add with environment variables
-claude mcp add umbraco-mcp --env UMBRACO_CLIENT_ID="your-id" --env UMBRACO_CLIENT_SECRET="your-secret" --env UMBRACO_BASE_URL="https://your-domain.com" --env INCLUDE_MANAGEMENT_COLLECTIONS="culture,document,media" -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
+claude mcp add umbraco-mcp --env UMBRACO_CLIENT_ID="your-id" --env UMBRACO_CLIENT_SECRET="your-secret" --env UMBRACO_BASE_URL="https://your-domain.com" --env NODE_TLS_REJECT_UNAUTHORIZED="0" --env INCLUDE_MANAGEMENT_COLLECTIONS="culture,document,media" -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
 
 # Verify installation
 claude mcp list
