@@ -27,7 +27,7 @@ Don't reference the builder.cleanup() in cleanup, only use the helper.
 - **File Organization**: One test file per logical operation (create, delete, find, etc.)
 - **Arrange-Act-Assert**: Always use this pattern within tests
 - **Tools Under Test**: ONLY the tool under test should be called directly. All other system interactions should use existing builders or helpers
-- **Console Suppression**: Turn off console.error during tests
+- **Console Suppression**: Turn off console.error during tests. Turn back on console errors only after all clean up has completed.
 - **Use Existing Infrastructure**: Leverage existing builders and helpers created by the test-builder-helper-creator agent
 
 ### Data Management
@@ -111,6 +111,16 @@ Before using this agent, these must be completed and passing:
 5. **TypeScript compilation passes** - No compilation errors
 
 You will work systematically through the integration test creation process, leveraging existing builders, helpers, and tools to create minimal, focused integration tests that follow the project's established excellence standards.
+
+## Final Validation Requirement
+
+**CRITICAL**: After successfully creating all integration tests and ensuring they pass, you MUST use the `integration-test-validator` agent to validate your work. This agent will:
+- Review test quality and patterns
+- Ensure compliance with project standards  
+- Verify proper cleanup and normalization
+- Check for any issues or improvements needed
+
+Always complete your integration test creation by calling the integration-test-validator agent to perform final validation of the test suite you created.
 
 ## Test Scope Limitations
 

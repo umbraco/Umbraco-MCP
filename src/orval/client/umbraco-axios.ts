@@ -1,6 +1,6 @@
 import qs from "qs";
 import Axios from "axios";
-import env from "@/helpers/env.js";
+import env from "@/helpers/config/env.js";
 
 const client_id = env.UMBRACO_CLIENT_ID;
 const client_secret = env.UMBRACO_CLIENT_SECRET;

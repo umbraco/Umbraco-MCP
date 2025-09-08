@@ -30,11 +30,19 @@ import GetDocumentChildrenTool from "./items/get/get-children.js";
 import GetDocumentAncestorsTool from "./items/get/get-ancestors.js";
 import GetRecycleBinRootTool from "./items/get/get-recycle-bin-root.js";
 import GetRecycleBinChildrenTool from "./items/get/get-recycle-bin-children.js";
-import { AuthorizationPolicies } from "@/helpers/umbraco-auth-policies.js";
+import { AuthorizationPolicies } from "@/helpers/auth/umbraco-auth-policies.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 import { ToolDefinition } from "types/tool-definition.js";
+import { ToolCollectionExport } from "types/tool-collection.js";
 
-export const DocumentTools = (user: CurrentUserResponseModel) => {
+export const DocumentCollection: ToolCollectionExport = {
+  metadata: {
+    name: 'document',
+    displayName: 'Documents',
+    description: 'Document content management and publishing',
+    dependencies: []
+  },
+  tools: (user: CurrentUserResponseModel) => {
   const tools: ToolDefinition<any>[] = [];
 
   if (AuthorizationPolicies.TreeAccessDocuments(user)) {
@@ -76,4 +84,10 @@ export const DocumentTools = (user: CurrentUserResponseModel) => {
   }
 
   return tools;
-}
+  }
+};
+
+// Backwards compatibility export
+export const DocumentTools = (user: CurrentUserResponseModel) => {
+  return DocumentCollection.tools(user);
+};

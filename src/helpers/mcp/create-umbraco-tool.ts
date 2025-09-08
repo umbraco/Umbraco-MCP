@@ -1,6 +1,6 @@
 import { ZodRawShape } from "zod";
 import { ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ToolDefinition } from "../types/tool-definition.js";
+import { ToolDefinition } from "../../types/tool-definition.js";
 import { CurrentUserResponseModel } from "@/umb-management-api/schemas/index.js";
 
 export const CreateUmbracoTool =

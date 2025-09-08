@@ -1,5 +1,5 @@
 import { UmbracoWorkflowClient } from "@umb-workflow-client";
-import { CreateUmbracoTool } from "@/helpers/create-umbraco-tool.js";
+import { CreateUmbracoTool } from "@/helpers/mcp/create-umbraco-tool.js";
 import { InitiateWorkflowRequestModel } from "@/umb-workflow-api/schemas/index.js";
 import { postActionInitiateBody } from "@/umb-workflow-api/api/umbracoWorkflowManagementAPI.zod.js";
 
