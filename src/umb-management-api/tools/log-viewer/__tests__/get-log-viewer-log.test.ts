@@ -50,7 +50,8 @@ describe("get-log-viewer-log", () => {
 
     // Verify the items are within the date range
     const itemDate = new Date(response.items[0].timestamp).getTime();
+    const nowAfterCall = new Date().getTime(); // Capture current time after API call
     expect(itemDate).toBeGreaterThanOrEqual(oneMonthAgo.getTime());
-    expect(itemDate).toBeLessThanOrEqual(now.getTime());
+    expect(itemDate).toBeLessThanOrEqual(nowAfterCall);
   });
 });

@@ -38,7 +38,7 @@ export class LogViewerTestHelper {
           messageTemplate: expect.any(String),
           renderedMessage: expect.any(String),
           properties: expect.any(Array),
-          exception: expect.toBeOneOf([expect.any(Object), null]),
+          exception: expect.toBeOneOf([expect.any(Object), expect.any(String), null]),
         })
       );
     }

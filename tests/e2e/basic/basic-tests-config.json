@@ -7,7 +7,7 @@
         "UMBRACO_CLIENT_ID": "umbraco-back-office-mcp",
         "UMBRACO_CLIENT_SECRET": "1234567890",
         "UMBRACO_BASE_URL": "http://localhost:56472",
-        "UMBRACO_MCP_INCLUDE_TOOLS": "get-document-type-configuration,get-document-root,get-document-by-id,create-data-type-folder,get-data-type-root,find-data-type,move-data-type,delete-data-type-folder"
+        "INCLUDE_MANAGEMENT_TOOLS": "get-document-type-configuration,get-document-root,get-document-by-id,create-data-type-folder,get-data-type-root,find-data-type,move-data-type,delete-data-type-folder"
       }
     }
   }
