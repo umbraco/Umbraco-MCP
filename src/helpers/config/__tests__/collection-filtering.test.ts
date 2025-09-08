@@ -534,7 +534,7 @@ describe('Collection Filtering', () => {
       expect(DocumentBlueprintCollection.metadata).toBeDefined();
       expect(DocumentBlueprintCollection.metadata.name).toBe('document-blueprint');
       expect(DocumentBlueprintCollection.metadata.displayName).toBe('Document Blueprints');
-      expect(DocumentBlueprintCollection.metadata.dependencies).toEqual([]);
+      expect(DocumentBlueprintCollection.metadata.dependencies).toEqual(['document-type', 'document']);
       expect(typeof DocumentBlueprintCollection.tools).toBe('function');
       
       const tools = DocumentBlueprintCollection.tools(mockUser);
@@ -556,7 +556,7 @@ describe('Collection Filtering', () => {
       expect(MediaCollection.metadata).toBeDefined();
       expect(MediaCollection.metadata.name).toBe('media');
       expect(MediaCollection.metadata.displayName).toBe('Media');
-      expect(MediaCollection.metadata.dependencies).toEqual([]);
+      expect(MediaCollection.metadata.dependencies).toEqual(['temporary-file']);
       expect(typeof MediaCollection.tools).toBe('function');
       
       const tools = MediaCollection.tools(mockUser);
@@ -589,7 +589,7 @@ describe('Collection Filtering', () => {
       expect(MemberGroupCollection.metadata).toBeDefined();
       expect(MemberGroupCollection.metadata.name).toBe('member-group');
       expect(MemberGroupCollection.metadata.displayName).toBe('Member Groups');
-      expect(MemberGroupCollection.metadata.dependencies).toEqual([]);
+      expect(MemberGroupCollection.metadata.dependencies).toEqual(['member', 'member-type']);
       expect(typeof MemberGroupCollection.tools).toBe('function');
       
       const tools = MemberGroupCollection.tools(mockUser);
@@ -600,7 +600,7 @@ describe('Collection Filtering', () => {
       expect(MemberTypeCollection.metadata).toBeDefined();
       expect(MemberTypeCollection.metadata.name).toBe('member-type');
       expect(MemberTypeCollection.metadata.displayName).toBe('Member Types');
-      expect(MemberTypeCollection.metadata.dependencies).toEqual([]);
+      expect(MemberTypeCollection.metadata.dependencies).toEqual(['member', 'member-group']);
       expect(typeof MemberTypeCollection.tools).toBe('function');
       
       const tools = MemberTypeCollection.tools(mockUser);
@@ -699,7 +699,7 @@ describe('Collection Filtering', () => {
       expect(TemporaryFileCollection.metadata).toBeDefined();
       expect(TemporaryFileCollection.metadata.name).toBe('temporary-file');
       expect(TemporaryFileCollection.metadata.displayName).toBe('Temporary Files');
-      expect(TemporaryFileCollection.metadata.dependencies).toEqual([]);
+      expect(TemporaryFileCollection.metadata.dependencies).toEqual(['media']);
       expect(typeof TemporaryFileCollection.tools).toBe('function');
       
       const tools = TemporaryFileCollection.tools(mockUser);
