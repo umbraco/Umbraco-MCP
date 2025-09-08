@@ -15,8 +15,12 @@
     "generate": "orval --config orval.config.ts",
     "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "compile": "tsc --noEmit",
-    "patch-publish-alpha": "npm version prerelease --preid=alpha && npm publish --tag alpha --access public"
+    "patch-publish-alpha": "npm version prerelease --preid=alpha && npm publish --tag alpha --access public",
+    "eval-mcp:basic": "npx mcp-server-tester evals tests/e2e/basic/basic-tests.yaml --server-config tests/e2e/basic/basic-tests-config.json",
+    "eval-mcp:create-data-type": "npx mcp-server-tester evals tests/e2e/create-data-type/create-data-type.yaml --server-config tests/e2e/create-data-type/create-data-type-config.json",
+    "eval-mcp:create-document-type": "npx mcp-server-tester evals tests/e2e/create-document-type/create-document-type.yaml --server-config tests/e2e/create-document-type/create-document-type-config.json",
+    "eval-mcp:create-blog-post": "npx mcp-server-tester evals tests/e2e/create-blog-post/create-blog-post.yaml --server-config tests/e2e/create-blog-post/create-blog-post-config.json --debug",
+    "eval-mcp:all": "npm run eval-mcp:basic && npm run eval-mcp:create-data-type && npm run eval-mcp:create-document-type && npm run eval-mcp:create-blog-post"
   },
   "engines": {
     "node": ">=22.0.0"
