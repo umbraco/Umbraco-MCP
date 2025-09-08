@@ -8,6 +8,7 @@ import { DocumentTypeCollection } from "./document-type/index.js";
 import { LanguageCollection } from "./language/index.js";
 import { DocumentBlueprintCollection } from "./document-blueprint/index.js";
 import { DocumentCollection } from "./document/index.js";
+import { DocumentVersionCollection } from "./document-version/index.js";
 import { MediaCollection } from "./media/index.js";
 import { MediaTypeCollection } from "./media-type/index.js";
 import { MemberCollection } from "./member/index.js";
@@ -41,6 +42,7 @@ const availableCollections: ToolCollectionExport[] = [
   LanguageCollection,
   DocumentBlueprintCollection,
   DocumentCollection,
+  DocumentVersionCollection,
   MediaCollection,
   MediaTypeCollection,
   MemberCollection,

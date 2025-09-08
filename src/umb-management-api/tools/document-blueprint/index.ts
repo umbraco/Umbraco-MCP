@@ -15,7 +15,7 @@ export const DocumentBlueprintCollection: ToolCollectionExport = {
     name: 'document-blueprint',
     displayName: 'Document Blueprints',
     description: 'Document blueprint templates and management',
-    dependencies: []
+    dependencies: ['document-type', 'document']
   },
   tools: (user: CurrentUserResponseModel) => {
     const tools: ToolDefinition<any>[] = [];

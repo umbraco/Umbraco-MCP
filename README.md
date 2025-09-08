@@ -274,6 +274,16 @@ The allows you to specify collections by name if you wish to exclude them from t
 </details>
 
 <details>
+<summary>Document Version (document-version)</summary>
+<br>
+
+`get-document-version` - Get document versions with pagination  
+`get-document-version-by-id` - Get a specific document version by ID  
+`update-document-version-prevent-cleanup` - Prevent or allow cleanup of a document version  
+`create-document-version-rollback` - Rollback a document to a specific version
+</details>
+
+<details>
 <summary>Document Type (document-type)</summary>
 <br>
 

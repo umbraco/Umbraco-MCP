@@ -11,7 +11,7 @@ export const TemporaryFileCollection: ToolCollectionExport = {
     name: 'temporary-file',
     displayName: 'Temporary Files',
     description: 'Temporary file management and upload handling',
-    dependencies: []
+    dependencies: ['media']
   },
   tools: (user: CurrentUserResponseModel) => {
     const tools: ToolDefinition<any>[] = [];

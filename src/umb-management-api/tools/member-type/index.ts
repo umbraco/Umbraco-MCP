@@ -18,7 +18,7 @@ export const MemberTypeCollection: ToolCollectionExport = {
     name: 'member-type',
     displayName: 'Member Types',
     description: 'Member type definitions and composition management',
-    dependencies: []
+    dependencies: ['member', 'member-group']
   },
   tools: (user: CurrentUserResponseModel) => {
     const tools: ToolDefinition<any>[] = [];

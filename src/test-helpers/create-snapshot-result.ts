@@ -15,6 +15,18 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
         item.parent.path = item.parent.path.replace(/_\d{13}(?=_|\.js$|\/|$)/g, "_NORMALIZED_TIMESTAMP");
       }
     }
+    // Normalize document reference in document versions
+    if (item.document) {
+      item.document = { ...item.document, id: BLANK_UUID };
+    }
+    // Normalize documentType reference
+    if (item.documentType) {
+      item.documentType = { ...item.documentType, id: BLANK_UUID };
+    }
+    // Normalize user reference
+    if (item.user) {
+      item.user = { ...item.user, id: BLANK_UUID };
+    }
     if (item.createDate) {
       item.createDate = "NORMALIZED_DATE";
     }
@@ -23,6 +35,9 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
     }
     if (item.updateDate) {
       item.updateDate = "NORMALIZED_DATE";
+    }
+    if (item.versionDate) {
+      item.versionDate = "NORMALIZED_DATE";
     }
     // Normalize test names that contain timestamps
     if (item.name && typeof item.name === "string") {
@@ -55,12 +70,26 @@ export function createSnapshotResult(result: any, idToReplace?: string) {
             if (parsed.updateDate) {
               parsed.updateDate = "NORMALIZED_DATE";
             }
+            if (parsed.versionDate) {
+              parsed.versionDate = "NORMALIZED_DATE";
+            }
+            // Normalize document version references
+            if (parsed.document) {
+              parsed.document = { ...parsed.document, id: BLANK_UUID };
+            }
+            if (parsed.documentType) {
+              parsed.documentType = { ...parsed.documentType, id: BLANK_UUID };
+            }
+            if (parsed.user) {
+              parsed.user = { ...parsed.user, id: BLANK_UUID };
+            }
             if (parsed.variants && Array.isArray(parsed.variants)) {
               parsed.variants = parsed.variants.map((variant: any) => {
                 if (variant.createDate) variant.createDate = "NORMALIZED_DATE";
                 if (variant.publishDate)
                   variant.publishDate = "NORMALIZED_DATE";
                 if (variant.updateDate) variant.updateDate = "NORMALIZED_DATE";
+                if (variant.versionDate) variant.versionDate = "NORMALIZED_DATE";
                 return variant;
               });
             }
