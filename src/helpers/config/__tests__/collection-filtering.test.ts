@@ -438,7 +438,7 @@ describe('Collection Filtering', () => {
 
   describe('Environment Variable Parsing', () => {
     it('should parse comma-separated collection names', async () => {
-      process.env.INCLUDE_MANAGEMENT_COLLECTIONS = 'culture, data-type , document';
+      process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = 'culture, data-type , document';
       
       // Force re-import of env module after setting environment variables
       jest.resetModules();
@@ -450,7 +450,7 @@ describe('Collection Filtering', () => {
     });
 
     it('should handle empty values', async () => {
-      process.env.INCLUDE_MANAGEMENT_COLLECTIONS = '';
+      process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = '';
       
       // Force re-import of env module after setting environment variables
       jest.resetModules();

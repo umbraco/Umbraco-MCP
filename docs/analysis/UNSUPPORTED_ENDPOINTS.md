@@ -5,9 +5,16 @@ This document provides a comprehensive comparison between the available Umbraco 
 ## Summary
 
 - **Total API Endpoints**: 393
-- **Implemented Tools**: 187
-- **Coverage**: ~47.6%
-- **Missing Endpoints**: ~206
+- **Implemented Tools**: 269
+- **Coverage**: ~68.4%
+- **Missing Endpoints**: ~124
+
+**Recent Updates:**
+- Added Document Version tools (4 endpoints)
+- Added Stylesheet tools (11 endpoints) 
+- Added Script tools (10 endpoints)
+- Expanded Partial View coverage
+- Enhanced test infrastructure and collection filtering system
 
 ## Coverage by Section
 
@@ -17,6 +24,7 @@ This document provides a comprehensive comparison between the available Umbraco 
 - **Dictionary**: ~90% coverage (9/10 endpoints)  
 - **Document Blueprints**: ~85% coverage (6/7 endpoints)
 - **Document Types**: ~88% coverage (22/25 endpoints)
+- **Document Versions**: 100% coverage (4/4 endpoints) *NEW*
 - **Documents**: ~79% coverage (38/48 endpoints)
 - **Languages**: ~85% coverage (6/7 endpoints)
 - **Log Viewer**: ~90% coverage (9/10 endpoints)
@@ -25,9 +33,12 @@ This document provides a comprehensive comparison between the available Umbraco 
 - **Member Groups**: ~85% coverage (6/7 endpoints)
 - **Member Types**: ~80% coverage (8/10 endpoints)
 - **Members**: ~83% coverage (5/6 endpoints)
+- **Partial Views**: ~83% coverage (10/12 endpoints) *IMPROVED*
 - **Property Types**: 100% coverage (1/1 endpoints)
 - **Redirects**: 100% coverage (5/5 endpoints)
+- **Scripts**: 100% coverage (10/10 endpoints) *NEW*
 - **Server**: 100% coverage (5/5 endpoints)
+- **Stylesheets**: 100% coverage (11/11 endpoints) *NEW*
 - **Templates**: 100% coverage (10/10 endpoints)
 - **Temporary Files**: 100% coverage (4/4 endpoints)
 - **User Groups**: 100% coverage (8/8 endpoints)
@@ -291,11 +302,11 @@ This document provides a comprehensive comparison between the available Umbraco 
 1. **User Management** - Critical for user administration
 2. **Authentication & Security** - Essential for security operations
 3. **Package Management** - Important for deployment and maintenance
-4. **Version Management** - Important for content workflows
+4. ~~**Version Management**~~ - ✅ COMPLETED (Document Versions added)
 
 ### Medium Priority (Development tools)
-1. **Scripting & Views** - Important for developers
-2. **Stylesheets** - Important for theming
+1. ~~**Scripting & Views**~~ - ✅ COMPLETED (Scripts and Partial Views added)
+2. ~~**Stylesheets**~~ - ✅ COMPLETED (100% coverage achieved)
 3. **System Operations** - Important for maintenance
 
 ### Low Priority (Specialized features)
@@ -305,11 +316,21 @@ This document provides a comprehensive comparison between the available Umbraco 
 
 ## Implementation Notes
 
-Most missing endpoints fall into these categories:
-- Advanced administrative functions
-- Developer-focused tools
-- System maintenance operations
-- Import/export functionality
-- Advanced content workflows
+**Recent Achievements (68.4% coverage):**
+- ✅ **Document Versions** - Complete rollback and cleanup functionality
+- ✅ **Stylesheets** - Full CRUD operations and tree navigation
+- ✅ **Scripts** - Complete script file management
+- ✅ **Enhanced Test Infrastructure** - Comprehensive testing patterns and collection filtering
+- ✅ **Improved Coverage** - Significant jump from 47.6% to 68.4%
 
-The current MCP implementation covers the core content management workflows very well, with strong coverage of the primary content, media, and type management operations that most users need day-to-day.
+**Remaining gaps focus on:**
+- Advanced administrative functions (User management, Security)
+- System maintenance operations (Packages, Health checks)
+- Import/export functionality
+- Specialized features (Relations, Tags, Static files)
+
+The current MCP implementation now provides excellent coverage of the core content management workflows, with strong support for:
+- All content types (Documents, Media, Members)
+- Development workflow (Scripts, Stylesheets, Templates, Partial Views)
+- Content versioning and rollback capabilities
+- Comprehensive testing and quality assurance

@@ -71,8 +71,8 @@ const mapTools = (server: McpServer,
     if (!userHasPermission) return;
     
     // Apply existing tool-level filtering (preserves current behavior)
-    if (env.EXCLUDE_MANAGEMENT_TOOLS?.includes(tool.name)) return;
-    if (env.INCLUDE_MANAGEMENT_TOOLS?.length && !env.INCLUDE_MANAGEMENT_TOOLS.includes(tool.name)) return;
+    if (env.UMBRACO_EXCLUDE_TOOLS?.includes(tool.name)) return;
+    if (env.UMBRACO_INCLUDE_TOOLS?.length && !env.UMBRACO_INCLUDE_TOOLS.includes(tool.name)) return;
     
     // Register the tool
     server.tool(tool.name, tool.description, tool.schema, tool.handler);

@@ -4,10 +4,10 @@ import { CollectionConfiguration, DEFAULT_COLLECTION_CONFIG } from "../../types/
 export class CollectionConfigLoader {
   static loadFromEnv(): CollectionConfiguration {
     return {
-      enabledCollections: env.INCLUDE_MANAGEMENT_COLLECTIONS ?? DEFAULT_COLLECTION_CONFIG.enabledCollections,
-      disabledCollections: env.EXCLUDE_MANAGEMENT_COLLECTIONS ?? DEFAULT_COLLECTION_CONFIG.disabledCollections,
-      enabledTools: env.INCLUDE_MANAGEMENT_TOOLS ?? DEFAULT_COLLECTION_CONFIG.enabledTools,
-      disabledTools: env.EXCLUDE_MANAGEMENT_TOOLS ?? DEFAULT_COLLECTION_CONFIG.disabledTools,
+      enabledCollections: env.UMBRACO_INCLUDE_TOOL_COLLECTIONS ?? DEFAULT_COLLECTION_CONFIG.enabledCollections,
+      disabledCollections: env.UMBRACO_EXCLUDE_TOOL_COLLECTIONS ?? DEFAULT_COLLECTION_CONFIG.disabledCollections,
+      enabledTools: env.UMBRACO_INCLUDE_TOOLS ?? DEFAULT_COLLECTION_CONFIG.enabledTools,
+      disabledTools: env.UMBRACO_EXCLUDE_TOOLS ?? DEFAULT_COLLECTION_CONFIG.disabledTools,
     };
   }
 }
