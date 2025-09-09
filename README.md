@@ -40,8 +40,8 @@ Once you have this information head back into Claude desktop app and head to Set
         "UMBRACO_CLIENT_ID": "umbraco-back-office-mcp",
         "UMBRACO_CLIENT_SECRET": "1234567890",
         "UMBRACO_BASE_URL": "https://localhost:44391",
-        "INCLUDE_MANAGEMENT_COLLECTIONS": "culture,document,media",
-        "EXCLUDE_MANAGEMENT_TOOLS": "delete-document,empty-recycle-bin"
+        "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "culture,document,media",
+        "UMBRACO_EXCLUDE_TOOLS": "delete-document,empty-recycle-bin"
       }
     }
   }
@@ -71,7 +71,7 @@ Or configure environment variables and scope:
 npm install -g @anthropic-ai/claude-code
 
 # Add with environment variables
-claude mcp add umbraco-mcp --env UMBRACO_CLIENT_ID="your-id" --env UMBRACO_CLIENT_SECRET="your-secret" --env UMBRACO_BASE_URL="https://your-domain.com" --env NODE_TLS_REJECT_UNAUTHORIZED="0" --env INCLUDE_MANAGEMENT_COLLECTIONS="culture,document,media" -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
+claude mcp add umbraco-mcp --env UMBRACO_CLIENT_ID="your-id" --env UMBRACO_CLIENT_SECRET="your-secret" --env UMBRACO_BASE_URL="https://your-domain.com" --env NODE_TLS_REJECT_UNAUTHORIZED="0" --env UMBRACO_INCLUDE_TOOL_COLLECTIONS="culture,document,media" -- npx @umbraco-mcp/umbraco-mcp-cms@alpha
 
 # Verify installation
 claude mcp list
@@ -86,7 +86,7 @@ This will add umbraco-mcp to the existing project in the claude.json config file
 <summary>VS Code</summary>
 
 #### Click the button to install:
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522umbraco-mcp%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540umbraco-mcp%252Fumbraco-mcp-cms%2540alpha%2522%255D%252C%2522env%2522%253A%257B%2522UMBRACO_CLIENT_ID%2522%253A%2522%253CAPI%2520user%2520name%253E%2522%252C%2522UMBRACO_CLIENT_SECRET%2522%253A%2522%253CAPI%2520client%2520secert%253E%2522%252C%2522UMBRACO_BASE_URL%2522%253A%2522https%253A%252F%252F%253Cdomain%253E%2522%252C%2522EXCLUDE_MANAGEMENT_TOOLS%2522%253A%2522%253Ctoolname%253E%252C%253Ctoolname%253E%2522%257D%257D)
+[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522umbraco-mcp%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540umbraco-mcp%252Fumbraco-mcp-cms%2540alpha%2522%255D%252C%2522env%2522%253A%257B%2522UMBRACO_CLIENT_ID%2522%253A%2522%253CAPI%2520user%2520name%253E%2522%252C%2522UMBRACO_CLIENT_SECRET%2522%253A%2522%253CAPI%2520client%2520secert%253E%2522%252C%2522UMBRACO_BASE_URL%2522%253A%2522https%253A%252F%252F%253Cdomain%253E%2522%252C%2522UMBRACO_EXCLUDE_TOOLS%2522%253A%2522%253Ctoolname%253E%252C%253Ctoolname%253E%2522%257D%257D)
 
 **Requirements:** VS Code 1.101+ with GitHub Copilot Chat extension installed.
 
@@ -104,8 +104,8 @@ Follow the MCP [install guide](https://code.visualstudio.com/docs/copilot/custom
         "UMBRACO_CLIENT_ID": "<API user name>",
         "UMBRACO_CLIENT_SECRET": "<API client secret>",
         "UMBRACO_BASE_URL": "https://<domain>",
-        "INCLUDE_MANAGEMENT_COLLECTIONS": "<collection>,<collection>",
-        "EXCLUDE_MANAGEMENT_TOOLS": "<toolname>,<toolname>"
+        "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "<collection>,<collection>",
+        "UMBRACO_EXCLUDE_TOOLS": "<toolname>,<toolname>"
       }
     }
   }
@@ -132,8 +132,8 @@ Add the following to the config file and update the env variables.
         "UMBRACO_CLIENT_ID": "<API user name>",
         "UMBRACO_CLIENT_SECRET": "<API client secret>",
         "UMBRACO_BASE_URL": "https://<domain>",
-        "INCLUDE_MANAGEMENT_COLLECTIONS": "<collection>,<collection>",
-        "EXCLUDE_MANAGEMENT_TOOLS": "<toolname>,<toolname>"
+        "UMBRACO_INCLUDE_TOOL_COLLECTIONS": "<collection>,<collection>",
+        "UMBRACO_EXCLUDE_TOOLS": "<toolname>,<toolname>"
       }
     }
   }
@@ -156,26 +156,26 @@ Umbraco API User client secert
 
 Url of the site you want to connect to, it only needs to be the scheme and domain e.g https://<nolink/>example.com
 
-`EXCLUDE_MANAGEMENT_TOOLS`
+`UMBRACO_EXCLUDE_TOOLS`
 
 The allows you to specify tools by name if you wish to exclude them for the usable tools list. This is helpful as some Agents, cant handle so many tools. This is a commma seperated list of tools which can be found below.
 
-`INCLUDE_MANAGEMENT_TOOLS`
+`UMBRACO_INCLUDE_TOOLS`
 
 The allows you to specify tools by name if you wish to include only specific tools in the usable tools list. When specified, only these tools will be available. This is a commma seperated list of tools which can be found below.
 
-`INCLUDE_MANAGEMENT_COLLECTIONS`
+`UMBRACO_INCLUDE_TOOL_COLLECTIONS`
 
 The allows you to specify collections by name if you wish to include only specific collections. When specified, only tools from these collections will be available. This is a commma seperated list of collection names (see tool list below for collection names).
 
-`EXCLUDE_MANAGEMENT_COLLECTIONS`
+`UMBRACO_EXCLUDE_TOOL_COLLECTIONS`
 
 The allows you to specify collections by name if you wish to exclude them from the usable tools list. This is a commma seperated list of collection names (see tool list below for collection names).
 
 
 ##  Umbraco Management API Tools
 
-**Note:** Collection names are shown in brackets for use with `INCLUDE_MANAGEMENT_COLLECTIONS` and `EXCLUDE_MANAGEMENT_COLLECTIONS`.
+**Note:** Collection names are shown in brackets for use with `UMBRACO_INCLUDE_TOOL_COLLECTIONS` and `UMBRACO_EXCLUDE_TOOL_COLLECTIONS`.
 
 <details>
 <summary> View Tool list</summary>

@@ -48,10 +48,10 @@ describe('UmbracoToolFactory Integration', () => {
     mockServer = createMockServer();
     
     // Reset environment variables
-    delete process.env.INCLUDE_MANAGEMENT_COLLECTIONS;
-    delete process.env.EXCLUDE_MANAGEMENT_COLLECTIONS;
-    delete process.env.INCLUDE_MANAGEMENT_TOOLS;
-    delete process.env.EXCLUDE_MANAGEMENT_TOOLS;
+    delete process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS;
+    delete process.env.UMBRACO_EXCLUDE_TOOL_COLLECTIONS;
+    delete process.env.UMBRACO_INCLUDE_TOOLS;
+    delete process.env.UMBRACO_EXCLUDE_TOOLS;
   });
 
   afterEach(() => {
@@ -68,7 +68,7 @@ describe('UmbracoToolFactory Integration', () => {
   });
 
   it('should only load tools from enabled collections', () => {
-    process.env.INCLUDE_MANAGEMENT_COLLECTIONS = 'culture,data-type';
+    process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = 'culture,data-type';
     
     UmbracoToolFactory(mockServer, mockUser);
     
@@ -84,7 +84,7 @@ describe('UmbracoToolFactory Integration', () => {
   });
 
   it('should handle empty enabled collections list', () => {
-    process.env.INCLUDE_MANAGEMENT_COLLECTIONS = '';
+    process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = '';
     
     UmbracoToolFactory(mockServer, mockUser);
     
@@ -106,7 +106,7 @@ describe('UmbracoToolFactory Integration', () => {
 
 
   it('should handle collection exclusions for converted collections', async () => {
-    process.env.EXCLUDE_MANAGEMENT_COLLECTIONS = 'culture';
+    process.env.UMBRACO_EXCLUDE_TOOL_COLLECTIONS = 'culture';
     
     // Force re-import to pick up environment changes
     jest.resetModules();
@@ -126,7 +126,7 @@ describe('UmbracoToolFactory Integration', () => {
   it('should handle invalid collection names gracefully', async () => {
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     // Test with an invalid collection name that doesn't exist in availableCollections
-    process.env.INCLUDE_MANAGEMENT_COLLECTIONS = 'invalid-collection-name,culture';
+    process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = 'invalid-collection-name,culture';
     
     // Force re-import to pick up environment changes
     jest.resetModules();
@@ -160,7 +160,7 @@ describe('UmbracoToolFactory Integration', () => {
 
   it('should handle multiple collection dependencies', () => {
     // This test verifies that if collections had dependencies, they would be included
-    process.env.INCLUDE_MANAGEMENT_COLLECTIONS = 'culture,data-type';
+    process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = 'culture,data-type';
     
     UmbracoToolFactory(mockServer, mockUser);
     
@@ -187,7 +187,7 @@ describe('UmbracoToolFactory Integration', () => {
 
   describe('Configuration parsing edge cases', () => {
     it('should handle whitespace in collection names', () => {
-      process.env.INCLUDE_MANAGEMENT_COLLECTIONS = ' culture , data-type , ';
+      process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = ' culture , data-type , ';
       
       UmbracoToolFactory(mockServer, mockUser);
       
@@ -196,7 +196,7 @@ describe('UmbracoToolFactory Integration', () => {
     });
 
     it('should handle empty collection names in list', () => {
-      process.env.INCLUDE_MANAGEMENT_COLLECTIONS = 'culture,,data-type';
+      process.env.UMBRACO_INCLUDE_TOOL_COLLECTIONS = 'culture,,data-type';
       
       UmbracoToolFactory(mockServer, mockUser);
       

@@ -504,15 +504,24 @@
 ## Summary Statistics
 
 **Total Endpoints:** 393
+**MCP Tools Implemented:** 269
+**Coverage:** 68.4%
 
 **Categories:** 37
 
 **Major Functional Areas:**
-- **Content Management:** Documents (48 endpoints), Media (34 endpoints), Templates (10 endpoints)
+- **Content Management:** Documents (48 endpoints), Document Versions (4 endpoints), Media (34 endpoints), Templates (10 endpoints)
 - **Content Types:** Document Types (25 endpoints), Media Types (25 endpoints), Data Types (20 endpoints)
 - **User Management:** Users (36 endpoints), User Groups (8 endpoints), Members (10 endpoints)
-- **Development:** Scripts (10 endpoints), Stylesheets (10 endpoints), Partial Views (12 endpoints)
+- **Development:** Scripts (10 endpoints), Stylesheets (11 endpoints), Partial Views (12 endpoints)
 - **System Management:** Server (5 endpoints), Security (4 endpoints), Health Check (4 endpoints)
 - **Configuration:** Various configuration endpoints across categories
 - **Tree Operations:** Tree navigation endpoints for hierarchical content
 - **Search & Filtering:** Search and filter endpoints across content types
+
+**Recent Additions:**
+- Document Version management (rollback, cleanup)
+- Complete Stylesheet file management
+- Full Script file operations
+- Enhanced collection filtering system
+- Comprehensive testing infrastructure
